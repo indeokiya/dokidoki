@@ -1,7 +1,7 @@
 spring:
   # database local
   datasource:
-    url: jdbc:mysql://localhost:3306/ad_db
+    url: jdbc:mysql://localhost:3306/dokidoki
     username: root
     password: root
 
@@ -19,7 +19,9 @@ spring:
 
 oauth2:
   google:
-    clientId: 409728357789-pfbb5h8u9m4tib34v3qne7n7atat1tbc.apps.googleusercontent.com
-    redirect_uri: http://localhost:8080/oauth2/login/google
+    client_id: 409728357789-pfbb5h8u9m4tib34v3qne7n7atat1tbc.apps.googleusercontent.com
+    client_secret: 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
+    profile_uri: https://www.googleapis.com/oauth2/v3/userinfo
+    redirect_uri: http://localhost:8080/oauth2/google/redirect
 
 
