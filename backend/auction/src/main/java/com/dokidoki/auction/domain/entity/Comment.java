@@ -3,10 +3,10 @@ package com.dokidoki.auction.domain.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -16,27 +16,29 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "auction_id")
-//    private Auction auction;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "member_id")
-//    private Member member;
+    // AuctionIng, AuctionEd 두 개의 테이블을 참조해야 하므로 매핑 X
+    @Column(name = "auction_id")
+    private Long auctionId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     private String content;
 
-    private Timestamp written_time;
+    @CreationTimestamp
+    @Column(name = "written_time")
+    private Timestamp writtenTime;
 
-    private Long parent_id;
+    @Column(name = "parent_id")
+    private Long parentId;
 
-    public static Comment createComment(String content, Long parent_id) {
+    public static Comment createComment(Long auction_id, Member member, String content, Long parent_id) {
         Comment newComment = new Comment();
-//        newComment.auction = auction;
-//        newComment.member = member;
+        newComment.auctionId = auction_id;
+        newComment.member = member;
         newComment.content = content;
-        newComment.parent_id = parent_id;
-        newComment.written_time = Timestamp.valueOf(LocalDateTime.now());
+        newComment.parentId = parent_id;
         return newComment;
     }
 }
