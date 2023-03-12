@@ -1,5 +1,6 @@
 package com.dokidoki.auction.domain.entity;
 
+import com.dokidoki.auction.dto.request.CommentRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,5 +41,9 @@ public class Comment {
         newComment.content = content;
         newComment.parentId = parent_id;
         return newComment;
+    }
+
+    public void updateComment(CommentRequest commentRequest) {
+        this.content = commentRequest.getContent();
     }
 }

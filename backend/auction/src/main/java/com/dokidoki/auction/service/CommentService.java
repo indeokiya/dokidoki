@@ -95,4 +95,20 @@ public class CommentService {
         commentRepository.save(newComment);
         return 0;
     }
+
+    @Transactional
+    public int updateComment(Long id, CommentRequest commentRequest) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+
+        // 존재하지 않는 댓글일 경우
+        if (optionalComment.isEmpty()) {
+            return 5;
+        }
+
+        // 업데이트
+        Comment comment = optionalComment.get();
+        comment.updateComment(commentRequest);
+
+        return 0;
+    }
 }
