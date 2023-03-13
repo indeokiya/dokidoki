@@ -9,8 +9,8 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 public class OauthToken {
     private String access_token;
-    private Integer expires_in;
     private String token_type;
     private String scope;
-    private String refresh_token;
+
+    private String id_token;
 }
