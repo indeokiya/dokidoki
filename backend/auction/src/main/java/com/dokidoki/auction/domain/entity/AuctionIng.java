@@ -1,12 +1,19 @@
 package com.dokidoki.auction.domain.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "auction_ing")
 @Entity
@@ -34,8 +41,9 @@ public class AuctionIng {
     @Column(name = "price_size")
     private int priceSize;              // 경매 단위
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_at")
-    private LocalDateTime endAt;        // 경매 종료 시점
+    private Date endAt;        // 경매 종료 시점
 
     @Column(name = "meeting_place")
     private String meetingPlace;        // 거래장소

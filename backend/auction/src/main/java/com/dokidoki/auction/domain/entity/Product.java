@@ -17,7 +17,7 @@ public class Product {
     private long id;            // 제품 id
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "catetory_id")
+    @JoinColumn(name = "category_id")
     private Category category;
 
     private String name;        // 제품명

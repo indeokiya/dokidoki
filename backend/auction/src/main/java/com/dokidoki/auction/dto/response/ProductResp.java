@@ -12,6 +12,8 @@ import lombok.*;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductResp {
 
+    private long productId;
+
     private String name;        // 제품명
 
     private String imgUrl;      // 대표 이미지 url
