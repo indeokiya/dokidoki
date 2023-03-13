@@ -24,8 +24,8 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<?, ?> redisTemplate() {
-        RedisTemplate<?, ?> redisTemplate = new RedisTemplate<>();
+    public RedisTemplate<String, ?> redisTemplate() {
+        RedisTemplate<String, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer()); // key 깨짐 방지
         // value serializer도 설정해줘야하나?
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());

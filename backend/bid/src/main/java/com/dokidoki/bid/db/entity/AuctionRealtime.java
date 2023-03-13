@@ -19,7 +19,7 @@ public class AuctionRealtime {
     private int priceSize;
 
     @TimeToLive
-    private long lifeSpan;
+    private long lifeSpan; // 초 단위
 
     @Builder
     public AuctionRealtime(long auctionId, Integer highestPrice, Integer priceSize, long lifeSpan) {
@@ -31,6 +31,11 @@ public class AuctionRealtime {
 
     public void updatePriceSize(int priceSize) {
         this.priceSize = priceSize;
+    }
+
+    public int updateHighestPrice() {
+        this.highestPrice = this.highestPrice + this.priceSize;
+        return this.highestPrice;
     }
 
 
