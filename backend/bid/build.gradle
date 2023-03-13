@@ -1,0 +1,35 @@
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '2.7.9'
+	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+}
+
+group = 'com.dokidoki'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	// common
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+	// JSON
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
+	// DB
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+	// lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor('org.projectlombok:lombok')
+
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+tasks.named('test') {
+	useJUnitPlatform()
+}
