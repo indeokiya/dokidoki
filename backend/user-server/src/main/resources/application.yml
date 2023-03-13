@@ -38,3 +38,6 @@ jwt:
   # 60 * 60 * 1000 = 3600000
   access_expiration: 3600000
   refresh_expiration: 1296000000
+
+front:
+  redirect_uri: http://localhost:3000

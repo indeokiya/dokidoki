@@ -12,6 +12,7 @@ import com.dokidoki.userserver.service.UserService;
 import com.dokidoki.userserver.util.OauthUrlUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,9 @@ public class OauthController {
     private final UserService userService;
 
     private final JwtProvider jwtProvider;
+
+    @Value("${front.redirect_uri}")
+    private String FRONT_REDIRECT_URI;
 
     @GetMapping("/login/{provider}")
     public ResponseEntity<OauthLoginUrlDto> oauth2LoginUrl(
@@ -76,19 +80,38 @@ public class OauthController {
                             .build()
             );
         }
+        String accessToken = jwtProvider.getAccessToken(user.getId());
+        String refreshToken = jwtProvider.getRefreshToken(user);
+
+        response.sendRedirect(getFrontRedirectUrl(accessToken, refreshToken));
+    }
+
+    @GetMapping("/kakao/redirect")
+    public void redirectKakao(@RequestParam String code, HttpServletResponse response) throws IOException {
+        KakaoUserInfo info = oauthService.getUserInfoKakao(code);
+
+        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.KAKAO);
+
+        // 신규 가입
+        if(user == null){
+            user = userService.saveUser(
+                    UserEntity.builder()
+                            .sub(info.getSub())
+                            .email(info.getEmail())
+                            .picture(info.getPicture())
+                            .name(info.getNickname())
+                            .providerType(ProviderType.KAKAO)
+                            .build()
+            );
+        }
 
         String accessToken = jwtProvider.getAccessToken(user.getId());
         String refreshToken = jwtProvider.getRefreshToken(user);
 
-//        Cookie refreshCookie = new Cookie("rfrs", refreshToken);
-//        refreshCookie.setPath("/");
-        log.info("http://localhost:3000?access_token="+accessToken + "&refresh_token="+refreshToken);
-        response.sendRedirect("http://localhost:3000?access_token="+accessToken + "&refresh_token="+refreshToken);
+        response.sendRedirect(getFrontRedirectUrl(accessToken, refreshToken));
     }
 
-    @GetMapping("/kakao/redirect")
-    public ResponseEntity<?> redirectKakao(@RequestParam String code, HttpServletResponse response){
-        KakaoUserInfo info = oauthService.getUserInfoKakao(code);
-        return ResponseEntity.ok(info);
+    private String getFrontRedirectUrl(String accessToken, String refreshToken){
+        return FRONT_REDIRECT_URI + "?access_token=" + accessToken + "&refresh_token=" + refreshToken;
     }
 }
