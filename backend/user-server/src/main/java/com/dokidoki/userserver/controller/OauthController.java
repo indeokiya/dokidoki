@@ -1,11 +1,14 @@
 package com.dokidoki.userserver.controller;
 
+import com.dokidoki.userserver.componet.JwtProvider;
 import com.dokidoki.userserver.dto.GoogleUserInfo;
 import com.dokidoki.userserver.dto.KakaoUserInfo;
 import com.dokidoki.userserver.dto.response.OauthLoginUrlDto;
+import com.dokidoki.userserver.entity.UserEntity;
 import com.dokidoki.userserver.enumtype.ProviderType;
 import com.dokidoki.userserver.exception.CustomException;
 import com.dokidoki.userserver.service.OauthService;
+import com.dokidoki.userserver.service.UserService;
 import com.dokidoki.userserver.util.OauthUrlUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +16,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @RestController
 @Slf4j
@@ -24,6 +28,10 @@ public class OauthController {
 
     private final OauthUrlUtil oauthUrlUtil;
     private final OauthService oauthService;
+
+    private final UserService userService;
+
+    private final JwtProvider jwtProvider;
 
     @GetMapping("/login/{provider}")
     public ResponseEntity<OauthLoginUrlDto> oauth2LoginUrl(
@@ -51,14 +59,35 @@ public class OauthController {
 
 
     @GetMapping("/google/redirect")
-    public ResponseEntity<?> redirectGoogle(@RequestParam String code, HttpServletResponse response){
+    public void redirectGoogle(@RequestParam String code, HttpServletResponse response) throws IOException {
         GoogleUserInfo info = oauthService.getUserInfoGoogle(code);
-        return ResponseEntity.ok(info);
+
+        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.GOOGLE);
+
+        // 신규 가입
+        if(user == null){
+            user = userService.saveUser(
+                    UserEntity.builder()
+                            .sub(info.getSub())
+                            .email(info.getEmail())
+                            .picture(info.getPicture())
+                            .name(info.getName())
+                            .providerType(ProviderType.GOOGLE)
+                            .build()
+            );
+        }
+
+        String accessToken = jwtProvider.getAccessToken(user.getId());
+        String refreshToken = jwtProvider.getRefreshToken(user);
+
+//        Cookie refreshCookie = new Cookie("rfrs", refreshToken);
+//        refreshCookie.setPath("/");
+        log.info("http://localhost:3000?access_token="+accessToken + "&refresh_token="+refreshToken);
+        response.sendRedirect("http://localhost:3000?access_token="+accessToken + "&refresh_token="+refreshToken);
     }
 
     @GetMapping("/kakao/redirect")
     public ResponseEntity<?> redirectKakao(@RequestParam String code, HttpServletResponse response){
-        log.info("kakao code: " + code);
         KakaoUserInfo info = oauthService.getUserInfoKakao(code);
         return ResponseEntity.ok(info);
     }

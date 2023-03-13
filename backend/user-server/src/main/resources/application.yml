@@ -5,17 +5,17 @@ spring:
     username: root
     password: root
 
-    jpa:
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
       hibernate:
-        ddl-auto: create
-      show-sql: true
-      properties:
-        hibernate:
-          format_sql: true
-          dialect: org.hibernate.dialect.MySQL8Dialect
-    logging:
-      level:
-        org.hibernate.type: trace
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  logging:
+    level:
+      org.hibernate.type: trace
 
 oauth2:
   google:
@@ -30,3 +30,11 @@ oauth2:
     client_secret: DrtbGue1SrkzOWMJPLVx9g2by9YlNIWk
     redirect_uri: http://localhost:8080/oauth2/kakao/redirect
     token_uri: https://kauth.kakao.com/oauth/token
+
+jwt:
+  issuer: dokidoki.com
+  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
+  # unit is ms. 15 * 24 * 60 * 60 * 1000 = 15days 1296000000
+  # 60 * 60 * 1000 = 3600000
+  access_expiration: 3600000
+  refresh_expiration: 1296000000
