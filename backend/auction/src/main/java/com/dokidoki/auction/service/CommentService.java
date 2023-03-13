@@ -97,8 +97,8 @@ public class CommentService {
     }
 
     @Transactional
-    public int updateComment(Long id, CommentRequest commentRequest) {
-        Optional<Comment> optionalComment = commentRepository.findById(id);
+    public int updateComment(Long comment_id, CommentRequest commentRequest) {
+        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
 
         // 존재하지 않는 댓글일 경우
         if (optionalComment.isEmpty()) {
@@ -109,6 +109,20 @@ public class CommentService {
         Comment comment = optionalComment.get();
         comment.updateComment(commentRequest);
 
+        return 0;
+    }
+
+    @Transactional
+    public int deleteComment(Long comment_id) {
+        // {comment_id}를 갖는 댓글이 있는지 확인
+        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+        if (optionalComment.isEmpty()) {
+            return 5;
+        }
+        // 댓글 삭제
+        commentRepository.delete(optionalComment.get());
+        // 대댓글 모두 삭제
+        commentRepository.deleteCommentsByParentId(optionalComment.get().getId());
         return 0;
     }
 }

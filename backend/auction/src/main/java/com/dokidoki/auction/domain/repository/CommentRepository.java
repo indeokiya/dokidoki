@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     List<Comment> findCommentsByAuctionIdOrderByWrittenTime(Long auction_id);
+    int deleteCommentsByParentId(Long parent_id);
 }
