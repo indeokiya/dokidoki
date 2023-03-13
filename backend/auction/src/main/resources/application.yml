@@ -18,3 +18,15 @@ spring:
       hibernate:
         format_sql: true
 
+cloud:
+  aws:
+    s3:
+      bucket: dokidoki.image.bucket
+    credentials:
+      access-key: ${access-key}
+      secret-key: ${secret-key}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
