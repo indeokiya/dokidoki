@@ -11,6 +11,7 @@ import com.dokidoki.auction.domain.repository.ProfileImageRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.dto.request.AuctionImagesRequest;
 import com.dokidoki.auction.dto.request.ProfileImageRequest;
+import com.dokidoki.auction.dto.response.AuctionImageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,6 +37,19 @@ public class ImageService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+
+    public AuctionImageResponse readAuctionImages(Long auction_id) {
+        // AuctionImage Entity 검색
+        List<AuctionImage> auctionImages = auctionImageRepository.findAuctionImagesByAuctionId(auction_id);
+
+        // Image URL 추출
+        List<String> auctionImageUrls = new ArrayList<>();
+        auctionImages.forEach(auctionImage -> {
+            auctionImageUrls.add(auctionImage.getImageUrl());
+        });
+
+        return new AuctionImageResponse(auction_id, auctionImageUrls);
+    }
 
     @Transactional
     public List<String> createAuctionImages(AuctionImagesRequest auctionImagesRequest) {

@@ -2,15 +2,14 @@ package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.dto.request.AuctionImagesRequest;
 import com.dokidoki.auction.dto.request.ProfileImageRequest;
+import com.dokidoki.auction.dto.response.AuctionImageResponse;
 import com.dokidoki.auction.dto.response.CommonResponse;
 import com.dokidoki.auction.service.ImageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,6 +21,17 @@ import java.util.Optional;
 @Slf4j
 public class ImageController {
     private final ImageService imageService;
+
+    @GetMapping("/auctions/{auction_id}")
+    public ResponseEntity<CommonResponse<AuctionImageResponse>> readAuctionImages(@PathVariable Long auction_id) {
+        // 경매 식별번호로, 등록된 제품 사진 검색
+        AuctionImageResponse auctionImageResponse = imageService.readAuctionImages(auction_id);
+
+        return new ResponseEntity<>(
+                CommonResponse.of(200, "성공", auctionImageResponse),
+                HttpStatus.OK
+        );
+    }
 
     @PostMapping("/auctions")
     public ResponseEntity<CommonResponse<List<String>>> createAuctionImages(Optional<AuctionImagesRequest> optionalAuctionImagesRequest) {
