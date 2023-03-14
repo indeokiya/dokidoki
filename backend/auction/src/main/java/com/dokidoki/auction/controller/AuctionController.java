@@ -1,12 +1,13 @@
 package com.dokidoki.auction.controller;
 
-import com.dokidoki.auction.domain.entity.Product;
+import com.dokidoki.auction.common.BaseResponseBody;
+import com.dokidoki.auction.domain.entity.AuctionIng;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
-import com.dokidoki.auction.dto.response.CategoryResp;
+import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.CommonResponse;
 import com.dokidoki.auction.dto.response.ProductResp;
 import com.dokidoki.auction.service.AuctionService;
-import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,10 +61,11 @@ public class AuctionController {
         }
 
         AuctionRegisterReq auctionRegisterReq = auctionRegisterReqO.get();
+        Long sellerId = 1L;
 
-        String msg = auctionService.createAuction(auctionRegisterReq);
+        String msg = auctionService.createAuction(auctionRegisterReq, sellerId);
 
-        if (msg == "no contents with id") {
+        if (msg.equals("제품에 대한 정보가 존재하지 않습니다.")) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, msg, null),
                     HttpStatus.NOT_FOUND
@@ -77,6 +78,30 @@ public class AuctionController {
         );
     }
 
+    @PutMapping("/auctions")
+    public ResponseEntity<BaseResponseBody> updateAuction(
+            @RequestParam("auction_id") @ApiParam(value = "경매 id", required = true) long auctionId,
+            @RequestBody @ApiParam(value = "경매 수정 정보", required = true) Optional<AuctionUpdateReq> auctionUpdateReqO) {
 
+        if (auctionUpdateReqO.isEmpty()) {
+            return ResponseEntity.status(400).body(BaseResponseBody.of("요청받은 데이터가 없습니다."));
+        }
+
+        Long sellerId = 1L;
+
+        try {
+            if (auctionUpdateReqO.isPresent()) {
+                AuctionUpdateReq auctionUpdateReq = auctionUpdateReqO.get();
+                AuctionIng auction = auctionService.updateAuction(sellerId, auctionId, auctionUpdateReq);
+                if (!auction.equals(null)) {
+                    return ResponseEntity.status(200).body(BaseResponseBody.of("경매 정보가 수정되었습니다."));
+                }
+            }
+            return ResponseEntity.status(400).body(BaseResponseBody.of("해당하는 경매가 존재하지 않습니다."));
+        } catch (Exception e) {
+            return ResponseEntity.status(403).body(BaseResponseBody.of("오류가 발생했습니다", e));
+        }
+
+    }
 
 }

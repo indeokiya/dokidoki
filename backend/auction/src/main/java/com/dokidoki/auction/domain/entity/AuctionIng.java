@@ -1,5 +1,6 @@
 package com.dokidoki.auction.domain.entity;
 
+import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -7,8 +8,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @Getter
@@ -50,4 +49,11 @@ public class AuctionIng {
 
     @Column(name = "highest_price")
     private int highestPrice;           // 현재 최고가
+
+    public void update(AuctionUpdateReq auctionUpdateReq) {
+        this.title = auctionUpdateReq.getTitle();
+        this.description = auctionUpdateReq.getDescription();
+        this.priceSize = auctionUpdateReq.getPriceSize();
+        this.meetingPlace = auctionUpdateReq.getMeetingPlace();
+    }
 }

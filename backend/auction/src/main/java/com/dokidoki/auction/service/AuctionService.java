@@ -7,13 +7,12 @@ import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.CategoryRepository;
 import com.dokidoki.auction.domain.repository.ProductRepository;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
+import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.CategoryResp;
 import com.dokidoki.auction.dto.response.ProductResp;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
@@ -73,17 +72,17 @@ public class AuctionService {
 
 
     @Transactional
-    public String createAuction(AuctionRegisterReq auctionRegisterReq) {
+    public String createAuction(AuctionRegisterReq auctionRegisterReq, long sellerId) {
         Optional<Product> productO = productRepository.findById(auctionRegisterReq.getProductId());
 
         if (productO.isEmpty()) {
-            return "no contents with id";
+            return "제품에 대한 정보가 존재하지 않습니다.";
         }
 
         Product product = productO.get();
 
         AuctionIng auctionIng = AuctionIng.builder()
-                .sellerId(1L)
+                .sellerId(sellerId)
                 .product(product)
                 .title(auctionRegisterReq.getTitle())
                 .description(auctionRegisterReq.getDescription())
@@ -95,5 +94,17 @@ public class AuctionService {
 
         auctionIngRepository.save(auctionIng);
         return "경매 게시글이 작성되었습니다.";
+    }
+
+    @Transactional
+    public AuctionIng updateAuction(long sellerId, long auctionId, AuctionUpdateReq auctionUpdateReq) throws Exception {
+
+        Optional<AuctionIng> auctionO = auctionIngRepository.findById(auctionId);
+        AuctionIng auction = auctionO.get();
+
+        // 요청자와 판매자가 동일한 경우에만 update 수행
+        if (auction.getSellerId() == sellerId)
+            auction.update(auctionUpdateReq);
+        return auction;
     }
 }

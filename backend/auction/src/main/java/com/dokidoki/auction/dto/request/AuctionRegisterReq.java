@@ -6,13 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 
 import java.util.Date;
-import java.util.List;
+
 
 @ToString
 @Getter
@@ -20,9 +16,6 @@ import java.util.List;
 public class AuctionRegisterReq {
 
     // 판매자id (작성자id)
-
-    // 사진(?)
-//    private List<MultipartFile> multipartFileList;
 
     private long productId;
 
