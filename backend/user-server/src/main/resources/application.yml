@@ -1,0 +1,43 @@
+spring:
+  # database local
+  datasource:
+    url: jdbc:mysql://localhost:3306/dokidoki
+    username: root
+    password: root
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  logging:
+    level:
+      org.hibernate.type: trace
+
+oauth2:
+  google:
+    client_id: 409728357789-pfbb5h8u9m4tib34v3qne7n7atat1tbc.apps.googleusercontent.com
+    client_secret: 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
+    token_uri: https://oauth2.googleapis.com/token
+    profile_uri: https://www.googleapis.com/oauth2/v3/userinfo
+    redirect_uri: http://localhost:8080/oauth2/google/redirect
+  kakao:
+    # REST API 키
+    client_id: 355cfcf503170ecfb98fae9e4aa9a4df
+    client_secret: DrtbGue1SrkzOWMJPLVx9g2by9YlNIWk
+    redirect_uri: http://localhost:8080/oauth2/kakao/redirect
+    token_uri: https://kauth.kakao.com/oauth/token
+
+jwt:
+  issuer: dokidoki.com
+  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
+  # unit is ms. 15 * 24 * 60 * 60 * 1000 = 15days 1296000000
+  # 60 * 60 * 1000 = 3600000
+  access_expiration: 3600000
+  refresh_expiration: 1296000000
+
+front:
+  redirect_uri: http://localhost:3000
