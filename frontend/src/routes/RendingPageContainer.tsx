@@ -1,8 +1,15 @@
+import StartAction from "../components/main/StartAction/StartAction";
+import TotalTransaction from "../components/main/TotalTransaction/TotalTransaction";
+import FunctionInfoCards from "../components/main/functionInfoCards/FunctionInfoCards";
 
 
 const RendingPageContainer = () =>{
     return (
-        <div></div>
+        <>
+            <StartAction></StartAction>
+            <TotalTransaction></TotalTransaction>
+            <FunctionInfoCards></FunctionInfoCards>
+        </>
     )
 }
 

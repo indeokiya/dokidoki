@@ -1,7 +1,12 @@
 const Login = ()=>{
 
     return(
-        <div></div>
+        <div>
+            <ul>
+                <li>구글</li>
+                <li>카카오</li>
+            </ul>
+        </div>
     )
 }
 
