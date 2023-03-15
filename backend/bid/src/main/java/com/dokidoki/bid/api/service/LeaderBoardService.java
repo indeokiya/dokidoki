@@ -36,12 +36,17 @@ public class LeaderBoardService {
     // TODO - 게시글을 등록하면서 시작 가격과 경매 단위가 레디스로 넘어오는 과정이 필요
     //  TTL 설정도 해줘야.
 
-    @Transactional
+    /**
+     * 경매에 입찰하는 메서드. 컨트롤러에서 접근하는 메서드.
+     * @param auctionId 경매 ID
+     * @param req client 측에서 넘어온 요청 정보
+     */
     public void bid(long auctionId, AuctionBidReq req) {
         // TODO - 분산 락 처리 과정 필요
 
         // TODO - 나중에 토큰에서 받아오는 걸로 수정하기
         long memberId = req.getMemberId();
+
 
         // 1. 경매 정보가 없는 경우 - 에러 발생시키기
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
@@ -64,6 +69,24 @@ public class LeaderBoardService {
 
         // 3. 실시간 최고가, 리더보드 갱신하기
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
+        String key = getKey(auctionId);
+        int newHighestPrice = updateLeaderBoardAndHighestPrice(auctionRealtime, key, req);
+
+        // TODO - 4. Kafka 에 갱신된 리더보드 (leaderBoard), 최고가 (newHighestPrice) 보내기
+        // MySQL도 구독해놓고, 최고가 정보를 받아야 함
+        List<LeaderBoardMemberResp> leaderBoard = getLeaderBoardMemberResp(key);
+
+    }
+
+    /**
+     * 리더보드와 실시간 최고가를 갱신하는 메서드
+     * @param auctionRealtime redis 에 저장되어 있는 실시간 경매 정보
+     * @param key redis 에 리더보드가 저장된 키
+     * @param req client 측에서 넘어온 요청 정보
+     * @return newHighestPrice
+     */
+    @Transactional
+    public int updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, String key, AuctionBidReq req) {
 
         // 3-1. 실시간 최고가 갱신
         int newHighestPrice = auctionRealtime.updateHighestPrice();
@@ -73,29 +96,31 @@ public class LeaderBoardService {
         // 3-2. 리더보드 갱신
         int limit = LeaderBoardConstants.limit;
 
-        String key = getKey(auctionId);
-
         LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req);
 
         redisTemplate.opsForZSet().add(key, memberInfo, newHighestPrice);
-
         redisTemplate.opsForZSet().removeRange(key, -limit -1, -limit -1);
 
-        // TODO - 4. Kafka 에 갱신된 리더보드 (leaderBoard), 최고가 (newHighestPrice) 보내기
-        List<LeaderBoardMemberResp> leaderBoard = getLeaderBoardMemberResp(key);
-
-
-        // TODO - 5. MySQL DB도 수정하기
-
-
+        return newHighestPrice;
     }
 
+    /**
+     * auctionId로 Redis 에 leaderboard 를 저장할 키를 생성하는 메서드
+     * @param auctionId 경매 ID
+     * @return Redis 에 leaderboard 를 저장할 키
+     */
     public String getKey(long auctionId) {
         StringBuilder sb = new StringBuilder();
         sb.append("realtime:").append(auctionId);
         return sb.toString();
     }
 
+    /**
+     * Redis 의 SortedSet 에 저장된 leaderboard 정보를 바탕으로
+     * client 에게 보내줄 리더보드 정보를 가공하는 메서드
+     * @param key leaderboard 를 저장해 둔 키
+     * @return client 에게 보내줄 리더보드 정보
+     */
     public List<LeaderBoardMemberResp> getLeaderBoardMemberResp(String key) {
         List<LeaderBoardMemberResp> list = new ArrayList<>();
 
@@ -116,6 +141,11 @@ public class LeaderBoardService {
         return list;
     }
 
+    /**
+     * 경매 단위를 수정하는 메서드. 컨트롤러에서 접근하는 메서드
+     * @param auctionId 경매 ID
+     * @param req client 측에서 넘어온 요청 정보
+     */
     @Transactional
     public void updatePriceSize(long auctionId, AuctionUpdatePriceSizeReq req) {
         // TODO - 분산 락 처리 과정 필요
@@ -142,6 +172,9 @@ public class LeaderBoardService {
         auctionRealtimeRepository.save(auctionRealTimeO.get());
         
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
+        // -> MySQL도 구독해놔야
+        
 
     }
+
 }
