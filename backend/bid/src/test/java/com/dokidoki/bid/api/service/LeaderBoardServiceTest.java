@@ -135,9 +135,7 @@ class LeaderBoardServiceTest {
             @Test
             @DisplayName("없는 경매면 에러를 낸다.")
             public void 입찰실패_없는_경매() {
-                assertThrows(InvalidValueException.class, () -> {
-                    leaderBoardService.bid(auctionId + 2, reqs[0]);
-                });
+                assertThrows(InvalidValueException.class, () -> leaderBoardService.bid(auctionId + 2, reqs[0]));
             }
 
             @Test
@@ -195,7 +193,7 @@ class LeaderBoardServiceTest {
 
                 String key = leaderBoardService.getKey(auctionId);
                 // 랭킹 갱신 확인
-                Set set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
+                Set<Object> set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
 
                 for (Object o : set) {
                     DefaultTypedTuple tuple = (DefaultTypedTuple) o;
@@ -222,7 +220,7 @@ class LeaderBoardServiceTest {
                     leaderBoardService.bid(auctionId, req);
                 }
 
-                Set set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
+                Set<Object> set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
 
                 assertEquals(limit, set.size());
             }
@@ -243,9 +241,7 @@ class LeaderBoardServiceTest {
             @Test
             @DisplayName("없는 경매면 에러를 낸다.")
             public void 입찰단위_수정_실패_없는대상() {
-                assertThrows(InvalidValueException.class, ()-> {
-                    leaderBoardService.updatePriceSize(auctionId + 20, correctReq);
-                });
+                assertThrows(InvalidValueException.class, ()-> leaderBoardService.updatePriceSize(auctionId + 20, correctReq));
             }
 
             @Test

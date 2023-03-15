@@ -21,7 +21,8 @@ public class AuctionController {
     public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId) {
         Map<String, Object> resultMap = new HashMap<>();
         leaderBoardService.bid(auctionId, req);
-        resultMap.put("msg", "success_bidding");
+        resultMap.put("status_code", 200);
+        resultMap.put("message", "성공");
         return ResponseEntity.ok(resultMap);
     }
 
@@ -29,7 +30,8 @@ public class AuctionController {
     public ResponseEntity<?> updatePriceSize(@RequestBody AuctionUpdatePriceSizeReq req, @PathVariable long auctionId) {
         Map<String, Object> resultMap = new HashMap<>();
         leaderBoardService.updatePriceSize(auctionId, req);
-        resultMap.put("msg", "success_update_price_size");
+        resultMap.put("status_code", 200);
+        resultMap.put("message", "성공");
         return ResponseEntity.ok(resultMap);
     }
 

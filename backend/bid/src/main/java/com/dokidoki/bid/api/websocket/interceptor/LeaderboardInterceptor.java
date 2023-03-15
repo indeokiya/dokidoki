@@ -10,6 +10,10 @@ import java.util.Map;
 
 @Slf4j
 public class LeaderboardInterceptor implements HandshakeInterceptor {
+
+    /**
+     *  경로에서 auctionId 파싱해서 넘겨주기
+     */
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
         String path = request.getURI().getPath();
