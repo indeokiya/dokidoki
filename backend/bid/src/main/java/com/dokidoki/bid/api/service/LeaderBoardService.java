@@ -3,6 +3,7 @@ package com.dokidoki.bid.api.service;
 import com.dokidoki.bid.api.request.AuctionBidReq;
 import com.dokidoki.bid.api.request.AuctionUpdatePriceSizeReq;
 import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
+import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
 import com.dokidoki.bid.common.codes.LeaderBoardConstants;
 import com.dokidoki.bid.common.error.exception.BusinessException;
 import com.dokidoki.bid.common.error.exception.ErrorCode;
@@ -13,11 +14,15 @@ import com.dokidoki.bid.db.repository.AuctionIngRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import com.dokidoki.bid.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -50,7 +55,6 @@ public class LeaderBoardService {
         // 2-1. 경매 단위가 일치하지 않을 경우
         if (auctionRealtimeO.get().getPriceSize() != req.getCurrentPriceSize()) {
             throw new BusinessException("경매 단위가 갱신되었습니다. 다시 시도해주세요", ErrorCode.DIFFERENT_PRICE_SIZE);
-
         }
 
         // 2-2. 현재 가격이 일치하지 않을 경우
@@ -77,7 +81,11 @@ public class LeaderBoardService {
 
         redisTemplate.opsForZSet().removeRange(key, -limit -1, -limit -1);
 
-        // TODO - 4. MySQL DB도 수정하기
+        // TODO - 4. Kafka 에 갱신된 리더보드 (leaderBoard), 최고가 (newHighestPrice) 보내기
+        List<LeaderBoardMemberResp> leaderBoard = getLeaderBoardMemberResp(key);
+
+
+        // TODO - 5. MySQL DB도 수정하기
 
 
     }
@@ -86,6 +94,26 @@ public class LeaderBoardService {
         StringBuilder sb = new StringBuilder();
         sb.append("realtime:").append(auctionId);
         return sb.toString();
+    }
+
+    public List<LeaderBoardMemberResp> getLeaderBoardMemberResp(String key) {
+        List<LeaderBoardMemberResp> list = new ArrayList<>();
+
+        Set<Object> set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
+
+        for (Object o : set) {
+            DefaultTypedTuple tuple = (DefaultTypedTuple) o;
+            int bidPrice = tuple.getScore().intValue();
+            LeaderBoardMemberInfo memberInfo = (LeaderBoardMemberInfo) tuple.getValue();
+            LeaderBoardMemberResp resp = LeaderBoardMemberResp.builder()
+                    .name(memberInfo.getName())
+                    .email(memberInfo.getEmail())
+                    .bidTime(memberInfo.getBidTime())
+                    .bidPrice(bidPrice)
+                    .build();
+            list.add(resp);
+        }
+        return list;
     }
 
     @Transactional
@@ -106,13 +134,14 @@ public class LeaderBoardService {
             throw new BusinessException("권한이 없습니다.", ErrorCode.BUSINESS_EXCEPTION_ERROR);
         }
 
-
         // 3. 가격 수정하기
 
         auctionRealTimeO.get().updatePriceSize(req.getPriceSize());
 
         // 수정사항 저장하기 (JPA 는 dirty check 가 되는데, redis 는 안되는 듯)
         auctionRealtimeRepository.save(auctionRealTimeO.get());
+        
+        // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
 
     }
 }
