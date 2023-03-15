@@ -27,7 +27,7 @@ public class RedisConfig {
     public RedisTemplate<String, ?> redisTemplate() {
         RedisTemplate<String, ?> redisTemplate = new RedisTemplate<>();
         redisTemplate.setKeySerializer(new StringRedisSerializer()); // key 깨짐 방지
-        // value serializer도 설정해줘야하나?
+        // value serializer 도 설정해줘야하나?
         redisTemplate.setValueSerializer(new GenericJackson2JsonRedisSerializer());
         redisTemplate.setConnectionFactory(redisConnectionFactory());
         return redisTemplate;

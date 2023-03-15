@@ -14,10 +14,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("auctions")
 public class AuctionController {
+
     private final LeaderBoardService leaderBoardService;
 
     @PostMapping("/{auctionId}/bid")
-    public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId){
+    public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId) {
         Map<String, Object> resultMap = new HashMap<>();
         leaderBoardService.bid(auctionId, req);
         resultMap.put("msg", "success_bidding");
@@ -31,8 +32,5 @@ public class AuctionController {
         resultMap.put("msg", "success_update_price_size");
         return ResponseEntity.ok(resultMap);
     }
-
-
-
 
 }
