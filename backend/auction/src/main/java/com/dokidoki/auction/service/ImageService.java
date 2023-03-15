@@ -38,6 +38,9 @@ public class ImageService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+    /*
+        경메 제품 사진 관련 서비스
+     */
     public AuctionImageResponse readAuctionImages(Long auction_id) {
         // AuctionImage Entity 검색
         List<AuctionImage> auctionImages = auctionImageRepository.findAuctionImagesByAuctionId(auction_id);
@@ -68,6 +71,9 @@ public class ImageService {
         return auctionImagesUrls;
     }
 
+    /*
+        사용자 프로필 관련 서비스
+     */
     @Transactional
     public String createProfileImage(ProfileImageRequest profileImageRequest) {
         // 파일 업로드 및 URL 획득
@@ -87,6 +93,9 @@ public class ImageService {
         return profileImageUrl;
     }
 
+    /*
+        Aws S3 업로드 관련 서비스
+     */
     public List<String> uploadImages(MultipartFile[] multipartFiles, String dirName) {
         List<String> urls = new ArrayList<>();
 

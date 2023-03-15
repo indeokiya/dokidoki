@@ -22,6 +22,9 @@ import java.util.Optional;
 public class ImageController {
     private final ImageService imageService;
 
+    /*
+        경매 제품 사진 관련 API
+     */
     @GetMapping("/auctions/{auction_id}")
     public ResponseEntity<CommonResponse<AuctionImageResponse>> readAuctionImages(@PathVariable Long auction_id) {
         // 경매 식별번호로, 등록된 제품 사진 검색
@@ -59,6 +62,9 @@ public class ImageController {
         );
     }
 
+    /*
+        사용자 프로필 사진 관련 API
+     */
     @PostMapping("/profiles")
     public ResponseEntity<CommonResponse<String>> createProfileImage(Optional<ProfileImageRequest> optionalProfileImageRequest) {
         if (optionalProfileImageRequest.isEmpty()
