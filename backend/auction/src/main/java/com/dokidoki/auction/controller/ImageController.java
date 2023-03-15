@@ -65,6 +65,16 @@ public class ImageController {
     /*
         사용자 프로필 사진 관련 API
      */
+    @GetMapping("/profiles/{member_id}")
+    public ResponseEntity<CommonResponse<String>> readProfileImage(@PathVariable Long member_id) {
+        String url = imageService.readProfileImage(member_id);
+
+        return new ResponseEntity<>(
+                CommonResponse.of(200, "성공", url),
+                HttpStatus.OK
+        );
+    }
+
     @PostMapping("/profiles")
     public ResponseEntity<CommonResponse<String>> createProfileImage(Optional<ProfileImageRequest> optionalProfileImageRequest) {
         if (optionalProfileImageRequest.isEmpty()

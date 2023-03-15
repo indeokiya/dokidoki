@@ -74,6 +74,13 @@ public class ImageService {
     /*
         사용자 프로필 관련 서비스
      */
+    public String readProfileImage(Long member_id) {
+        ProfileImage profileImage = profileImageRepository.findProfileImageByMemberId(member_id);
+        if (profileImage == null)
+            return null;
+        return profileImage.getImageUrl();
+    }
+
     @Transactional
     public String createProfileImage(ProfileImageRequest profileImageRequest) {
         // 파일 업로드 및 URL 획득
