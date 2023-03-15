@@ -19,14 +19,25 @@ dependencies {
 
 	// JSON
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
 	// DB
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	// websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
-	annotationProcessor('org.projectlombok:lombok')
+	annotationProcessor 'org.projectlombok:lombok'
 
+	// swagger
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+
+	// test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 

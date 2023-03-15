@@ -2,3 +2,20 @@ spring:
   redis:
     host: localhost
     port: 6379
+  datasource:
+    url: jdbc:mysql://localhost:3306/dokidoki?serverTimezone=UTC&characterEncoding=UTF-8
+    username: dokidoki
+    password: dokidoki202
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
