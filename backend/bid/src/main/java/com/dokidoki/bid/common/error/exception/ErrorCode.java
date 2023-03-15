@@ -15,7 +15,12 @@ public enum ErrorCode {
     UNAUTHORIZED(401, "C007", "UnAuthorized"),
 
     // Business
-    BUSINESS_EXCEPTION_ERROR(400, "B001", "Business Exception Occurs");
+    BUSINESS_EXCEPTION_ERROR(400, "B001", "Business Exception Occurs"),
+
+
+    // Bid
+    DIFFERENT_PRICE_SIZE(400, "BID001", "Different Price Size"),
+    DIFFERENT_HIGHEST_PRICE(400, "BID002", "Different Highest Price");
 
     private final String code;
     private final String message;
