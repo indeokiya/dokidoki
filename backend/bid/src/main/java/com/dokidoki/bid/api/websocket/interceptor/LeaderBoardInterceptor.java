@@ -9,7 +9,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 import java.util.Map;
 
 @Slf4j
-public class LeaderboardInterceptor implements HandshakeInterceptor {
+public class LeaderBoardInterceptor implements HandshakeInterceptor {
 
     /**
      *  경로에서 auctionId 파싱해서 넘겨주기

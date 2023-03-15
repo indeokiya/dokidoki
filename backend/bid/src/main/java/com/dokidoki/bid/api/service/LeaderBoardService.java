@@ -73,7 +73,7 @@ public class LeaderBoardService {
         int newHighestPrice = updateLeaderBoardAndHighestPrice(auctionRealtime, key, req);
 
         // TODO - 4. Kafka 에 갱신된 리더보드 (leaderBoard), 최고가 (newHighestPrice) 보내기
-        // MySQL도 구독해놓고, 최고가 정보를 받아야 함
+        //  MySQL도 구독해놓고, 최고가 정보를 받아야 함
         List<LeaderBoardMemberResp> leaderBoard = getLeaderBoardMemberResp(key);
 
     }
@@ -172,7 +172,7 @@ public class LeaderBoardService {
         auctionRealtimeRepository.save(auctionRealTimeO.get());
         
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
-        // -> MySQL도 구독해놔야
+        //  -> MySQL도 구독해놔야
         
 
     }
