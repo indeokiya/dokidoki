@@ -14,7 +14,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;            // 제품 id
+    private Long id;            // 제품 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
@@ -26,6 +26,6 @@ public class Product {
     private String imgUrl;      // 이미지 url
 
     @Column(name = "sale_cnt")
-    private int saleCnt;        // 판매 빈도
+    private Integer saleCnt;        // 판매 빈도
 
 }

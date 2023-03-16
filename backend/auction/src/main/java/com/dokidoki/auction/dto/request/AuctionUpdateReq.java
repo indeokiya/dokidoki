@@ -13,7 +13,7 @@ public class AuctionUpdateReq {
 
     private String description;
 
-    private int priceSize;
+    private Integer priceSize;
 
     private String meetingPlace;
 }

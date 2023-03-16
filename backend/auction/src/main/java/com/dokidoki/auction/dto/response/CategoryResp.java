@@ -10,7 +10,7 @@ import lombok.*;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class CategoryResp {
 
-    private long id;
+    private Long id;
     private String categoryName;
 
 }

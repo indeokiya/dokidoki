@@ -51,7 +51,7 @@ public class AuctionService {
 
     // 카테고리 기준 제품 목록 조회
     @Transactional
-    public List<ProductResp> getProductList(long catId) {
+    public List<ProductResp> getProductList(Long catId) {
         List<Product> products = productRepository.findByCategory_Id(catId);
         List<ProductResp> productList = new ArrayList<>();
 

@@ -20,11 +20,11 @@ public class AuctionIng {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     // 판매자id 수정필요
     @Column(name = "seller_id")
-    private long sellerId;
+    private Long sellerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -35,7 +35,7 @@ public class AuctionIng {
     private String description;         // 제품설명
 
     @Column(name = "offer_price")
-    private int offerPrice;             // 시작 가격(호가)
+    private Integer offerPrice;             // 시작 가격(호가)
 
     @Column(name = "price_size")
     private int priceSize;              // 경매 단위
