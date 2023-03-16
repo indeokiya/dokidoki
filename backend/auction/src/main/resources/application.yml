@@ -21,3 +21,5 @@ spring:
 jwt:
   issuer: dokidoki.com
   secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
+  access_expiration: 3600000
+  refresh_expiration: 1296000000
