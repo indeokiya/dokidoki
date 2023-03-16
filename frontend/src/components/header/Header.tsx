@@ -3,6 +3,7 @@ import AfterLoginMenu from "./AfterloginMenu";
 import BeforLoginMenu from "./BeforLoginMenu";
 import {useState}from 'react';
 import styled from "styled-components";
+import LogoImgSrc from "../../assets/image/logo.png"
 
 const Header = () => {
 
@@ -12,6 +13,10 @@ const Header = () => {
     padding-right:1rem;
     padding-left:1rem;
     border-bottom : 1px solid grey;
+  `
+  const LogoImg = styled.img`
+    height:30px;
+    margin:5px;
   `
 
   let HeaderMenu;
@@ -24,7 +29,7 @@ const Header = () => {
     <HeaderBox>
     <Grid container spacing={2}  alignItems={'center'}>
       <Grid item xs>
-        <h1>logo</h1>
+        <LogoImg src={LogoImgSrc}></LogoImg>
       </Grid>
       <Grid item>
         {HeaderMenu}

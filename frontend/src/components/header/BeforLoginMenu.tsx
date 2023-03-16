@@ -1,4 +1,4 @@
-import { Grid, Button, Avatar } from "@mui/material";
+import { Grid, Button } from "@mui/material";
 
 const BeforLoginMenu = () =>{
 

@@ -31,9 +31,9 @@ const StyledLargeP = styled.p`
   return (
     <>
         <StyledDiv>
-            <h3>icon</h3>
+            <AttachMoneyIcon fontSize="large" sx={{marginBottom:'15px'}}/>
            <StyledSmallP>총 거래된 금액</StyledSmallP>
-           <StyledLargeP>123,1241,212,315</StyledLargeP>
+           <StyledLargeP>123,1241,212,315 원</StyledLargeP>
         </StyledDiv>
     </>
   );
