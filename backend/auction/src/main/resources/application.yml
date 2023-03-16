@@ -17,6 +17,23 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+
+cloud:
+  aws:
+    s3:
+      bucket: dokidoki
+    credentials:
+      access-key: ${access-key}
+      secret-key: ${secret-key}
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
 
 jwt:
   issuer: dokidoki.com
