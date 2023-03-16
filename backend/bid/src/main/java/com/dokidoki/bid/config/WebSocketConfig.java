@@ -1,4 +1,4 @@
-package com.dokidoki.bid.api.websocket;
+package com.dokidoki.bid.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -18,17 +18,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker("/topic");
         // 도착 경로에 대한 prefix 설정 "/app" 이라고 설정하면,
         // /topic/hello 라는 토픽에 구독을 신청했을 때, 실제 경로는 /app/topic/hello 가 됨
-        registry.setApplicationDestinationPrefixes();
+        registry.setApplicationDestinationPrefixes("/");
 
     }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         // 연결할 소켓 엔드포인트를 지정하는 코드
-        registry.addEndpoint();
+        registry.addEndpoint("/ws")
+                .setAllowedOrigins("*");
     }
-
-
-    // 웹소켓을 pathvariable에 따라 나눠서 연결할 수 있게 할 수가 있나?
 
 }
