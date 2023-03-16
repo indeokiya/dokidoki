@@ -72,6 +72,15 @@ public class ImageController {
         );
     }
 
+    @DeleteMapping("/auctions/{auction_id}")
+    public ResponseEntity<CommonResponse<Void>> deleteProfileImages(@PathVariable Long auction_id) {
+        imageService.deleteAuctionImages(auction_id);
+        return new ResponseEntity<>(
+                CommonResponse.of(200, "성공", null),
+                HttpStatus.OK
+        );
+    }
+
     /*
         사용자 프로필 사진 관련 API
      */

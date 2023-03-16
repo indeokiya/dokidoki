@@ -71,6 +71,11 @@ public class ImageService {
         return auctionImagesUrls;
     }
 
+    @Transactional
+    public void deleteAuctionImages(Long auction_id) {
+        auctionImageRepository.deleteAuctionImagesByAuctionId(auction_id);
+    }
+
     /*
         사용자 프로필 관련 서비스
      */
