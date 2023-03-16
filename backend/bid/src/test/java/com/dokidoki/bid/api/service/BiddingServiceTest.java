@@ -2,7 +2,9 @@ package com.dokidoki.bid.api.service;
 
 import com.dokidoki.bid.api.request.AuctionBidReq;
 import com.dokidoki.bid.api.request.AuctionUpdatePriceSizeReq;
+import com.dokidoki.bid.api.response.AuctionInitialInfoResp;
 import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
+import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
 import com.dokidoki.bid.common.codes.LeaderBoardConstants;
 import com.dokidoki.bid.common.error.exception.BusinessException;
 import com.dokidoki.bid.common.error.exception.ErrorCode;
@@ -24,6 +26,7 @@ import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +35,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @DisplayName("LeaderBoardService 클래스")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-class LeaderBoardServiceTest {
+class BiddingServiceTest {
 
     @Autowired
     BiddingService biddingService;
@@ -170,7 +173,13 @@ class LeaderBoardServiceTest {
                 assertEquals(highestPrice + priceSize, auctionRealtime.getHighestPrice());
 
                 String key = biddingService.getKey(auctionId);
+
                 // 랭킹 갱신 확인
+                AuctionInitialInfoResp initialInfo = biddingService.getInitialInfo(auctionId);
+                List<LeaderBoardMemberResp> leaderBoard = initialInfo.getLeaderBoard();
+                System.out.println(leaderBoard);
+                assertEquals(1, leaderBoard.size());
+
                 Set set = redisTemplate.opsForZSet().rangeWithScores(key, 0, -1);
 
                 assertEquals(1, set.size());
@@ -193,6 +202,9 @@ class LeaderBoardServiceTest {
                 biddingService.bid(auctionId, reqs[1]);
 
                 String key = biddingService.getKey(auctionId);
+
+                System.out.println(biddingService.getInitialInfo(auctionId).getLeaderBoard());
+
                 // 랭킹 갱신 확인
                 Set<Object> set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
 
