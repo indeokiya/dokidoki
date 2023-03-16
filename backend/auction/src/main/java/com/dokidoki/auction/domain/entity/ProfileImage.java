@@ -27,4 +27,8 @@ public class ProfileImage {
         profileImage.imageUrl = imageUrl;
         return profileImage;
     }
+
+    public void updateProfileImage(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 }
