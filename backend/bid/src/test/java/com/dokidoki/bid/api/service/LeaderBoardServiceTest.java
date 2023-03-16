@@ -34,7 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 class LeaderBoardServiceTest {
 
-    @Autowired LeaderBoardService leaderBoardService;
+    @Autowired
+    BiddingService biddingService;
     @Autowired AuctionRealtimeRepository auctionRealtimeRepository;
     @Autowired UserRepository userRepository;
     @Autowired AuctionIngRepository auctionIngRepository;
@@ -78,7 +79,7 @@ class LeaderBoardServiceTest {
 
         auctionIngRepository.save(auctionIng);
         auctionId = auctionIng.getId();
-        key = leaderBoardService.getKey(auctionId);
+        key = biddingService.getKey(auctionId);
 
         // 실시간 경매 초기화 정보 등록 (나중엔 메서드로 대체하기)
         AuctionRealtime auctionRealtime = AuctionRealtime.builder()
@@ -135,14 +136,14 @@ class LeaderBoardServiceTest {
             @Test
             @DisplayName("없는 경매면 에러를 낸다.")
             public void 입찰실패_없는_경매() {
-                assertThrows(InvalidValueException.class, () -> leaderBoardService.bid(auctionId + 2, reqs[0]));
+                assertThrows(InvalidValueException.class, () -> biddingService.bid(auctionId + 2, reqs[0]));
             }
 
             @Test
             @DisplayName("경매 단위가 일치하지 않으면 Business 에러를 낸다.")
             public void 입찰실패_경매단위_불일치() {
                 BusinessException exception = assertThrows(BusinessException.class, () -> {
-                    leaderBoardService.bid(auctionId, wrongPriceSizeReq);
+                    biddingService.bid(auctionId, wrongPriceSizeReq);
                 });
 
                 assertEquals(ErrorCode.DIFFERENT_PRICE_SIZE, exception.getErrorCode());
@@ -153,7 +154,7 @@ class LeaderBoardServiceTest {
             @DisplayName("현재 가격이 일치하지 않으면 Business 에러를 낸다.")
             public void 입찰실패_현재가격_불일치() {
                 BusinessException exception = assertThrows(BusinessException.class, () -> {
-                    leaderBoardService.bid(auctionId, wrongHighestPriceReq);
+                    biddingService.bid(auctionId, wrongHighestPriceReq);
                 });
 
                 assertEquals(ErrorCode.DIFFERENT_HIGHEST_PRICE, exception.getErrorCode());
@@ -162,13 +163,13 @@ class LeaderBoardServiceTest {
             @Test
             @DisplayName("모든 조건을 통과하면 성공적으로 입찰이 된다.")
             public void 입찰성공() {
-                leaderBoardService.bid(auctionId, reqs[0]);
+                biddingService.bid(auctionId, reqs[0]);
                 AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
 
                 // auctionRealtime 값 갱신 확인
                 assertEquals(highestPrice + priceSize, auctionRealtime.getHighestPrice());
 
-                String key = leaderBoardService.getKey(auctionId);
+                String key = biddingService.getKey(auctionId);
                 // 랭킹 갱신 확인
                 Set set = redisTemplate.opsForZSet().rangeWithScores(key, 0, -1);
 
@@ -188,10 +189,10 @@ class LeaderBoardServiceTest {
             @Test
             @DisplayName("새로운 입찰이 일어나면, 가장 위의 정보가 그 사람의 입찰 정보로 갱신된다.")
             public void 입찰성공_사용자_갱신() {
-                leaderBoardService.bid(auctionId, reqs[0]);
-                leaderBoardService.bid(auctionId, reqs[1]);
+                biddingService.bid(auctionId, reqs[0]);
+                biddingService.bid(auctionId, reqs[1]);
 
-                String key = leaderBoardService.getKey(auctionId);
+                String key = biddingService.getKey(auctionId);
                 // 랭킹 갱신 확인
                 Set<Object> set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
 
@@ -217,7 +218,7 @@ class LeaderBoardServiceTest {
                             .email(emails[0])
                             .currentHighestPrice(highestPrice + i * priceSize)
                             .currentPriceSize(priceSize).build();
-                    leaderBoardService.bid(auctionId, req);
+                    biddingService.bid(auctionId, req);
                 }
 
                 Set<Object> set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
@@ -241,14 +242,14 @@ class LeaderBoardServiceTest {
             @Test
             @DisplayName("없는 경매면 에러를 낸다.")
             public void 입찰단위_수정_실패_없는대상() {
-                assertThrows(InvalidValueException.class, ()-> leaderBoardService.updatePriceSize(auctionId + 20, correctReq));
+                assertThrows(InvalidValueException.class, ()-> biddingService.updatePriceSize(auctionId + 20, correctReq));
             }
 
             @Test
             @DisplayName("경매 게시글 작성자가 아니면 에러를 낸다.")
             public void 입찰단위_수정_실패_잘못된_접근() {
                 BusinessException exception = assertThrows(BusinessException.class, () -> {
-                    leaderBoardService.updatePriceSize(auctionId, wrongReq);
+                    biddingService.updatePriceSize(auctionId, wrongReq);
                 });
                 assertEquals(ErrorCode.BUSINESS_EXCEPTION_ERROR, exception.getErrorCode());
             }
@@ -256,7 +257,7 @@ class LeaderBoardServiceTest {
             @Test
             @DisplayName("올바르게 접근하면 제대로 수정된다.")
             public void 입찰단위_수정_성공() {
-                leaderBoardService.updatePriceSize(auctionId, correctReq);
+                biddingService.updatePriceSize(auctionId, correctReq);
                 AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
                 assertEquals(correctReq.getPriceSize(), auctionRealtime.getPriceSize());
             }

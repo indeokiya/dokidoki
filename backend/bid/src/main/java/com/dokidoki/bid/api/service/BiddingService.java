@@ -2,6 +2,7 @@ package com.dokidoki.bid.api.service;
 
 import com.dokidoki.bid.api.request.AuctionBidReq;
 import com.dokidoki.bid.api.request.AuctionUpdatePriceSizeReq;
+import com.dokidoki.bid.api.response.AuctionInitialInfoResp;
 import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
 import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
 import com.dokidoki.bid.common.codes.LeaderBoardConstants;
@@ -12,7 +13,6 @@ import com.dokidoki.bid.db.entity.AuctionIngEntity;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 import com.dokidoki.bid.db.repository.AuctionIngRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
-import com.dokidoki.bid.db.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.DefaultTypedTuple;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -27,7 +27,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class LeaderBoardService {
+public class BiddingService {
 
     private final AuctionRealtimeRepository auctionRealtimeRepository;
     private final AuctionIngRepository auctionIngRepository;
@@ -35,6 +35,25 @@ public class LeaderBoardService {
 
     // TODO - 게시글을 등록하면서 시작 가격과 경매 단위가 레디스로 넘어오는 과정이 필요
     //  TTL 설정도 해줘야.
+
+    public AuctionInitialInfoResp getInitialInfo(long auctionId) {
+        
+        Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
+        
+        // 1. 경매 정보가 없는 경우, 에러 발생시키기
+        if (auctionRealtimeO.isEmpty()) {
+            throw new InvalidValueException("잘못된 접근입니다. auctionId가 존재하지 않습니다.");
+        }
+
+        AuctionInitialInfoResp resp = AuctionInitialInfoResp.builder()
+                .highestPrice(auctionRealtimeO.get().getHighestPrice())
+                .priceSize(auctionRealtimeO.get().getPriceSize())
+                .leaderBoard(getInitialLeaderBoard(auctionId))
+                .build();
+        
+        return resp;
+    }
+
 
     /**
      * 경매에 입찰하는 메서드. 컨트롤러에서 접근하는 메서드.
@@ -70,11 +89,11 @@ public class LeaderBoardService {
         // 3. 실시간 최고가, 리더보드 갱신하기
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
         String key = getKey(auctionId);
-        int newHighestPrice = updateLeaderBoardAndHighestPrice(auctionRealtime, key, req);
 
-        // TODO - 4. Kafka 에 갱신된 리더보드 (leaderBoard), 최고가 (newHighestPrice) 보내기
-        //  MySQL도 구독해놓고, 최고가 정보를 받아야 함
-        List<LeaderBoardMemberResp> leaderBoard = getLeaderBoardMemberResp(key);
+        LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, key, req);
+
+        // TODO - 4. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
+        //  MySQL 도 구독해놓고, 최고가 정보를 받아야 함
 
     }
 
@@ -86,7 +105,7 @@ public class LeaderBoardService {
      * @return newHighestPrice
      */
     @Transactional
-    public int updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, String key, AuctionBidReq req) {
+    public LeaderBoardMemberResp updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, String key, AuctionBidReq req) {
 
         // 3-1. 실시간 최고가 갱신
         int newHighestPrice = auctionRealtime.updateHighestPrice();
@@ -101,7 +120,9 @@ public class LeaderBoardService {
         redisTemplate.opsForZSet().add(key, memberInfo, newHighestPrice);
         redisTemplate.opsForZSet().removeRange(key, -limit -1, -limit -1);
 
-        return newHighestPrice;
+        LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(memberInfo, newHighestPrice);
+
+        return resp;
     }
 
     /**
@@ -117,12 +138,14 @@ public class LeaderBoardService {
 
     /**
      * Redis 의 SortedSet 에 저장된 leaderboard 정보를 바탕으로
-     * client 에게 보내줄 리더보드 정보를 가공하는 메서드
-     * @param key leaderboard 를 저장해 둔 키
+     * client 에게 보내줄 리더보드 정보를 가공하는 메서드. 컨트롤러에서 접근하는 메서드.
+     * @param auctionId 경매 ID
      * @return client 에게 보내줄 리더보드 정보
      */
-    public List<LeaderBoardMemberResp> getLeaderBoardMemberResp(String key) {
+    public List<LeaderBoardMemberResp> getInitialLeaderBoard(long auctionId) {
         List<LeaderBoardMemberResp> list = new ArrayList<>();
+
+        String key = getKey(auctionId);
 
         Set<Object> set = redisTemplate.opsForZSet().reverseRangeWithScores(key, 0, -1);
 
@@ -130,12 +153,7 @@ public class LeaderBoardService {
             DefaultTypedTuple tuple = (DefaultTypedTuple) o;
             int bidPrice = tuple.getScore().intValue();
             LeaderBoardMemberInfo memberInfo = (LeaderBoardMemberInfo) tuple.getValue();
-            LeaderBoardMemberResp resp = LeaderBoardMemberResp.builder()
-                    .name(memberInfo.getName())
-                    .email(memberInfo.getEmail())
-                    .bidTime(memberInfo.getBidTime())
-                    .bidPrice(bidPrice)
-                    .build();
+            LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(memberInfo, bidPrice);
             list.add(resp);
         }
         return list;
@@ -172,7 +190,7 @@ public class LeaderBoardService {
         auctionRealtimeRepository.save(auctionRealTimeO.get());
         
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
-        //  -> MySQL도 구독해놔야
+        //  -> MySQL 도 구독해놔야
         
 
     }
