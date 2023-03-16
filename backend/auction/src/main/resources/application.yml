@@ -34,3 +34,7 @@ cloud:
       auto: false
     stack:
       auto: false
+
+jwt:
+  issuer: dokidoki.com
+  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
