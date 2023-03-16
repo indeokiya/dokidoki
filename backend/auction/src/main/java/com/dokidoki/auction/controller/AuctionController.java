@@ -6,11 +6,15 @@ import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.CommonResponse;
 import com.dokidoki.auction.dto.response.ProductResp;
+import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
+import com.dokidoki.auction.kafka.dto.KafkaAuctionUpdateDTO;
+import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import com.dokidoki.auction.service.AuctionService;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,9 +25,12 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
+@CrossOrigin("*")
 public class AuctionController {
 
     private final AuctionService auctionService;
+
+//    private final KafkaAuctionProducer producer;
 
     // 카테고리 조회
 //    @GetMapping("/products/{category_id}")
@@ -72,6 +79,9 @@ public class AuctionController {
             );
         }
 
+        // 성공적으로 등록되면 카프카에 auction.register 메시지 발행.
+        // producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(auctionRegisterReq));
+
         return new ResponseEntity<>(
                 CommonResponse.of(201, msg, null),
                 HttpStatus.CREATED
@@ -102,6 +112,9 @@ public class AuctionController {
             return ResponseEntity.status(403).body(BaseResponseBody.of("오류가 발생했습니다", e));
         }
 
+//        if (경매 단위 수정됐으면) {
+//            producer.sendAuctionUpdate(~~~);
+//        }
     }
 
 }
