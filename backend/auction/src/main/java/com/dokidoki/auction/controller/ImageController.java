@@ -30,6 +30,14 @@ public class ImageController {
         // 경매 식별번호로, 등록된 제품 사진 검색
         AuctionImageResponse auctionImageResponse = imageService.readAuctionImages(auction_id);
 
+        // 경매 제품 사진 조회에 실패했을 경우,
+        if (auctionImageResponse == null) {
+            return new ResponseEntity<>(
+                    CommonResponse.of(400, "경매가 존재하지 않거나 사진을 가져오는 데 실패했습니다.", null),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
         return new ResponseEntity<>(
                 CommonResponse.of(200, "성공", auctionImageResponse),
                 HttpStatus.OK
@@ -47,17 +55,19 @@ public class ImageController {
             );
         }
 
-        int statusCode = 201;
-        String message = "제품 사진이 등록되었습니다.";
+        // 제품 사진 등록
         List<String> auctionImageUrls = imageService.createAuctionImages(optionalAuctionImagesRequest.get());
 
+        // 제품 사진 등록에 실패했을 경우,
         if (auctionImageUrls == null) {
-            statusCode = 400;
-            message = "제품 사진 등록에 실패했습니다.";
+            return new ResponseEntity<>(
+                    CommonResponse.of(400, "제품 사진 등록에 실패했습니다.", null),
+                    HttpStatus.BAD_REQUEST
+            );
         }
 
         return new ResponseEntity<>(
-                CommonResponse.of(statusCode, message, auctionImageUrls),
+                CommonResponse.of(201, "제품 사진이 등록되었습니다.", auctionImageUrls),
                 HttpStatus.CREATED
         );
     }
@@ -69,13 +79,21 @@ public class ImageController {
     public ResponseEntity<CommonResponse<String>> readProfileImage(@PathVariable Long member_id) {
         String url = imageService.readProfileImage(member_id);
 
+        // 프로필 조회에 실패했을 경우,
+        if (url == null) {
+            return new ResponseEntity<>(
+                    CommonResponse.of(400, "사용자가 없거나 프로필을 가져오는 데 실패했습니다.", null),
+                    HttpStatus.BAD_REQUEST
+            );
+        }
+
         return new ResponseEntity<>(
                 CommonResponse.of(200, "성공", url),
                 HttpStatus.OK
         );
     }
 
-    @PostMapping("/profiles")
+    @PutMapping("/profiles")
     public ResponseEntity<CommonResponse<String>> createProfileImage(Optional<ProfileImageRequest> optionalProfileImageRequest) {
         if (optionalProfileImageRequest.isEmpty()
                 || optionalProfileImageRequest.get().getMember_id() == null
@@ -86,17 +104,19 @@ public class ImageController {
             );
         }
 
-        int statusCode = 201;
-        String message = "프로필 사진이 등록되었습니다.";
+        // 프로필 사진 등록
         String profileImageUrl = imageService.createProfileImage(optionalProfileImageRequest.get());
 
+        // 프로필 사진 등록에 실패했을 경우,
         if (profileImageUrl == null) {
-            statusCode = 400;
-            message = "프로필 사진 등록에 실패했습니다.";
+            return new ResponseEntity<>(
+                    CommonResponse.of(400, "프로필 사진 등록에 실패했습니다.", null),
+                    HttpStatus.BAD_REQUEST
+            );
         }
 
         return new ResponseEntity<>(
-                CommonResponse.of(statusCode, message, profileImageUrl),
+                CommonResponse.of(201, "프로필 사진이 등록되었습니다.", profileImageUrl),
                 HttpStatus.CREATED
         );
     }

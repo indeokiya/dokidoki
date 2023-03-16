@@ -75,7 +75,9 @@ public class ImageService {
         사용자 프로필 관련 서비스
      */
     public String readProfileImage(Long member_id) {
-        ProfileImage profileImage = profileImageRepository.findProfileImageByMemberId(member_id);
+        ProfileImage profileImage = profileImageRepository
+                .findProfileImageByMemberId(member_id)
+                .orElse(null);
         if (profileImage == null)
             return null;
         return profileImage.getImageUrl();
@@ -88,14 +90,26 @@ public class ImageService {
         if (profileImageUrl == null)
             return null;
 
-        // 사용자 존재 여부 확인
-        Optional<Member> optionalMember = memberRepository.findById(profileImageRequest.getMember_id());
-        if (optionalMember.isEmpty())
+        // 사용자 객체 가져오기
+        Member member = memberRepository
+                .findById(profileImageRequest.getMember_id())
+                .orElse(null);
+        if (member == null)  // 존재하지 않는다면 null 반환
             return null;
 
-        // 객체 생성 및 저장
-        ProfileImage profileImage = ProfileImage.createProfileImage(optionalMember.get(), profileImageUrl);
-        profileImageRepository.save(profileImage);
+        // 기존 객체가 존재하는지 확인
+        ProfileImage originProfileImage = profileImageRepository
+                .findProfileImageByMemberId(member.getId())
+                .orElse(null);
+
+        if (originProfileImage != null) {
+            // 기존 객체가 존재하면 Update 및 종료
+            originProfileImage.updateProfileImage(profileImageUrl);
+        } else {
+            // 기존 객체가 없다면 객체 생성 후 저장
+            ProfileImage profileImage = ProfileImage.createProfileImage(member, profileImageUrl);
+            profileImageRepository.save(profileImage);
+        }
 
         return profileImageUrl;
     }
