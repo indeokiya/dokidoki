@@ -28,10 +28,4 @@ public class KafkaAuctionRegisterDTO {
         this.highestPrice = highestPrice;
     }
 
-//    public KafkaAuctionRegisterDTO(AuctionRegisterReq auction) {
-//        this.id = auction.getProductId();
-//        this.offerPrice = auction.getOfferPrice();
-//        this.priceSize = auction.getPriceSize();
-//        this.highestPrice = this.offerPrice;
-//    }
 }
