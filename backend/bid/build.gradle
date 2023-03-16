@@ -17,11 +17,17 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
+	// kafka
+	implementation 'org.springframework.kafka:spring-kafka' // 버전을 명시하지 않아 Boot가 compatible version을 찾게 하는 것이 좋음
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+
 	// JSON
 	implementation 'com.fasterxml.jackson.core:jackson-databind'
 
 	// DB
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'com.mysql:mysql-connector-j'
 
 	// lombok
 	compileOnly 'org.projectlombok:lombok'
