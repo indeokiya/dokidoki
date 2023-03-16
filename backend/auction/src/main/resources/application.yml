@@ -28,8 +28,8 @@ cloud:
     s3:
       bucket: dokidoki
     credentials:
-      access-key: ${access-key}
-      secret-key: ${secret-key}
+      access-key: AKIAUEVS3DJH3EYUME6G
+      secret-key: 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
     region:
       static: ap-northeast-2
       auto: false
