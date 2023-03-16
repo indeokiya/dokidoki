@@ -1,0 +1,18 @@
+jwt:
+  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
+
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Origin Access-Control-Allow-Credentials
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - '*'
+            allow-credentials: false
+            allowedHeaders: '*'
+            allowedMethods: '*'
+      routes:
+      - id:

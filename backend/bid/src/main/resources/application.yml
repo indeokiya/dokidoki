@@ -46,8 +46,3 @@ spring:
 #    producer:
       # producer bootstrap servers가 따로 존재하면 설정
       # bootstrap-servers: 3.34.97.97:9092
-
-      # 데이터를 보낼 때, key/value를 직렬화
-      # JSON 데이터를 보낼 것이라면 JsonDeserializer
-#      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-#      value-serializer: org.apache.kafka.common.serialization.JsonSerializer
