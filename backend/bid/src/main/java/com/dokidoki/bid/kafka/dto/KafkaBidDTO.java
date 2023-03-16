@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class KafkaBidSuccessDTO {
+public class KafkaBidDTO {
 
     private long memberId;
     private String name;
