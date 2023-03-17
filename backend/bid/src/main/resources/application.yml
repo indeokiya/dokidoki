@@ -43,6 +43,10 @@ spring:
       topic: auction.register
     auctionUpdateConfig:
       topic: auction.update
+    auctionEndConfig:
+      topic: auction.end
+    BidConfig:
+      topic: bid
 #    producer:
       # producer bootstrap servers가 따로 존재하면 설정
       # bootstrap-servers: 3.34.97.97:9092

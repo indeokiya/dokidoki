@@ -37,6 +37,10 @@ spring:
       topic: auction.register
     auctionUpdateConfig:
       topic: auction.update
+    auctionEndConfig:
+      topic: auction.end
+    BidConfig:
+      topic: bid
 
 cloud:
   aws:
