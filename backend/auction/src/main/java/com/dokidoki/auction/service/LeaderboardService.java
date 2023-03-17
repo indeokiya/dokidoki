@@ -1,6 +1,6 @@
 package com.dokidoki.auction.service;
 
-import com.dokidoki.auction.domain.entity.Leaderboard;
+import com.dokidoki.auction.domain.entity.LeaderboardEntity;
 import com.dokidoki.auction.domain.entity.Member;
 import com.dokidoki.auction.domain.repository.LeaderboardRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
@@ -24,13 +24,13 @@ public class LeaderboardService {
 
             // 사용자가 존재할 경우에만 데이터 삽입
             if (member != null) {
-                Leaderboard leaderboard = Leaderboard.createLeaderboard(
+                LeaderboardEntity leaderboardEntity = LeaderboardEntity.createLeaderboard(
                         leaderboardRequest.getAuction_id(),
                         member,
                         history.getBid_price(),
                         history.getBid_time()
                 );
-                leaderboardRepository.save(leaderboard);
+                leaderboardRepository.save(leaderboardEntity);
             }
         });
 

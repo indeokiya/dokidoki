@@ -3,9 +3,9 @@ package com.dokidoki.auction.service;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.dokidoki.auction.domain.entity.AuctionImage;
+import com.dokidoki.auction.domain.entity.AuctionImageEntity;
 import com.dokidoki.auction.domain.entity.Member;
-import com.dokidoki.auction.domain.entity.ProfileImage;
+import com.dokidoki.auction.domain.entity.ProfileImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionImageRepository;
 import com.dokidoki.auction.domain.repository.ProfileImageRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
@@ -43,12 +43,12 @@ public class ImageService {
      */
     public AuctionImageResponse readAuctionImages(Long auction_id) {
         // AuctionImage Entity 검색
-        List<AuctionImage> auctionImages = auctionImageRepository.findAuctionImagesByAuctionId(auction_id);
+        List<AuctionImageEntity> auctionImageEntities = auctionImageRepository.findAuctionImagesByAuctionId(auction_id);
 
         // Image URL 추출
         List<String> auctionImageUrls = new ArrayList<>();
-        auctionImages.forEach(auctionImage -> {
-            auctionImageUrls.add(auctionImage.getImageUrl());
+        auctionImageEntities.forEach(auctionImageEntity -> {
+            auctionImageUrls.add(auctionImageEntity.getImageUrl());
         });
 
         return new AuctionImageResponse(auction_id, auctionImageUrls);
@@ -61,11 +61,11 @@ public class ImageService {
 
         // 객체 생성 및 저장
         auctionImagesUrls.forEach(auctionImagesUrl -> {
-            AuctionImage auctionImage = AuctionImage.createAuctionImage(
+            AuctionImageEntity auctionImageEntity = AuctionImageEntity.createAuctionImage(
                     auctionImagesRequest.getAuction_id(),
                     auctionImagesUrl
             );
-            auctionImageRepository.save(auctionImage);
+            auctionImageRepository.save(auctionImageEntity);
         });
 
         return auctionImagesUrls;
@@ -80,12 +80,12 @@ public class ImageService {
         사용자 프로필 관련 서비스
      */
     public String readProfileImage(Long member_id) {
-        ProfileImage profileImage = profileImageRepository
+        ProfileImageEntity profileImageEntity = profileImageRepository
                 .findProfileImageByMemberId(member_id)
                 .orElse(null);
-        if (profileImage == null)
+        if (profileImageEntity == null)
             return null;
-        return profileImage.getImageUrl();
+        return profileImageEntity.getImageUrl();
     }
 
     @Transactional
@@ -103,17 +103,17 @@ public class ImageService {
             return null;
 
         // 기존 객체가 존재하는지 확인
-        ProfileImage originProfileImage = profileImageRepository
+        ProfileImageEntity originProfileImageEntity = profileImageRepository
                 .findProfileImageByMemberId(member.getId())
                 .orElse(null);
 
-        if (originProfileImage != null) {
+        if (originProfileImageEntity != null) {
             // 기존 객체가 존재하면 Update 및 종료
-            originProfileImage.updateProfileImage(profileImageUrl);
+            originProfileImageEntity.updateProfileImage(profileImageUrl);
         } else {
             // 기존 객체가 없다면 객체 생성 후 저장
-            ProfileImage profileImage = ProfileImage.createProfileImage(member, profileImageUrl);
-            profileImageRepository.save(profileImage);
+            ProfileImageEntity profileImageEntity = ProfileImageEntity.createProfileImage(member, profileImageUrl);
+            profileImageRepository.save(profileImageEntity);
         }
 
         return profileImageUrl;
