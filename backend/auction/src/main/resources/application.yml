@@ -39,7 +39,7 @@ spring:
       topic: auction.update
     auctionEndConfig:
       topic: auction.end
-    BidConfig:
+    bidConfig:
       topic: bid
 
 cloud:

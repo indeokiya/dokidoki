@@ -25,7 +25,7 @@ public class ConsumerConfig {
 
     @Value(value = "${spring.kafka.auctionEndConfig.topic}")
     private String auctionEndTopic;
-    @Value(value = "${spring.kafka.BidConfig.topic}")
+    @Value(value = "${spring.kafka.bidConfig.topic}")
     private String bidTopic;
 
     public ConsumerFactory<String, KafkaAuctionEndDTO> auctionEndConsumerFactory(String groupId) {
