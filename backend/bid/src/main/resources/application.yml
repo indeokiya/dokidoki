@@ -1,7 +1,10 @@
 server:
-  port: 8082
+  port: 8081
 
 spring:
+  redis:
+    host: localhost
+    port: 6379
   datasource:
     url: jdbc:mysql://localhost:3306/dokidoki?serverTimezone=UTC&characterEncoding=UTF-8
     username: dokidoki
@@ -15,44 +18,31 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
-  servlet:
-    multipart:
-      max-request-size: 10MB
-      max-file-size: 10MB
   kafka:
     bootstrap-servers:
       - localhost:9092
     consumer:
+      # consumer bootstrap servers가 따로 존재하면 설정
+      # bootstrap-servers: localhost:9092
+      # 식별 가능한 Consumer Group Id
       group-id: test.group
       # Kafka 서버에 초기 offset이 없거나, 서버에 현재 offset이 더 이상 존재하지 않을 경우 수행할 작업을 설정
       # latest: 가장 최근에 생산된 메시지로 offeset reset
       # earliest: 가장 오래된 메시지로 offeset reset
       # none: offset 정보가 없으면 Exception 발생
       auto-offset-reset: latest
+      # 데이터를 받아올 때, key/value를 역직렬화
+      # JSON 데이터를 받아올 것이라면 JsonDeserializer
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.JsonDeserializer
     auctionRegisterConfig:
       topic: auction.register
     auctionUpdateConfig:
       topic: auction.update
-
-cloud:
-  aws:
-    s3:
-      bucket: dokidoki
-    credentials:
-      access-key: AKIAUEVS3DJH3EYUME6G
-      secret-key: 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
-    region:
-      static: ap-northeast-2
-      auto: false
-    stack:
-      auto: false
-
-jwt:
-  issuer: dokidoki.com
-  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
-  access_expiration: 3600000
-  refresh_expiration: 1296000000
+#    producer:
+      # producer bootstrap servers가 따로 존재하면 설정
+      # bootstrap-servers: 3.34.97.97:9092
