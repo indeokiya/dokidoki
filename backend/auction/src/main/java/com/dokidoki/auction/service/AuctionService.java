@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -105,6 +106,18 @@ public class AuctionService {
         // 요청자와 판매자가 동일한 경우에만 update 수행
         if (auction.getSellerId() == sellerId)
             auction.update(auctionUpdateReq);
+        return auction;
+    }
+
+    /**
+     * 경매 id에 해당하는 진행중인 경매 정보 조회
+     * @param id
+     * @return
+     * @throws NoSuchElementException
+     */
+    @Transactional
+    public AuctionIng getAuctioningProduct(Long id) throws NoSuchElementException {
+        AuctionIng auction = auctionIngRepository.findById(id).get();
         return auction;
     }
 }
