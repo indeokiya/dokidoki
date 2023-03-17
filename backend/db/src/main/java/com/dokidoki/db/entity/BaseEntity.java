@@ -13,11 +13,9 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseEntity {
     @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false)
     private LocalDateTime createDate;
 
     @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime lastModifiedDate;
 }

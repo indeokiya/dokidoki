@@ -1,6 +1,5 @@
 package com.dokidoki.db.entity;
 
-import com.dokidoki.auction.dto.request.CommentRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,11 +7,13 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Comment {
+@Table(name = "comment")
+public class CommentEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,27 +24,14 @@ public class Comment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberEntity member;
 
     private String content;
 
     @CreationTimestamp
     @Column(name = "written_time")
-    private Timestamp writtenTime;
+    private LocalDateTime writtenTime;
 
     @Column(name = "parent_id")
     private Long parentId;
-
-    public static Comment createComment(Long auction_id, Member member, String content, Long parent_id) {
-        Comment newComment = new Comment();
-        newComment.auctionId = auction_id;
-        newComment.member = member;
-        newComment.content = content;
-        newComment.parentId = parent_id;
-        return newComment;
-    }
-
-    public void updateComment(CommentRequest commentRequest) {
-        this.content = commentRequest.getContent();
-    }
 }
