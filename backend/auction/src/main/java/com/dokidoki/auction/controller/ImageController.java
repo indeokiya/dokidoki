@@ -46,9 +46,12 @@ public class ImageController {
 
     @PostMapping("/auctions")
     public ResponseEntity<CommonResponse<List<String>>> createAuctionImages(Optional<AuctionImagesRequest> optionalAuctionImagesRequest) {
-        if (optionalAuctionImagesRequest.isEmpty()
-                || optionalAuctionImagesRequest.get().getAuction_id() == null
-                || optionalAuctionImagesRequest.get().getFiles() == null) {
+        AuctionImagesRequest auctionImagesRequest = optionalAuctionImagesRequest.orElse(null);
+
+        // 데이터 들어왔는지 확인
+        if (auctionImagesRequest == null
+                || auctionImagesRequest.getAuction_id() == null
+                || auctionImagesRequest.getFiles() == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "요청받은 정보가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
@@ -56,7 +59,7 @@ public class ImageController {
         }
 
         // 제품 사진 등록
-        List<String> auctionImageUrls = imageService.createAuctionImages(optionalAuctionImagesRequest.get());
+        List<String> auctionImageUrls = imageService.createAuctionImages(auctionImagesRequest);
 
         // 제품 사진 등록에 실패했을 경우,
         if (auctionImageUrls == null) {
@@ -104,9 +107,11 @@ public class ImageController {
 
     @PutMapping("/profiles")
     public ResponseEntity<CommonResponse<String>> createProfileImage(Optional<ProfileImageRequest> optionalProfileImageRequest) {
-        if (optionalProfileImageRequest.isEmpty()
-                || optionalProfileImageRequest.get().getMember_id() == null
-                || optionalProfileImageRequest.get().getFile() == null) {
+        ProfileImageRequest profileImageRequest = optionalProfileImageRequest.orElse(null);
+
+        if (profileImageRequest == null
+                || profileImageRequest.getMember_id() == null
+                || profileImageRequest.getFile() == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "요청받은 정보가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
@@ -114,7 +119,7 @@ public class ImageController {
         }
 
         // 프로필 사진 등록
-        String profileImageUrl = imageService.createProfileImage(optionalProfileImageRequest.get());
+        String profileImageUrl = imageService.createProfileImage(profileImageRequest);
 
         // 프로필 사진 등록에 실패했을 경우,
         if (profileImageUrl == null) {

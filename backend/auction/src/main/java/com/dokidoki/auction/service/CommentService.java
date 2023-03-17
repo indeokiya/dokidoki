@@ -1,10 +1,11 @@
 package com.dokidoki.auction.service;
 
-import com.dokidoki.auction.domain.entity.Comment;
+import com.dokidoki.auction.domain.entity.CommentEntity;
 import com.dokidoki.auction.domain.entity.Member;
 import com.dokidoki.auction.domain.repository.CommentRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.dto.request.CommentRequest;
+import com.dokidoki.auction.dto.request.PutCommentRequest;
 import com.dokidoki.auction.dto.response.CommentResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class CommentService {
         // ~ 미구현 ~
 
         // 경매 식별번호로 모든 댓글 검색
-        List<Comment> comments = commentRepository.findCommentsByAuctionIdOrderByWrittenTime(auction_id);
+        List<CommentEntity> commentEntities = commentRepository.findCommentsByAuctionIdOrderByWrittenTime(auction_id);
 
         // Entity -> DTO 변환
         // 1. 댓글과 대댓글로 나누어 처리
@@ -40,21 +41,21 @@ public class CommentService {
         Map<Long, Integer> indexOf = new HashMap<>();
 
         // 모든 comment 처리
-        for (int i = 0; i < comments.size(); i++) {
-            Comment comment = comments.get(i);
+        for (int i = 0; i < commentEntities.size(); i++) {
+            CommentEntity commentEntity = commentEntities.get(i);
 
             // 댓글일 경우, commentResponses 에 삽입 후 indexOf 에 위치 저장
-            if (comment.getParentId() == null) {
-                indexOf.put(comment.getId(), commentResponses.size());
-                commentResponses.add(new CommentResponse(comment));
+            if (commentEntity.getParentId() == null) {
+                indexOf.put(commentEntity.getId(), commentResponses.size());
+                commentResponses.add(new CommentResponse(commentEntity));
             }
             // 대댓글일 경우, 부모 댓글에 본인 추가
             else {
-                int parentIndex = indexOf.get(comment.getParentId());
+                int parentIndex = indexOf.get(commentEntity.getParentId());
                 commentResponses
                         .get(parentIndex)
                         .getSub_comments()
-                        .add(new CommentResponse(comment));
+                        .add(new CommentResponse(commentEntity));
             }
         }
 
@@ -86,28 +87,32 @@ public class CommentService {
         // 부모 댓글이 설정되어 있으나, 존재하지 않는 댓글일 경우,
         // ~ 미구현 ~
 
-        Comment newComment = Comment.createComment(
+        CommentEntity newCommentEntity = CommentEntity.createComment(
                 commentRequest.getAuction_id(),
                 member,
                 commentRequest.getContent(),
                 commentRequest.getParent_id()
         );
-        commentRepository.save(newComment);
+        commentRepository.save(newCommentEntity);
         return 0;
     }
 
     @Transactional
-    public int updateComment(Long comment_id, CommentRequest commentRequest) {
-        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+    public int updateComment(Long comment_id, PutCommentRequest commentRequest) {
+        CommentEntity commentEntity = commentRepository.findById(comment_id).orElse(null);
 
         // 존재하지 않는 댓글일 경우
-        if (optionalComment.isEmpty()) {
+        if (commentEntity == null)
             return 5;
-        }
+        // 새로운 댓글이 비어있을 경우
+        if (commentRequest.getContent().isBlank())
+            return 3;
+        // 255자를 초과할 경우
+        if (commentRequest.getContent().length() > 255)
+            return 4;
 
         // 업데이트
-        Comment comment = optionalComment.get();
-        comment.updateComment(commentRequest);
+        commentEntity.updateComment(commentRequest);
 
         return 0;
     }
@@ -115,7 +120,7 @@ public class CommentService {
     @Transactional
     public int deleteComment(Long comment_id) {
         // {comment_id}를 갖는 댓글이 있는지 확인
-        Optional<Comment> optionalComment = commentRepository.findById(comment_id);
+        Optional<CommentEntity> optionalComment = commentRepository.findById(comment_id);
         if (optionalComment.isEmpty()) {
             return 5;
         }

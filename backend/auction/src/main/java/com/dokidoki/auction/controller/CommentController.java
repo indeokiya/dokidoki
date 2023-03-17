@@ -1,6 +1,7 @@
 package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.dto.request.CommentRequest;
+import com.dokidoki.auction.dto.request.PutCommentRequest;
 import com.dokidoki.auction.dto.response.CommentResponse;
 import com.dokidoki.auction.dto.response.CommonResponse;
 import com.dokidoki.auction.service.CommentService;
@@ -29,33 +30,34 @@ public class CommentController {
     }
 
     @PostMapping("")
-    public ResponseEntity<CommonResponse<Void>> createComment(Optional<CommentRequest> commentRequest) {
+    public ResponseEntity<CommonResponse<Void>> createComment(
+            @RequestBody Optional<CommentRequest> optionalCommentRequest) {
+        CommentRequest commentRequest = optionalCommentRequest.orElse(null);
+
         // Request Body가 없을 경우,
-        if (commentRequest.isEmpty()) {
+        if (commentRequest == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "요청받은 정보가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
             );
         }
 
-        CommentRequest comment = commentRequest.get();
-
         // 경매 식별번호가 없을 경우,
-        if (comment.getAuction_id() == null) {
+        if (commentRequest.getAuction_id() == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "경매 식별번호가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
             );
         }
         // 사용자 식별번호가 없을 경우,
-        if (comment.getMember_id() == null) {
+        if (commentRequest.getMember_id() == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "사용자 식별번호가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
             );
         }
         // 댓글이 빈 문자열일 경우,
-        if (comment.getContent() == null) {
+        if (commentRequest.getContent() == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "댓글 정보가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
@@ -63,7 +65,7 @@ public class CommentController {
         }
 
         // 댓글 등록 및 결과 반환
-        int resultCode = commentService.createComment(comment);
+        int resultCode = commentService.createComment(commentRequest);
 
         // 유효성 검증, 오류가 존재하면 오류 메시지가 포함된 Response 객체 반환
         ResponseEntity<CommonResponse<Void>> errorResponse = checkResultCode(resultCode);
@@ -78,23 +80,29 @@ public class CommentController {
     }
 
     @PutMapping("/{comment_id}")
-    public ResponseEntity<CommonResponse<Void>> updateComment(@PathVariable Long comment_id, Optional<CommentRequest> commentRequest) {
-        // Request Body가 없거나 없는 댓글, 또는 비어있는 댓글일 경우,
-        if (commentRequest.isEmpty() || commentRequest.get().getContent() == null) {
+    public ResponseEntity<CommonResponse<Void>> updateComment(
+            @PathVariable Long comment_id,
+            @RequestBody Optional<PutCommentRequest> optionalPutCommentRequest) {
+        PutCommentRequest putCommentRequest = optionalPutCommentRequest.orElse(null);
+
+        // Request Body가 없을 경우,
+        if (putCommentRequest == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "요청받은 정보가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
             );
         }
 
-        // 업데이트
-        int resultCode = commentService.updateComment(comment_id, commentRequest.get());
+        // 요청한 사용자와 댓글 작성자 일치 확인
+        // ~ 미구현 ~
 
-        // 유효성 검증, 오류가 존재하면 오류 메시지가 포함된 Response 객체 반환
-        ResponseEntity<CommonResponse<Void>> errorResponse = checkResultCode(resultCode);
-        if (errorResponse != null) {
-            return errorResponse;
-        }
+        // 댓글 수정
+        ResponseEntity<CommonResponse<Void>> errRes = checkResultCode(
+                commentService.updateComment(comment_id, putCommentRequest)
+        );
+        System.out.println();
+        if (errRes != null)
+            return errRes;
 
         return new ResponseEntity<>(
                 CommonResponse.of(201, "댓글이 수정되었습니다.", null),
