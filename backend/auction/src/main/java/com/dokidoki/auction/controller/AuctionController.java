@@ -35,15 +35,14 @@ public class AuctionController {
     // 카테고리 조회
 //    @GetMapping("/products/{category_id}")
 //    @Operation(summary = "category의 id를 선택 시에 대한 요청", description = "카테고리에 해당 제품 목록으로 응답")
-//    public ResponseEntity<List<CategoryResp>> getCategoryList(@PathVariable("category_id") long catId) {
+//    public ResponseEntity<List<CategoryResp>> getCategoryList(@PathVariable("category_id") Long catId) {
 //
-//        List<CategoryResp>
 //    }
 
     // 카테고리 기준 제품 목록 조회
     @GetMapping("/products/{category_id}")
     @Operation(summary = "category의 id를 선택 시에 대한 요청 API", description = "카테고리에 해당 제품 목록으로 응답")
-    public ResponseEntity<?> getCategoryList(@PathVariable("category_id") long catId) {
+    public ResponseEntity<?> getCategoryList(@PathVariable("category_id") Long catId) {
 
         log.debug(">>> categoryId : {}", catId);
         List<ProductResp> productList = auctionService.getProductList(catId);
@@ -90,7 +89,7 @@ public class AuctionController {
 
     @PutMapping("/auctions")
     public ResponseEntity<BaseResponseBody> updateAuction(
-            @RequestParam("auction_id") @ApiParam(value = "경매 id", required = true) long auctionId,
+            @RequestParam("auction_id") @ApiParam(value = "경매 id", required = true) Long auctionId,
             @RequestBody @ApiParam(value = "경매 수정 정보", required = true) Optional<AuctionUpdateReq> auctionUpdateReqO) {
 
         if (auctionUpdateReqO.isEmpty()) {

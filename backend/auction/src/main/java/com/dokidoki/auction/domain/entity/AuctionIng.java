@@ -1,15 +1,13 @@
 package com.dokidoki.auction.domain.entity;
 
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 import java.util.Date;
 
+@ToString
 @Getter
 @Builder
 @AllArgsConstructor
@@ -20,11 +18,11 @@ public class AuctionIng {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     // 판매자id 수정필요
     @Column(name = "seller_id")
-    private long sellerId;
+    private Long sellerId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
@@ -35,10 +33,10 @@ public class AuctionIng {
     private String description;         // 제품설명
 
     @Column(name = "offer_price")
-    private int offerPrice;             // 시작 가격(호가)
+    private Integer offerPrice;             // 시작 가격(호가)
 
     @Column(name = "price_size")
-    private int priceSize;              // 경매 단위
+    private Integer priceSize;              // 경매 단위
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_at")
@@ -48,7 +46,7 @@ public class AuctionIng {
     private String meetingPlace;        // 거래장소
 
     @Column(name = "highest_price")
-    private int highestPrice;           // 현재 최고가
+    private Integer highestPrice;           // 현재 최고가
 
     public void update(AuctionUpdateReq auctionUpdateReq) {
         this.title = auctionUpdateReq.getTitle();

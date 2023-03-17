@@ -17,15 +17,15 @@ public class AuctionRegisterReq {
 
     // 판매자id (작성자id)
 
-    private long productId;
+    private Long productId;
 
     private String title;
 
     private String description;
 
-    private int offerPrice;
+    private Integer offerPrice;
 
-    private int priceSize;
+    private Integer priceSize;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")

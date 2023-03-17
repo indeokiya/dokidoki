@@ -1,5 +1,6 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.common.error.exception.InvalidValueException;
 import com.dokidoki.auction.domain.entity.AuctionIng;
 import com.dokidoki.auction.domain.entity.Category;
 import com.dokidoki.auction.domain.entity.Product;
@@ -51,7 +52,7 @@ public class AuctionService {
 
     // 카테고리 기준 제품 목록 조회
     @Transactional
-    public List<ProductResp> getProductList(long catId) {
+    public List<ProductResp> getProductList(Long catId) {
         List<Product> products = productRepository.findByCategory_Id(catId);
         List<ProductResp> productList = new ArrayList<>();
 
@@ -106,5 +107,23 @@ public class AuctionService {
         if (auction.getSellerId() == sellerId)
             auction.update(auctionUpdateReq);
         return auction;
+    }
+
+    /**
+     * 경매 id에 해당하는 진행중인 경매 정보 조회
+     * @param   auctionId
+     * @return 진행중인 경매 정보
+     */
+    @Transactional
+    public AuctionIng getAuctioningById(Long auctionId) {
+
+        Optional<AuctionIng> auctionO = auctionIngRepository.findById(auctionId);
+
+        // 진행 중 경매 유무 체크
+        if (auctionO.isEmpty()) {
+            throw new InvalidValueException("진행중인 경매가 존재하지 않습니다.");
+        }
+
+        return auctionO.get();
     }
 }
