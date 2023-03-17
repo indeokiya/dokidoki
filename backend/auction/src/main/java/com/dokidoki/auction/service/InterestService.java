@@ -22,7 +22,7 @@ public class InterestService {
     private final InterestRepository interestRepository;
 
     @Transactional
-    public void addInterest(Long memberId, Long auctionId) {
+    public boolean addInterest(Long memberId, Long auctionId) {
 
         Member member = memberService.getMemberById(memberId);
         AuctionIng auctionIng = auctionService.getAuctioningById(auctionId);
@@ -30,8 +30,8 @@ public class InterestService {
         Interest exInterest = interestRepository.findByMemberAndAuctionIng(member, auctionIng);
 
         // 이미 관심경매로 등록되어 있는 경우
-//        if (exInterest != null)
-//            return false;
+        if (exInterest != null)
+            return false;
 
         Interest interest =  Interest.builder()
                 .member(member)
@@ -40,7 +40,7 @@ public class InterestService {
 
         // 관심경매로 등록
         interestRepository.save(interest);
-//        return true;
+        return true;
     }
 
 

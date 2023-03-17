@@ -26,8 +26,11 @@ public class InterestController {
     ) {
 //        Long buyerId = jwTutil.getUserId(request);
         Long buyerId = 1L;
-        interestService.addInterest(buyerId, auctionId);
-        return ResponseEntity.status(201).body(BaseResponseBody.of("관심목록에 추가되었습니다."));
+
+        if (interestService.addInterest(buyerId, auctionId))
+            return ResponseEntity.status(201).body(BaseResponseBody.of("관심목록에 추가되었습니다."));
+        else
+            return ResponseEntity.status(400).body(BaseResponseBody.of("이미 관심목록에 존재합니다."));
     }
 
     @DeleteMapping("")
