@@ -1,5 +1,6 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.common.error.exception.InvalidValueException;
 import com.dokidoki.auction.domain.entity.AuctionIng;
 import com.dokidoki.auction.domain.entity.Category;
 import com.dokidoki.auction.domain.entity.Product;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Slf4j
@@ -111,13 +111,19 @@ public class AuctionService {
 
     /**
      * 경매 id에 해당하는 진행중인 경매 정보 조회
-     * @param id
-     * @return
-     * @throws NoSuchElementException
+     * @param   auctionId
+     * @return 진행중인 경매 정보
      */
     @Transactional
-    public AuctionIng getAuctioningProduct(Long id) throws NoSuchElementException {
-        AuctionIng auction = auctionIngRepository.findById(id).get();
-        return auction;
+    public AuctionIng getAuctioningById(Long auctionId) {
+
+        Optional<AuctionIng> auctionO = auctionIngRepository.findById(auctionId);
+
+        // 진행 중 경매 유무 체크
+        if (auctionO.isEmpty()) {
+            throw new InvalidValueException("진행중인 경매가 존재하지 않습니다.");
+        }
+
+        return auctionO.get();
     }
 }
