@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class CommentResponse {
     private final Long id;
     private final Long member_id;
     private final String content;
-    private final Timestamp written_time;
+    private final LocalDateTime written_time;
     private final List<CommentResponse> sub_comments;
 
     public CommentResponse(CommentEntity commentEntity) {
