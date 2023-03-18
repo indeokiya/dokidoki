@@ -16,6 +16,7 @@ import java.util.List;
 public class CommentResponse {
     private final Long id;
     private final Long member_id;
+    private final String member_name;
     private final String content;
     private final LocalDateTime written_time;
     private final List<CommentResponse> sub_comments;
@@ -23,6 +24,7 @@ public class CommentResponse {
     public CommentResponse(CommentEntity commentEntity) {
         this.id = commentEntity.getId();
         this.member_id = commentEntity.getMember().getId();
+        this.member_name = commentEntity.getMember().getName();
         this.content = commentEntity.getContent();
         this.written_time = commentEntity.getWrittenTime();
         this.sub_comments = new ArrayList<>();

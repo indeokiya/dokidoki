@@ -41,9 +41,7 @@ public class CommentService {
         Map<Long, Integer> indexOf = new HashMap<>();
 
         // 모든 comment 처리
-        for (int i = 0; i < commentEntities.size(); i++) {
-            CommentEntity commentEntity = commentEntities.get(i);
-
+        for (CommentEntity commentEntity : commentEntities) {
             // 댓글일 경우, commentResponses 에 삽입 후 indexOf 에 위치 저장
             if (commentEntity.getParentId() == null) {
                 indexOf.put(commentEntity.getId(), commentResponses.size());
