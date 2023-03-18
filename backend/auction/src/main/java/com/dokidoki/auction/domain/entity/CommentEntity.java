@@ -5,6 +5,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -35,16 +36,13 @@ public class CommentEntity {
     @Column(name = "parent_id")
     private Long parentId;
 
-    public static CommentEntity createComment(Long auction_id, Member member, String content, Long parent_id) {
+    public static CommentEntity createComment(Long id, Long auction_id, Member member, String content, Long parent_id) {
         CommentEntity newCommentEntity = new CommentEntity();
+        newCommentEntity.id = id;
         newCommentEntity.auctionId = auction_id;
         newCommentEntity.member = member;
         newCommentEntity.content = content;
         newCommentEntity.parentId = parent_id;
         return newCommentEntity;
-    }
-
-    public void updateComment(PutCommentRequest commentRequest) {
-        this.content = commentRequest.getContent();
     }
 }

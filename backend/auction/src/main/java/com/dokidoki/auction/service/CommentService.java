@@ -88,6 +88,7 @@ public class CommentService {
         // ~ 미구현 ~
 
         CommentEntity newCommentEntity = CommentEntity.createComment(
+                null,  // INSERT의 경우 Auto Increment를 위해 null 설정
                 commentRequest.getAuction_id(),
                 member,
                 commentRequest.getContent(),
@@ -112,7 +113,16 @@ public class CommentService {
             return 4;
 
         // 업데이트
-        commentEntity.updateComment(commentRequest);
+        // 1. 기존 정보에 새로운 댓글로 교체한 객체 생성
+        CommentEntity newCommentEntity = CommentEntity.createComment(
+                commentEntity.getId(),  // Update를 위해 PK도 기존대로 설정
+                commentEntity.getAuctionId(),
+                commentEntity.getMember(),
+                commentRequest.getContent(),
+                commentEntity.getParentId()
+        );
+        // 2. 저장
+        commentRepository.save(newCommentEntity);
 
         return 0;
     }
