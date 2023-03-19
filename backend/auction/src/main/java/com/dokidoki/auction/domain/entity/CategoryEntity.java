@@ -7,7 +7,7 @@ import javax.persistence.*;
 @ToString
 @Getter
 @Entity
-public class Category {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

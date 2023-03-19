@@ -24,7 +24,7 @@ public class CommentEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberEntity memberEntity;
 
     private String content;
 
@@ -35,10 +35,10 @@ public class CommentEntity {
     @Column(name = "parent_id")
     private Long parentId;
 
-    public static CommentEntity createComment(Long auction_id, Member member, String content, Long parent_id) {
+    public static CommentEntity createComment(Long auction_id, MemberEntity memberEntity, String content, Long parent_id) {
         CommentEntity newCommentEntity = new CommentEntity();
         newCommentEntity.auctionId = auction_id;
-        newCommentEntity.member = member;
+        newCommentEntity.memberEntity = memberEntity;
         newCommentEntity.content = content;
         newCommentEntity.parentId = parent_id;
         return newCommentEntity;

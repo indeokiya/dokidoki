@@ -1,7 +1,7 @@
 package com.dokidoki.auction.service;
 
 import com.dokidoki.auction.domain.entity.CommentEntity;
-import com.dokidoki.auction.domain.entity.Member;
+import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.repository.CommentRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.dto.request.CommentRequest;
@@ -69,11 +69,11 @@ public class CommentService {
 
         // 존재하지 않는 사용자 식별번호일 경우,
         // MSA니까 사용자 서버에 사용자 객체 요청해야 할 듯?
-        Optional<Member> optionalMember = memberRepository.findById(commentRequest.getMember_id());
+        Optional<MemberEntity> optionalMember = memberRepository.findById(commentRequest.getMember_id());
         if (optionalMember.isEmpty()) {
             return 2;
         }
-        Member member = optionalMember.get();
+        MemberEntity memberEntity = optionalMember.get();
 
         // 댓글이 빈 문자열일 경우,
         if (commentRequest.getContent().isBlank()) {
@@ -89,7 +89,7 @@ public class CommentService {
 
         CommentEntity newCommentEntity = CommentEntity.createComment(
                 commentRequest.getAuction_id(),
-                member,
+                memberEntity,
                 commentRequest.getContent(),
                 commentRequest.getParent_id()
         );

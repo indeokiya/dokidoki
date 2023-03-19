@@ -21,7 +21,7 @@ public class CommentResponse {
 
     public CommentResponse(CommentEntity commentEntity) {
         this.id = commentEntity.getId();
-        this.member_id = commentEntity.getMember().getId();
+        this.member_id = commentEntity.getMemberEntity().getId();
         this.content = commentEntity.getContent();
         this.written_time = commentEntity.getWrittenTime();
         this.sub_comments = new ArrayList<>();
