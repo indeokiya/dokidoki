@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +16,15 @@ import java.util.List;
 public class CommentResponse {
     private final Long id;
     private final Long member_id;
+    private final String member_name;
     private final String content;
-    private final Timestamp written_time;
+    private final LocalDateTime written_time;
     private final List<CommentResponse> sub_comments;
 
     public CommentResponse(CommentEntity commentEntity) {
         this.id = commentEntity.getId();
         this.member_id = commentEntity.getMemberEntity().getId();
+        this.member_name = commentEntity.getMemberEntity().getName();
         this.content = commentEntity.getContent();
         this.written_time = commentEntity.getWrittenTime();
         this.sub_comments = new ArrayList<>();

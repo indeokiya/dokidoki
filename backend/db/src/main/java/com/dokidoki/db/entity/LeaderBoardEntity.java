@@ -19,11 +19,8 @@ public class LeaderBoardEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = AuctionIngEntity.class)
-    @JoinColumn(name = "auction_id")
-    private AuctionIngEntity auctionIng;
 
-    @Column(name = "auction_id", insertable = false, updatable = false)
+    @Column(name = "auction_id")
     private Long auctionId;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = MemberEntity.class)

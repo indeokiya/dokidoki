@@ -1,13 +1,12 @@
 package com.dokidoki.auction.domain.entity;
 
-import com.dokidoki.auction.dto.request.PutCommentRequest;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity(name = "comment")
 @Table(name = "comment")
@@ -30,21 +29,18 @@ public class CommentEntity {
 
     @CreationTimestamp
     @Column(name = "written_time")
-    private Timestamp writtenTime;
+    private LocalDateTime writtenTime;
 
     @Column(name = "parent_id")
     private Long parentId;
 
-    public static CommentEntity createComment(Long auction_id, MemberEntity memberEntity, String content, Long parent_id) {
+    public static CommentEntity createComment(Long id, Long auction_id, MemberEntity memberEntity, String content, Long parent_id) {
         CommentEntity newCommentEntity = new CommentEntity();
+        newCommentEntity.id = id;
         newCommentEntity.auctionId = auction_id;
         newCommentEntity.memberEntity = memberEntity;
         newCommentEntity.content = content;
         newCommentEntity.parentId = parent_id;
         return newCommentEntity;
-    }
-
-    public void updateComment(PutCommentRequest commentRequest) {
-        this.content = commentRequest.getContent();
     }
 }

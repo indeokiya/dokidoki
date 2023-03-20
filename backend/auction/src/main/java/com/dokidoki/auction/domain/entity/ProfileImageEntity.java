@@ -22,14 +22,11 @@ public class ProfileImageEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    public static ProfileImageEntity createProfileImage(MemberEntity memberEntity, String imageUrl) {
+    public static ProfileImageEntity createProfileImage(Long id, MemberEntity memberEntity, String imageUrl) {
         ProfileImageEntity profileImageEntity = new ProfileImageEntity();
+        profileImageEntity.id = id;
         profileImageEntity.memberEntity = memberEntity;
         profileImageEntity.imageUrl = imageUrl;
         return profileImageEntity;
-    }
-
-    public void updateProfileImage(String imageUrl) {
-        this.imageUrl = imageUrl;
     }
 }

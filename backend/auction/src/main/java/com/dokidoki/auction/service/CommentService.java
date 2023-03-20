@@ -41,9 +41,7 @@ public class CommentService {
         Map<Long, Integer> indexOf = new HashMap<>();
 
         // 모든 comment 처리
-        for (int i = 0; i < commentEntities.size(); i++) {
-            CommentEntity commentEntity = commentEntities.get(i);
-
+        for (CommentEntity commentEntity : commentEntities) {
             // 댓글일 경우, commentResponses 에 삽입 후 indexOf 에 위치 저장
             if (commentEntity.getParentId() == null) {
                 indexOf.put(commentEntity.getId(), commentResponses.size());
@@ -88,6 +86,7 @@ public class CommentService {
         // ~ 미구현 ~
 
         CommentEntity newCommentEntity = CommentEntity.createComment(
+                null,  // INSERT의 경우 Auto Increment를 위해 null 설정
                 commentRequest.getAuction_id(),
                 memberEntity,
                 commentRequest.getContent(),
@@ -112,7 +111,16 @@ public class CommentService {
             return 4;
 
         // 업데이트
-        commentEntity.updateComment(commentRequest);
+        // 1. 기존 정보에 새로운 댓글로 교체한 객체 생성
+        CommentEntity newCommentEntity = CommentEntity.createComment(
+                commentEntity.getId(),  // Update를 위해 PK도 기존대로 설정
+                commentEntity.getAuctionId(),
+                commentEntity.getMemberEntity(),
+                commentRequest.getContent(),
+                commentEntity.getParentId()
+        );
+        // 2. 저장
+        commentRepository.save(newCommentEntity);
 
         return 0;
     }

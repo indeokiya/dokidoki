@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity(name = "leaderboard")
 @Table(name = "leaderboard")
@@ -26,9 +27,9 @@ public class LeaderboardEntity {
     private Integer bidPrice;
 
     @Column(name = "bid_time")
-    private Timestamp bidTime;
+    private LocalDateTime bidTime;
 
-    public static LeaderboardEntity createLeaderboard(Long auctionId, MemberEntity memberEntity, Integer bidPrice, Timestamp bidTime) {
+    public static LeaderboardEntity createLeaderboard(Long auctionId, MemberEntity memberEntity, Integer bidPrice, LocalDateTime bidTime) {
         LeaderboardEntity leaderboardEntity = new LeaderboardEntity();
         leaderboardEntity.auctionId = auctionId;
         leaderboardEntity.memberEntity = memberEntity;

@@ -109,10 +109,17 @@ public class ImageService {
 
         if (originProfileImageEntity != null) {
             // 기존 객체가 존재하면 Update 및 종료
-            originProfileImageEntity.updateProfileImage(profileImageUrl);
+            // 1. 기존 정보에 새로운 사진 URL로 교체한 객체 생성
+            ProfileImageEntity newProfileImageEntity = ProfileImageEntity.createProfileImage(
+                    originProfileImageEntity.getId(),
+                    originProfileImageEntity.getMemberEntity(),
+                    profileImageUrl
+            );
+            // 2. 저장
+            profileImageRepository.save(newProfileImageEntity);
         } else {
             // 기존 객체가 없다면 객체 생성 후 저장
-            ProfileImageEntity profileImageEntity = ProfileImageEntity.createProfileImage(memberEntity, profileImageUrl);
+            ProfileImageEntity profileImageEntity = ProfileImageEntity.createProfileImage(null, memberEntity, profileImageUrl);
             profileImageRepository.save(profileImageEntity);
         }
 
