@@ -27,7 +27,7 @@ public class InterestService {
         MemberEntity memberEntity = memberService.getMemberById(memberId);
         AuctionIngEntity auctionIngEntity = auctionService.getAuctioningById(auctionId);
 
-        InterestEntity exInterestEntity = interestRepository.findByMemberAndAuctionIng(memberEntity, auctionIngEntity);
+        InterestEntity exInterestEntity = interestRepository.findByMemberEntityAndAuctionIngEntity(memberEntity, auctionIngEntity);
 
         // 이미 관심경매로 등록되어 있는 경우
         if (exInterestEntity != null)
@@ -49,7 +49,7 @@ public class InterestService {
 
         MemberEntity memberEntity = memberService.getMemberById(memberId);
         AuctionIngEntity auctionIngEntity = auctionService.getAuctioningById(auctionId);
-        InterestEntity interestEntity = interestRepository.findByMemberAndAuctionIng(memberEntity, auctionIngEntity);
+        InterestEntity interestEntity = interestRepository.findByMemberEntityAndAuctionIngEntity(memberEntity, auctionIngEntity);
 
         // 관심등록이 안되어있을 경우
         if (interestEntity == null) {

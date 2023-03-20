@@ -81,7 +81,7 @@ public class ImageService {
      */
     public String readProfileImage(Long member_id) {
         ProfileImageEntity profileImageEntity = profileImageRepository
-                .findProfileImageByMemberId(member_id)
+                .findProfileImageByMemberEntityId(member_id)
                 .orElse(null);
         if (profileImageEntity == null)
             return null;
@@ -104,7 +104,7 @@ public class ImageService {
 
         // 기존 객체가 존재하는지 확인
         ProfileImageEntity originProfileImageEntity = profileImageRepository
-                .findProfileImageByMemberId(memberEntity.getId())
+                .findProfileImageByMemberEntityId(memberEntity.getId())
                 .orElse(null);
 
         if (originProfileImageEntity != null) {

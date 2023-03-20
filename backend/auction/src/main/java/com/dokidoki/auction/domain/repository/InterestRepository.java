@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface InterestRepository extends JpaRepository<InterestEntity, Long> {
 
-    InterestEntity findByMemberAndAuctionIng(MemberEntity memberEntity, AuctionIngEntity auctionIngEntity);
+    InterestEntity findByMemberEntityAndAuctionIngEntity(MemberEntity memberEntity, AuctionIngEntity auctionIngEntity);
 
 
 }
