@@ -7,7 +7,7 @@ import lombok.*;
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class OauthLoginUrlDto {
+public class OauthLoginUrlRes {
     ProviderType provider;
     String url;
 }
