@@ -56,7 +56,4 @@ public class AuctionIngEntity{
 
     @Column(name = "highest_price")
     private Integer highestPrice;           // 현재 최고가
-
-    @OneToMany(mappedBy = "auctionIng", cascade = CascadeType.ALL)
-    private List<LeaderBoardEntity> leaderBoardEntities = new ArrayList<>();
 }
