@@ -4,13 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dokidoki.auction.domain.entity.AuctionImageEntity;
-import com.dokidoki.auction.domain.entity.MemberEntity;
-import com.dokidoki.auction.domain.entity.ProfileImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionImageRepository;
 import com.dokidoki.auction.domain.repository.ProfileImageRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.dto.request.AuctionImagesRequest;
-import com.dokidoki.auction.dto.request.ProfileImageRequest;
 import com.dokidoki.auction.dto.response.AuctionImageResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -74,56 +71,6 @@ public class ImageService {
     @Transactional
     public void deleteAuctionImages(Long auction_id) {
         auctionImageRepository.deleteAuctionImagesByAuctionId(auction_id);
-    }
-
-    /*
-        사용자 프로필 관련 서비스
-     */
-    public String readProfileImage(Long member_id) {
-        ProfileImageEntity profileImageEntity = profileImageRepository
-                .findProfileImageByMemberEntityId(member_id)
-                .orElse(null);
-        if (profileImageEntity == null)
-            return null;
-        return profileImageEntity.getImageUrl();
-    }
-
-    @Transactional
-    public String createProfileImage(ProfileImageRequest profileImageRequest) {
-        // 파일 업로드 및 URL 획득
-        String profileImageUrl = uploadImage(profileImageRequest.getFile(), "profiles");
-        if (profileImageUrl == null)
-            return null;
-
-        // 사용자 객체 가져오기
-        MemberEntity memberEntity = memberRepository
-                .findById(profileImageRequest.getMember_id())
-                .orElse(null);
-        if (memberEntity == null)  // 존재하지 않는다면 null 반환
-            return null;
-
-        // 기존 객체가 존재하는지 확인
-        ProfileImageEntity originProfileImageEntity = profileImageRepository
-                .findProfileImageByMemberEntityId(memberEntity.getId())
-                .orElse(null);
-
-        if (originProfileImageEntity != null) {
-            // 기존 객체가 존재하면 Update 및 종료
-            // 1. 기존 정보에 새로운 사진 URL로 교체한 객체 생성
-            ProfileImageEntity newProfileImageEntity = ProfileImageEntity.createProfileImage(
-                    originProfileImageEntity.getId(),
-                    originProfileImageEntity.getMemberEntity(),
-                    profileImageUrl
-            );
-            // 2. 저장
-            profileImageRepository.save(newProfileImageEntity);
-        } else {
-            // 기존 객체가 없다면 객체 생성 후 저장
-            ProfileImageEntity profileImageEntity = ProfileImageEntity.createProfileImage(null, memberEntity, profileImageUrl);
-            profileImageRepository.save(profileImageEntity);
-        }
-
-        return profileImageUrl;
     }
 
     /*
