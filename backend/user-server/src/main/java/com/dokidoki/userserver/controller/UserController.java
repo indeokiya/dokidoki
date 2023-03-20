@@ -9,37 +9,28 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Slf4j
-@RequestMapping("/tokens")
 @RequiredArgsConstructor
-public class TokenController {
+public class UserController {
 
-    private final JwtProvider jwtProvider;
     private final UserService userService;
-
-    @GetMapping("/refresh")
+    private final JwtProvider jwtProvider;
+    @DeleteMapping
     public ResponseEntity<?> refresh(HttpServletRequest request){
         String token = jwtProvider.getToken(request);
         Long userId = ((Integer)jwtProvider.parseClaims(token).get("user_id")).longValue();
 
         log.info("유저 아이디 " + userId);
 
-        UserEntity userEntity = userService.getUserById(userId).orElseThrow(
-                ()-> new CustomException(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다.")
-        );
+       userService.deleteById(userId);
 
-        String accessToken = jwtProvider.getAccessToken(userEntity.getId());
-        String refreshToken = jwtProvider.getRefreshToken(userEntity);
-
-        JWTRes res = JWTRes.builder()
-                .access_token(accessToken)
-                .refresh_token(refreshToken).build();
-
-        return ResponseEntity.ok(res);
+       return ResponseEntity.noContent().build();
     }
 }
