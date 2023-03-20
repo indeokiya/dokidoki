@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "leader_board")
+@Table(name = "leaderboard")
 @Getter
 @Builder
 @RequiredArgsConstructor
