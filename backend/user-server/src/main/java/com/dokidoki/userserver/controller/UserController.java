@@ -23,7 +23,7 @@ public class UserController {
     private final UserService userService;
     private final JwtProvider jwtProvider;
     @DeleteMapping
-    public ResponseEntity<?> refresh(HttpServletRequest request){
+    public ResponseEntity<?> deleteUser(HttpServletRequest request){
         String token = jwtProvider.getToken(request);
         Long userId = ((Integer)jwtProvider.parseClaims(token).get("user_id")).longValue();
 
