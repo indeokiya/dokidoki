@@ -27,7 +27,11 @@ public class AuctionEndService {
 
     public AuctionEndResponse readAuctionEnds(Long auction_id) {
         // 완료된 경매 정보
-        AuctionEndInterface auctionEndInterface = auctionEndRepository.findAuctionEndEntitiesById(auction_id);
+        List<AuctionEndInterface> auctionEndInterfaces = auctionEndRepository.findAuctionEndEntitiesById(auction_id);
+
+        // 존재하지 않는다면 null 반환
+        if (auctionEndInterfaces.isEmpty())
+            return null;
 
         // 경매 제품 사진 URL 구하기
         List<String> auctionImageUrls = imageService.readAuctionImages(auction_id).getImage_urls();
@@ -42,7 +46,7 @@ public class AuctionEndService {
             leaderboardHistoryResponses.add(new LeaderboardHistoryResponse(leaderboard));
 
         return new AuctionEndResponse(
-                auctionEndInterface,
+                auctionEndInterfaces.get(0),
                 auctionImageUrls,
                 commentResponses,
                 leaderboardHistoryResponses

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Long> {
     // 경매 End, 제품, 카테고리, 사용자 테이블 조인해서 데이터 검색하기 (최적화 필요할 것 같긴 한데 일단은..)
@@ -24,5 +26,5 @@ public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Lo
             " AND p.category_id = c.id" +
             " AND a.seller_id = s.id" +
             " AND a.buyer_id = b.id", nativeQuery = true)
-    AuctionEndInterface findAuctionEndEntitiesById(@Param("auction_id") Long auctionId);
+    List<AuctionEndInterface> findAuctionEndEntitiesById(@Param("auction_id") Long auctionId);
 }
