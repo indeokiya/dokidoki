@@ -3,7 +3,7 @@ package com.dokidoki.userserver.controller;
 import com.dokidoki.userserver.componet.JwtProvider;
 import com.dokidoki.userserver.dto.GoogleUserInfo;
 import com.dokidoki.userserver.dto.KakaoUserInfo;
-import com.dokidoki.userserver.dto.response.OauthLoginUrlDto;
+import com.dokidoki.userserver.dto.response.OauthLoginUrlRes;
 import com.dokidoki.userserver.entity.UserEntity;
 import com.dokidoki.userserver.enumtype.ProviderType;
 import com.dokidoki.userserver.exception.CustomException;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -38,20 +37,20 @@ public class OauthController {
     private String FRONT_REDIRECT_URI;
 
     @GetMapping("/login/{provider}")
-    public ResponseEntity<OauthLoginUrlDto> oauth2LoginUrl(
+    public ResponseEntity<OauthLoginUrlRes> oauth2LoginUrl(
             @PathVariable(name = "provider") String provider
     ){
 
-        OauthLoginUrlDto response;
+        OauthLoginUrlRes response;
 
         switch (provider){
             case "kakao":
-                response = OauthLoginUrlDto.builder()
+                response = OauthLoginUrlRes.builder()
                         .url(oauthUrlUtil.getAuthorizationUrlKakao())
                         .provider(ProviderType.KAKAO).build();
                 break;
             case "google":
-                response = OauthLoginUrlDto.builder()
+                response = OauthLoginUrlRes.builder()
                         .url(oauthUrlUtil.getAuthorizationUrlGoogle())
                         .provider(ProviderType.GOOGLE).build();
                 break;
