@@ -3,7 +3,7 @@ package com.dokidoki.auction.dto.response;
 import java.time.LocalDateTime;
 
 // Join Query 데이터 DTO
-public interface AuctionEndInterface {
+public interface DetailAuctionEndInterface {
     String getAuction_title();
     LocalDateTime getStart_time();
     LocalDateTime  getEnd_time();
