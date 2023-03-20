@@ -6,8 +6,9 @@ import javax.persistence.*;
 
 @ToString
 @Getter
+@Table(name = "category")
 @Entity
-public class Category {
+public class CategoryEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

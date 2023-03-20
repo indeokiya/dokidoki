@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Builder
 @Getter
 @AllArgsConstructor
-public class TokenBody {
+public class TokenBodyReq {
     private String client_id;
     private String client_secret;
     private String code;

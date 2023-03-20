@@ -1,7 +1,7 @@
 package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
-import com.dokidoki.auction.common.JWTutil;
+//import com.dokidoki.auction.common.JWTutil;
 import com.dokidoki.auction.service.InterestService;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class InterestController {
 
     private final InterestService interestService;
-    private final JWTutil jwTutil;
+//    private final JWTutil jwTutil;
 
     @PostMapping("")
     public ResponseEntity<BaseResponseBody> addInterest(

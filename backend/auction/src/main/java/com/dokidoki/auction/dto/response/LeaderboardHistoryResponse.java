@@ -16,8 +16,8 @@ public class LeaderboardHistoryResponse {
     private final LocalDateTime bid_time;
 
     public LeaderboardHistoryResponse(LeaderboardEntity leaderboard) {
-        this.member_id = leaderboard.getMember().getId();
-        this.member_name = leaderboard.getMember().getName();
+        this.member_id = leaderboard.getMemberEntity().getId();
+        this.member_name = leaderboard.getMemberEntity().getName();
         this.bid_price = leaderboard.getBidPrice();
         this.bid_time = leaderboard.getBidTime();
     }

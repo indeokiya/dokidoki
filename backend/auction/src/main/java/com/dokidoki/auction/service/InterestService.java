@@ -1,8 +1,8 @@
 package com.dokidoki.auction.service;
 
-import com.dokidoki.auction.domain.entity.AuctionIng;
-import com.dokidoki.auction.domain.entity.Interest;
-import com.dokidoki.auction.domain.entity.Member;
+import com.dokidoki.auction.domain.entity.AuctionIngEntity;
+import com.dokidoki.auction.domain.entity.InterestEntity;
+import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.repository.InterestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,22 +24,22 @@ public class InterestService {
     @Transactional
     public boolean addInterest(Long memberId, Long auctionId) {
 
-        Member member = memberService.getMemberById(memberId);
-        AuctionIng auctionIng = auctionService.getAuctioningById(auctionId);
+        MemberEntity memberEntity = memberService.getMemberById(memberId);
+        AuctionIngEntity auctionIngEntity = auctionService.getAuctioningById(auctionId);
 
-        Interest exInterest = interestRepository.findByMemberAndAuctionIng(member, auctionIng);
+        InterestEntity exInterestEntity = interestRepository.findByMemberEntityAndAuctionIngEntity(memberEntity, auctionIngEntity);
 
         // 이미 관심경매로 등록되어 있는 경우
-        if (exInterest != null)
+        if (exInterestEntity != null)
             return false;
 
-        Interest interest =  Interest.builder()
-                .member(member)
-                .auctionIng(auctionIng)
+        InterestEntity interestEntity =  InterestEntity.builder()
+                .memberEntity(memberEntity)
+                .auctionIngEntity(auctionIngEntity)
                 .build();
 
         // 관심경매로 등록
-        interestRepository.save(interest);
+        interestRepository.save(interestEntity);
         return true;
     }
 
@@ -47,18 +47,18 @@ public class InterestService {
     @Transactional
     public boolean deleteInterest(Long memberId, Long auctionId) {
 
-        Member member = memberService.getMemberById(memberId);
-        AuctionIng auctionIng = auctionService.getAuctioningById(auctionId);
-        Interest interest = interestRepository.findByMemberAndAuctionIng(member, auctionIng);
+        MemberEntity memberEntity = memberService.getMemberById(memberId);
+        AuctionIngEntity auctionIngEntity = auctionService.getAuctioningById(auctionId);
+        InterestEntity interestEntity = interestRepository.findByMemberEntityAndAuctionIngEntity(memberEntity, auctionIngEntity);
 
         // 관심등록이 안되어있을 경우
-        if (interest == null) {
+        if (interestEntity == null) {
             return false;
         }
 
-        log.debug("member = {}", member);
-        log.debug("auctionIng = {}", auctionIng);
-        interestRepository.delete(interest);
+        log.debug("member = {}", memberEntity);
+        log.debug("auctionIng = {}", auctionIngEntity);
+        interestRepository.delete(interestEntity);
 
         return true;
     }

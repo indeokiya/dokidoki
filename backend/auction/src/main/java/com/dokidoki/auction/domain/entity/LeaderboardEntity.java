@@ -21,7 +21,7 @@ public class LeaderboardEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberEntity memberEntity;
 
     @Column(name = "bid_price")
     private Integer bidPrice;
@@ -29,10 +29,10 @@ public class LeaderboardEntity {
     @Column(name = "bid_time")
     private LocalDateTime bidTime;
 
-    public static LeaderboardEntity createLeaderboard(Long auctionId, Member member, Integer bidPrice, LocalDateTime bidTime) {
+    public static LeaderboardEntity createLeaderboard(Long auctionId, MemberEntity memberEntity, Integer bidPrice, LocalDateTime bidTime) {
         LeaderboardEntity leaderboardEntity = new LeaderboardEntity();
         leaderboardEntity.auctionId = auctionId;
-        leaderboardEntity.member = member;
+        leaderboardEntity.memberEntity = memberEntity;
         leaderboardEntity.bidPrice = bidPrice;
         leaderboardEntity.bidTime = bidTime;
         return leaderboardEntity;

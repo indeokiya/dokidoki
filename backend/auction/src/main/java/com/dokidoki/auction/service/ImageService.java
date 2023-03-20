@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dokidoki.auction.domain.entity.AuctionImageEntity;
-import com.dokidoki.auction.domain.entity.Member;
+import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.entity.ProfileImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionImageRepository;
 import com.dokidoki.auction.domain.repository.ProfileImageRepository;
@@ -81,7 +81,7 @@ public class ImageService {
      */
     public String readProfileImage(Long member_id) {
         ProfileImageEntity profileImageEntity = profileImageRepository
-                .findProfileImageByMemberId(member_id)
+                .findProfileImageByMemberEntityId(member_id)
                 .orElse(null);
         if (profileImageEntity == null)
             return null;
@@ -96,15 +96,15 @@ public class ImageService {
             return null;
 
         // 사용자 객체 가져오기
-        Member member = memberRepository
+        MemberEntity memberEntity = memberRepository
                 .findById(profileImageRequest.getMember_id())
                 .orElse(null);
-        if (member == null)  // 존재하지 않는다면 null 반환
+        if (memberEntity == null)  // 존재하지 않는다면 null 반환
             return null;
 
         // 기존 객체가 존재하는지 확인
         ProfileImageEntity originProfileImageEntity = profileImageRepository
-                .findProfileImageByMemberId(member.getId())
+                .findProfileImageByMemberEntityId(memberEntity.getId())
                 .orElse(null);
 
         if (originProfileImageEntity != null) {
@@ -112,14 +112,14 @@ public class ImageService {
             // 1. 기존 정보에 새로운 사진 URL로 교체한 객체 생성
             ProfileImageEntity newProfileImageEntity = ProfileImageEntity.createProfileImage(
                     originProfileImageEntity.getId(),
-                    originProfileImageEntity.getMember(),
+                    originProfileImageEntity.getMemberEntity(),
                     profileImageUrl
             );
             // 2. 저장
             profileImageRepository.save(newProfileImageEntity);
         } else {
             // 기존 객체가 없다면 객체 생성 후 저장
-            ProfileImageEntity profileImageEntity = ProfileImageEntity.createProfileImage(null, member, profileImageUrl);
+            ProfileImageEntity profileImageEntity = ProfileImageEntity.createProfileImage(null, memberEntity, profileImageUrl);
             profileImageRepository.save(profileImageEntity);
         }
 

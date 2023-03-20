@@ -17,15 +17,15 @@ public class ProfileImageEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private Member member;
+    private MemberEntity memberEntity;
 
     @Column(name = "image_url")
     private String imageUrl;
 
-    public static ProfileImageEntity createProfileImage(Long id, Member member, String imageUrl) {
+    public static ProfileImageEntity createProfileImage(Long id, MemberEntity memberEntity, String imageUrl) {
         ProfileImageEntity profileImageEntity = new ProfileImageEntity();
         profileImageEntity.id = id;
-        profileImageEntity.member = member;
+        profileImageEntity.memberEntity = memberEntity;
         profileImageEntity.imageUrl = imageUrl;
         return profileImageEntity;
     }

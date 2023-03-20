@@ -1,7 +1,7 @@
 package com.dokidoki.auction.service;
 
 import com.dokidoki.auction.common.error.exception.InvalidValueException;
-import com.dokidoki.auction.domain.entity.Member;
+import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,10 @@ public class MemberService {
      * @param memberId
      * @return  멤버정보
      */
-    public Member getMemberById(Long memberId) {
+    public MemberEntity getMemberById(Long memberId) {
 
         // 사용자 유무 체크 (추후 필요한지 확인)
-        Optional<Member> memberO = memberRepository.findById(memberId);
+        Optional<MemberEntity> memberO = memberRepository.findById(memberId);
         if (memberO.isEmpty()) {
             throw new InvalidValueException("해당 회원이 존재하지 않습니다.");
         }

@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "auction_ing")
 @Entity
-public class AuctionIng {
+public class AuctionIngEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class AuctionIng {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product product;
+    private ProductEntity productEntity;
 
     private String title;               // 제목
 

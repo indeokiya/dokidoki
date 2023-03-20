@@ -16,15 +16,15 @@ public class AuctionEndEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
-    private Member seller;
+    private MemberEntity seller;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
-    private Member buyer;
+    private MemberEntity buyer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private Product product;
+    private ProductEntity product;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;        // 경매 시작 시간
@@ -44,9 +44,9 @@ public class AuctionEndEntity {
 
     public static AuctionEndEntity createAuctionEnd(
             Long id,
-            Member seller,
-            Member buyer,
-            Product product,
+            MemberEntity seller,
+            MemberEntity buyer,
+            ProductEntity product,
             LocalDateTime startTime,
             LocalDateTime endTime,
             String title,

@@ -1,20 +1,16 @@
 package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
-import com.dokidoki.auction.domain.entity.AuctionIng;
+import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.CommonResponse;
 import com.dokidoki.auction.dto.response.ProductResp;
-import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
-import com.dokidoki.auction.kafka.dto.KafkaAuctionUpdateDTO;
-import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import com.dokidoki.auction.service.AuctionService;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -101,7 +97,7 @@ public class AuctionController {
         try {
             if (auctionUpdateReqO.isPresent()) {
                 AuctionUpdateReq auctionUpdateReq = auctionUpdateReqO.get();
-                AuctionIng auction = auctionService.updateAuction(sellerId, auctionId, auctionUpdateReq);
+                AuctionIngEntity auction = auctionService.updateAuction(sellerId, auctionId, auctionUpdateReq);
                 if (!auction.equals(null)) {
                     return ResponseEntity.status(200).body(BaseResponseBody.of("경매 정보가 수정되었습니다."));
                 }

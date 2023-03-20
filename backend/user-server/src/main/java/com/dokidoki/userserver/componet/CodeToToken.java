@@ -1,13 +1,12 @@
 package com.dokidoki.userserver.componet;
 
 import com.dokidoki.userserver.dto.OauthToken;
-import com.dokidoki.userserver.dto.request.TokenBody;
+import com.dokidoki.userserver.dto.request.TokenBodyReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -50,7 +49,7 @@ public class CodeToToken {
     public OauthToken codeToTokenGoogle(String code){
         URI uri = UriComponentsBuilder.fromUriString(TOKEN_URI_GOOGLE).build().toUri();
 
-        TokenBody tokenBody = TokenBody.builder()
+        TokenBodyReq tokenBody = TokenBodyReq.builder()
                 .code(code)
                 .client_id(CLIENT_ID_GOOGLE)
                 .client_secret(CLIENT_SECRET_GOOGLE)
@@ -58,7 +57,7 @@ public class CodeToToken {
                 .redirect_uri(REDIRECT_URI_GOOGLE)
                 .build();
 
-        HttpEntity<TokenBody> entity = new HttpEntity(tokenBody);
+        HttpEntity<TokenBodyReq> entity = new HttpEntity(tokenBody);
 
         log.info(uri.toString());
         OauthToken token = restTemplate.postForEntity(uri, entity, OauthToken.class).getBody();

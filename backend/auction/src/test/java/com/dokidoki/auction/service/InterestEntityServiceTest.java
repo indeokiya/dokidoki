@@ -6,7 +6,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class InterestServiceTest {
+public class InterestEntityServiceTest {
     
     // 사용자 회원가입
     

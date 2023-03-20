@@ -1,11 +1,11 @@
 package com.dokidoki.auction.domain.repository;
 
-import com.dokidoki.auction.domain.entity.Product;
+import com.dokidoki.auction.domain.entity.ProductEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
-    List<Product> findByCategory_Id(Long category_id);
+    List<ProductEntity> findByCategoryEntity_Id(Long category_id);
 }
