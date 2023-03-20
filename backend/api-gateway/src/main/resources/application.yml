@@ -15,4 +15,34 @@ spring:
             allowedHeaders: '*'
             allowedMethods: '*'
       routes:
-      - id:
+      - id: bid-server
+        uri: http://172.17.0.1:8081
+        predicates:
+          - Path=/bid/**
+        filters:
+          - RewritePath=/bid/(?<segment>.*), /$\{segment}
+          - JwtAuthenticationFilter
+
+      - id: auction-server
+        uri: http://172.17.0.1:8082
+        predicates:
+          - Path=/auction/**
+        filters:
+          - RewritePath=/auction/(?<segment>.*), /$\{segment}
+          - JwtAuthenticationFilter
+
+      - id: user-server
+        uri: http://172.17.0.1:8083
+        predicates:
+          - Path=/user/**
+        filters:
+          - RewritePath=/user/(?<segment>.*), /$\{segment}
+
+      - id: user-server
+        uri: http://172.17.0.1:8083
+        predicates:
+          - Path=/user/**
+          - Method=DELETE
+        filters:
+          - RewritePath=/web-service/(?<segment>.*), /$\{segment}
+          - JwtAuthenticationFilter
