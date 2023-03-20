@@ -3,7 +3,7 @@ import Content from "./Content";
 import styled from "styled-components";
 import { useRef, useEffect,useState } from "react";
 
-const ContentsList = () => {
+const ContentsList:React.FC<{openPage:()=>void}> = (props) => {
   const [posts,setPosts] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
 
   const[isLoading,setIsLoading] = useState(true);
@@ -43,7 +43,7 @@ const ContentsList = () => {
       <Grid container spacing={4} paddingLeft={2}>
         {posts.map((data, i) => (
           <Grid key={i} item xs={4}>
-            <Content></Content>
+            <Content openPage={props.openPage}></Content>
           </Grid>
         ))}
         <Grid item xs={12}>

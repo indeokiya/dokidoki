@@ -7,6 +7,8 @@ import RootLayout from "./routes/RootLayout";
 import RendingPageContainer from "./routes/RendingPageContainer";
 import ActionPageContent from "./routes/ActionPageContent";
 import TestContainer from "./routes/TestContainer";
+import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
+import ProfilePage from "./routes/ProfilePage";
 
 const router = createBrowserRouter([
   {
@@ -20,13 +22,11 @@ const router = createBrowserRouter([
       {
         path: "action",
         element: <ActionPageContent />,
-        children: [
-          {
-            path: ":id",
-            element: <h1>이곳은 모달로띄우는 페이지 입니다.</h1>,
-          },
-        ],
       },
+      {
+        path:"mypage",
+        element:<ProfilePage/>
+      }
     ],
   },
   {

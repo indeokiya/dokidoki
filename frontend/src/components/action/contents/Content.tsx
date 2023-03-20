@@ -4,10 +4,10 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import sampleImg from '../../../assets/image/phone.png'
+import sampleImg from '../../../assets/image/phone1.png'
 import { useState } from 'react';
 
-export default function Content() {
+const Content:React.FC<{openPage:()=> void}> = (props) => {
 
     const [isHovered, setIsHovered] = useState(false); 
 
@@ -18,6 +18,7 @@ export default function Content() {
         onMouseLeave={() => setIsHovered(false)} 
         raised={isHovered}
         sx={ isHovered? {cursor:'pointer'}:{}}
+        onClick = {()=>{props.openPage()}}
         >
         
       <CardMedia
@@ -29,11 +30,13 @@ export default function Content() {
       />
       <CardContent>
         <Typography gutterBottom variant="h5" component="div">
-          Lizard
+          게시글 제목~
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          Lizards are a widespread group of squamate reptiles, with over 6,000
-          species, ranging across all continents except Antarctica
+        <Typography variant="body2" color="text.secondary" align="left">
+          Lizards  
+        </Typography>
+        <Typography variant="body2" color="text.secondary" align="right">
+          Lizards  
         </Typography>
       </CardContent>
       <CardActions>
@@ -43,3 +46,5 @@ export default function Content() {
     </Card>
   );
 }
+
+export default Content;
