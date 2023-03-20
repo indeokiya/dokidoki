@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 8080
 
 spring:
   # database local
@@ -21,18 +21,33 @@ spring:
     level:
       org.hibernate.type: trace
 
+cloud:
+  aws:
+    s3:
+      bucket: dokidoki
+    credentials:
+      access-key: AKIAUEVS3DJH3EYUME6G
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
 oauth2:
   google:
     client_id: 409728357789-pfbb5h8u9m4tib34v3qne7n7atat1tbc.apps.googleusercontent.com
     client_secret: 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
     token_uri: https://oauth2.googleapis.com/token
     profile_uri: https://www.googleapis.com/oauth2/v3/userinfo
-    redirect_uri: http://j8a202.p.ssafy.io/user/oauth2/google/redirect
+    #redirect_uri: http://j8a202.p.ssafy.io/user/oauth2/google/redirect
+    redirect_uri: http://localhost:8080/oauth2/google/redirect
   kakao:
     # REST API 키
     client_id: 355cfcf503170ecfb98fae9e4aa9a4df
     client_secret: DrtbGue1SrkzOWMJPLVx9g2by9YlNIWk
-    redirect_uri: http://j8a202.p.ssafy.io/user/oauth2/kakao/redirect
+    #redirect_uri: http://j8a202.p.ssafy.io/user/oauth2/kakao/redirect
+    redirect_uri: http://localhost:8080/oauth2/kakao/redirect
     token_uri: https://kauth.kakao.com/oauth/token
 
 jwt:
@@ -44,4 +59,4 @@ jwt:
   refresh_expiration: 1296000000
 
 front:
-  redirect_uri: http://j8a202.p.ssafy.io:3000
+  redirect_uri: http://localhost:3000
