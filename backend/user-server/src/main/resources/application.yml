@@ -1,13 +1,14 @@
 spring:
   # database local
   datasource:
-    url: jdbc:mysql://localhost:3306/dokidoki
-    username: root
-    password: root
+    url: jdbc:mysql://j8a202.p.ssafy.io:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+    username: dokidoki
+    password: dokidoki202
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
