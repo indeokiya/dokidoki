@@ -1,42 +1,31 @@
 package com.dokidoki.bid.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.lang.reflect.Member;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
-@Entity
-@Table(name = "auction_ing")
+import java.util.Date;
+
+@ToString
 @Getter
 @Builder
-@RequiredArgsConstructor
 @AllArgsConstructor
-public class AuctionIngEntity{
+@NoArgsConstructor
+@Table(name = "auction_ing")
+@Entity
+public class AuctionIngEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MemberEntity.class)
-    @JoinColumn(name = "seller_id")
-    private MemberEntity member;
-
-    @Column(name = "seller_id", insertable = false, updatable = false)
+    // 판매자id 수정필요
+    @Column(name = "seller_id")
     private Long sellerId;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = ProductEntity.class)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
-    private ProductEntity product;
-
-    @Column(name = "product_id", insertable = false, updatable = false)
-    private Long productId;
+    private ProductEntity productEntity;
 
     private String title;               // 제목
 
@@ -48,8 +37,9 @@ public class AuctionIngEntity{
     @Column(name = "price_size")
     private Integer priceSize;              // 경매 단위
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_at")
-    private LocalDateTime endAt;        // 경매 종료 시점
+    private Date endAt;        // 경매 종료 시점
 
     @Column(name = "meeting_place")
     private String meetingPlace;        // 거래장소
@@ -58,4 +48,3 @@ public class AuctionIngEntity{
     private Integer highestPrice;           // 현재 최고가
 
 }
-

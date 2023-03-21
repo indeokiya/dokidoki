@@ -1,26 +1,29 @@
 package com.dokidoki.bid.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "auction_image")
 @Table(name = "auction_image")
 @Getter
-@Builder
-@RequiredArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor
 public class AuctionImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "auction_id")
-    private Long sellerId;
+    private Long auctionId;
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    public static AuctionImageEntity createAuctionImage(Long auctionId, String imageUrl) {
+        AuctionImageEntity auctionImageEntity = new AuctionImageEntity();
+        auctionImageEntity.auctionId = auctionId;
+        auctionImageEntity.imageUrl = imageUrl;
+        return auctionImageEntity;
+    }
 }

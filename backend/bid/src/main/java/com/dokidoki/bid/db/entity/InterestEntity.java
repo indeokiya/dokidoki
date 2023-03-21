@@ -1,29 +1,30 @@
 package com.dokidoki.bid.db.entity;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "interest")
-@Getter
+@ToString
 @Builder
-@RequiredArgsConstructor
+@NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "interest")
+@Entity
 public class InterestEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;    // 찜 id
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MemberEntity.class)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
-    private MemberEntity member;
+    private MemberEntity memberEntity;
 
-    @Column(name = "member_id", insertable = false, updatable = false)
-    private Long memberId;
-    @Column(name = "auction_id")
-    private Long auctionId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "auction_id")
+    private AuctionIngEntity auctionIngEntity;
 }

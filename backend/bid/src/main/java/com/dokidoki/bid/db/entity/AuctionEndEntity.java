@@ -1,46 +1,30 @@
 package com.dokidoki.bid.db.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "auction_end")
 @Getter
-@Builder
-@RequiredArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class AuctionEndEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MemberEntity.class)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private MemberEntity seller;
 
-    @Column(name = "seller_id", insertable = false, updatable = false)
-    private Long sellerId;
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = MemberEntity.class)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "buyer_id")
     private MemberEntity buyer;
 
-    @Column(name = "buyer_id", insertable = false, updatable = false)
-    private Long buyerId;
-
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = ProductEntity.class)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private ProductEntity product;
-
-    @Column(name = "product_id", insertable = false, updatable = false)
-    private Long productId;
 
     @Column(name = "start_time")
     private LocalDateTime startTime;        // 경매 시작 시간
@@ -57,4 +41,28 @@ public class AuctionEndEntity {
 
     @Column(name = "final_price")
     private Integer finalPrice;         // 낙찰금액
+
+    public static AuctionEndEntity createAuctionEnd(
+            Long id,
+            MemberEntity seller,
+            MemberEntity buyer,
+            ProductEntity product,
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            String title,
+            Integer offerPrice,
+            Integer finalPrice
+    ) {
+        AuctionEndEntity auctionEndEntity = new AuctionEndEntity();
+        auctionEndEntity.id = id;
+        auctionEndEntity.seller = seller;
+        auctionEndEntity.buyer = buyer;
+        auctionEndEntity.product = product;
+        auctionEndEntity.startTime = startTime;
+        auctionEndEntity.endTime = endTime;
+        auctionEndEntity.title = title;
+        auctionEndEntity.offerPrice = offerPrice;
+        auctionEndEntity.finalPrice = finalPrice;
+        return auctionEndEntity;
+    }
 }
