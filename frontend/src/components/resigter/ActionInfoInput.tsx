@@ -1,15 +1,9 @@
-import {
-  Paper,
-  Grid,
-  Typography,
-  Divider,
-  TextField,
-  Input,
-} from "@mui/material";
+import { Paper, Grid, Typography, Divider, TextField } from "@mui/material";
 import { useState } from "react";
 import AddressInput from "./AddressInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import MapIcon from "@mui/icons-material/Map";
+import { NumericFormat } from "react-number-format";
 
 const ActionInfoInput = () => {
   const [address, setAddress] = useState("");
@@ -29,11 +23,13 @@ const ActionInfoInput = () => {
             <Typography variant="subtitle1">시작 가격 : </Typography>
           </Grid>
           <Grid item xs={10} mb={2}>
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              fullWidth
-              type="number"
+          <NumericFormat
+                style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
+              allowNegative={false}
+              decimalScale={2}
+              displayType={"input"}
+              thousandSeparator={true}
+              suffix={" 원"}
             />
           </Grid>
 
@@ -41,11 +37,13 @@ const ActionInfoInput = () => {
             <Typography variant="subtitle1">겅매 단위 : </Typography>
           </Grid>
           <Grid item xs={10} mb={2}>
-            <TextField
-              id="outlined-basic"
-              variant="outlined"
-              fullWidth
-              type="number"
+            <NumericFormat
+                style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
+              allowNegative={false}
+              decimalScale={2}
+              displayType={"input"}
+              thousandSeparator={true}
+              suffix={" 원"}
             />
           </Grid>
 
@@ -57,7 +55,7 @@ const ActionInfoInput = () => {
               id="outlined-basic"
               variant="outlined"
               fullWidth
-              type="date"
+              type="datetime-local"
             />
           </Grid>
 
@@ -65,25 +63,30 @@ const ActionInfoInput = () => {
             <Typography variant="subtitle1">거래 장소 : </Typography>
           </Grid>
           <Grid item xs={10} mb={2}>
-            <TextField
-              id="outlined-basic"
-              fullWidth
-              type="text"
-              value={address}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <MapIcon
-                      onClick={() => {
-                        setAddressInputVisible(!addressInputVisible);
-                      }}
-                    />
-                  </InputAdornment>
-                ),
-              }}
-            />
-
-            {addressInputVisible && <AddressInput setAddress={setAddress} />}
+            {addressInputVisible ? (
+              <AddressInput
+                setAddress={setAddress}
+                setVisible={setAddressInputVisible}
+              />
+            ) : (
+              <TextField
+                id="outlined-basic"
+                fullWidth
+                type="text"
+                value={address}
+                onClick={() => {
+                  setAddressInputVisible(!addressInputVisible);
+                }}
+                disabled
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <MapIcon />
+                    </InputAdornment>
+                  ),
+                }}
+              />
+            )}
           </Grid>
         </Grid>
       </Paper>

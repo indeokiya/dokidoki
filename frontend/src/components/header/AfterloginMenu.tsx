@@ -2,6 +2,7 @@ import { Grid, Button, Avatar, Badge, Menu, MenuItem } from "@mui/material";
 import imgSrc from "../../../src/assets/image/profile.png";
 import styled from "styled-components";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const AfterLoginMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -46,10 +47,9 @@ const AfterLoginMenu = () => {
   return (
     <Grid container alignItems={"center"} spacing={1}>
       <Grid item>
+        <Link to='/action'>
         <Button> Action </Button>
-      </Grid>
-      <Grid item>
-        <Button> MyPage </Button>
+        </Link>
       </Grid>
       <Grid item>
         <p>{loginUser.name}님 환영합니다.</p>

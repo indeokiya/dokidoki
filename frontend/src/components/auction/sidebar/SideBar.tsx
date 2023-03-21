@@ -31,20 +31,19 @@ export default function SelectedListItem() {
   };
 
   const StyledH5 = styled.h3`
-    text-align: center;
+    text-align: start;
   `;
   return (
-    <div style={{position:'fixed'}}>
+    <div style={{position:'absolute'}}>
     <Box
       sx={{
-        width: "100%",
-        maxWidth: 360,
+        width: "200",
         bgcolor: "background.paper",
-        border: "1px solid #DDDDDD",
+        
       }}
     >
       <List component="nav" aria-label="main mailbox folders">
-        <StyledH5 style={{ textAlign: "center" }}>category</StyledH5>
+        <StyledH5 >category</StyledH5>
         <Divider />
 
         {category.map((category, i) => (

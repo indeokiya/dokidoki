@@ -5,7 +5,7 @@ import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./routes/RootLayout";
 import RendingPageContainer from "./routes/RendingPageContainer";
-import ActionPageContent from "./routes/ActionPageContent";
+import ActionPageContent from "./routes/AuctionPageContent";
 import TestContainer from "./routes/TestContainer";
 import ProfilePage from "./routes/ProfilePage";
 import LoginPage from "./routes/LoginPage";
