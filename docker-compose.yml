@@ -1,0 +1,98 @@
+version: "3.8"
+
+services:
+  dokidoki_frontend:
+    container_name: dokidoki_frontend
+    build:
+      context: ./frontend
+      dockerfile: dockerfile
+    ports:
+      - "3030:3000"
+    environment:
+      - NODE_ENV=development
+      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true
+    tty: true
+    networks:
+      - default
+      - dokidoki_net
+
+
+  database_redis:
+    container_name: database_redis
+    image: redis
+    command: ["redis-server", "--appendonly", "yes", "--replica-read-only", "no","--requirepass", "qhBb3Ht7Psvz54PCjlAw"]
+    ports:
+      - "6379:6379"
+    networks:
+      - default
+      - dokidoki_net
+
+  api-gateway-server:
+    container_name: api-gateway-server
+    build:
+      context: ./backend/api-gateway
+      dockerfile: dockerfile
+    restart: always
+    ports:
+      - 8080:8080
+    stdin_open: true
+    tty: true
+    networks:
+      - default
+      - dokidoki_net
+
+  bid-server:
+    container_name: bid-server
+    build:
+      context: ./backend/bid
+      dockerfile: dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: dokidoki
+      SPRING_DATASOURCE_PASSWORD: dokidoki202
+      SPRING_REDIS_HOST: database_redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_REDIS_PASSWORD: qhBb3Ht7Psvz54PCjlAw
+    restart: always
+    ports:
+      - 8081:8081
+    networks:
+      - default
+      - dokidoki_net
+
+  auction-server:
+    container_name: auction-server
+    build:
+      context: ./backend/auction
+      dockerfile: dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: dokidoki
+      SPRING_DATASOURCE_PASSWORD: dokidoki202
+    restart: always
+    ports:
+      - 8082:8082
+    networks:
+      - default
+      - dokidoki_net
+
+  user-server:
+    container_name: user-server
+    build:
+      context: ./backend/user-server
+      dockerfile: dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: dokidoki
+      SPRING_DATASOURCE_PASSWORD: dokidoki202
+    restart: always
+    ports:
+      - 8083:8083
+    networks:
+      - default
+      - dokidoki_net
+
+networks:
+  dokidoki_net:
+    driver: bridge
