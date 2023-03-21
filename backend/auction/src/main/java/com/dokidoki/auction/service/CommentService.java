@@ -129,16 +129,20 @@ public class CommentService {
     }
 
     @Transactional
-    public int deleteComment(Long comment_id) {
+    public int deleteComment(Long memberId, Long commentId) {
         // {comment_id}를 갖는 댓글이 있는지 확인
-        Optional<CommentEntity> optionalComment = commentRepository.findById(comment_id);
-        if (optionalComment.isEmpty()) {
+        CommentEntity commentEntity = commentRepository.findById(commentId).orElse(null);
+        if (commentEntity == null)
             return 5;
-        }
+
+        // 요청자와 작성자가 일치하는지 확인
+        if (!memberId.equals(commentEntity.getMemberEntity().getId()))
+            return 6;
+
         // 댓글 삭제
-        commentRepository.delete(optionalComment.get());
+        commentRepository.delete(commentEntity);
         // 대댓글 모두 삭제
-        commentRepository.deleteCommentsByParentId(optionalComment.get().getId());
+        commentRepository.deleteCommentsByParentId(commentEntity.getId());
         return 0;
     }
 }

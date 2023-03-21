@@ -122,14 +122,23 @@ public class CommentController {
     }
 
     @DeleteMapping("/{comment_id}")
-    public ResponseEntity<CommonResponse<Void>> deleteComment(@PathVariable Long comment_id) {
-        int resultCode = commentService.deleteComment(comment_id);
+    public ResponseEntity<CommonResponse<Void>> deleteComment(
+            @PathVariable Long comment_id,
+            HttpServletRequest request) {
+        Long memberId = jwtUtil.getUserId(request);
+        if (memberId == null){
+            return new ResponseEntity<>(
+                    CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
+                    HttpStatus.FORBIDDEN
+            );
+        }
+
+        int resultCode = commentService.deleteComment(memberId, comment_id);
 
         // 유효성 검증, 오류가 존재하면 오류 메시지가 포함된 Response 객체 반환
         ResponseEntity<CommonResponse<Void>> errorResponse = checkResultCode(resultCode);
-        if (errorResponse != null) {
+        if (errorResponse != null)
             return errorResponse;
-        }
 
         return new ResponseEntity<>(
                 CommonResponse.of(200, "댓글이 삭제되었습니다.", null),
