@@ -97,12 +97,15 @@ public class CommentService {
     }
 
     @Transactional
-    public int updateComment(Long comment_id, PutCommentRequest commentRequest) {
-        CommentEntity commentEntity = commentRepository.findById(comment_id).orElse(null);
+    public int updateComment(Long memberId, Long commentId, PutCommentRequest commentRequest) {
+        CommentEntity commentEntity = commentRepository.findById(commentId).orElse(null);
 
         // 존재하지 않는 댓글일 경우
         if (commentEntity == null)
             return 5;
+        // 요청자와 작성자가 일치하지 않을 경우
+        if (!memberId.equals(commentEntity.getMemberEntity().getId()))
+            return 6;
         // 새로운 댓글이 비어있을 경우
         if (commentRequest.getContent().isBlank())
             return 3;

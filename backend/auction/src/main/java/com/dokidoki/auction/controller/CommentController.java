@@ -88,8 +88,17 @@ public class CommentController {
     @PutMapping("/{comment_id}")
     public ResponseEntity<CommonResponse<Void>> updateComment(
             @PathVariable Long comment_id,
-            @RequestBody Optional<PutCommentRequest> optionalPutCommentRequest) {
+            @RequestBody Optional<PutCommentRequest> optionalPutCommentRequest,
+            HttpServletRequest request) {
         PutCommentRequest putCommentRequest = optionalPutCommentRequest.orElse(null);
+
+        Long memberId = jwtUtil.getUserId(request);
+        if (memberId == null){
+            return new ResponseEntity<>(
+                    CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
+                    HttpStatus.FORBIDDEN
+            );
+        }
 
         // Request Body가 없을 경우,
         if (putCommentRequest == null) {
@@ -99,14 +108,10 @@ public class CommentController {
             );
         }
 
-        // 요청한 사용자와 댓글 작성자 일치 확인
-        // ~ 미구현 ~
-
         // 댓글 수정
         ResponseEntity<CommonResponse<Void>> errRes = checkResultCode(
-                commentService.updateComment(comment_id, putCommentRequest)
+                commentService.updateComment(memberId, comment_id, putCommentRequest)
         );
-        System.out.println();
         if (errRes != null)
             return errRes;
 
@@ -139,6 +144,7 @@ public class CommentController {
         final int BLANK_CONTENT = 3;  // 공백 문자열일 경우
         final int MAX_LENGTH_EXCEEDED = 4;  // 최대 길이를 초과할 경우
         final int NO_COMMENT = 5;  // 부모 댓글 식별번호가 없을 경우
+        final int NOT_EQUAL = 6;
 
         switch (resultCode) {
             case NO_AUCTION:
@@ -165,6 +171,11 @@ public class CommentController {
                 return new ResponseEntity<>(
                         CommonResponse.of(400, "존재하지 않는 댓글입니다.", null),
                         HttpStatus.BAD_REQUEST
+                );
+            case NOT_EQUAL:
+                return new ResponseEntity<>(
+                        CommonResponse.of(403, "댓글 작성자가 아닙니다.", null),
+                        HttpStatus.FORBIDDEN
                 );
         }
         return null;
