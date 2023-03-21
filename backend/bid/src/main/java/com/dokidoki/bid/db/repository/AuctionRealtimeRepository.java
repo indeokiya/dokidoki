@@ -14,5 +14,6 @@ public interface AuctionRealtimeRepository {
 
     AuctionRealtime save(AuctionRealtime auctionRealtime, Duration duration);
 
+    void deleteAll();
 
 }
