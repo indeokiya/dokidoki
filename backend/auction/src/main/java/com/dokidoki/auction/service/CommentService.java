@@ -61,13 +61,13 @@ public class CommentService {
     }
 
     @Transactional
-    public int createComment(CommentRequest commentRequest) {
+    public int createComment(Long memberId, CommentRequest commentRequest) {
         // 존재하지 않는 경매 식별번호일 경우,
         // ~ 미구현 ~
 
         // 존재하지 않는 사용자 식별번호일 경우,
         // MSA니까 사용자 서버에 사용자 객체 요청해야 할 듯?
-        Optional<MemberEntity> optionalMember = memberRepository.findById(commentRequest.getMember_id());
+        Optional<MemberEntity> optionalMember = memberRepository.findById(memberId);
         if (optionalMember.isEmpty()) {
             return 2;
         }
