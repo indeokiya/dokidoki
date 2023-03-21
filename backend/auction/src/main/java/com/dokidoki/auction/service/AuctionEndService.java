@@ -1,14 +1,10 @@
 package com.dokidoki.auction.service;
 
-import com.dokidoki.auction.domain.entity.AuctionImageEntity;
-import com.dokidoki.auction.domain.entity.CommentEntity;
 import com.dokidoki.auction.domain.entity.LeaderboardEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
-import com.dokidoki.auction.domain.repository.AuctionImageRepository;
-import com.dokidoki.auction.domain.repository.CommentRepository;
 import com.dokidoki.auction.domain.repository.LeaderboardRepository;
-import com.dokidoki.auction.dto.response.AuctionEndInterface;
-import com.dokidoki.auction.dto.response.AuctionEndResponse;
+import com.dokidoki.auction.dto.response.DetailAuctionEndInterface;
+import com.dokidoki.auction.dto.response.DetailAuctionEndResponse;
 import com.dokidoki.auction.dto.response.CommentResponse;
 import com.dokidoki.auction.dto.response.LeaderboardHistoryResponse;
 import lombok.RequiredArgsConstructor;
@@ -25,12 +21,12 @@ public class AuctionEndService {
     private final CommentService commentService;
     private final LeaderboardRepository leaderboardRepository;
 
-    public AuctionEndResponse readAuctionEnds(Long auction_id) {
+    public DetailAuctionEndResponse readAuctionEnds(Long auction_id) {
         // 완료된 경매 정보
-        List<AuctionEndInterface> auctionEndInterfaces = auctionEndRepository.findAuctionEndEntitiesById(auction_id);
+        List<DetailAuctionEndInterface> detailAuctionEndInterfaces = auctionEndRepository.findDetailAuctionEndEntitiesById(auction_id);
 
         // 존재하지 않는다면 null 반환
-        if (auctionEndInterfaces.isEmpty())
+        if (detailAuctionEndInterfaces.isEmpty())
             return null;
 
         // 경매 제품 사진 URL 구하기
@@ -45,8 +41,8 @@ public class AuctionEndService {
         for (LeaderboardEntity leaderboard : leaderboardEntities)
             leaderboardHistoryResponses.add(new LeaderboardHistoryResponse(leaderboard));
 
-        return new AuctionEndResponse(
-                auctionEndInterfaces.get(0),
+        return new DetailAuctionEndResponse(
+                detailAuctionEndInterfaces.get(0),
                 auctionImageUrls,
                 commentResponses,
                 leaderboardHistoryResponses
