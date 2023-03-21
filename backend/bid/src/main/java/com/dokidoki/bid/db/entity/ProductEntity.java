@@ -3,6 +3,8 @@ package com.dokidoki.bid.db.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @ToString
 @Getter
@@ -10,16 +12,18 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "product")
 public class ProductEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;            // 제품 id
+    private Long id;            // 제품 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private CategoryEntity category;
+
+    @Column(name = "category_id" , insertable = false, updatable = false)
+    private Long categoryId;
 
     private String name;        // 제품명
 
@@ -27,6 +31,11 @@ public class ProductEntity {
     private String imgUrl;      // 이미지 url
 
     @Column(name = "sale_cnt")
-    private int saleCnt;        // 판매 빈도
+    private Integer saleCnt;        // 판매 빈도
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<AuctionIngEntity> auctionIngEntities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<AuctionEndEntity> auctionEndEntities = new ArrayList<>();
 }

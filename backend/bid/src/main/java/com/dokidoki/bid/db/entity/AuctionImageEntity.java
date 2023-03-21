@@ -1,7 +1,5 @@
 package com.dokidoki.bid.db.entity;
 
-
-import com.dokidoki.bid.db.entity.enumtype.ProviderType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,21 +8,19 @@ import lombok.RequiredArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "member")
+@Table(name = "auction_image")
 @Getter
 @Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
-public class UserEntity extends BaseEntity{
+public class AuctionImageEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String sub;
-    private String name;
-    private String picture;
-    private String email;
 
-    @Column(name = "provider")
-    @Enumerated(EnumType.STRING)
-    private ProviderType providerType;
+    @Column(name = "auction_id")
+    private Long sellerId;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 }
