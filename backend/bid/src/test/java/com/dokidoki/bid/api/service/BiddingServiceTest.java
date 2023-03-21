@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -46,33 +47,34 @@ class BiddingServiceTest {
     static long auctionId;
     static long realTimeAuctionId;
     static String key;
-    final static long sellerId = 80_000;
+    static long sellerId;
+    static long[] memberIds = {0, 0};
     final static int highestPrice = 7_000_000;
     final static int priceSize = 10_000;
     final static int lifeSpan = 60 * 60 * 24;
-    final static long[] memberIds = { 70_000, 70_001};
     final static String[] names = {"사용자0", "사용자1"};
     final static String[] emails = {"user0@gmail.com", "user1@gmail.com"};
 
     @BeforeEach
     public void 준비() {
         // 기존 DB 내용 삭제
-        // TODO - redis DB 초기화 과정 필요
-
+        auctionRealtimeRepository.deleteAll();
         auctionIngRepository.deleteAll();
         memberRepository.deleteAll();
 
         // 사용자 회원가입
         for (int i = 0; i < memberIds.length; i++) {
             MemberEntity user = MemberEntity.builder()
-                    .id(memberIds[i]).name(names[i]).email(emails[i]).build();
-            memberRepository.save(user);
+                    .name(names[i]).build();
+            MemberEntity member = memberRepository.save(user);
+            memberIds[i] = member.getId();
         }
 
         MemberEntity user = MemberEntity.builder()
-                .id(sellerId).name("판매자").email("seller@gmail.com").build();
+                .name("판매자").build();
 
-        memberRepository.save(user);
+        MemberEntity seller = memberRepository.save(user);
+        sellerId = seller.getId();
 
         // 경매 등록
         AuctionIngEntity auctionIng = AuctionIngEntity.builder()
@@ -83,6 +85,7 @@ class BiddingServiceTest {
         auctionId = auctionIng.getId();
         key = biddingService.getKey(auctionId);
 
+
         // 실시간 경매 초기화 정보 등록 (나중엔 메서드로 대체하기)
         AuctionRealtime auctionRealtime = AuctionRealtime.builder()
                 .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
@@ -90,15 +93,20 @@ class BiddingServiceTest {
         RLiveObjectService liveObjectService = redisson.getLiveObjectService();
         auctionRealtime = liveObjectService.persist(auctionRealtime);
         realTimeAuctionId = auctionRealtime.getAuctionId();
+
+        System.out.println("sellerId: "+ sellerId);
+        System.out.println(Arrays.toString(memberIds));
+        System.out.println("auctionId: "+ auctionId);
+        System.out.println("realTimeAuctionId: "+ realTimeAuctionId);
+
     }
 
     @Test
-    public void test() {
+    @DisplayName("경매 초기화 등록 정보 확인")
+    public void 경매_초기화_등록_정보_확인() {
         RLiveObjectService liveObjectService = redisson.getLiveObjectService();
         AuctionRealtime auctionRealtime = liveObjectService.get(AuctionRealtime.class, realTimeAuctionId);
         System.out.println(auctionRealtime);
-        AuctionRealtime auctionRealtime1 = liveObjectService.get(AuctionRealtime.class, realTimeAuctionId + 2);
-        System.out.println(auctionRealtime1);
 
     }
 
@@ -141,6 +149,7 @@ class BiddingServiceTest {
 
             @BeforeEach
             public void 준비() {
+                auctionRealtimeRepository.deleteAll();
                 AuctionRealtime auctionRealtime = AuctionRealtime.builder()
                         .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
                 auctionRealtimeRepository.save(auctionRealtime);
@@ -284,6 +293,7 @@ class BiddingServiceTest {
             @Test
             @DisplayName("올바르게 접근하면 제대로 수정된다.")
             public void 입찰단위_수정_성공() {
+                System.out.println(auctionId);
                 biddingService.updatePriceSize(auctionId, correctReq);
                 AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
                 assertEquals(correctReq.getPriceSize(), auctionRealtime.getPriceSize());
