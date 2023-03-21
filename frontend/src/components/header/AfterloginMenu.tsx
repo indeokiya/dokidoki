@@ -48,7 +48,7 @@ const AfterLoginMenu = () => {
     <Grid container alignItems={"center"} spacing={1}>
       <Grid item>
         <Link to='/action'>
-        <Button> Action </Button>
+        <Button sx={{textDecoration:'none'}}> Action </Button>
         </Link>
       </Grid>
       <Grid item>
@@ -80,7 +80,6 @@ const AfterLoginMenu = () => {
           }}
         >
           <MenuItem onClick={handleClose}>Profile</MenuItem>
-          <MenuItem onClick={handleClose}>My account</MenuItem>
           <MenuItem onClick={handleClose}>Logout</MenuItem>
         </Menu>
       </Grid>

@@ -30,7 +30,7 @@ const ProductInfoInput =()=>{
                 {/* 상단 Grid */}
                 <Grid container direction="row">
                   <Grid item xs={12}>
-                    <Typography variant="h5" fontWeight="bold" color={"blue"}>제품 정보</Typography>
+                    <Typography variant="h5" fontWeight="bold" color={"#3A77EE"}>제품 정보</Typography>
                     <Divider sx={{margin:"2rem 0px"}}/>
                   </Grid>
                   {/* 이미지 삽입 */}

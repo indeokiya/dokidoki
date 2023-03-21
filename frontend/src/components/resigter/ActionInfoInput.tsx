@@ -14,7 +14,7 @@ const ActionInfoInput = () => {
       <Paper elevation={3} sx={{ width: 600, padding: 10 }}>
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="h5" fontWeight="bold" color={"blue"}>
+            <Typography variant="h5" fontWeight="bold" color={"#3A77EE"}>
               경매 정보
             </Typography>
             <Divider sx={{ margin: "2rem 0px" }} />
@@ -77,7 +77,6 @@ const ActionInfoInput = () => {
                 onClick={() => {
                   setAddressInputVisible(!addressInputVisible);
                 }}
-                disabled
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
