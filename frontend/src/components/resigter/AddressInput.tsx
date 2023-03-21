@@ -1,13 +1,9 @@
-import { useState, useCallback, useRef } from "react";
-import Grid from "@mui/material/Grid";
-import axios from "axios";
+import { useState} from "react";
 import { Button } from "@mui/material";
 import DaumPostcode from "react-daum-postcode";
 
-const TestContainer = () => {
-  const [address, setAddress] = useState("");
-  const [visible, setVisible] = useState(false); // 우편번호 컴포넌트의 노출여부 상태
-
+const AddressInput:React.FC<{setAddress:(address:string)=>void}> = (props) => {
+  
   const handleComplete = (data: any) => {
     let fullAddress = data.address;
     let extraAddress = "";
@@ -22,21 +18,16 @@ const TestContainer = () => {
       }
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
-    setAddress(fullAddress);
+    props.setAddress(fullAddress);
   };
 
   return (
     <>
-    <Button onClick={()=>{ setVisible(true) }}>열기</Button>
-    {address}
-      {visible && (
         <div>
-          <Button onClick={() => setVisible(false)} >닫기</Button> 
           <DaumPostcode onComplete={handleComplete} />
         </div>
-      )}
     </>
   );
 };
 
-export default TestContainer
+export default AddressInput

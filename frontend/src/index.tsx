@@ -7,8 +7,11 @@ import RootLayout from "./routes/RootLayout";
 import RendingPageContainer from "./routes/RendingPageContainer";
 import ActionPageContent from "./routes/ActionPageContent";
 import TestContainer from "./routes/TestContainer";
-import LeaderBoard from "./components/LeaderBoard/LeaderBoard";
 import ProfilePage from "./routes/ProfilePage";
+import LoginPage from "./routes/LoginPage";
+import RegisterPage from "./routes/RegisterPage";
+
+
 
 const router = createBrowserRouter([
   {
@@ -20,15 +23,24 @@ const router = createBrowserRouter([
         element: <RendingPageContainer />,
       },
       {
-        path: "action",
+        path:"action",
         element: <ActionPageContent />,
       },
       {
         path:"mypage",
         element:<ProfilePage/>
-      }
+      },
+      {
+        path:'login',
+        element:<LoginPage/>
+      },
+      {
+        path:'regist',
+        element:<RegisterPage/>
+      },
     ],
   },
+  
   {
     path: "/test",
     element: <TestContainer />,
