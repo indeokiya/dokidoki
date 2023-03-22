@@ -9,54 +9,53 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
+
 public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Long> {
-    @Query(value = "SELECT a.id as auction_id, a.title as auction_title " +
-            " , a.end_at as end_time, p.name as product_name, c.category_name as category_name " +
-            " , a.offer_price as offer_price, a.highest_price as cur_price " +
-            "FROM auction_ing a " +
-            " JOIN product p " +
-            " JOIN category c " +
-            "WHERE a.product_id = p.id" +
-            " AND p.category_id = c.id " +
-            "ORDER BY a.end_at DESC ", nativeQuery = true)
+    @Query("SELECT a.id as auction_id, a.title as auction_title " +
+            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            "FROM AuctionIngEntity a " +
+            " JOIN a.productEntity p " +
+            " JOIN p.categoryEntity c " +
+            "ORDER BY a.endAt DESC ")
     Page<SimpleAuctionIngInterface> findAllSimpleIngList(Pageable pageable);
 
-    @Query(value = "SELECT a.id as auction_id, a.title as auction_title " +
-            " , a.end_at as end_time, p.name as product_name, c.category_name as category_name " +
-            " , a.offer_price as offer_price, a.highest_price as cur_price " +
-            "FROM auction_ing a " +
-            " JOIN product p " +
-            " JOIN category c " +
-            "WHERE a.product_id = p.id" +
-            " AND p.category_id = c.id " +
-            " AND TIMESTAMPDIFF(second, now(), a.end_at) <= 3600 " +
-            "ORDER BY a.end_at DESC ", nativeQuery = true)
-    Page<SimpleAuctionIngInterface> findAllSimpleDeadlineList(Pageable pageable);
+    @Query("SELECT a.id as auction_id, a.title as auction_title " +
+            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            "FROM AuctionIngEntity a " +
+            " JOIN a.productEntity p " +
+            " JOIN p.categoryEntity c " +
+            "WHERE a.endAt < :within_an_hour " +
+            "ORDER BY a.endAt DESC ")
+    Page<SimpleAuctionIngInterface> findAuctionIngEntitiesByEndAtLessThan(
+            @Param("within_an_hour") LocalDateTime withinAnHour, Pageable pageable);
+    default Page<SimpleAuctionIngInterface> findAllSimpleDeadlineList(Pageable pageable) {
+        // 현재로부터 한 시간 뒤의 시간을 구한 뒤, endAt과 비교 연산
+        return findAuctionIngEntitiesByEndAtLessThan(LocalDateTime.now().plusMinutes(60), pageable);
+    }
 
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title " +
-            " , a.end_at as end_time, p.name as product_name, c.category_name as category_name " +
-            " , a.offer_price as offer_price, a.highest_price as cur_price " +
-            "FROM auction_ing a " +
-            " JOIN product p " +
-            " JOIN category c " +
-            "WHERE a.product_id = p.id" +
-            " AND p.category_id = c.id " +
-            " AND (p.name LIKE %:keyword% or c.category_name LIKE %:keyword% or a.title LIKE %:keyword%) " +
+            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.offerPrice as offerPrice, a.highestPrice as cur_price " +
+            "FROM AuctionIngEntity a " +
+            " JOIN a.productEntity p " +
+            " JOIN p.categoryEntity c " +
+            "WHERE (p.name LIKE %:keyword% or c.categoryName LIKE %:keyword% or a.title LIKE %:keyword%) " +
             " AND c.id = :category_id " +
-            "ORDER BY a.end_at DESC ", nativeQuery = true)
+            "ORDER BY a.endAt DESC ")
     Page<SimpleAuctionIngInterface> findAllSimpleIngListByKeywordANDCategoryId(
             @Param("keyword") String keyword, @Param("category_id") Long categoryId, Pageable pageable);
 
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title " +
-            " , a.end_at as end_time, p.name as product_name, c.category_name as category_name " +
-            " , a.offer_price as offer_price, a.highest_price as cur_price " +
-            "FROM auction_ing a " +
-            " JOIN product p " +
-            " JOIN category c " +
-            "WHERE a.product_id = p.id" +
-            " AND p.category_id = c.id " +
-            " AND (p.name LIKE %:keyword% or c.category_name LIKE %:keyword% or a.title LIKE %:keyword%) " +
-            "ORDER BY a.end_at DESC ", nativeQuery = true)
+            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            "FROM AuctionIngEntity a " +
+            " JOIN a.productEntity p " +
+            " JOIN p.categoryEntity c " +
+            "WHERE (p.name LIKE %:keyword% or c.categoryName LIKE %:keyword% or a.title LIKE %:keyword%) " +
+            "ORDER BY a.endAt DESC ")
     Page<SimpleAuctionIngInterface> findAllSimpleIngListByKeyword(
             @Param("keyword") String keyword, Pageable pageable);
 }

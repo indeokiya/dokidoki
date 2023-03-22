@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.ToString;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 
@@ -27,9 +28,8 @@ public class AuctionRegisterReq {
 
     private Integer priceSize;
 
-    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME, pattern = "yyyy-MM-dd HH:mm")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
-    private Date endAt;
+    private LocalDateTime endAt;
 
     private String meetingPlace;
 }

@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @ToString
@@ -38,9 +39,8 @@ public class AuctionIngEntity {
     @Column(name = "price_size")
     private Integer priceSize;              // 경매 단위
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_at")
-    private Date endAt;        // 경매 종료 시점
+    private LocalDateTime endAt;        // 경매 종료 시점
 
     @Column(name = "meeting_place")
     private String meetingPlace;        // 거래장소
