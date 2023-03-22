@@ -28,10 +28,10 @@ public class AuctionListController {
     메인 페이지 : 종료된 경매 목록 가져오기
      */
     @GetMapping("/end")
-    public ResponseEntity<CommonResponse<PaginationResponse<List<SimpleAuctionEndInfo>>>> readSimpleAuctionEnds(
+    public ResponseEntity<CommonResponse<PaginationResponse>> readSimpleAuctionEnds(
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         // 데이터 조회
-        PaginationResponse<List<SimpleAuctionEndInfo>> paginationResponse = auctionListService
+        PaginationResponse paginationResponse = auctionListService
                 .readSimpleAuctionEnd(PageRequest.of(page, size));
 
         return new ResponseEntity<>(
@@ -44,10 +44,10 @@ public class AuctionListController {
     메인 페이지 : 진행중인 경매 목록 가져오기
      */
     @GetMapping("/in-progress")
-    public ResponseEntity<CommonResponse<PaginationResponse<List<SimpleAuctionIngInfo>>>> readSimpleAuctionIng(
+    public ResponseEntity<CommonResponse<PaginationResponse>> readSimpleAuctionIng(
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         // 데이터 조회
-        PaginationResponse<List<SimpleAuctionIngInfo>> paginationResponse = auctionListService
+        PaginationResponse paginationResponse = auctionListService
                 .readSimpleAuctionIng(PageRequest.of(page, size));
 
         return new ResponseEntity<>(
@@ -60,10 +60,10 @@ public class AuctionListController {
     메인 페이지 : 마감임박 경매 목록 가져오기
      */
     @GetMapping("/deadline")
-    public ResponseEntity<CommonResponse<PaginationResponse<List<SimpleAuctionIngInfo>>>> readSimpleAuctionDeadline(
+    public ResponseEntity<CommonResponse<PaginationResponse>> readSimpleAuctionDeadline(
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
             // 데이터 조회
-            PaginationResponse<List<SimpleAuctionIngInfo>> paginationResponse = auctionListService
+            PaginationResponse paginationResponse = auctionListService
                     .readSimpleAuctionDeadline(PageRequest.of(page, size));
 
             return new ResponseEntity<>(
@@ -76,10 +76,10 @@ public class AuctionListController {
     메인 페이지 : 키워드 및 카테고리 검색
      */
     @GetMapping("/search")
-    public ResponseEntity<CommonResponse<PaginationResponse<List<SimpleAuctionIngInfo>>>> searchSimpleAuctionIng(
+    public ResponseEntity<CommonResponse<PaginationResponse>> searchSimpleAuctionIng(
             @RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "0") Long category_id,
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
-        PaginationResponse<List<SimpleAuctionIngInfo>> paginationResponse = auctionListService
+        PaginationResponse paginationResponse = auctionListService
                 .searchSimpleAuctionIng(keyword, category_id, PageRequest.of(page, size));
 
         return new ResponseEntity<>(
