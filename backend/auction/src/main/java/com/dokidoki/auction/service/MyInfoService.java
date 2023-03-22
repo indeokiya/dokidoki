@@ -43,6 +43,18 @@ public class MyInfoService {
     }
 
     /*
+    입찰중인 경매 목록 조회
+     */
+    public PaginationResponse readAllMyInterestingAuction(Long memberId, Pageable pageable) {
+        // 데이터 조회
+        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+                .findAllMyInterestingAuction(memberId, pageable);
+
+        // Response DTO 변환
+        return auctionListService.convertToDTOWithImages(simpleAuctionIngInterfaces);
+    }
+
+    /*
     구매내역 조회
      */
     public MyHistoryResponse readAllMyPurchases(Long memberId, Pageable pageable) {

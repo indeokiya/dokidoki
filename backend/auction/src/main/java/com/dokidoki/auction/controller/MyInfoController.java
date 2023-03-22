@@ -59,6 +59,24 @@ public class MyInfoController {
     }
 
     /*
+    관심있는 경매 목록 조회
+     */
+    @GetMapping("/interests")
+    public ResponseEntity<BaseResponseBody> readAllMyInterestingAuction(
+            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
+            HttpServletRequest request) {
+        // 요청자 확인
+        Long memberId = jwtUtil.getUserId(request);
+        if (memberId == null)
+            return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
+
+        // 데이터 조회 및 반환
+        PaginationResponse paginationResponse = myInfoService
+                .readAllMyInterestingAuction(memberId, PageRequest.of(page, size));
+        return ResponseEntity.status(200).body(BaseResponseBody.of("관심있는 경매 목록 조회 성공", paginationResponse));
+    }
+
+    /*
     구매내역 조회
      */
     @GetMapping("/purchases")
