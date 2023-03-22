@@ -1,6 +1,6 @@
 package com.dokidoki.auction.controller;
 
-import com.dokidoki.auction.common.JWTutil;
+import com.dokidoki.auction.common.JWTUtil;
 import com.dokidoki.auction.dto.response.AuctionImageResponse;
 import com.dokidoki.auction.dto.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
@@ -19,12 +19,12 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/my-lists")
 public class MyListController {
 
-    private final JWTutil jwTutil;
+    private final JWTUtil jwtUtil;
 
 //    @GetMapping("/bid")
 //    public ResponseEntity<?> readAuctionImages(HttpServletRequest request) {
 //
-//        Long userId = jwTutil.getUserId(request);
+//        Long userId = jwtUtil.getUserId(request);
 //
 //
 //    }
