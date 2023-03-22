@@ -3,6 +3,7 @@ package com.dokidoki.auction.controller;
 import com.dokidoki.auction.common.BaseResponseBody;
 import com.dokidoki.auction.common.JWTUtil;
 import com.dokidoki.auction.dto.response.MyHistoryResponse;
+import com.dokidoki.auction.dto.response.PaginationResponse;
 import com.dokidoki.auction.service.MyInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +21,24 @@ import javax.servlet.http.HttpServletRequest;
 public class MyInfoController {
     private final MyInfoService myInfoService;
     private final JWTUtil jwtUtil;
+
+    /*
+    판매중인 경매 목록 조회
+     */
+    @GetMapping("/bade")
+    public ResponseEntity<BaseResponseBody> readAllMySellingAuction(
+            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
+            HttpServletRequest request) {
+        // 요청자 확인
+        Long memberId = jwtUtil.getUserId(request);
+        if (memberId == null)
+            return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
+
+        // 데이터 조회 및 반환
+        PaginationResponse paginationResponse = myInfoService
+                .readAllMySellingAuction(memberId, PageRequest.of(page, size));
+        return ResponseEntity.status(200).body(BaseResponseBody.of("판매중인 경매 목록 조회 성공", paginationResponse));
+    }
 
     /*
     구매내역 조회
