@@ -3,9 +3,11 @@ package com.dokidoki.auction.service;
 import com.dokidoki.auction.common.error.exception.InvalidValueException;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.entity.CategoryEntity;
+import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.entity.ProductEntity;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.CategoryRepository;
+import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.domain.repository.ProductRepository;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
@@ -30,6 +32,8 @@ public class AuctionService {
     private final ProductRepository productRepository;
 
     private final AuctionIngRepository auctionIngRepository;
+
+    private final MemberRepository memberRepository;
 
 
     // 카테고리 목록 조회
@@ -73,17 +77,22 @@ public class AuctionService {
 
 
     @Transactional
-    public String createAuction(AuctionRegisterReq auctionRegisterReq, long sellerId) {
+    public String createAuction(AuctionRegisterReq auctionRegisterReq, Long sellerId) {
         Optional<ProductEntity> productO = productRepository.findById(auctionRegisterReq.getProductId());
 
         if (productO.isEmpty()) {
             return "제품에 대한 정보가 존재하지 않습니다.";
         }
 
+        // 요청자 객체 획득
+        MemberEntity requestMemberEntity = memberRepository.findById(sellerId).orElse(null);
+        if (requestMemberEntity == null)
+            return null;
+
         ProductEntity productEntity = productO.get();
 
         AuctionIngEntity auctionIngEntity = AuctionIngEntity.builder()
-                .sellerId(sellerId)
+                .seller(requestMemberEntity)
                 .productEntity(productEntity)
                 .title(auctionRegisterReq.getTitle())
                 .description(auctionRegisterReq.getDescription())
@@ -98,13 +107,14 @@ public class AuctionService {
     }
 
     @Transactional
-    public AuctionIngEntity updateAuction(long sellerId, long auctionId, AuctionUpdateReq auctionUpdateReq) throws Exception {
+    public AuctionIngEntity updateAuction(Long sellerId, Long auctionId, AuctionUpdateReq auctionUpdateReq) throws Exception {
 
-        Optional<AuctionIngEntity> auctionO = auctionIngRepository.findById(auctionId);
-        AuctionIngEntity auction = auctionO.get();
+        AuctionIngEntity auction = auctionIngRepository.findById(auctionId).orElse(null);
+        if (auction == null)
+            return null;
 
         // 요청자와 판매자가 동일한 경우에만 update 수행
-        if (auction.getSellerId() == sellerId)
+        if (sellerId.equals(auction.getSeller().getId()))
             auction.update(auctionUpdateReq);
         return auction;
     }
@@ -117,13 +127,11 @@ public class AuctionService {
     @Transactional
     public AuctionIngEntity getAuctioningById(Long auctionId) {
 
-        Optional<AuctionIngEntity> auctionO = auctionIngRepository.findById(auctionId);
-
-        // 진행 중 경매 유무 체크
-        if (auctionO.isEmpty()) {
+        AuctionIngEntity auction = auctionIngRepository.findById(auctionId)
+                .orElse(null);
+        if (auction == null)
             throw new InvalidValueException("진행중인 경매가 존재하지 않습니다.");
-        }
 
-        return auctionO.get();
+        return auction;
     }
 }

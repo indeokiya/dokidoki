@@ -1,6 +1,7 @@
 package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
+import com.dokidoki.auction.common.JWTUtil;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +27,7 @@ import java.util.Optional;
 public class AuctionController {
 
     private final AuctionService auctionService;
+    private final JWTUtil jwtUtil;
 
 //    private final KafkaAuctionProducer producer;
 
@@ -86,13 +89,16 @@ public class AuctionController {
     @PutMapping("/auctions")
     public ResponseEntity<BaseResponseBody> updateAuction(
             @RequestParam("auction_id") @ApiParam(value = "경매 id", required = true) Long auctionId,
-            @RequestBody @ApiParam(value = "경매 수정 정보", required = true) Optional<AuctionUpdateReq> auctionUpdateReqO) {
+            @RequestBody @ApiParam(value = "경매 수정 정보", required = true) Optional<AuctionUpdateReq> auctionUpdateReqO,
+            HttpServletRequest request) {
 
         if (auctionUpdateReqO.isEmpty()) {
             return ResponseEntity.status(400).body(BaseResponseBody.of("요청받은 데이터가 없습니다."));
         }
 
-        Long sellerId = 1L;
+        Long sellerId = jwtUtil.getUserId(request);
+        if (sellerId == null)
+            return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         try {
             if (auctionUpdateReqO.isPresent()) {
