@@ -1,7 +1,11 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.domain.entity.AuctionEndEntity;
+import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.entity.CommentEntity;
 import com.dokidoki.auction.domain.entity.MemberEntity;
+import com.dokidoki.auction.domain.repository.AuctionEndRepository;
+import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.CommentRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.dto.request.CommentRequest;
@@ -18,13 +22,12 @@ import java.util.*;
 public class CommentService {
     private final CommentRepository commentRepository;
     private final MemberRepository memberRepository;
+    private final AuctionIngRepository auctionIngRepository;
+    private final AuctionEndRepository auctionEndRepository;
 
-    public List<CommentResponse> readComment(Long auction_id) {
-        // 존재하지 않는 경매 식별번호일 경우,
-        // ~ 미구현 ~
-
+    public List<CommentResponse> readComment(Long auctionId) {
         // 경매 식별번호로 모든 댓글 검색
-        List<CommentEntity> commentEntities = commentRepository.findCommentsByAuctionIdOrderByWrittenTime(auction_id);
+        List<CommentEntity> commentEntities = commentRepository.findCommentsByAuctionIdOrderByWrittenTime(auctionId);
 
         // Entity -> DTO 변환
         // 1. 댓글과 대댓글로 나누어 처리
@@ -63,34 +66,38 @@ public class CommentService {
     @Transactional
     public int createComment(Long memberId, CommentRequest commentRequest) {
         // 존재하지 않는 경매 식별번호일 경우,
-        // ~ 미구현 ~
+        Long auctionId = commentRequest.getAuction_id();
+        if (existsAuction(auctionId))
+            return 1;
 
         // 존재하지 않는 사용자 식별번호일 경우,
         // MSA니까 사용자 서버에 사용자 객체 요청해야 할 듯?
-        Optional<MemberEntity> optionalMember = memberRepository.findById(memberId);
-        if (optionalMember.isEmpty()) {
+        MemberEntity memberEntity = memberRepository.findById(memberId).orElse(null);
+        if (memberEntity == null)
             return 2;
-        }
-        MemberEntity memberEntity = optionalMember.get();
 
         // 댓글이 빈 문자열일 경우,
-        if (commentRequest.getContent().isBlank()) {
+        String comment = commentRequest.getContent();
+        if (comment == null || comment.isBlank())
             return 3;
-        }
         // 댓글이 255자를 넘길 경우,
-        else if (commentRequest.getContent().length() > 255) {
+        else if (comment.length() > 255)
             return 4;
-        }
 
         // 부모 댓글이 설정되어 있으나, 존재하지 않는 댓글일 경우,
-        // ~ 미구현 ~
+        Long parentId = commentRequest.getParent_id();
+        if (parentId != null) {
+            CommentEntity parentCommentEntity = commentRepository.findById(parentId).orElse(null);
+            if (parentCommentEntity == null)
+                return 5;
+        }
 
         CommentEntity newCommentEntity = CommentEntity.createComment(
                 null,  // INSERT의 경우 Auto Increment를 위해 null 설정
-                commentRequest.getAuction_id(),
+                auctionId,
                 memberEntity,
-                commentRequest.getContent(),
-                commentRequest.getParent_id()
+                comment,
+                parentId
         );
         commentRepository.save(newCommentEntity);
         return 0;
@@ -144,5 +151,19 @@ public class CommentService {
         // 대댓글 모두 삭제
         commentRepository.deleteCommentsByParentId(commentEntity.getId());
         return 0;
+    }
+
+    private boolean existsAuction(Long auctionId) {
+        // 존재하지 않는 경매 식별번호일 경우,
+        if (auctionId == null)
+            return false;
+        // 진행중 경매 테이블 확인, 없으면 종료된 경매 테이블도 확인. 두 군데 모두 없으면 NO_AUCTION 반환
+        AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
+        if (auctionIngEntity == null) {
+            AuctionEndEntity auctionEndEntity = auctionEndRepository.findById(auctionId).orElse(null);
+            return auctionEndEntity != null;
+        }
+
+        return true;
     }
 }

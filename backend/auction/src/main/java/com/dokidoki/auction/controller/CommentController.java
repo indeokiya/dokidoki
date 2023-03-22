@@ -22,12 +22,17 @@ public class CommentController {
     private final CommentService commentService;
     private final JWTUtil jwtUtil;
 
+    // 토큰 없을 때 반환하는 Response
+    private final ResponseEntity<CommonResponse<Void>> NOT_VALID_TOKEN_RESPONSE = new ResponseEntity<>(
+            CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
+            HttpStatus.FORBIDDEN
+    );
+
     @GetMapping("/{auction_id}")
     public ResponseEntity<CommonResponse<List<CommentResponse>>> readComment(@PathVariable Long auction_id) {
         List<CommentResponse> comments = commentService.readComment(auction_id);
-        // 댓글이 없을 경우 204 (No Content) 반환
         return new ResponseEntity<>(
-                CommonResponse.of(comments.size() != 0 ? 200 : 204, "성공", comments),
+                CommonResponse.of(200, "댓글 조회 성공", comments),
                 HttpStatus.OK
         );
     }
@@ -38,34 +43,15 @@ public class CommentController {
             HttpServletRequest request) {
         CommentRequest commentRequest = optionalCommentRequest.orElse(null);
 
+        // 요청자 확인
         Long memberId = jwtUtil.getUserId(request);
-        if (memberId == null){
-            return new ResponseEntity<>(
-                    CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        if (memberId == null)
+            return NOT_VALID_TOKEN_RESPONSE;
 
         // Request Body가 없을 경우,
         if (commentRequest == null) {
             return new ResponseEntity<>(
                     CommonResponse.of(400, "요청받은 정보가 없습니다.", null),
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-
-        // 경매 식별번호가 없을 경우,
-        if (commentRequest.getAuction_id() == null) {
-            return new ResponseEntity<>(
-                    CommonResponse.of(400, "경매 식별번호가 없습니다.", null),
-                    HttpStatus.BAD_REQUEST
-            );
-        }
-
-        // 댓글이 빈 문자열일 경우,
-        if (commentRequest.getContent() == null) {
-            return new ResponseEntity<>(
-                    CommonResponse.of(400, "댓글 정보가 없습니다.", null),
                     HttpStatus.BAD_REQUEST
             );
         }
@@ -92,13 +78,10 @@ public class CommentController {
             HttpServletRequest request) {
         PutCommentRequest putCommentRequest = optionalPutCommentRequest.orElse(null);
 
+        // 요청자 확인
         Long memberId = jwtUtil.getUserId(request);
-        if (memberId == null){
-            return new ResponseEntity<>(
-                    CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        if (memberId == null)
+            return NOT_VALID_TOKEN_RESPONSE;
 
         // Request Body가 없을 경우,
         if (putCommentRequest == null) {
@@ -125,13 +108,10 @@ public class CommentController {
     public ResponseEntity<CommonResponse<Void>> deleteComment(
             @PathVariable Long comment_id,
             HttpServletRequest request) {
+        // 요청자 확인
         Long memberId = jwtUtil.getUserId(request);
-        if (memberId == null){
-            return new ResponseEntity<>(
-                    CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        if (memberId == null)
+            return NOT_VALID_TOKEN_RESPONSE;
 
         int resultCode = commentService.deleteComment(memberId, comment_id);
 
