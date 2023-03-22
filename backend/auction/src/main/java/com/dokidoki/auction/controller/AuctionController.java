@@ -55,7 +55,9 @@ public class AuctionController {
 
     @PostMapping("/auctions")
     @Operation(summary = "경매 게시글 생성 API", description = "경매 게시글을 작성한다.")
-    public ResponseEntity<CommonResponse<Void>> createAuction(@RequestBody Optional<AuctionRegisterReq> auctionRegisterReqO) {
+    public ResponseEntity<CommonResponse<Void>> createAuction(
+            @RequestBody Optional<AuctionRegisterReq> auctionRegisterReqO,
+            HttpServletRequest request) {
         log.debug("POST /auction request : {}", auctionRegisterReqO);
 
         if (auctionRegisterReqO.isEmpty()) {
@@ -66,7 +68,13 @@ public class AuctionController {
         }
 
         AuctionRegisterReq auctionRegisterReq = auctionRegisterReqO.get();
-        Long sellerId = 1L;
+        Long sellerId = jwtUtil.getUserId(request);
+        if (sellerId == null) {
+            return new ResponseEntity<>(
+                    CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
+                    HttpStatus.FORBIDDEN
+            );
+        }
 
         String msg = auctionService.createAuction(auctionRegisterReq, sellerId);
 
