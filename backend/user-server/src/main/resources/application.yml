@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 8083
 
 spring:
   # database local
@@ -59,4 +59,4 @@ jwt:
   refresh_expiration: 1296000000
 
 front:
-  redirect_uri: http://j8a202.p.ssafy.io:3000
+  redirect_uri: http://j8a202.p.ssafy.io/redirect
