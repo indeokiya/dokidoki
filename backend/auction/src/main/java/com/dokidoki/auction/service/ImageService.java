@@ -5,8 +5,6 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dokidoki.auction.domain.entity.AuctionImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionImageRepository;
-import com.dokidoki.auction.domain.repository.ProfileImageRepository;
-import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.dto.request.AuctionImagesRequest;
 import com.dokidoki.auction.dto.response.AuctionImageResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +25,6 @@ import java.util.*;
 @Component
 @Service
 public class ImageService {
-    private final MemberRepository memberRepository;
-    private final ProfileImageRepository profileImageRepository;
     private final AuctionImageRepository auctionImageRepository;
     private final AmazonS3 amazonS3Client;
 
