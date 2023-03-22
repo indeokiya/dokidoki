@@ -3,15 +3,16 @@ package com.dokidoki.bid.db.repository;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 import org.redisson.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.Optional;
 
-@Repository
-public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
+// @Repository 로 하면 다른 메서드가 작동해버림..
+@Component
+public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository {
 
     private RedissonClient redisson;
     private RLiveObjectService liveObjectService;
@@ -39,7 +40,7 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
             AuctionRealtime res = liveObjectService.persist(auctionRealtime);
             transaction.commit();
             return res;
-        } catch(TransactionException e) {
+        } catch(Exception e) {
             transaction.rollback();
             throw e;
         }
@@ -54,7 +55,7 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
             rLiveObject.expire(duration);
             transaction.commit();
             return res;
-        } catch (TransactionException e) {
+        } catch (Exception e) {
             transaction.rollback();
             throw e;
         }
@@ -63,13 +64,13 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
     @Override
     public void deleteAll() {
         RTransaction transaction = redisson.createTransaction(TransactionOptions.defaults());
-        try{
+        try {
             Iterable<Long> iterable = liveObjectService.findIds(AuctionRealtime.class);
             iterable.forEach(id ->
                     liveObjectService.delete(AuctionRealtime.class, id)
             );
             transaction.commit();
-        } catch (TransactionException e) {
+        } catch (Exception e) {
             transaction.rollback();
             throw e;
         }

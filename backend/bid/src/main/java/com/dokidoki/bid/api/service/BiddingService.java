@@ -10,10 +10,8 @@ import com.dokidoki.bid.common.error.exception.BusinessException;
 import com.dokidoki.bid.common.error.exception.ErrorCode;
 import com.dokidoki.bid.common.error.exception.InvalidValueException;
 import com.dokidoki.bid.db.entity.AuctionIngEntity;
-//import com.dokidoki.bid.db.entity.AuctionRealtime;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 import com.dokidoki.bid.db.repository.AuctionIngRepository;
-//import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.redisson.api.RLiveObjectService;
@@ -72,7 +70,6 @@ public class BiddingService {
 
         // TODO - 나중에 토큰에서 받아오는 걸로 수정하기
         long memberId = req.getMemberId();
-
 
         // 1. 경매 정보가 없는 경우 - 에러 발생시키기
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
@@ -187,9 +184,12 @@ public class BiddingService {
         if (auctionRealTimeO.isEmpty()) {
             throw new InvalidValueException("잘못된 접근입니다. auctionId가 존재하지 않습니다.");
         }
+        System.out.println(auctionRealTimeO.get());
+        System.out.println(req);
 
         // 2. 해당 경매를 올린 사용자가 아니면 에러 내기
         Optional<AuctionIngEntity> auctionIngO = auctionIngRepository.findBySellerIdAndId(req.getMemberId(), auctionId, AuctionIngEntity.class);
+        System.out.println(auctionIngO.get());
 
         if (auctionIngO.isEmpty()) {
             throw new BusinessException("권한이 없습니다.", ErrorCode.BUSINESS_EXCEPTION_ERROR);

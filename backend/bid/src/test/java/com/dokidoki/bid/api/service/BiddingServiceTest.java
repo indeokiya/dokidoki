@@ -75,6 +75,7 @@ class BiddingServiceTest {
 
         MemberEntity seller = memberRepository.save(user);
         sellerId = seller.getId();
+        System.out.println(sellerId);
 
         // 경매 등록
         AuctionIngEntity auctionIng = AuctionIngEntity.builder()
@@ -83,13 +84,15 @@ class BiddingServiceTest {
 
         auctionIngRepository.save(auctionIng);
         auctionId = auctionIng.getId();
+        System.out.println(auctionId);
         key = biddingService.getKey(auctionId);
 
 
         // 실시간 경매 초기화 정보 등록 (나중엔 메서드로 대체하기)
-        AuctionRealtime auctionRealtime = AuctionRealtime.builder()
-                .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
 
+        AuctionRealtime auctionRealtime = AuctionRealtime.of(auctionId, highestPrice, priceSize);
+
+        System.out.println(auctionRealtime);
         RLiveObjectService liveObjectService = redisson.getLiveObjectService();
         auctionRealtime = liveObjectService.persist(auctionRealtime);
         realTimeAuctionId = auctionRealtime.getAuctionId();
@@ -150,9 +153,11 @@ class BiddingServiceTest {
             @BeforeEach
             public void 준비() {
                 auctionRealtimeRepository.deleteAll();
-                AuctionRealtime auctionRealtime = AuctionRealtime.builder()
-                        .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
-                auctionRealtimeRepository.save(auctionRealtime);
+                AuctionRealtime auctionRealtime = AuctionRealtime.of(auctionId, highestPrice, priceSize);
+
+//                AuctionRealtime auctionRealtime = AuctionRealtime.builder()
+//                        .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
+//                auctionRealtimeRepository.save(auctionRealtime);
 
                 RScoredSortedSet<Object> scoredSortedSet = redisson.getScoredSortedSet(key);
 
@@ -268,12 +273,22 @@ class BiddingServiceTest {
     @DisplayName("updatePriceSize 메서드")
     class updatePriceSize_메서드_테스트 {
 
+        AuctionUpdatePriceSizeReq correctReq;
+        AuctionUpdatePriceSizeReq wrongReq;
+
+        @BeforeEach
+        public void 준비() {
+            correctReq = AuctionUpdatePriceSizeReq.builder()
+                    .memberId(sellerId).priceSize(5_000).build();
+
+            wrongReq = AuctionUpdatePriceSizeReq.builder()
+                    .memberId(sellerId + 30).priceSize(5_000).build();
+        }
+
+
         @Nested
         @DisplayName("수정할 대상이 주어질 때")
         class 수정할_대상_제공 {
-
-            AuctionUpdatePriceSizeReq correctReq = new AuctionUpdatePriceSizeReq(sellerId, 5_000);
-            AuctionUpdatePriceSizeReq wrongReq = new AuctionUpdatePriceSizeReq(sellerId + 30, 5_000);
 
             @Test
             @DisplayName("없는 경매면 에러를 낸다.")
@@ -293,7 +308,7 @@ class BiddingServiceTest {
             @Test
             @DisplayName("올바르게 접근하면 제대로 수정된다.")
             public void 입찰단위_수정_성공() {
-                System.out.println(auctionId);
+                System.out.println("auctionId:"+ auctionId);
                 biddingService.updatePriceSize(auctionId, correctReq);
                 AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
                 assertEquals(correctReq.getPriceSize(), auctionRealtime.getPriceSize());

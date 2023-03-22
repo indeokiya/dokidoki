@@ -3,6 +3,7 @@ server:
 
 spring:
   datasource:
+#    url: jdbc:mysql://j8a202.p.ssafy.io:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
     url: jdbc:mysql://localhost:3306/dokidoki?serverTimezone=UTC&characterEncoding=UTF-8
     username: dokidoki
     password: dokidoki202
@@ -15,7 +16,7 @@ spring:
     database-platform: org.hibernate.dialect.MySQL8Dialect
     show-sql: true
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     properties:
       hibernate:
         format_sql: true
