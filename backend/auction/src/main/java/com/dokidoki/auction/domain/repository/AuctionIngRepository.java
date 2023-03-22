@@ -71,4 +71,18 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             "WHERE a.seller.id = :member_id " +
             "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllMySellingAuction(@Param("member_id") Long memberId, Pageable pageable);
+
+    /*
+    특정 사용자가 입찰중인 경매 목록 조회
+     */
+    @Query("SELECT a.id as auction_id, a.title as auction_title " +
+            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            "FROM AuctionIngEntity a " +
+            " JOIN a.productEntity p " +
+            " JOIN p.categoryEntity c " +
+            "WHERE :member_id IN " +
+            " (SELECT l.memberEntity.id FROM leaderboard l WHERE l.auctionId = a.id) " +
+            "ORDER BY a.id DESC ")
+    Page<SimpleAuctionIngInterface> findAllMyBiddingAuction(@Param("member_id") Long memberId, Pageable pageable);
 }
