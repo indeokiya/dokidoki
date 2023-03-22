@@ -7,9 +7,11 @@ import Typography from '@mui/material/Typography';
 import sampleImg from '../../../assets/image/phone1.png'
 import { useState } from 'react';
 
-const Content:React.FC<{openPage:()=> void}> = (props) => {
+
+const Content = () => {
 
     const [isHovered, setIsHovered] = useState(false); 
+    
 
 //마우스가 올라가면 raised 옵션을 주고 싶다. 
   return (
@@ -18,7 +20,7 @@ const Content:React.FC<{openPage:()=> void}> = (props) => {
         onMouseLeave={() => setIsHovered(false)} 
         raised={isHovered}
         sx={ isHovered? {cursor:'pointer'}:{}}
-        onClick = {()=>{props.openPage()}}
+       
         >
         
       <CardMedia
@@ -29,6 +31,7 @@ const Content:React.FC<{openPage:()=> void}> = (props) => {
         
       />
       <CardContent>
+        
         <Typography gutterBottom variant="h5" component="div">
           게시글 제목~
         </Typography>

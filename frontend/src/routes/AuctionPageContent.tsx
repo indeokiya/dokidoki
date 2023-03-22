@@ -5,19 +5,15 @@ import ContentsList from "../components/auction/contents/ContentsList";
 import Grid from "@mui/material/Grid"; // Grid version 1
 import { Outlet, Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import LeaderBoard from "../components/leaderBoard/LeaderBoard";
 import styled from "styled-components";
 
 const ActionPageContent = () => {
-  const [openDialog, setOpenDialog] = useState(false); //다이얼 로그 여는
+
 
 
   const navigate = useNavigate();
  
 
-  const DialogHandler = () => {
-    setOpenDialog(!openDialog);
-  };
 
   const StyledIcon = styled.div`
     position: fixed;
@@ -43,24 +39,20 @@ const ActionPageContent = () => {
     }
   `;
 
-
-
   return (
     <>
       <Container>
           <StyledIcon onClick={()=>{
-            
             navigate("/regist")
           }}>+</StyledIcon>
 
-        <LeaderBoard open={openDialog} onClose={DialogHandler} />
         <SearchBar />
         <Grid container spacing={2}>
           <Grid item xs={2}>
             <SideBar />
           </Grid>
           <Grid xs={10}>
-            <ContentsList openPage={DialogHandler} />
+            <ContentsList />
           </Grid>
         </Grid>
       </Container>

@@ -2,9 +2,11 @@ import { Grid, Button, Avatar, Badge, Menu, MenuItem } from "@mui/material";
 import imgSrc from "../../../src/assets/image/profile.png";
 import styled from "styled-components";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link,useNavigate } from "react-router-dom";
 
 const AfterLoginMenu = () => {
+  const navigate = useNavigate();
+
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -79,7 +81,12 @@ const AfterLoginMenu = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem onClick={handleClose}>Profile</MenuItem>
+          <MenuItem onClick={()=>{
+            handleClose()
+            navigate("/mypage")
+            }}>
+           Mypage
+            </MenuItem>
           <MenuItem onClick={handleClose}>Logout</MenuItem>
         </Menu>
       </Grid>
