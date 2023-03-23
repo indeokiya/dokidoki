@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 import styled from "styled-components";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ViewOpeion from "./ViewOption";
+import Typography from '@mui/material/Typography';
 
 export default function SelectedListItem() {
   const category = [
@@ -56,7 +57,7 @@ export default function SelectedListItem() {
                 <ArrowRightIcon />
               </ListItemIcon>
             )}
-            <ListItemText primary={category} />
+            <Typography variant="subtitle2">{category}</Typography>
           </ListItemButton>
         ))}
       </List>

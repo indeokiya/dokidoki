@@ -8,12 +8,7 @@ import { useState } from "react";
 import styled from "styled-components";
 
 const ActionPageContent = () => {
-
-
-
   const navigate = useNavigate();
- 
-
 
   const StyledIcon = styled.div`
     position: fixed;
@@ -24,10 +19,10 @@ const ActionPageContent = () => {
     font-size: 50px;
     color: white;
     font-weight: bold;
-    width: 100px;
-    height: 100px;
+    width: 60px;
+    height: 60px;
     text-align: center;
-    line-height: 95px;
+    line-height: 55px;
     cursor: pointer;
     transition: all 0.3s;
     &:hover {
@@ -42,9 +37,13 @@ const ActionPageContent = () => {
   return (
     <>
       <Container>
-          <StyledIcon onClick={()=>{
-            navigate("/regist")
-          }}>+</StyledIcon>
+        <StyledIcon
+          onClick={() => {
+            navigate("/regist");
+          }}
+        >
+          +
+        </StyledIcon>
 
         <SearchBar />
         <Grid container spacing={2}>

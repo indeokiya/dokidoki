@@ -35,11 +35,12 @@ const router = createBrowserRouter([
         path:'regist',
         element:<RegisterPage/>
       },
-      {
-        path:'product/:id',
-        element:<ProductPage/>
-      },
+      
     ],
+  },
+  {
+    path:'product/:id',
+    element:<ProductPage/>
   },
   {
     path:"/mypage",

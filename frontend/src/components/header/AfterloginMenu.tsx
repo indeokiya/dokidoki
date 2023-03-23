@@ -2,7 +2,7 @@ import { Grid, Button, Avatar, Badge, Menu, MenuItem } from "@mui/material";
 import imgSrc from "../../../src/assets/image/profile.png";
 import styled from "styled-components";
 import { useState } from "react";
-import { Link,useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const AfterLoginMenu = () => {
   const navigate = useNavigate();
@@ -49,8 +49,8 @@ const AfterLoginMenu = () => {
   return (
     <Grid container alignItems={"center"} spacing={1}>
       <Grid item>
-        <Link to='/action'>
-        <Button sx={{textDecoration:'none'}}> Action </Button>
+        <Link to="/auction">
+          <Button sx={{ textDecoration: "none" }}> Auction </Button>
         </Link>
       </Grid>
       <Grid item>
@@ -81,12 +81,14 @@ const AfterLoginMenu = () => {
             "aria-labelledby": "basic-button",
           }}
         >
-          <MenuItem onClick={()=>{
-            handleClose()
-            navigate("/mypage")
-            }}>
-           Mypage
-            </MenuItem>
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate("/mypage");
+            }}
+          >
+            Mypage
+          </MenuItem>
           <MenuItem onClick={handleClose}>Logout</MenuItem>
         </Menu>
       </Grid>

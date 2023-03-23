@@ -1,10 +1,3 @@
-import * as React from "react";
-import Button from "@mui/material/Button";
-import Dialog, { DialogProps } from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Grid from "@mui/material/Grid";
 import ProductImages from "../components/leaderBoard/ProductImages";
 import ProductInfo from "../components/leaderBoard/ProductInfo";
@@ -14,6 +7,8 @@ import styled from "styled-components";
 import ProductGraph from "../components/leaderBoard/ProductGraph";
 import ProductDescription from "../components/leaderBoard/ProductDescription";
 import CommentsList from "../components/leaderBoard/comments/CommentsList";
+import ScrollTop from "../components/util/ScrollTop";
+import Header from "../components/header/Header";
 
 const ProductPage = () => {
   const StyledDiv = styled.div`
@@ -22,32 +17,36 @@ const ProductPage = () => {
   `;
 
   return (
-    <Container>
-      <Grid container spacing={3} mb={10}>
-        <Grid item xs={1} />
-        <Grid item xs={5}>
-          {/* 제품 이미지 */}
-          <ProductImages />
+    <>
+      <Header />
+      <Container>
+        <ScrollTop />
+        <Grid container spacing={3} mb={10}>
+          <Grid item xs={2} />
+          <Grid item xs={4}>
+            {/* 제품 이미지 */}
+            <ProductImages />
+          </Grid>
+          <Grid item xs={4}>
+            {/* 제품 정보 */}
+            <ProductInfo />
+          </Grid>
         </Grid>
-        <Grid item xs={5}>
-          {/* 제품 정보 */}
-          <ProductInfo />
-        </Grid>
-      </Grid>
-      <Divider />
+        <Divider />
 
-      <StyledDiv>
-        <ProductDescription />
-      </StyledDiv>
+        <StyledDiv>
+          <ProductDescription />
+        </StyledDiv>
 
-      {/* 제품 카테고리 평균 가격 */}
-      <ProductGraph />
+        {/* 제품 카테고리 평균 가격 */}
+        <ProductGraph />
 
-      {/* 댓글 작성과 댓글들  */}
-      <CommentsList />
+        {/* 댓글 작성과 댓글들  */}
+        <CommentsList />
 
-      {/* 모달창 하단에 존재하는 버튼 */}
-    </Container>
+        {/* 모달창 하단에 존재하는 버튼 */}
+      </Container>
+    </>
   );
 };
 

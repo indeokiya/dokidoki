@@ -32,6 +32,10 @@ const Content = () => {
     margin-bottom: 3px;
   `;
 
+  const StyledSpan = styled.span`
+    font-size :12px;
+  `
+
   //마우스가 올라가면 raised 옵션을 주고 싶다.
   return (
     <Card
@@ -48,29 +52,36 @@ const Content = () => {
       />
       <CardContent sx={{ padding: 3, boxSizing: "border-box" }}>
         <CustomBadge>mobile</CustomBadge>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="subtitle1" component="div">
           게시글 제목~
         </Typography>
 
-        <Box my={3}>
+        <Box my={1}>
           <StyledFlex>
-            <span>남은 시간 : </span>
-            <span>20 : 20 : 20</span>
+            <StyledSpan style={{ color: "#3A77EE" }}>남은 시간 : </StyledSpan>
+            <StyledSpan style={{ color: "#3A77EE" }}>20 : 20 : 20</StyledSpan>
+      </StyledFlex>
+          <StyledFlex>
+            <StyledSpan >시작 가격 : </StyledSpan>
+            <StyledSpan>20,000 원</StyledSpan>
           </StyledFlex>
           <StyledFlex>
-            <span style={{ color: "blue" }}>시작 가격 : </span>
-            <span>20,000 원</span>
-          </StyledFlex>
-          <StyledFlex>
-            <span>경매 단위 : </span>
-            <span>2,000 원</span>
+            <StyledSpan>경매 단위 : </StyledSpan>
+            <StyledSpan>2,000 원</StyledSpan>
           </StyledFlex>
         </Box>
+        <StyledFlex>
+            <StyledSpan> </StyledSpan>
+            <StyledSpan style={{color:"red", fontSize:'12px'}}>( + 10%)</StyledSpan>
+          </StyledFlex>
+        <StyledFlex>
+            <StyledSpan style={{fontWeight:"bold"}}>현제 가격 : </StyledSpan>
+            <StyledSpan style={{fontWeight:"bold", fontSize:"1rem"}}>22,000 원</StyledSpan>
+          </StyledFlex>
       </CardContent>
 
       <CardActions>
-        <Button size="small">Share</Button>
-        <Button size="small">Learn More</Button>
+        {/* <Button size="small">Share</Button> */}
       </CardActions>
     </Card>
   );

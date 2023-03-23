@@ -42,7 +42,7 @@ const ContentsList = () => {
 
   return (
     <div id="scroll">
-      <Grid container spacing={4} paddingLeft={2}>
+      <Grid container spacing={2} paddingLeft={2}>
         {posts.map((data, i) => (
           <Grid key={i} item xs={4}>
             <div onClick={()=>{ navigate("/product/"+data)}}>
