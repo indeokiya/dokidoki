@@ -18,31 +18,31 @@ spring:
       - id: bid-server
         uri: http://172.17.0.1:8081
         predicates:
-          - Path=/bid/**
+          - Path=/api/bid/**
         filters:
-          - RewritePath=/bid/(?<segment>.*), /$\{segment}
+          - RewritePath=/api/bid/(?<segment>.*), /$\{segment}
           - JwtAuthenticationFilter
 
       - id: auction-server
         uri: http://172.17.0.1:8082
         predicates:
-          - Path=/auction/**
+          - Path=/api/auction/**
         filters:
-          - RewritePath=/auction/(?<segment>.*), /$\{segment}
+          - RewritePath=/api/auction/(?<segment>.*), /$\{segment}
           - JwtAuthenticationFilter
 
       - id: user-server
         uri: http://172.17.0.1:8083
         predicates:
-          - Path=/user/**
+          - Path=/api/user/**
         filters:
-          - RewritePath=/user/(?<segment>.*), /$\{segment}
+          - RewritePath=/api/user/(?<segment>.*), /$\{segment}
 
       - id: user-server
         uri: http://172.17.0.1:8083
         predicates:
-          - Path=/user/**
+          - Path=/api/user/**
           - Method=DELETE
         filters:
-          - RewritePath=/web-service/(?<segment>.*), /$\{segment}
+          - RewritePath=/api/user/(?<segment>.*), /$\{segment}
           - JwtAuthenticationFilter
