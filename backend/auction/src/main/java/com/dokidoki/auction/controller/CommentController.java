@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/comments")
+@RequestMapping(value = "/{auction_id}/comments")
 @RequiredArgsConstructor
 public class CommentController {
     private final CommentService commentService;
@@ -26,7 +26,7 @@ public class CommentController {
             .status(403)
             .body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
-    @GetMapping("/{auction_id}")
+    @GetMapping("")
     public ResponseEntity<BaseResponseBody> readComment(@PathVariable Long auction_id) {
         List<CommentResponse> comments = commentService.readComment(auction_id);
         return ResponseEntity
@@ -36,6 +36,7 @@ public class CommentController {
 
     @PostMapping("")
     public ResponseEntity<BaseResponseBody> createComment(
+            @PathVariable Long auction_id,
             @RequestBody Optional<CommentRequest> optionalCommentRequest,
             HttpServletRequest request) {
         CommentRequest commentRequest = optionalCommentRequest.orElse(null);
@@ -52,7 +53,7 @@ public class CommentController {
                     .body(BaseResponseBody.of("요청받은 정보가 없습니다."));
 
         // 댓글 등록 및 결과 반환
-        int resultCode = commentService.createComment(memberId, commentRequest);
+        int resultCode = commentService.createComment(memberId, auction_id, commentRequest);
 
         // 유효성 검증, 오류가 존재하면 오류 메시지가 포함된 Response 객체 반환
         ResponseEntity<BaseResponseBody> errorResponse = checkResultCode(resultCode);
@@ -66,6 +67,7 @@ public class CommentController {
 
     @PutMapping("/{comment_id}")
     public ResponseEntity<BaseResponseBody> updateComment(
+            @PathVariable Long auction_id,
             @PathVariable Long comment_id,
             @RequestBody Optional<PutCommentRequest> optionalPutCommentRequest,
             HttpServletRequest request) {
@@ -84,7 +86,7 @@ public class CommentController {
 
         // 댓글 수정
         ResponseEntity<BaseResponseBody> errRes = checkResultCode(
-                commentService.updateComment(memberId, comment_id, putCommentRequest)
+                commentService.updateComment(memberId, auction_id, comment_id, putCommentRequest)
         );
         if (errRes != null)
             return errRes;
@@ -96,6 +98,7 @@ public class CommentController {
 
     @DeleteMapping("/{comment_id}")
     public ResponseEntity<BaseResponseBody> deleteComment(
+            @PathVariable Long auction_id,
             @PathVariable Long comment_id,
             HttpServletRequest request) {
         // 요청자 확인
@@ -103,7 +106,7 @@ public class CommentController {
         if (memberId == null)
             return NOT_VALID_TOKEN_RESPONSE;
 
-        int resultCode = commentService.deleteComment(memberId, comment_id);
+        int resultCode = commentService.deleteComment(memberId, auction_id, comment_id);
 
         // 유효성 검증, 오류가 존재하면 오류 메시지가 포함된 Response 객체 반환
         ResponseEntity<BaseResponseBody> errorResponse = checkResultCode(resultCode);
