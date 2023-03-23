@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -49,7 +50,7 @@ public class AuctionController {
     @PostMapping("/new")
     @Operation(summary = "경매 게시글 생성 API", description = "경매 게시글을 작성한다.")
     public ResponseEntity<BaseResponseBody> createAuction(
-            @RequestBody Optional<AuctionRegisterReq> auctionRegisterReqO,
+            Optional<AuctionRegisterReq> auctionRegisterReqO,
             HttpServletRequest request) {
         log.debug("POST /auction request : {}", auctionRegisterReqO);
 

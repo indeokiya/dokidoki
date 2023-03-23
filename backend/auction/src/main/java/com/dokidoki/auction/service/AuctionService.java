@@ -125,7 +125,7 @@ public class AuctionService {
 
     @Transactional
     public String createAuction(AuctionRegisterReq auctionRegisterReq, Long sellerId) {
-        Optional<ProductEntity> productO = productRepository.findById(auctionRegisterReq.getProductId());
+        Optional<ProductEntity> productO = productRepository.findById(auctionRegisterReq.getProduct_id());
 
         if (productO.isEmpty()) {
             return "제품에 대한 정보가 존재하지 않습니다.";
@@ -143,13 +143,22 @@ public class AuctionService {
                 .productEntity(productEntity)
                 .title(auctionRegisterReq.getTitle())
                 .description(auctionRegisterReq.getDescription())
-                .offerPrice(auctionRegisterReq.getOfferPrice())
-                .priceSize(auctionRegisterReq.getPriceSize())
-                .endAt(auctionRegisterReq.getEndAt())
-                .meetingPlace(auctionRegisterReq.getMeetingPlace())
+                .offerPrice(auctionRegisterReq.getOffer_price())
+                .priceSize(auctionRegisterReq.getPrice_size())
+                .endAt(auctionRegisterReq.getEnd_at())
+                .meetingPlace(auctionRegisterReq.getMeeting_place())
                 .build();
 
         auctionIngRepository.save(auctionIngEntity);
+
+        // 이미지 등록
+        if (auctionRegisterReq.getFiles() != null && auctionRegisterReq.getFiles().length > 0) {
+            imageService.createAuctionImages(
+                    auctionIngEntity.getId(),
+                    auctionRegisterReq.getFiles()
+            );
+        }
+
         return "경매 게시글이 작성되었습니다.";
     }
 
