@@ -98,7 +98,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
             "WHERE :member_id IN " +
-            " (SELECT l.memberEntity.id FROM leaderboard l WHERE l.auctionId = a.id) " +
+            " (SELECT DISTINCT l.memberEntity.id FROM leaderboard l WHERE l.auctionId = a.id) " +
             "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllMyBiddingAuction(@Param("member_id") Long memberId, Pageable pageable);
 
@@ -112,7 +112,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
             "WHERE :member_id IN " +
-            " (SELECT i.memberEntity.id FROM InterestEntity i WHERE i.auctionIngEntity.id = a.id) " +
+            " (SELECT DISTINCT i.memberEntity.id FROM InterestEntity i WHERE i.auctionIngEntity.id = a.id) " +
             "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllMyInterestingAuction(@Param("member_id") Long memberId, Pageable pageable);
 }

@@ -11,8 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Long> {
     // 경매 End, 제품, 카테고리, 사용자 테이블 조인해서 데이터 검색하기
