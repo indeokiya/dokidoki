@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,6 @@ public class BiddingService {
     //  TTL 설정도 해줘야.
 
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
-
 
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
         
@@ -60,11 +60,11 @@ public class BiddingService {
      * @param auctionId 경매 ID
      * @param req client 측에서 넘어온 요청 정보
      */
-    public void bid(long auctionId, AuctionBidReq req) {
+    public void bid(long auctionId, AuctionBidReq req, long memberId) {
+        System.out.println(req);
         // TODO - 분산 락 처리 과정 필요
 
         // TODO - 나중에 토큰에서 받아오는 걸로 수정하기
-        long memberId = req.getMemberId();
 
         // 1. 경매 정보가 없는 경우 - 에러 발생시키기
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
@@ -72,7 +72,7 @@ public class BiddingService {
         if (auctionRealtimeO.isEmpty()) {
             throw new InvalidValueException("잘못된 접근입니다. auctionId가 존재하지 않습니다.");
         }
-
+        System.out.println(auctionRealtimeO.get());
         // 2. 실시간 DB 정보와 client 측 정보가 일치하는지 확인하기 (경매 단위, 현재 가격)
 
         // 2-1. 경매 단위가 일치하지 않을 경우
@@ -89,7 +89,7 @@ public class BiddingService {
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
         String key = getKey(auctionId);
 
-        LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, key, req);
+        LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, key, req, memberId);
 
         // TODO - 4. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
         //  MySQL 도 구독해놓고, 최고가 정보를 받아야 함
@@ -104,7 +104,7 @@ public class BiddingService {
      * @return newHighestPrice
      */
     @Transactional
-    public LeaderBoardMemberResp updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, String key, AuctionBidReq req) {
+    public LeaderBoardMemberResp updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, String key, AuctionBidReq req, long memberId) {
 
         // 3-1. 실시간 최고가 갱신
         int newHighestPrice = auctionRealtime.updateHighestPrice();
@@ -114,9 +114,9 @@ public class BiddingService {
         // 3-2. 리더보드 갱신
         int limit = LeaderBoardConstants.limit;
 
-        LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req);
+        LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
 
-        RScoredSortedSet<Object> scoredSortedSet = redisson.getScoredSortedSet(key);
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(key);
 
         scoredSortedSet.add(newHighestPrice, memberInfo);
 
@@ -149,18 +149,16 @@ public class BiddingService {
 
         String key = getKey(auctionId);
 
-        RScoredSortedSet<Object> scoredSortedSet = redisson.getScoredSortedSet(key);
-        System.out.println(scoredSortedSet);
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(key);
+        Collection<LeaderBoardMemberInfo> leaderBoardMemberInfos = scoredSortedSet.valueRangeReversed(0, -1);
 
-        // TODO - 여기 scoredSortedSet 어떻게 나오는지 한 번 봐야...
 
-//        for (Object o : set) {
-//            DefaultTypedTuple tuple = (DefaultTypedTuple) o;
-//            int bidPrice = tuple.getScore().intValue();
-//            LeaderBoardMemberInfo memberInfo = (LeaderBoardMemberInfo) tuple.getValue();
-//            LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(memberInfo, bidPrice);
-//            list.add(resp);
-//        }
+        for (LeaderBoardMemberInfo info: leaderBoardMemberInfos) {
+            int bidPrice = scoredSortedSet.getScore(info).intValue();
+            LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(info, bidPrice);
+            list.add(resp);
+        }
+
         return list;
     }
 
@@ -170,7 +168,7 @@ public class BiddingService {
      * @param req client 측에서 넘어온 요청 정보
      */
     @Transactional
-    public void updatePriceSize(long auctionId, AuctionUpdatePriceSizeReq req) {
+    public void updatePriceSize(long auctionId, AuctionUpdatePriceSizeReq req, long memberId) {
         // TODO - 분산 락 처리 과정 필요
 
         Optional<AuctionRealtime> auctionRealTimeO = auctionRealtimeRepository.findById(auctionId);
@@ -183,8 +181,7 @@ public class BiddingService {
         System.out.println(req);
 
         // 2. 해당 경매를 올린 사용자가 아니면 에러 내기
-        Optional<AuctionIngEntity> auctionIngO = auctionIngRepository.findBySellerIdAndId(req.getMemberId(), auctionId, AuctionIngEntity.class);
-        System.out.println(auctionIngO.get());
+        Optional<AuctionIngEntity> auctionIngO = auctionIngRepository.findBySellerIdAndId(memberId, auctionId, AuctionIngEntity.class);
 
         if (auctionIngO.isEmpty()) {
             throw new BusinessException("권한이 없습니다.", ErrorCode.BUSINESS_EXCEPTION_ERROR);

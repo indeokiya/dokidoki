@@ -32,18 +32,4 @@ public class AuctionRealtime {
         return this.highestPrice;
     }
 
-
-    public void setAuctionId(long auctionId) {
-        this.auctionId = auctionId;
-    }
-
-
-    public void setHighestPrice(int highestPrice) {
-        this.highestPrice = highestPrice;
-    }
-    
-    // public 으로 열려있어야 작동함
-    public void setPriceSize(int priceSize) {
-        this.priceSize = priceSize;
-    }
 }

@@ -26,9 +26,9 @@ public class LeaderBoardMemberInfo {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime bidTime;
 
-    public static LeaderBoardMemberInfo of(AuctionBidReq req) {
+    public static LeaderBoardMemberInfo of(AuctionBidReq req, long memberId) {
         return LeaderBoardMemberInfo.builder()
-                .memberId(req.getMemberId())
+                .memberId(memberId)
                 .name(req.getName())
                 .email(req.getEmail())
                 .bidTime(LocalDateTime.now()).build();
