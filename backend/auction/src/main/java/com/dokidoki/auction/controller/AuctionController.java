@@ -5,7 +5,6 @@ import com.dokidoki.auction.common.JWTUtil;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
-import com.dokidoki.auction.dto.response.CommonResponse;
 import com.dokidoki.auction.dto.response.ProductResp;
 import com.dokidoki.auction.service.AuctionService;
 import io.swagger.annotations.ApiParam;
@@ -41,57 +40,49 @@ public class AuctionController {
     // 카테고리 기준 제품 목록 조회
     @GetMapping("/products/{category_id}")
     @Operation(summary = "category의 id를 선택 시에 대한 요청 API", description = "카테고리에 해당 제품 목록으로 응답")
-    public ResponseEntity<?> getCategoryList(@PathVariable("category_id") Long catId) {
+    public ResponseEntity<BaseResponseBody> getCategoryList(@PathVariable("category_id") Long catId) {
 
         log.debug(">>> categoryId : {}", catId);
         List<ProductResp> productList = auctionService.getProductList(catId);
 
         if (productList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body("해당 카테고리에 해당하는 제품 목록이 없습니다.");
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(BaseResponseBody.of("해당 카테고리에 해당하는 제품 목록이 없습니다."));
         }
-        return ResponseEntity.ok(productList);
+        return ResponseEntity.status(200).body(BaseResponseBody.of("제품 목록 조회 성공", productList));
     }
 
     @PostMapping("/auctions")
     @Operation(summary = "경매 게시글 생성 API", description = "경매 게시글을 작성한다.")
-    public ResponseEntity<CommonResponse<Void>> createAuction(
+    public ResponseEntity<BaseResponseBody> createAuction(
             @RequestBody Optional<AuctionRegisterReq> auctionRegisterReqO,
             HttpServletRequest request) {
         log.debug("POST /auction request : {}", auctionRegisterReqO);
 
-        if (auctionRegisterReqO.isEmpty()) {
-            return new ResponseEntity<>(
-                    CommonResponse.of(400, "요청받은 데이터가 없습니다.", null),
-                    HttpStatus.BAD_REQUEST
-            );
-        }
+        if (auctionRegisterReqO.isEmpty())
+            return ResponseEntity
+                    .status(400)
+                    .body(BaseResponseBody.of("요청받은 데이터가 없습니다."));
 
         AuctionRegisterReq auctionRegisterReq = auctionRegisterReqO.get();
         Long sellerId = jwtUtil.getUserId(request);
-        if (sellerId == null) {
-            return new ResponseEntity<>(
-                    CommonResponse.of(403, "토큰이 유효하지 않습니다.", null),
-                    HttpStatus.FORBIDDEN
-            );
-        }
+        if (sellerId == null)
+            return ResponseEntity
+                    .status(403)
+                    .body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         String msg = auctionService.createAuction(auctionRegisterReq, sellerId);
 
-        if (msg.equals("제품에 대한 정보가 존재하지 않습니다.")) {
-            return new ResponseEntity<>(
-                    CommonResponse.of(400, msg, null),
-                    HttpStatus.NOT_FOUND
-            );
-        }
+        if (msg.equals("제품에 대한 정보가 존재하지 않습니다."))
+            return ResponseEntity
+                    .status(400)
+                    .body(BaseResponseBody.of(msg));
 
         // 성공적으로 등록되면 카프카에 auction.register 메시지 발행.
         // producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(auctionRegisterReq));
 
-        return new ResponseEntity<>(
-                CommonResponse.of(201, msg, null),
-                HttpStatus.CREATED
-        );
+        return ResponseEntity.status(201).body(BaseResponseBody.of(msg));
     }
 
     @PutMapping("/auctions")
