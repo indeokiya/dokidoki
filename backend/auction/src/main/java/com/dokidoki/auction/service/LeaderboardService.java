@@ -19,6 +19,7 @@ public class LeaderboardService {
     private final LeaderboardRepository leaderboardRepository;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public int createLeaderboard(Long auctionId, LeaderboardRequest leaderboardRequest) {
         // 리더보드 입찰 내역 삽입
         leaderboardRequest.getHistories().forEach(history -> {

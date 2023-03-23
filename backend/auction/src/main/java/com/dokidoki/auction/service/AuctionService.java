@@ -47,7 +47,7 @@ public class AuctionService {
     }
 
     // 카테고리 기준 제품 목록 조회
-    @Transactional
+    @Transactional(readOnly = true)
     public List<ProductResp> getProductList(String keyword) {
         List<ProductEntity> productEntities = productRepository.findByKeyword(keyword);
         List<ProductResp> productList = new ArrayList<>();
@@ -96,7 +96,6 @@ public class AuctionService {
     }
 
     // 완료된 경매 상세정보 조회
-
     @Transactional(readOnly = true)
     public DetailAuctionEndResponse readAuctionEnd(Long auction_id) {
         // 완료된 경매 정보
@@ -173,7 +172,7 @@ public class AuctionService {
      * @param   auctionId
      * @return 진행중인 경매 정보
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public AuctionIngEntity getAuctioningById(Long auctionId) {
 
         AuctionIngEntity auction = auctionIngRepository.findById(auctionId)

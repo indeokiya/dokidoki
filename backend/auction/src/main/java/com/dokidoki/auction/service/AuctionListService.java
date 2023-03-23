@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +24,7 @@ public class AuctionListService {
     /*
     종료된 경매 목록 조회
      */
+    @Transactional(readOnly = true)
     public PaginationResponse readSimpleAuctionEnd(Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionEndInterface> simpleAuctionEndInterfaces = auctionEndRepository
@@ -54,6 +56,7 @@ public class AuctionListService {
     /*
     진행중인 전체 경매 목록 조회
      */
+    @Transactional(readOnly = true)
     public PaginationResponse readSimpleAuctionIng(Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
@@ -64,6 +67,7 @@ public class AuctionListService {
     /*
     진행중인 마감임박 경매 목록 조회
      */
+    @Transactional(readOnly = true)
     public PaginationResponse readSimpleAuctionDeadline(Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
@@ -74,6 +78,7 @@ public class AuctionListService {
     /*
     진행중인 경매 목록 검색
      */
+    @Transactional(readOnly = true)
     public PaginationResponse searchSimpleAuctionIng(
             String keyword, Long categoryId, Pageable pageable) {
         // 불필요 문자 제거

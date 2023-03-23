@@ -25,6 +25,7 @@ public class CommentService {
     private final AuctionIngRepository auctionIngRepository;
     private final AuctionEndRepository auctionEndRepository;
 
+    @Transactional(readOnly = true)
     public List<CommentResponse> readComment(Long auctionId) {
         // 경매 식별번호로 모든 댓글 검색
         List<CommentEntity> commentEntities = commentRepository.findCommentsByAuctionIdOrderByWrittenTime(auctionId);

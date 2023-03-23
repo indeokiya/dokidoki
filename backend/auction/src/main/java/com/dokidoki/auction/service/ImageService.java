@@ -34,6 +34,7 @@ public class ImageService {
     /*
         경메 제품 사진 관련 서비스
      */
+    @Transactional(readOnly = true)
     public AuctionImageResponse readAuctionImages(Long auction_id) {
         // AuctionImage Entity 검색
         List<AuctionImageEntity> auctionImageEntities = auctionImageRepository.findAuctionImagesByAuctionId(auction_id);
