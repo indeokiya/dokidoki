@@ -4,6 +4,7 @@ import BeforLoginMenu from "./BeforLoginMenu";
 import {useState}from 'react';
 import styled from "styled-components";
 import LogoImgSrc from "../../assets/image/logo.png"
+import { Link } from "react-router-dom";
 
 
 const Header = () => {
@@ -30,7 +31,9 @@ const Header = () => {
     <HeaderBox>
     <Grid container spacing={2}  alignItems={'center'}>
       <Grid item xs>
+        <Link to="/">
         <LogoImg src={LogoImgSrc}></LogoImg>
+        </Link>
       </Grid>
       <Grid item>
         {HeaderMenu}

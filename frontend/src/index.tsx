@@ -1,15 +1,15 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import RootLayout from "./routes/RootLayout";
 import RendingPageContainer from "./routes/RendingPageContainer";
-import ActionPageContent from "./routes/ActionPageContent";
+import ActionPageContent from "./routes/AuctionPageContent";
 import TestContainer from "./routes/TestContainer";
-import ProfilePage from "./routes/ProfilePage";
+import ProfilePage from "./routes/MyPage";
 import LoginPage from "./routes/LoginPage";
 import RegisterPage from "./routes/RegisterPage";
+import ProductPage from "./routes/ProductPage";
 
 
 
@@ -23,13 +23,10 @@ const router = createBrowserRouter([
         element: <RendingPageContainer />,
       },
       {
-        path:"action",
+        path:"auction",
         element: <ActionPageContent />,
       },
-      {
-        path:"mypage",
-        element:<ProfilePage/>
-      },
+      
       {
         path:'login',
         element:<LoginPage/>
@@ -38,9 +35,17 @@ const router = createBrowserRouter([
         path:'regist',
         element:<RegisterPage/>
       },
+      
     ],
   },
-  
+  {
+    path:'product/:id',
+    element:<ProductPage/>
+  },
+  {
+    path:"/mypage",
+    element:<ProfilePage/>
+  },
   {
     path: "/test",
     element: <TestContainer />,

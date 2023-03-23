@@ -5,7 +5,8 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Checkbox from "@mui/material/Checkbox";
-
+import Typography from '@mui/material/Typography';
+            
 export default function ViewOpeion() {
     const options = ['경매중','경매완료','마감임박']
 
@@ -47,7 +48,7 @@ export default function ViewOpeion() {
                   inputProps={{ "aria-labelledby": labelId }}
                 />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={value} />
+              <Typography variant="subtitle2">{value}</Typography>
             </ListItemButton>
           </ListItem>
         );
