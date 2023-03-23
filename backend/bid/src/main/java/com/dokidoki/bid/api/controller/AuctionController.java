@@ -29,7 +29,7 @@ public class AuctionController {
     }
 
     @PostMapping("/{auctionId}/bid")
-    public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId, HttpServletRequest request) {
+    public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId, HttpServletRequest request) throws InterruptedException {
         Map<String, Object> resultMap = new HashMap<>();
         long memberId = JWTUtil.getUserId(request).longValue();
         biddingService.bid(auctionId, req, memberId);

@@ -188,7 +188,7 @@ class BiddingServiceTest {
 
             @Test
             @DisplayName("모든 조건을 통과하면 성공적으로 입찰이 된다.")
-            public void 입찰성공() {
+            public void 입찰성공() throws InterruptedException {
                 biddingService.bid(auctionId, reqs[0], memberIds[0]);
                 AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
 
@@ -218,7 +218,7 @@ class BiddingServiceTest {
 
             @Test
             @DisplayName("새로운 입찰이 일어나면, 가장 위의 정보가 그 사람의 입찰 정보로 갱신된다.")
-            public void 입찰성공_사용자_갱신() {
+            public void 입찰성공_사용자_갱신() throws InterruptedException {
                 biddingService.bid(auctionId, reqs[0], memberIds[0]);
                 biddingService.bid(auctionId, reqs[1], memberIds[1]);
 
@@ -241,7 +241,7 @@ class BiddingServiceTest {
 
             @Test
             @DisplayName("제한된 수 이상으로 입찰될 경우, 그 개수만큼 최근 입찰된 결과만 sorted Set 에 남는다.")
-            public void 제한수_유지() {
+            public void 제한수_유지() throws InterruptedException {
                 int limit = LeaderBoardConstants.limit;
 
                 for (int i = 0; i < limit + 2; i++) {

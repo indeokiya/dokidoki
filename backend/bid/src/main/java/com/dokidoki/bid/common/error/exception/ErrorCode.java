@@ -20,7 +20,8 @@ public enum ErrorCode {
 
     // Bid
     DIFFERENT_PRICE_SIZE(400, "BID001", "Different Price Size"),
-    DIFFERENT_HIGHEST_PRICE(400, "BID002", "Different Highest Price");
+    DIFFERENT_HIGHEST_PRICE(400, "BID002", "Different Highest Price"),
+    FAILURE_GET_REALTIME_LOCK(500, "BID003", "Failure getting realtime lock");
 
     private final String code;
     private final String message;
