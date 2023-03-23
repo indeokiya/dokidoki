@@ -67,7 +67,7 @@ public class CommentService {
     public int createComment(Long memberId, CommentRequest commentRequest) {
         // 존재하지 않는 경매 식별번호일 경우,
         Long auctionId = commentRequest.getAuction_id();
-        if (existsAuction(auctionId))
+        if (!existsAuction(auctionId))
             return 1;
 
         // 존재하지 않는 사용자 식별번호일 경우,
