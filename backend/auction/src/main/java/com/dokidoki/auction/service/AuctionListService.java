@@ -23,7 +23,7 @@ public class AuctionListService {
     /*
     종료된 경매 목록 조회
      */
-    public PaginationResponse<List<SimpleAuctionEndInfo>> readSimpleAuctionEnd(Pageable pageable) {
+    public PaginationResponse readSimpleAuctionEnd(Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionEndInterface> simpleAuctionEndInterfaces = auctionEndRepository
                 .findAllSimpleEndList(pageable);
@@ -45,7 +45,7 @@ public class AuctionListService {
         }
 
         // Response DTO 생성 및 반환
-        return new PaginationResponse<>(
+        return PaginationResponse.of(
                 simpleAuctionEndInfos,
                 simpleAuctionEndInterfaces.isLast()
         );
@@ -54,7 +54,7 @@ public class AuctionListService {
     /*
     진행중인 전체 경매 목록 조회
      */
-    public PaginationResponse<List<SimpleAuctionIngInfo>> readSimpleAuctionIng(Pageable pageable) {
+    public PaginationResponse readSimpleAuctionIng(Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllSimpleIngList(pageable);
@@ -64,7 +64,7 @@ public class AuctionListService {
     /*
     진행중인 마감임박 경매 목록 조회
      */
-    public PaginationResponse<List<SimpleAuctionIngInfo>> readSimpleAuctionDeadline(Pageable pageable) {
+    public PaginationResponse readSimpleAuctionDeadline(Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllSimpleDeadlineList(pageable);
@@ -74,7 +74,7 @@ public class AuctionListService {
     /*
     진행중인 경매 목록 검색
      */
-    public PaginationResponse<List<SimpleAuctionIngInfo>> searchSimpleAuctionIng(
+    public PaginationResponse searchSimpleAuctionIng(
             String keyword, Long categoryId, Pageable pageable) {
         // 불필요 문자 제거
         keyword = keyword.strip();
@@ -94,7 +94,7 @@ public class AuctionListService {
     /*
     DB에서 조회한 진행중인 경매 목록 데이터에 제품 이미지를 추가하며 DTO로 변환
      */
-    public PaginationResponse<List<SimpleAuctionIngInfo>> convertToDTOWithImages(
+    public PaginationResponse convertToDTOWithImages(
             Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces) {
         // 데이터 조합
         List<SimpleAuctionIngInfo> simpleAuctionIngInfos = new ArrayList<>();
@@ -113,7 +113,7 @@ public class AuctionListService {
         }
 
         // Response DTO 생성 및 반환
-        return new PaginationResponse<>(
+        return PaginationResponse.of(
                 simpleAuctionIngInfos,
                 simpleAuctionIngInterfaces.isLast()
         );
