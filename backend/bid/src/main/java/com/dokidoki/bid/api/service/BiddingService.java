@@ -14,19 +14,14 @@ import com.dokidoki.bid.db.entity.AuctionRealtime;
 import com.dokidoki.bid.db.repository.AuctionIngRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import lombok.RequiredArgsConstructor;
-import org.redisson.api.RLiveObjectService;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.DefaultTypedTuple;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -139,7 +134,7 @@ public class BiddingService {
      */
     public String getKey(long auctionId) {
         StringBuilder sb = new StringBuilder();
-        sb.append("realtime:").append(auctionId);
+        sb.append("leaderboard:").append(auctionId);
         return sb.toString();
     }
 

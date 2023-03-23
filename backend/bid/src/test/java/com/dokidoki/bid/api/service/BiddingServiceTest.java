@@ -28,7 +28,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -90,7 +89,8 @@ class BiddingServiceTest {
 
         // 실시간 경매 초기화 정보 등록 (나중엔 메서드로 대체하기)
 
-        AuctionRealtime auctionRealtime = AuctionRealtime.of(auctionId, highestPrice, priceSize);
+        AuctionRealtime auctionRealtime = AuctionRealtime.builder()
+                        .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
 
         System.out.println(auctionRealtime);
         RLiveObjectService liveObjectService = redisson.getLiveObjectService();
@@ -153,7 +153,8 @@ class BiddingServiceTest {
             @BeforeEach
             public void 준비() {
                 auctionRealtimeRepository.deleteAll();
-                AuctionRealtime auctionRealtime = AuctionRealtime.of(auctionId, highestPrice, priceSize);
+                AuctionRealtime auctionRealtime = AuctionRealtime.builder()
+                        .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
 
 //                AuctionRealtime auctionRealtime = AuctionRealtime.builder()
 //                        .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();

@@ -1,31 +1,37 @@
 package com.dokidoki.bid.db.repository;
 
+import com.dokidoki.bid.common.codes.RealTimeConstants;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
-import org.redisson.api.*;
+import lombok.RequiredArgsConstructor;
+import org.redisson.api.RMapCache;
+import org.redisson.api.RTransaction;
+import org.redisson.api.RedissonClient;
+import org.redisson.api.TransactionOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.TransactionException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
-// @Repository 로 하면 다른 메서드가 작동해버림..
+@RequiredArgsConstructor
 @Component
-public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository {
+public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
 
-    private RedissonClient redisson;
-    private RLiveObjectService liveObjectService;
+    private final RedissonClient redisson;
+    private String key = RealTimeConstants.key;
+    private RMapCache<Long, AuctionRealtime> map;
 
     @Autowired
-    public AuctionRealtimeRepositoryImpl(RedissonClient redisson) {
-        this.liveObjectService = redisson.getLiveObjectService();
-        this.redisson = redisson;
+    public void setAuctionRealtimeRepositoryImpl() {
+        this.key = RealTimeConstants.key;
+        this.map = redisson.getMapCache(key);
     }
 
     @Override
     public Optional<AuctionRealtime> findById(long auctionId) {
-        AuctionRealtime auctionRealtime = liveObjectService.get(AuctionRealtime.class, auctionId);
+        AuctionRealtime auctionRealtime = map.get(auctionId);
         if (auctionRealtime == null) {
             return Optional.empty();
         } else {
@@ -34,12 +40,11 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     }
 
     @Override
-    public AuctionRealtime save(AuctionRealtime auctionRealtime) {
+    public void save(AuctionRealtime auctionRealtime) {
         RTransaction transaction = redisson.createTransaction(TransactionOptions.defaults());
         try {
-            AuctionRealtime res = liveObjectService.persist(auctionRealtime);
+            map.put(auctionRealtime.getAuctionId(), auctionRealtime);
             transaction.commit();
-            return res;
         } catch(Exception e) {
             transaction.rollback();
             throw e;
@@ -47,14 +52,11 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     }
 
     @Override
-    public AuctionRealtime save(AuctionRealtime auctionRealtime, Duration duration) {
+    public void save(AuctionRealtime auctionRealtime, long ttl, TimeUnit timeUnit) {
         RTransaction transaction = redisson.createTransaction(TransactionOptions.defaults());
         try {
-            AuctionRealtime res = liveObjectService.persist(auctionRealtime);
-            RLiveObject rLiveObject = liveObjectService.asLiveObject(auctionRealtime);
-            rLiveObject.expire(duration);
+            map.put(auctionRealtime.getAuctionId(), auctionRealtime, ttl, timeUnit);
             transaction.commit();
-            return res;
         } catch (Exception e) {
             transaction.rollback();
             throw e;
@@ -62,19 +64,15 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     }
 
     @Override
-    public void deleteAll() {
+    public boolean deleteAll() {
         RTransaction transaction = redisson.createTransaction(TransactionOptions.defaults());
         try {
-            Iterable<Long> iterable = liveObjectService.findIds(AuctionRealtime.class);
-            iterable.forEach(id ->
-                    liveObjectService.delete(AuctionRealtime.class, id)
-            );
+            boolean res = map.delete();
             transaction.commit();
+            return res;
         } catch (Exception e) {
             transaction.rollback();
             throw e;
         }
     }
-
-
 }

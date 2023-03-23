@@ -3,6 +3,7 @@ package com.dokidoki.bid.db.repository;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 
 import java.time.Duration;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -10,10 +11,10 @@ public interface AuctionRealtimeRepository {
 
     Optional<AuctionRealtime> findById(long auctionId);
 
-    AuctionRealtime save(AuctionRealtime auctionRealtime);
+    void save(AuctionRealtime auctionRealtime);
 
-    AuctionRealtime save(AuctionRealtime auctionRealtime, Duration duration);
+    void save(AuctionRealtime auctionRealtime, long ttl, TimeUnit timeUnit);
 
-    void deleteAll();
+    boolean deleteAll();
 
 }
