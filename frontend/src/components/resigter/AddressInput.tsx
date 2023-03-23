@@ -1,5 +1,5 @@
-import { Button } from "@mui/material";
-import DaumPostcode from "react-daum-postcode";
+import { Button } from '@mui/material';
+import DaumPostcode from 'react-daum-postcode';
 
 const AddressInput: React.FC<{
   setVisible: (data: boolean) => void;
@@ -7,17 +7,16 @@ const AddressInput: React.FC<{
 }> = (props) => {
   const handleComplete = (data: any) => {
     let fullAddress = data.address;
-    let extraAddress = "";
+    let extraAddress = '';
 
-    if (data.addressType === "R") {
-      if (data.bname !== "") {
+    if (data.addressType === 'R') {
+      if (data.bname !== '') {
         extraAddress += data.bname;
       }
-      if (data.buildingName !== "") {
-        extraAddress +=
-          extraAddress !== "" ? `,${data.buildingName}` : data.buildingName;
+      if (data.buildingName !== '') {
+        extraAddress += extraAddress !== '' ? `,${data.buildingName}` : data.buildingName;
       }
-      fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
+      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
     }
     
     props.dataRef.current.meeting_place = fullAddress;
@@ -28,14 +27,15 @@ const AddressInput: React.FC<{
   return (
     <>
       <div>
-        <DaumPostcode onComplete={handleComplete}/>
+        <DaumPostcode onComplete={handleComplete} />
         <Button
-          sx={{mt:3}}
+          sx={{ mt: 3 }}
           fullWidth
           onClick={() => {
             props.setVisible(false);
           }}
-          variant="outlined" color="error"
+          variant="outlined"
+          color="error"
         >
           close
         </Button>

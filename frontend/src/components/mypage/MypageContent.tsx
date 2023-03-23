@@ -11,7 +11,7 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
-const MypageContent = ()=> {
+const MypageContent = () => {
   return (
     <Paper sx={{ maxWidth: 936, margin: 'auto', overflow: 'hidden' }}>
       <AppBar
@@ -54,6 +54,6 @@ const MypageContent = ()=> {
       </Typography>
     </Paper>
   );
-}
+};
 
 export default MypageContent;

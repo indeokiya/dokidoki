@@ -25,20 +25,26 @@ const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
       <Paper elevation={3} sx={{ width: 600, padding: 10 }}>
         <Grid container>
           <Grid item xs={12}>
-            <Typography variant="h5" fontWeight="bold" color={"#3A77EE"}>
+            <Typography variant="h5" fontWeight="bold" color={'#3A77EE'}>
               경매 정보
             </Typography>
-            <Divider sx={{ margin: "2rem 0px" }} />
+            <Divider sx={{ margin: '2rem 0px' }} />
           </Grid>
           <Grid item xs={2}>
             <Typography variant="subtitle1">시작 가격 : </Typography>
           </Grid>
           <Grid item xs={10} mb={2}>
-          <NumericFormat
-              style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
+            <NumericFormat
+              style={{
+                width: '97%',
+                height: 50,
+                border: '1px solid shilver',
+                fontSize: 20,
+                paddingLeft: '10px',
+              }}
               allowNegative={false}
               decimalScale={2}
-              displayType={"input"}
+              displayType={'input'}
               thousandSeparator={true}
               suffix={" 원"}
               name="offer_price"
@@ -51,10 +57,16 @@ const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
           </Grid>
           <Grid item xs={10} mb={2}>
             <NumericFormat
-              style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
+              style={{
+                width: '97%',
+                height: 50,
+                border: '1px solid shilver',
+                fontSize: 20,
+                paddingLeft: '10px',
+              }}
               allowNegative={false}
               decimalScale={2}
-              displayType={"input"}
+              displayType={'input'}
               thousandSeparator={true}
               suffix={" 원"}
               name="price_size"

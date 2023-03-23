@@ -6,22 +6,10 @@ import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import MypageContent from '../components/mypage/MypageContent';
 import MypageHeader from '../components/mypage/MypageHeader';
-import MypageNavigator  from '../components/mypage/MypageNavigator';
-import {useState} from 'react'
+import MypageNavigator from '../components/mypage/MypageNavigator';
+import { useState } from 'react';
 
-
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}.
-    </Typography>
-  );
-}
+ 
 
 let theme = createTheme({
   palette: {
@@ -169,20 +157,14 @@ theme = {
 const drawerWidth = 256;
 
 export default function Paperbase() {
-  const [selectedMenu, setSelectedMenu] = useState("내 정보");
-  
-
-
+  const list = [1,2,3,4,5,6,7];
+  const [selectedMenu, setSelectedMenu] = useState('입찰 중');
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
-        <Box
-          component="nav"
-          sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        >
-         
+        <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
           <MypageNavigator
             PaperProps={{ style: { width: drawerWidth } }}
             sx={{ display: { sm: 'block', xs: 'none' } }}
@@ -190,12 +172,14 @@ export default function Paperbase() {
           />
         </Box>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <MypageHeader selectedMenu={selectedMenu}/>
+          <MypageHeader selectedMenu={selectedMenu} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-            <MypageContent />
+            {list.map(()=>{
+              return<MypageContent />
+            })}
+            
           </Box>
           <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-            <Copyright />
           </Box>
         </Box>
       </Box>

@@ -1,63 +1,58 @@
-import ReactDOM from "react-dom/client";
-import "./index.css";
-import reportWebVitals from "./reportWebVitals";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import RootLayout from "./routes/RootLayout";
-import RendingPageContainer from "./routes/RendingPageContainer";
-import ActionPageContent from "./routes/AuctionPageContent";
-import TestContainer from "./routes/TestContainer";
-import ProfilePage from "./routes/MyPage";
-import LoginPage from "./routes/LoginPage";
-import RegisterPage from "./routes/RegisterPage";
-import ProductPage from "./routes/ProductPage";
-
-
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import RootLayout from './routes/RootLayout';
+import RendingPageContainer from './routes/RendingPageContainer';
+import ActionPageContent from './routes/AuctionPageContent';
+import TestContainer from './routes/TestContainer';
+import ProfilePage from './routes/MyPage';
+import LoginPage from './routes/LoginPage';
+import RegisterPage from './routes/RegisterPage';
+import ProductPage from './routes/ProductPage';
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <RootLayout />,
     children: [
       {
-        path: "",
+        path: '',
         element: <RendingPageContainer />,
       },
       {
-        path:"auction",
+        path: 'auction',
         element: <ActionPageContent />,
       },
-      
+
       {
-        path:'login',
-        element:<LoginPage/>
+        path: 'login',
+        element: <LoginPage />,
       },
       {
-        path:'regist',
-        element:<RegisterPage/>
+        path: 'regist',
+        element: <RegisterPage />,
       },
-      
     ],
   },
   {
-    path:'product/:id',
-    element:<ProductPage/>
+    path: 'product/:id',
+    element: <ProductPage />,
   },
   {
-    path:"/mypage",
-    element:<ProfilePage/>
+    path: '/mypage',
+    element: <ProfilePage />,
   },
   {
-    path: "/test",
+    path: '/test',
     element: <TestContainer />,
   },
 ]);
 
-const root = ReactDOM.createRoot(
-  document.getElementById("root") as HTMLElement
-);
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   // <React.StrictMode>
-  <RouterProvider router={router}></RouterProvider>
+  <RouterProvider router={router}></RouterProvider>,
   // </React.StrictMode>
 );
 

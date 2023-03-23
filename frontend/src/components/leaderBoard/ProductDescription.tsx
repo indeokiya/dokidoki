@@ -1,5 +1,5 @@
-import Typography from "@mui/material/Typography";
-import styled from "styled-components";
+import Typography from '@mui/material/Typography';
+import styled from 'styled-components';
 
 const ProductDescription = () => {
   const StyledDiv = styled.div`

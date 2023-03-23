@@ -1,14 +1,14 @@
-import Grid from "@mui/material/Grid";
-import ProductImages from "../components/leaderBoard/ProductImages";
-import ProductInfo from "../components/leaderBoard/ProductInfo";
-import Divider from "@mui/material/Divider";
-import Container from "@mui/material/Container";
-import styled from "styled-components";
-import ProductGraph from "../components/leaderBoard/ProductGraph";
-import ProductDescription from "../components/leaderBoard/ProductDescription";
-import CommentsList from "../components/leaderBoard/comments/CommentsList";
-import ScrollTop from "../components/util/ScrollTop";
-import Header from "../components/header/Header";
+import Grid from '@mui/material/Grid';
+import ProductImages from '../components/leaderBoard/ProductImages';
+import ProductInfo from '../components/leaderBoard/ProductInfo';
+import Divider from '@mui/material/Divider';
+import Container from '@mui/material/Container';
+import styled from 'styled-components';
+import ProductGraph from '../components/leaderBoard/ProductGraph';
+import ProductDescription from '../components/leaderBoard/ProductDescription';
+import CommentsList from '../components/leaderBoard/comments/CommentsList';
+import ScrollTop from '../components/util/ScrollTop';
+import Header from '../components/header/Header';
 
 const ProductPage = () => {
   const StyledDiv = styled.div`
@@ -21,7 +21,7 @@ const ProductPage = () => {
       <Header />
       <Container>
         <ScrollTop />
-        <Grid container spacing={3} mb={10}>
+        <Grid container spacing={3} mb={10} mt={10}>
           <Grid item xs={2} />
           <Grid item xs={4}>
             {/* 제품 이미지 */}
