@@ -7,6 +7,7 @@ import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.ProductResp;
 import com.dokidoki.auction.service.AuctionService;
+import com.dokidoki.auction.service.InterestService;
 import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +24,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin("*")
+@RequestMapping("/auctions")
 public class AuctionController {
 
+    private final InterestService interestService;
     private final AuctionService auctionService;
     private final JWTUtil jwtUtil;
 
 //    private final KafkaAuctionProducer producer;
-
-    // 카테고리 조회
-//    @GetMapping("/products/{category_id}")
-//    @Operation(summary = "category의 id를 선택 시에 대한 요청", description = "카테고리에 해당 제품 목록으로 응답")
-//    public ResponseEntity<List<CategoryResp>> getCategoryList(@PathVariable("category_id") Long catId) {
-//
-//    }
 
     // 카테고리 기준 제품 목록 조회
     @GetMapping("/products")
@@ -54,7 +50,10 @@ public class AuctionController {
         return ResponseEntity.status(200).body(BaseResponseBody.of("제품 목록 조회 성공", productList));
     }
 
-    @PostMapping("/auctions")
+    /*
+    경매 생성 및 수정 API
+     */
+    @PostMapping("")
     @Operation(summary = "경매 게시글 생성 API", description = "경매 게시글을 작성한다.")
     public ResponseEntity<BaseResponseBody> createAuction(
             @RequestBody Optional<AuctionRegisterReq> auctionRegisterReqO,
@@ -86,9 +85,9 @@ public class AuctionController {
         return ResponseEntity.status(201).body(BaseResponseBody.of(msg));
     }
 
-    @PutMapping("/auctions")
+    @PutMapping("/{auction_id}")
     public ResponseEntity<BaseResponseBody> updateAuction(
-            @RequestParam("auction_id") @ApiParam(value = "경매 id", required = true) Long auctionId,
+            @PathVariable("auction_id") @ApiParam(value = "경매 id", required = true) Long auctionId,
             @RequestBody @ApiParam(value = "경매 수정 정보", required = true) Optional<AuctionUpdateReq> auctionUpdateReqO,
             HttpServletRequest request) {
 
@@ -116,6 +115,38 @@ public class AuctionController {
 //        if (경매 단위 수정됐으면) {
 //            producer.sendAuctionUpdate(~~~);
 //        }
+    }
+
+    /*
+    찜꽁 관련 API
+     */
+    @PostMapping("/interests/{auction_id}")
+    public ResponseEntity<BaseResponseBody> addInterest(
+            @PathVariable("auction_id") @ApiParam(value = "경매 id", required = true) Long auctionId,
+            HttpServletRequest request
+    ) {
+        Long buyerId = jwtUtil.getUserId(request);
+        if (buyerId == null)
+            return ResponseEntity.status(400).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
+
+        if (interestService.addInterest(buyerId, auctionId))
+            return ResponseEntity.status(201).body(BaseResponseBody.of("관심목록에 추가되었습니다."));
+        else
+            return ResponseEntity.status(400).body(BaseResponseBody.of("이미 관심목록에 존재합니다."));
+    }
+
+    @DeleteMapping("/interests/{auction_id}")
+    public ResponseEntity<BaseResponseBody> deleteInterest(
+            @PathVariable("auction_id") @ApiParam(value = "경매 id", required = true) Long auctionId,
+            HttpServletRequest request) {
+        Long buyerId = jwtUtil.getUserId(request);
+        if (buyerId == null)
+            return ResponseEntity.status(400).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
+
+        if (interestService.deleteInterest(buyerId, auctionId))
+            return ResponseEntity.status(200).body(BaseResponseBody.of("관심 목록에서 해제되었습니다."));
+        else
+            return ResponseEntity.status(400).body(BaseResponseBody.of("관심 목록에 존재하지 않습니다."));
     }
 
 }
