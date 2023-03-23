@@ -217,6 +217,36 @@ class BiddingServiceTest {
             }
 
             @Test
+            @DisplayName("모든 조건을 통과하면 성공적으로 입찰이 된다(분산 락 처리).")
+            public void 입찰성공_분산락() throws InterruptedException {
+                biddingService.bidWithLock(auctionId, reqs[0], memberIds[0]);
+                AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
+
+                // auctionRealtime 값 갱신 확인
+                assertEquals(highestPrice + priceSize, auctionRealtime.getHighestPrice());
+
+                String key = biddingService.getKey(auctionId);
+
+                // 랭킹 갱신 확인
+                AuctionInitialInfoResp initialInfo = biddingService.getInitialInfo(auctionId);
+                List<LeaderBoardMemberResp> leaderBoard = initialInfo.getLeaderBoard();
+                System.out.println(leaderBoard);
+                assertEquals(1, leaderBoard.size());
+
+                RScoredSortedSet<LeaderBoardMemberInfo> set = redisson.getScoredSortedSet(key);
+                Collection<LeaderBoardMemberInfo> leaderBoardMemberInfos = set.valueRangeReversed(0, -1);
+
+                assertEquals(1, set.size());
+
+                for (LeaderBoardMemberInfo info: leaderBoardMemberInfos) {
+                    int bidPrice = set.getScore(info).intValue();
+                    assertEquals(highestPrice + priceSize, bidPrice);
+                    assertEquals(memberIds[0], info.getMemberId());
+                    System.out.println(info);
+                }
+            }
+
+            @Test
             @DisplayName("새로운 입찰이 일어나면, 가장 위의 정보가 그 사람의 입찰 정보로 갱신된다.")
             public void 입찰성공_사용자_갱신() throws InterruptedException {
                 biddingService.bid(auctionId, reqs[0], memberIds[0]);

@@ -32,7 +32,8 @@ public class AuctionController {
     public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId, HttpServletRequest request) throws InterruptedException {
         Map<String, Object> resultMap = new HashMap<>();
         long memberId = JWTUtil.getUserId(request).longValue();
-        biddingService.bid(auctionId, req, memberId);
+//        biddingService.bid(auctionId, req, memberId);
+        biddingService.bidWithLock(auctionId, req, memberId);
         resultMap.put("status_code", 200);
         resultMap.put("message", "성공");
         return ResponseEntity.ok(resultMap);
@@ -49,9 +50,9 @@ public class AuctionController {
     }
 
     // access 토큰 발급 (테스트 용)
-//    @GetMapping("/{memberId}")
-//    public ResponseEntity<?> getAccessToken(@PathVariable long memberId) {
-//        return ResponseEntity.ok(JWTUtil.getAccessToken(memberId));
-//    }
+    @GetMapping("/{memberId}")
+    public ResponseEntity<?> getAccessToken(@PathVariable long memberId) {
+        return ResponseEntity.ok(JWTUtil.getAccessToken(memberId));
+    }
 
 }
