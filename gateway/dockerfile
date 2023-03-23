@@ -1,6 +1,0 @@
-FROM nginx
-
-COPY ./nginx.conf /etc/nginx/nginx.conf
-
-# certbot으로 생성한 설정 및 ssl key를 복사
-COPY /etc/letsencrypt ./etc/letsencrypt
