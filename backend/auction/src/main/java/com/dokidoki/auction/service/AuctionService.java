@@ -56,14 +56,14 @@ public class AuctionService {
 
     // 카테고리 기준 제품 목록 조회
     @Transactional
-    public List<ProductResp> getProductList(Long catId) {
-        List<ProductEntity> productEntities = productRepository.findByCategoryEntity_Id(catId);
+    public List<ProductResp> getProductList(String keyword) {
+        List<ProductEntity> productEntities = productRepository.findByKeyword(keyword);
         List<ProductResp> productList = new ArrayList<>();
 
         for (ProductEntity productEntity : productEntities) {
             ProductResp productResp = ProductResp.builder()
-                    .productId(productEntity.getId())
-                    .name(productEntity.getName())
+                    .product_id(productEntity.getId())
+                    .name(productEntity.getCategoryEntity().getCategoryName() + " - " + productEntity.getName())
                     .imgUrl(productEntity.getImgUrl())
                     .saleCnt(productEntity.getSaleCnt())
                     .build();

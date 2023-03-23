@@ -12,9 +12,9 @@ import lombok.*;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class ProductResp {
 
-    private Long productId;
+    private Long product_id;
 
-    private String name;        // 제품명
+    private String name;  // '카테고리명 - 제품명'
 
     private String imgUrl;      // 대표 이미지 url
 

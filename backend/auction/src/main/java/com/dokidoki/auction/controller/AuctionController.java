@@ -38,12 +38,13 @@ public class AuctionController {
 //    }
 
     // 카테고리 기준 제품 목록 조회
-    @GetMapping("/products/{category_id}")
+    @GetMapping("/products")
     @Operation(summary = "category의 id를 선택 시에 대한 요청 API", description = "카테고리에 해당 제품 목록으로 응답")
-    public ResponseEntity<BaseResponseBody> getCategoryList(@PathVariable("category_id") Long catId) {
+    public ResponseEntity<BaseResponseBody> getCategoryList(
+            @RequestParam(defaultValue = "") String keyword) {
 
-        log.debug(">>> categoryId : {}", catId);
-        List<ProductResp> productList = auctionService.getProductList(catId);
+        log.debug(">>> keyword : {}", keyword);
+        List<ProductResp> productList = auctionService.getProductList(keyword);
 
         if (productList.isEmpty()) {
             return ResponseEntity
