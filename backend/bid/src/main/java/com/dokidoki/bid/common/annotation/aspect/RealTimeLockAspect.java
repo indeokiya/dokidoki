@@ -9,9 +9,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.redisson.api.RFuture;
 import org.redisson.api.RLock;
+import org.redisson.api.RSemaphore;
 import org.redisson.api.RedissonClient;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.locks.Lock;
 
 
 /**
@@ -25,11 +30,26 @@ import org.springframework.stereotype.Component;
 public class RealTimeLockAspect {
 
     private final RedissonClient redisson;
+    private RSemaphore semaphore;
+
+    @Autowired
+    public void setRealTimeLockAspect() {
+        semaphore = redisson.getSemaphore(LockInfo.REALTIME.getLockName());
+        semaphore.trySetPermits(1);
+    }
+
 
     @Around("@annotation(realTimeLock)")
     public Object realtimeLock(ProceedingJoinPoint pjp, RealTimeLock realTimeLock) throws Throwable {
         log.info("start realtime lock");
-        RLock lock = redisson.getLock(LockInfo.REALTIME.getLockName());
+        
+        // [1] REALTIME 락 가져오도록 시도하기
+        RFuture<Boolean> acquireFuture = semaphore.tryAcquireAsync(LockInfo.REALTIME.getWaitTime(), LockInfo.REALTIME.getTimeUnit());
+
+        acquireFuture.whenComplete((res, exception) -> {
+
+            semaphore.releaseAsync();
+        });
 
         try {
             // [1] REALTIME 락 가져오도록 시도하기

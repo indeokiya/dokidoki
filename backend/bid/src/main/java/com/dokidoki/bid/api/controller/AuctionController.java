@@ -32,8 +32,7 @@ public class AuctionController {
     public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId, HttpServletRequest request) throws InterruptedException {
         Map<String, Object> resultMap = new HashMap<>();
         long memberId = JWTUtil.getUserId(request).longValue();
-//        biddingService.bid(auctionId, req, memberId);
-        biddingService.bidWithLock(auctionId, req, memberId);
+        biddingService.bid(auctionId, req, memberId);
         resultMap.put("status_code", 200);
         resultMap.put("message", "성공");
         return ResponseEntity.ok(resultMap);
