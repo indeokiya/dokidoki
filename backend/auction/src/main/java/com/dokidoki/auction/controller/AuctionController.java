@@ -6,6 +6,7 @@ import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.ProductResp;
+import com.dokidoki.auction.service.AuctionEndService;
 import com.dokidoki.auction.service.AuctionService;
 import com.dokidoki.auction.service.InterestService;
 import io.swagger.annotations.ApiParam;
@@ -25,7 +26,7 @@ import java.util.Optional;
 @CrossOrigin("*")
 @RequestMapping("")
 public class AuctionController {
-
+    private final AuctionEndService auctionEndService;
     private final InterestService interestService;
     private final AuctionService auctionService;
     private final JWTUtil jwtUtil;
@@ -109,6 +110,16 @@ public class AuctionController {
 //        if (경매 단위 수정됐으면) {
 //            producer.sendAuctionUpdate(~~~);
 //        }
+    }
+
+    /*
+    경매글 상세정보 조회 (진행중, 완료)
+     */
+    @GetMapping("/end/{auction_id}")
+    public ResponseEntity<BaseResponseBody> readAuctionEnd(@PathVariable Long auction_id) {
+        return ResponseEntity
+                .status(200)
+                .body(BaseResponseBody.of("성공", auctionEndService.readAuctionEnds(auction_id)));
     }
 
     /*
