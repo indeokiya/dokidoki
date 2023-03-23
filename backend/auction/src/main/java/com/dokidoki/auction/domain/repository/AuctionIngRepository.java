@@ -1,6 +1,8 @@
 package com.dokidoki.auction.domain.repository;
 
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
+import com.dokidoki.auction.dto.response.DetailAuctionEndInterface;
+import com.dokidoki.auction.dto.response.DetailAuctionIngInterface;
 import com.dokidoki.auction.dto.response.SimpleAuctionEndInterface;
 import com.dokidoki.auction.dto.response.SimpleAuctionIngInterface;
 import org.springframework.data.domain.Page;
@@ -10,15 +12,29 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Long> {
+    // 경매 End, 제품, 카테고리, 사용자 테이블 조인해서 데이터 검색하기
+    @Query("SELECT a.title as auction_title, a.endAt as end_time, a.description as description " +
+            ", a.meetingPlace as meeting_place, a.priceSize as price_size, a.offerPrice as offer_price " +
+            ", a.highestPrice as highest_price, s.name as seller_name, s.id as seller_id " +
+            ", p.name as product_name, c.categoryName as category_name " +
+            "FROM AuctionIngEntity a " +
+            " JOIN a.productEntity p " +
+            " JOIN p.categoryEntity c " +
+            " JOIN a.seller s " +
+            "WHERE a.id = :auction_id " +
+            "ORDER BY a.id DESC ")
+    DetailAuctionIngInterface findAuctionIngEntityById(@Param("auction_id") Long auctionId);
+
     @Query("SELECT a.id as auction_id, a.title as auction_title " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
-            "ORDER BY a.endAt DESC ")
+            "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllSimpleIngList(Pageable pageable);
 
     @Query("SELECT a.id as auction_id, a.title as auction_title " +
@@ -28,7 +44,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
             "WHERE a.endAt < :within_an_hour " +
-            "ORDER BY a.endAt DESC ")
+            "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAuctionIngEntitiesByEndAtLessThan(
             @Param("within_an_hour") LocalDateTime withinAnHour, Pageable pageable);
     default Page<SimpleAuctionIngInterface> findAllSimpleDeadlineList(Pageable pageable) {
@@ -44,7 +60,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             " JOIN p.categoryEntity c " +
             "WHERE (p.name LIKE %:keyword% or c.categoryName LIKE %:keyword% or a.title LIKE %:keyword%) " +
             " AND c.id = :category_id " +
-            "ORDER BY a.endAt DESC ")
+            "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllSimpleIngListByKeywordANDCategoryId(
             @Param("keyword") String keyword, @Param("category_id") Long categoryId, Pageable pageable);
 
@@ -55,7 +71,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
             "WHERE (p.name LIKE %:keyword% or c.categoryName LIKE %:keyword% or a.title LIKE %:keyword%) " +
-            "ORDER BY a.endAt DESC ")
+            "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllSimpleIngListByKeyword(
             @Param("keyword") String keyword, Pageable pageable);
 

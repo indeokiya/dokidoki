@@ -1,23 +1,16 @@
 package com.dokidoki.auction.service;
 
 import com.dokidoki.auction.common.error.exception.InvalidValueException;
-import com.dokidoki.auction.domain.entity.AuctionIngEntity;
-import com.dokidoki.auction.domain.entity.CategoryEntity;
-import com.dokidoki.auction.domain.entity.MemberEntity;
-import com.dokidoki.auction.domain.entity.ProductEntity;
-import com.dokidoki.auction.domain.repository.AuctionIngRepository;
-import com.dokidoki.auction.domain.repository.CategoryRepository;
-import com.dokidoki.auction.domain.repository.MemberRepository;
-import com.dokidoki.auction.domain.repository.ProductRepository;
+import com.dokidoki.auction.domain.entity.*;
+import com.dokidoki.auction.domain.repository.*;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
-import com.dokidoki.auction.dto.response.CategoryResp;
-import com.dokidoki.auction.dto.response.ProductResp;
+import com.dokidoki.auction.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,15 +19,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class AuctionService {
-
     private final CategoryRepository categoryRepository;
-
     private final ProductRepository productRepository;
-
     private final AuctionIngRepository auctionIngRepository;
-
+    private final AuctionEndRepository auctionEndRepository;
     private final MemberRepository memberRepository;
-
+    private final ImageService imageService;
+    private final CommentService commentService;
+    private final LeaderboardService leaderboardService;
 
     // 카테고리 목록 조회
     @Transactional
@@ -75,6 +67,62 @@ public class AuctionService {
 
     // 제품 등록시 판매 빈도 증가
 
+    // 진행중인 경매 상세정보 조회
+    @Transactional(readOnly = true)
+    public DetailAuctionIngResponse readAuctionIng(Long auctionId) {
+        // 완료된 경매 정보
+        DetailAuctionIngInterface detailAuctionIngInterface = auctionIngRepository
+                .findAuctionIngEntityById(auctionId);
+
+        // 존재하지 않는다면 null 반환
+        if (detailAuctionIngInterface == null)
+            return null;
+
+        // 경매 제품 사진 URL 구하기
+        List<String> auctionImageUrls = imageService.readAuctionImages(auctionId).getImage_urls();
+
+        // 댓글 구하기
+        List<CommentResponse> commentResponses = commentService.readComment(auctionId);
+
+        // 입찰 내역 구하기
+        List<LeaderboardHistoryResponse> leaderboardHistoryResponses = leaderboardService.readLeaderboard(auctionId);
+
+        return new DetailAuctionIngResponse(
+                detailAuctionIngInterface,
+                auctionImageUrls,
+                commentResponses,
+                leaderboardHistoryResponses
+        );
+    }
+
+    // 완료된 경매 상세정보 조회
+
+    @Transactional(readOnly = true)
+    public DetailAuctionEndResponse readAuctionEnd(Long auction_id) {
+        // 완료된 경매 정보
+        DetailAuctionEndInterface detailAuctionEndInterface = auctionEndRepository
+                .findDetailAuctionEndEntityById(auction_id);
+
+        // 존재하지 않는다면 null 반환
+        if (detailAuctionEndInterface == null)
+            return null;
+
+        // 경매 제품 사진 URL 구하기
+        List<String> auctionImageUrls = imageService.readAuctionImages(auction_id).getImage_urls();
+
+        // 댓글 구하기
+        List<CommentResponse> commentResponses = commentService.readComment(auction_id);
+
+        // 입찰 내역 구하기
+        List<LeaderboardHistoryResponse> leaderboardHistoryResponses = leaderboardService.readLeaderboard(auction_id);
+
+        return new DetailAuctionEndResponse(
+                detailAuctionEndInterface,
+                auctionImageUrls,
+                commentResponses,
+                leaderboardHistoryResponses
+        );
+    }
 
     @Transactional
     public String createAuction(AuctionRegisterReq auctionRegisterReq, Long sellerId) {

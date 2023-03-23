@@ -24,8 +24,9 @@ public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Lo
             " JOIN p.categoryEntity c " +
             " JOIN a.buyer b " +
             " JOIN a.seller s " +
-            "WHERE a.id = :auction_id")
-    List<DetailAuctionEndInterface> findDetailAuctionEndEntitiesById(@Param("auction_id") Long auctionId);
+            "WHERE a.id = :auction_id " +
+            "ORDER BY a.endTime DESC ")
+    DetailAuctionEndInterface findDetailAuctionEndEntityById(@Param("auction_id") Long auctionId);
     
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.startTime as start_time, a.endTime as end_time" +
             ", a.offerPrice as offer_price, a.finalPrice as final_price, a.buyer.id as buyer_id" +

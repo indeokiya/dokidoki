@@ -5,8 +5,13 @@ import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.repository.LeaderboardRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
 import com.dokidoki.auction.dto.request.LeaderboardRequest;
+import com.dokidoki.auction.dto.response.LeaderboardHistoryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -35,5 +40,17 @@ public class LeaderboardService {
         });
 
         return 0;
+    }
+
+    @Transactional(readOnly = true)
+    public List<LeaderboardHistoryResponse> readLeaderboard(Long auctionId) {
+        List<LeaderboardEntity> leaderboardEntities = leaderboardRepository
+                .findLeaderboardEntitiesByAuctionIdOrderByBidTime(auctionId);
+
+        List<LeaderboardHistoryResponse> leaderboardHistoryResponses = new ArrayList<>();
+        for (LeaderboardEntity leaderboardEntity : leaderboardEntities)
+            leaderboardHistoryResponses.add(new LeaderboardHistoryResponse(leaderboardEntity));
+
+        return leaderboardHistoryResponses;
     }
 }
