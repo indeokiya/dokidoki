@@ -1,15 +1,6 @@
 version: "3.8"
 
 services:
-  proxy_gateway:
-    container_name: proxy_gateway
-    build:
-      context: ./gateway
-      dockerfile: dockerfile
-    ports:
-      - "80:80"
-      - "443:443"
-
   frontend:
     container_name: frontend
     build:
