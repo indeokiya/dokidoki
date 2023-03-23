@@ -1,8 +1,8 @@
 version: "3.8"
 
 services:
-  dokidoki_frontend:
-    container_name: dokidoki_frontend
+  frontend:
+    container_name: frontend
     build:
       context: ./frontend
       dockerfile: dockerfile
