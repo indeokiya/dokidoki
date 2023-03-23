@@ -2,8 +2,8 @@ import { Button } from "@mui/material";
 import DaumPostcode from "react-daum-postcode";
 
 const AddressInput: React.FC<{
-  setAddress: (address: string) => void;
   setVisible: (data: boolean) => void;
+  dataRef: any;
 }> = (props) => {
   const handleComplete = (data: any) => {
     let fullAddress = data.address;
@@ -19,7 +19,9 @@ const AddressInput: React.FC<{
       }
       fullAddress += extraAddress !== "" ? ` (${extraAddress})` : "";
     }
-    props.setAddress(fullAddress);
+    
+    props.dataRef.current.meeting_place = fullAddress;
+    // console.log("fullAddress >> ", props.dataRef.current.meetingPlace);
     props.setVisible(false);
   };
 

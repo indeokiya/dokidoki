@@ -5,7 +5,28 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import { useState, useRef } from "react";
 import ProductInfoInput from "../components/resigter/ProductInfoInput";
-import ActionInfoInput from "../components/resigter/ActionInfoInput";
+import ActionInfoInput from "../components/resigter/AuctionInfoInput";
+import { ProductionQuantityLimitsRounded } from "@mui/icons-material";
+import {auctionAPI, bidAPI} from "../api/axios"
+
+// AuctionRegisterReq {
+//   private String title;
+//   private String Description;
+//   private Integer offerPrice;
+//   private Integer priceSize;
+//   private LocalDateTime endAt;
+//   private String meetingPlace;
+// }
+
+export type AuctionRegisterType = {
+  productId: number
+  title: string
+  description: string
+  offerPrice: number
+  priceSize: number
+  endAt: Date,
+  meetingPlace: string
+}
 
 const RegisterPage = () => {
   const StyledDiv = styled.div`
@@ -13,6 +34,40 @@ const RegisterPage = () => {
     height: 1000%;
     background-color: gainsboro;
   `;
+
+  const dataRef = useRef({
+    product_id: 1,
+    title: "",
+    description: "",
+    offer_price: -1,
+    price_size: -1,
+    end_at: "",
+    meeting_place: "",
+  })
+
+  const createAuctionurl = "auctions/new"; // 재휘 로컬에 보내는거
+  // const createAuctionurl = "api/auction/auctions"
+
+  const register = () => {
+    console.log("서버에 보낸 데이터 >> ",dataRef.current)
+    // 카테고리를 통해 product_id 받아오는 로직도 어디선가 필요함. 일단 1로 박음
+    const axios = auctionAPI;
+    axios.post(createAuctionurl, dataRef.current,)
+      .then(res => {
+        alert("성공")
+        console.log(res)
+        // 성공하면 alert 알림 후 location.href , location.replace 또는 navigator로 이동 
+      })
+      .catch(err => {
+        alert("실패")
+        console.error(err);
+      })
+    
+  }
+
+  const cancel = () => {
+    // 뒤로가기 로직
+  }
 
   return (
     <>
@@ -28,12 +83,12 @@ const RegisterPage = () => {
           >
             {/*상단 입력 박스 */}
             <Grid item xs={6}>
-              <ProductInfoInput />
+              <ProductInfoInput dataRef={dataRef} />
             </Grid>
 
             {/* 하단 입럭 박스 */}
             <Grid item xs={6}>
-              <ActionInfoInput />
+              <ActionInfoInput dataRef={dataRef} />
             </Grid>
 
             {/* 하단 버튼 */}
@@ -42,11 +97,15 @@ const RegisterPage = () => {
                 <Button
                   variant="contained"
                   color="error"
+                  onClick={cancel}
                   sx={{ width: 340, fontSize: 25 }}
                 >
-                  취소
+                  뒤로가기
                 </Button>
-                <Button variant="contained" sx={{ width: 340, fontSize: 25 }}>
+                <Button 
+                  variant="contained" 
+                  sx={{ width: 340, fontSize: 25 }}
+                  onClick={register}>
                   등록
                 </Button>
               </Stack>

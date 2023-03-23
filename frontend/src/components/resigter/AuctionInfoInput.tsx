@@ -4,10 +4,21 @@ import AddressInput from "./AddressInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import MapIcon from "@mui/icons-material/Map";
 import { NumericFormat } from "react-number-format";
+import { AuctionRegisterType } from "../../routes/RegisterPage";
 
-const ActionInfoInput = () => {
-  const [address, setAddress] = useState("");
+type AuctionRegisterProps = {
+  data: AuctionRegisterType // 부모컴포넌트에서 import 해온 타입을 재사용 해 줍시다.
+  // onChange(key: string): void
+}
+
+const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
   const [addressInputVisible, setAddressInputVisible] = useState(false);
+
+  const onChange = (e: any) => {
+    const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
+    dataRef.current[name] = parseInt(value.replace(/(,|\s|[A-Za-z])/g, ""));
+    // console.log("name >>", name, ":", dataRef.current[name]);
+  };
 
   return (
     <>
@@ -24,12 +35,14 @@ const ActionInfoInput = () => {
           </Grid>
           <Grid item xs={10} mb={2}>
           <NumericFormat
-                style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
+              style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
               allowNegative={false}
               decimalScale={2}
               displayType={"input"}
               thousandSeparator={true}
               suffix={" 원"}
+              name="offer_price"
+              onChange={onChange}
             />
           </Grid>
 
@@ -38,12 +51,14 @@ const ActionInfoInput = () => {
           </Grid>
           <Grid item xs={10} mb={2}>
             <NumericFormat
-                style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
+              style={{width:'97%', height:50, border:'1px solid shilver', fontSize:20, paddingLeft:'10px'}}
               allowNegative={false}
               decimalScale={2}
               displayType={"input"}
               thousandSeparator={true}
               suffix={" 원"}
+              name="price_size"
+              onChange={onChange}
             />
           </Grid>
 
@@ -56,6 +71,11 @@ const ActionInfoInput = () => {
               variant="outlined"
               fullWidth
               type="datetime-local"
+              name="end_at"
+              onChange={(e) => {
+                const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
+                dataRef.current[name] = value;
+              }}
             />
           </Grid>
 
@@ -65,15 +85,15 @@ const ActionInfoInput = () => {
           <Grid item xs={10} mb={2}>
             {addressInputVisible ? (
               <AddressInput
-                setAddress={setAddress}
                 setVisible={setAddressInputVisible}
+                dataRef={dataRef}
               />
             ) : (
               <TextField
                 id="outlined-basic"
                 fullWidth
                 type="text"
-                value={address}
+                value={dataRef.current.meeting_place}
                 onClick={() => {
                   setAddressInputVisible(!addressInputVisible);
                 }}
