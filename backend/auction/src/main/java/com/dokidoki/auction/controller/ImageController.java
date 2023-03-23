@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/images")
+@RequestMapping("/{auction_id}/images")
 @RequiredArgsConstructor
 @Slf4j
 public class ImageController {
@@ -22,7 +22,7 @@ public class ImageController {
     /*
         경매 제품 사진 관련 API
      */
-    @GetMapping("/auctions/{auction_id}")
+    @GetMapping("")
     public ResponseEntity<BaseResponseBody> readAuctionImages(@PathVariable Long auction_id) {
         // 경매 식별번호로, 등록된 제품 사진 검색
         AuctionImageResponse auctionImageResponse = imageService.readAuctionImages(auction_id);
@@ -36,13 +36,15 @@ public class ImageController {
         return ResponseEntity.status(200).body(BaseResponseBody.of("성공", auctionImageResponse));
     }
 
-    @PostMapping("/auctions")
-    public ResponseEntity<BaseResponseBody> createAuctionImages(Optional<AuctionImagesRequest> optionalAuctionImagesRequest) {
+    @PostMapping("")
+    public ResponseEntity<BaseResponseBody> createAuctionImages(
+            @PathVariable Long auction_id,
+            Optional<AuctionImagesRequest> optionalAuctionImagesRequest) {
         AuctionImagesRequest auctionImagesRequest = optionalAuctionImagesRequest.orElse(null);
 
         // 데이터 들어왔는지 확인
         if (auctionImagesRequest == null
-                || auctionImagesRequest.getAuction_id() == null
+                || auction_id == null
                 || auctionImagesRequest.getFiles() == null) {
             return ResponseEntity
                     .status(400)
@@ -50,7 +52,7 @@ public class ImageController {
         }
 
         // 제품 사진 등록
-        List<String> auctionImageUrls = imageService.createAuctionImages(auctionImagesRequest);
+        List<String> auctionImageUrls = imageService.createAuctionImages(auction_id, auctionImagesRequest);
 
         // 제품 사진 등록에 실패했을 경우,
         if (auctionImageUrls == null)
@@ -63,7 +65,7 @@ public class ImageController {
                 .body(BaseResponseBody.of("제품 사진이 등록되었습니다.", auctionImageUrls));
     }
 
-    @DeleteMapping("/auctions/{auction_id}")
+    @DeleteMapping("")
     public ResponseEntity<BaseResponseBody> deleteProfileImages(@PathVariable Long auction_id) {
         imageService.deleteAuctionImages(auction_id);
         return ResponseEntity.status(200).body(BaseResponseBody.of("성공"));

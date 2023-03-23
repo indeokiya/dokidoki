@@ -48,14 +48,14 @@ public class ImageService {
     }
 
     @Transactional
-    public List<String> createAuctionImages(AuctionImagesRequest auctionImagesRequest) {
+    public List<String> createAuctionImages(Long auctionId, AuctionImagesRequest auctionImagesRequest) {
         // 파일 업로드 및 URL 획득
         List<String> auctionImagesUrls = uploadImages(auctionImagesRequest.getFiles(), "auctions");
 
         // 객체 생성 및 저장
         auctionImagesUrls.forEach(auctionImagesUrl -> {
             AuctionImageEntity auctionImageEntity = AuctionImageEntity.createAuctionImage(
-                    auctionImagesRequest.getAuction_id(),
+                    auctionId,
                     auctionImagesUrl
             );
             auctionImageRepository.save(auctionImageEntity);
