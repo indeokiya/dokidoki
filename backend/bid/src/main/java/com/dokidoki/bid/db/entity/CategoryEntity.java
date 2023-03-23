@@ -1,14 +1,14 @@
 package com.dokidoki.bid.db.entity;
 
-import lombok.Getter;
-import lombok.ToString;
+
+import lombok.*;
 
 import javax.persistence.*;
 
 @ToString
 @Getter
-@Entity
 @Table(name = "category")
+@Entity
 public class CategoryEntity {
 
     @Id

@@ -13,7 +13,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AuctionBidReq {
-    private long memberId; // TODO - JWT 토큰에서 가져오는 걸로 바꾸기
     private String name;
     private String email;
     private int currentHighestPrice;
