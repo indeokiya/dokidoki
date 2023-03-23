@@ -2,9 +2,11 @@ import Grid from "@mui/material/Grid"; // Grid version 1
 import Content from "./Content";
 import styled from "styled-components";
 import { useRef, useEffect,useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-const ContentsList:React.FC<{openPage:()=>void}> = (props) => {
+const ContentsList = () => {
   const [posts,setPosts] = useState([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+  const navigate = useNavigate();
 
   const[isLoading,setIsLoading] = useState(true);
   const Target = styled.div`
@@ -40,10 +42,12 @@ const ContentsList:React.FC<{openPage:()=>void}> = (props) => {
 
   return (
     <div id="scroll">
-      <Grid container spacing={4} paddingLeft={2}>
+      <Grid container spacing={2} paddingLeft={2}>
         {posts.map((data, i) => (
           <Grid key={i} item xs={4}>
-            <Content openPage={props.openPage}></Content>
+            <div onClick={()=>{ navigate("/product/"+data)}}>
+            <Content/>
+            </div>
           </Grid>
         ))}
         <Grid item xs={12}>

@@ -8,6 +8,7 @@ import Divider from "@mui/material/Divider";
 import styled from "styled-components";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import ViewOpeion from "./ViewOption";
+import Typography from '@mui/material/Typography';
 
 export default function SelectedListItem() {
   const category = [
@@ -31,20 +32,19 @@ export default function SelectedListItem() {
   };
 
   const StyledH5 = styled.h3`
-    text-align: center;
+    text-align: start;
   `;
   return (
-    <div style={{position:'fixed'}}>
+    <div style={{position:'absolute'}}>
     <Box
       sx={{
-        width: "100%",
-        maxWidth: 360,
+        width: "200",
         bgcolor: "background.paper",
-        border: "1px solid #DDDDDD",
+        
       }}
     >
       <List component="nav" aria-label="main mailbox folders">
-        <StyledH5 style={{ textAlign: "center" }}>category</StyledH5>
+        <StyledH5 >category</StyledH5>
         <Divider />
 
         {category.map((category, i) => (
@@ -57,7 +57,7 @@ export default function SelectedListItem() {
                 <ArrowRightIcon />
               </ListItemIcon>
             )}
-            <ListItemText primary={category} />
+            <Typography variant="subtitle2">{category}</Typography>
           </ListItemButton>
         ))}
       </List>
