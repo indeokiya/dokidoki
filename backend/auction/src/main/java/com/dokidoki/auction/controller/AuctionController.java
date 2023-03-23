@@ -12,7 +12,6 @@ import io.swagger.annotations.ApiParam;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +23,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/auctions")
+@RequestMapping("")
 public class AuctionController {
 
     private final InterestService interestService;
@@ -42,18 +41,13 @@ public class AuctionController {
         log.debug(">>> keyword : {}", keyword);
         List<ProductResp> productList = auctionService.getProductList(keyword);
 
-        if (productList.isEmpty()) {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(BaseResponseBody.of("해당 카테고리에 해당하는 제품 목록이 없습니다."));
-        }
         return ResponseEntity.status(200).body(BaseResponseBody.of("제품 목록 조회 성공", productList));
     }
 
     /*
     경매 생성 및 수정 API
      */
-    @PostMapping("")
+    @PostMapping("/new")
     @Operation(summary = "경매 게시글 생성 API", description = "경매 게시글을 작성한다.")
     public ResponseEntity<BaseResponseBody> createAuction(
             @RequestBody Optional<AuctionRegisterReq> auctionRegisterReqO,

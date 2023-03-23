@@ -14,7 +14,7 @@ public class LeaderboardService {
     private final LeaderboardRepository leaderboardRepository;
     private final MemberRepository memberRepository;
 
-    public int createLeaderboard(LeaderboardRequest leaderboardRequest) {
+    public int createLeaderboard(Long auctionId, LeaderboardRequest leaderboardRequest) {
         // 리더보드 입찰 내역 삽입
         leaderboardRequest.getHistories().forEach(history -> {
             // 입찰한 사용자 가져오기
@@ -25,7 +25,7 @@ public class LeaderboardService {
             // 사용자가 존재할 경우에만 데이터 삽입
             if (memberEntity != null) {
                 LeaderboardEntity leaderboardEntity = LeaderboardEntity.createLeaderboard(
-                        leaderboardRequest.getAuction_id(),
+                        auctionId,
                         memberEntity,
                         history.getBid_price(),
                         history.getBid_time()

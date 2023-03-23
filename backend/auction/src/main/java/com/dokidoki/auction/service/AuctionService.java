@@ -107,16 +107,17 @@ public class AuctionService {
     }
 
     @Transactional
-    public AuctionIngEntity updateAuction(Long sellerId, Long auctionId, AuctionUpdateReq auctionUpdateReq) throws Exception {
+    public AuctionIngEntity updateAuction(Long sellerId, Long auctionId, AuctionUpdateReq auctionUpdateReq) {
 
         AuctionIngEntity auction = auctionIngRepository.findById(auctionId).orElse(null);
-        if (auction == null)
-            return null;
 
         // 요청자와 판매자가 동일한 경우에만 update 수행
-        if (sellerId.equals(auction.getSeller().getId()))
+        if (auction != null && sellerId.equals(auction.getSeller().getId())) {
             auction.update(auctionUpdateReq);
-        return auction;
+            return auction;
+        }
+
+        return null;
     }
 
     /**
