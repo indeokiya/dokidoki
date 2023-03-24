@@ -1,13 +1,10 @@
-import * as React from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-import MypageContent from '../components/mypage/MypageContent';
 import MypageHeader from '../components/mypage/MypageHeader';
 import MypageNavigator from '../components/mypage/MypageNavigator';
 import { useState } from 'react';
+import { Outlet } from 'react-router';
 
  
 
@@ -175,7 +172,7 @@ export default function Paperbase() {
           <MypageHeader selectedMenu={selectedMenu} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
         
-            
+            <Outlet/>
           </Box>
           <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
           </Box>

@@ -20,6 +20,8 @@ import { Typography, Badge } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import { useNavigate } from 'react-router';
+import Tooltip from '@mui/material/Tooltip';
 
 const item = {
   py: '2px',
@@ -41,13 +43,15 @@ const MypageNavigator: React.FC<{
   PaperProps: {};
   sx: {};
 }> = (props: any) => {
+  const navigate = useNavigate();
+
   const [categories, setCategories] = useState([
-    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: true },
-    { id: '구매 내역', icon: <ShoppingCartIcon />, active: false },
-    { id: '판매 중', icon: <SellOutlinedIcon />, active: false },
-    { id: '판매 내역', icon: <SellIcon />, active: false },
-    { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: false },
-    { id: '알림 내역', icon: <NotificationsIcon />, active: false },
+    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: true, path: 'action-item' },
+    { id: '구매 내역', icon: <ShoppingCartIcon />, active: false, path: 'action-history' },
+    { id: '판매 중', icon: <SellOutlinedIcon />, active: false, path: 'sale-item' },
+    { id: '판매 내역', icon: <SellIcon />, active: false, path: 'sale-history' },
+    { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: false, path: 'bookmark-list' },
+    { id: '알림 내역', icon: <NotificationsIcon />, active: false, path: 'alert-history' },
   ]);
 
   const activeHandler = (_id: string) => {
@@ -70,31 +74,46 @@ const MypageNavigator: React.FC<{
   `;
 
   const StyledEditIcon = styled.div`
-    color:white;
-    background-color:gray;
-    border:1px solid white;
-    border-radius:100px;
-    width:40px;
-    height:40px;
-    line-height:55px;
-    cursor:pointer;
-    transition : 0.5s;
-    &:hover{
-      background-color:silver;
+    color: white;
+    background-color: gray;
+    border: 1px solid white;
+    border-radius: 100px;
+    width: 40px;
+    height: 40px;
+    line-height: 55px;
+    transition: 0.5s;
+    &:hover {
+      background-color: silver;
     }
-  `
+  `;
+
+  const ImageInput = styled.input`
+    visibility: hidden;
+  `;
 
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
-        <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>DOKIDOKI</ListItem>
+        <ListItem
+          sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}
+          onClick={() => {
+            navigate('/');
+          }}
+        >
+          DOKIDOKI
+        </ListItem>
         <StyledDiv>
           <Badge
             overlap="circular"
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             badgeContent={
               <StyledEditIcon>
-                <EditOutlinedIcon />
+                <Tooltip title="수정">
+                  <label htmlFor="profileImgChange">
+                    <EditOutlinedIcon />
+                  </label>
+                </Tooltip>
+                <ImageInput type="file" id="profileImgChange"></ImageInput>
               </StyledEditIcon>
             }
           >
@@ -103,6 +122,14 @@ const MypageNavigator: React.FC<{
               sx={{ width: '150px', height: '150px', margin: '1rem auto' }}
             ></Avatar>
           </Badge>
+
+          {/* <label htmlFor="imageInput">
+              <ImageInputLabel>
+                <AddAPhotoIcon />
+                {imageCnt}/5
+              </ImageInputLabel>
+            </label> */}
+
           <Typography color="white" variant="subtitle1">
             김범식
           </Typography>
@@ -116,7 +143,7 @@ const MypageNavigator: React.FC<{
             <ListItemText sx={{ color: '#fff' }}>Menu</ListItemText>
           </ListItem>
 
-          {categories.map(({ id: childId, icon, active }) => (
+          {categories.map(({ id: childId, icon, active, path }) => (
             <ListItem
               disablePadding
               key={childId}
@@ -124,7 +151,13 @@ const MypageNavigator: React.FC<{
                 activeHandler(childId);
               }}
             >
-              <ListItemButton selected={active} sx={item}>
+              <ListItemButton
+                selected={active}
+                sx={item}
+                onClick={() => {
+                  navigate(path);
+                }}
+              >
                 <ListItemIcon>{icon}</ListItemIcon>
                 <ListItemText>{childId}</ListItemText>
               </ListItemButton>
