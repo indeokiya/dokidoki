@@ -60,7 +60,11 @@ const RegisterPage = () => {
 
     // 카테고리를 통해 product_id 받아오는 로직도 어디선가 필요함. 일단 1로 박음
     const axios = auctionAPI;
-    axios.post(createAuctionurl, formData, {headers : {"Content-Type":"multipart/form-data"}})
+    axios.post(createAuctionurl, formData, {headers : {
+      "Content-Type":"multipart/form-data", 
+      "authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2NzkyOTAwNTAsImV4cCI6MTY3OTI5MzY1MCwidXNlcl9pZCI6Mn0.ATBKCYsyg8jC-GxTT41Tbw3uknZ1PQ7JkC9g1AyGhLg", 
+      "withCredentials":"true",
+    }})
       .then(res => {
         alert("성공")
         console.log(res)
