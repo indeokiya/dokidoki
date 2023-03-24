@@ -34,6 +34,7 @@ public class ImageService {
     /*
         경메 제품 사진 관련 서비스
      */
+    @Transactional(readOnly = true)
     public AuctionImageResponse readAuctionImages(Long auction_id) {
         // AuctionImage Entity 검색
         List<AuctionImageEntity> auctionImageEntities = auctionImageRepository.findAuctionImagesByAuctionId(auction_id);
@@ -48,14 +49,14 @@ public class ImageService {
     }
 
     @Transactional
-    public List<String> createAuctionImages(AuctionImagesRequest auctionImagesRequest) {
+    public List<String> createAuctionImages(Long auctionId, MultipartFile[] files) {
         // 파일 업로드 및 URL 획득
-        List<String> auctionImagesUrls = uploadImages(auctionImagesRequest.getFiles(), "auctions");
+        List<String> auctionImagesUrls = uploadImages(files, "auctions");
 
         // 객체 생성 및 저장
         auctionImagesUrls.forEach(auctionImagesUrl -> {
             AuctionImageEntity auctionImageEntity = AuctionImageEntity.createAuctionImage(
-                    auctionImagesRequest.getAuction_id(),
+                    auctionId,
                     auctionImagesUrl
             );
             auctionImageRepository.save(auctionImageEntity);
@@ -76,7 +77,9 @@ public class ImageService {
         List<String> urls = new ArrayList<>();
 
         Arrays.stream(multipartFiles).forEach(multipartFile -> {
-            urls.add(uploadImage(multipartFile, dirName));
+            String url = uploadImage(multipartFile, dirName);
+            if (url != null)
+                urls.add(url);
         });
 
         return urls;
@@ -84,7 +87,7 @@ public class ImageService {
 
     public String uploadImage(MultipartFile multipartFile, String dirName) {
         // 사진 파일이 아닐 경우 종료
-        if (!multipartFile.getContentType().startsWith("image/")) {
+        if (multipartFile.getContentType() == null || !multipartFile.getContentType().startsWith("image/")) {
             return null;
         }
 

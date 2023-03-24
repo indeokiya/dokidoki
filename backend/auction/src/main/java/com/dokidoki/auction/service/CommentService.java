@@ -25,6 +25,7 @@ public class CommentService {
     private final AuctionIngRepository auctionIngRepository;
     private final AuctionEndRepository auctionEndRepository;
 
+    @Transactional(readOnly = true)
     public List<CommentResponse> readComment(Long auctionId) {
         // 경매 식별번호로 모든 댓글 검색
         List<CommentEntity> commentEntities = commentRepository.findCommentsByAuctionIdOrderByWrittenTime(auctionId);
@@ -64,10 +65,9 @@ public class CommentService {
     }
 
     @Transactional
-    public int createComment(Long memberId, CommentRequest commentRequest) {
+    public int createComment(Long memberId, Long auctionId, CommentRequest commentRequest) {
         // 존재하지 않는 경매 식별번호일 경우,
-        Long auctionId = commentRequest.getAuction_id();
-        if (existsAuction(auctionId))
+        if (!existsAuction(auctionId))
             return 1;
 
         // 존재하지 않는 사용자 식별번호일 경우,
@@ -104,7 +104,11 @@ public class CommentService {
     }
 
     @Transactional
-    public int updateComment(Long memberId, Long commentId, PutCommentRequest commentRequest) {
+    public int updateComment(Long memberId, Long auctionId, Long commentId, PutCommentRequest commentRequest) {
+        // 존재하지 않는 경매 식별번호일 경우,
+        if (!existsAuction(auctionId))
+            return 1;
+
         CommentEntity commentEntity = commentRepository.findById(commentId).orElse(null);
 
         // 존재하지 않는 댓글일 경우
@@ -136,7 +140,11 @@ public class CommentService {
     }
 
     @Transactional
-    public int deleteComment(Long memberId, Long commentId) {
+    public int deleteComment(Long memberId, Long auctionId, Long commentId) {
+        // 존재하지 않는 경매 식별번호일 경우,
+        if (!existsAuction(auctionId))
+            return 1;
+
         // {comment_id}를 갖는 댓글이 있는지 확인
         CommentEntity commentEntity = commentRepository.findById(commentId).orElse(null);
         if (commentEntity == null)

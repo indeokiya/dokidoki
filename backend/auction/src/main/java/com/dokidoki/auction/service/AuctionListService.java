@@ -2,15 +2,19 @@ package com.dokidoki.auction.service;
 
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
+import com.dokidoki.auction.domain.repository.InterestRepository;
 import com.dokidoki.auction.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -18,11 +22,13 @@ import java.util.List;
 public class AuctionListService {
     private final AuctionEndRepository auctionEndRepository;
     private final AuctionIngRepository auctionIngRepository;
+    private final InterestRepository interestRepository;
     private final ImageService imageService;
 
     /*
     종료된 경매 목록 조회
      */
+    @Transactional(readOnly = true)
     public PaginationResponse readSimpleAuctionEnd(Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionEndInterface> simpleAuctionEndInterfaces = auctionEndRepository
@@ -54,28 +60,31 @@ public class AuctionListService {
     /*
     진행중인 전체 경매 목록 조회
      */
-    public PaginationResponse readSimpleAuctionIng(Pageable pageable) {
+    @Transactional(readOnly = true)
+    public PaginationResponse readSimpleAuctionIng(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllSimpleIngList(pageable);
-        return convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     진행중인 마감임박 경매 목록 조회
      */
-    public PaginationResponse readSimpleAuctionDeadline(Pageable pageable) {
+    @Transactional(readOnly = true)
+    public PaginationResponse readSimpleAuctionDeadline(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllSimpleDeadlineList(pageable);
-        return convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     진행중인 경매 목록 검색
      */
+    @Transactional(readOnly = true)
     public PaginationResponse searchSimpleAuctionIng(
-            String keyword, Long categoryId, Pageable pageable) {
+            Long memberId, String keyword, Long categoryId, Pageable pageable) {
         // 불필요 문자 제거
         keyword = keyword.strip();
 
@@ -88,14 +97,29 @@ public class AuctionListService {
             simpleAuctionIngInterfaces = auctionIngRepository
                     .findAllSimpleIngListByKeywordANDCategoryId(keyword, categoryId, pageable);
 
-        return convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     DB에서 조회한 진행중인 경매 목록 데이터에 제품 이미지를 추가하며 DTO로 변환
      */
     public PaginationResponse convertToDTOWithImages(
+            Long memberId,
             Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces) {
+        // 관심있는 경매 ID 가져오기
+        List<InterestMapping> interestMappings = interestRepository.findAllByMemberEntity_Id(memberId);
+        Set<Long> interestsOfUser = new HashSet<>();
+        interestMappings.forEach(interestMapping -> {
+            interestsOfUser.add(interestMapping.getAuctionIngEntity().getId());
+        });
+
+        // 판매중인 경매 ID 가져오기
+        List<AuctionIngMapping> auctionIngMappings = auctionIngRepository.findAuctionIngEntityBySeller_Id(memberId);
+        Set<Long> salesOfUser = new HashSet<>();
+        auctionIngMappings.forEach(auctionIngMapping -> {
+            salesOfUser.add(auctionIngMapping.getSeller().getId());
+        });
+
         // 데이터 조합
         List<SimpleAuctionIngInfo> simpleAuctionIngInfos = new ArrayList<>();
         for (SimpleAuctionIngInterface simpleAuctionIngInterface : simpleAuctionIngInterfaces) {
@@ -107,7 +131,9 @@ public class AuctionListService {
             simpleAuctionIngInfos.add(
                     new SimpleAuctionIngInfo(
                             simpleAuctionIngInterface,
-                            auctionImageResponse.getImage_urls()
+                            auctionImageResponse.getImage_urls(),
+                            interestsOfUser,
+                            salesOfUser
                     )
             );
         }
