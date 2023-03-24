@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-@Entity(name = "auction_image")
+@Entity
 @Table(name = "auction_image")
 @Getter
 @NoArgsConstructor

@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
-@Entity(name = "leaderboard")
+@Entity
 @Table(name = "leaderboard")
 @Getter
 @NoArgsConstructor

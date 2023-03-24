@@ -14,6 +14,6 @@ public interface AuctionImageRepository extends JpaRepository<AuctionImageEntity
     List<AuctionImageEntity> findAuctionImagesByAuctionId(Long auctionId);
 
     @Modifying
-    @Query("delete from auction_image a where a.auctionId=:auction_id")
+    @Query("delete from AuctionImageEntity a where a.auctionId=:auction_id")
     void deleteAuctionImagesByAuctionId(@Param("auction_id") Long auction_id);
 }
