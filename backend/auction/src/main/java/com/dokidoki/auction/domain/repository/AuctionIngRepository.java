@@ -1,10 +1,7 @@
 package com.dokidoki.auction.domain.repository;
 
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
-import com.dokidoki.auction.dto.response.DetailAuctionEndInterface;
-import com.dokidoki.auction.dto.response.DetailAuctionIngInterface;
-import com.dokidoki.auction.dto.response.SimpleAuctionEndInterface;
-import com.dokidoki.auction.dto.response.SimpleAuctionIngInterface;
+import com.dokidoki.auction.dto.response.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -36,7 +33,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -48,7 +45,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -66,7 +63,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offerPrice, a.highestPrice as cur_price " +
+            " , a.offerPrice as offerPrice, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -81,7 +78,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -95,7 +92,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -108,7 +105,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -122,7 +119,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -130,4 +127,9 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             " (SELECT DISTINCT i.memberEntity.id FROM InterestEntity i WHERE i.auctionIngEntity.id = a.id) " +
             "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllMyInterestingAuction(@Param("member_id") Long memberId, Pageable pageable);
+
+    /*
+    특정 사용자가 판매중인 경매 ID 조회
+     */
+    List<AuctionIngMapping> findAuctionIngEntityBySeller_Id(Long sellerId);
 }

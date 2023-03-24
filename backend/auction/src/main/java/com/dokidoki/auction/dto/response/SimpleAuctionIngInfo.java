@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @RequiredArgsConstructor
@@ -26,11 +27,16 @@ public class SimpleAuctionIngInfo {
     private final Long remain_minutes;
     private final Long remain_seconds;
 
+    private final Boolean is_my_interest;
+    private final Boolean is_my_auction;
+
     private List<String> auction_image_urls;
 
     public SimpleAuctionIngInfo(
             SimpleAuctionIngInterface simpleAuctionIngInterface,
-            List<String> auction_image_urls) {
+            List<String> auction_image_urls,
+            Set<Long> interestsOfUser,
+            Set<Long> salesOfUser) {
         this.auction_id = simpleAuctionIngInterface.getAuction_id();
         this.auction_title = simpleAuctionIngInterface.getAuction_title();
         this.product_name = simpleAuctionIngInterface.getProduct_name();
@@ -38,6 +44,10 @@ public class SimpleAuctionIngInfo {
         this.meeting_place = simpleAuctionIngInterface.getMeeting_place();
         this.offer_price = simpleAuctionIngInterface.getOffer_price();
         this.cur_price = simpleAuctionIngInterface.getCur_price();
+
+        // 특정 인물의 관심 경매 목록과 판매중인 목록을 가져 와 '내 관심' '내 물건' 설정
+        this.is_my_interest = interestsOfUser.contains(this.auction_id);
+        this.is_my_auction = salesOfUser.contains(simpleAuctionIngInterface.getSeller_id());
 
         this.auction_image_urls = auction_image_urls;
 

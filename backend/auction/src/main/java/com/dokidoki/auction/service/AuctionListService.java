@@ -2,6 +2,7 @@ package com.dokidoki.auction.service;
 
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
+import com.dokidoki.auction.domain.repository.InterestRepository;
 import com.dokidoki.auction.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -11,7 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Slf4j
@@ -19,6 +22,7 @@ import java.util.List;
 public class AuctionListService {
     private final AuctionEndRepository auctionEndRepository;
     private final AuctionIngRepository auctionIngRepository;
+    private final InterestRepository interestRepository;
     private final ImageService imageService;
 
     /*
@@ -101,6 +105,20 @@ public class AuctionListService {
      */
     public PaginationResponse convertToDTOWithImages(
             Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces) {
+        // 관심있는 경매 ID 가져오기
+        List<InterestMapping> interestMappings = interestRepository.findAllByMemberEntity_Id(2L);
+        Set<Long> interestsOfUser = new HashSet<>();
+        interestMappings.forEach(interestMapping -> {
+            interestsOfUser.add(interestMapping.getAuctionIngEntity().getId());
+        });
+
+        // 판매중인 경매 ID 가져오기
+        List<AuctionIngMapping> auctionIngMappings = auctionIngRepository.findAuctionIngEntityBySeller_Id(2L);
+        Set<Long> salesOfUser = new HashSet<>();
+        auctionIngMappings.forEach(auctionIngMapping -> {
+            salesOfUser.add(auctionIngMapping.getSeller().getId());
+        });
+
         // 데이터 조합
         List<SimpleAuctionIngInfo> simpleAuctionIngInfos = new ArrayList<>();
         for (SimpleAuctionIngInterface simpleAuctionIngInterface : simpleAuctionIngInterfaces) {
@@ -112,7 +130,9 @@ public class AuctionListService {
             simpleAuctionIngInfos.add(
                     new SimpleAuctionIngInfo(
                             simpleAuctionIngInterface,
-                            auctionImageResponse.getImage_urls()
+                            auctionImageResponse.getImage_urls(),
+                            interestsOfUser,
+                            salesOfUser
                     )
             );
         }
