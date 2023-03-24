@@ -16,7 +16,7 @@ spring:
             allowedMethods: '*'
       routes:
       - id: bid-server
-        uri: http://172.17.0.1:8081
+        uri: http://bid-server:8081
         predicates:
           - Path=/api/bid/**
         filters:
@@ -24,7 +24,7 @@ spring:
           - JwtAuthenticationFilter
 
       - id: auction-server
-        uri: http://172.17.0.1:8082
+        uri: http://auction-server:8082
         predicates:
           - Path=/api/auction/**
         filters:
@@ -32,14 +32,14 @@ spring:
           - JwtAuthenticationFilter
 
       - id: user-server
-        uri: http://172.17.0.1:8083
+        uri: http://user-server:8083
         predicates:
           - Path=/api/user/**
         filters:
           - RewritePath=/api/user/(?<segment>.*), /$\{segment}
 
       - id: user-server
-        uri: http://172.17.0.1:8083
+        uri: http://user-server:8083
         predicates:
           - Path=/api/user/**
           - Method=DELETE
