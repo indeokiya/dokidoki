@@ -30,7 +30,7 @@ public class AuctionController {
     private final AuctionService auctionService;
     private final JWTUtil jwtUtil;
 
-//    private final KafkaAuctionProducer producer;
+    private final KafkaAuctionProducer producer;
 
     // 카테고리 기준 제품 목록 조회
     @GetMapping("/products")
@@ -74,7 +74,7 @@ public class AuctionController {
                     .body(BaseResponseBody.of(msg));
 
         // 성공적으로 등록되면 카프카에 auction.register 메시지 발행.
-        // producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(auctionRegisterReq));
+         producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(auctionRegisterReq));
 
         return ResponseEntity.status(201).body(BaseResponseBody.of(msg));
     }
