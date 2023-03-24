@@ -5,6 +5,7 @@ import com.dokidoki.bid.api.request.AuctionUpdatePriceSizeReq;
 import com.dokidoki.bid.api.response.AuctionInitialInfoResp;
 import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
 import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
+import com.dokidoki.bid.common.annotation.RTransactional;
 import com.dokidoki.bid.common.annotation.RealTimeLock;
 import com.dokidoki.bid.common.codes.LeaderBoardConstants;
 import com.dokidoki.bid.common.codes.LockInfo;
@@ -66,7 +67,7 @@ public class BiddingService {
      * @param req client 측에서 넘어온 요청 정보
      * @param memberId 접근하는 사용자의 ID
      */
-//    @RealTimeLock
+    @RealTimeLock
     public void bid(long auctionId, AuctionBidReq req, long memberId) throws InterruptedException {
         log.info("req: {}", req);
 
@@ -108,7 +109,7 @@ public class BiddingService {
      * @param memberId 접근하는 사용자의 ID
      * @return newHighestPrice
      */
-    @Transactional
+    @RTransactional
     public LeaderBoardMemberResp updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, String key, AuctionBidReq req, long memberId) {
 
         // 3-1. 실시간 최고가 갱신
@@ -173,7 +174,7 @@ public class BiddingService {
      * @param req client 측에서 넘어온 요청 정보
      * @param memberId 접근하는 사용자의 ID
      */
-    @Transactional
+    @RealTimeLock
     public void updatePriceSize(long auctionId, AuctionUpdatePriceSizeReq req, long memberId) {
         // TODO - 분산 락 처리 과정 필요
         log.info("req: {}", req);
@@ -201,8 +202,6 @@ public class BiddingService {
         
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
         //  -> MySQL 도 구독해놔야
-        
-
     }
 
 }

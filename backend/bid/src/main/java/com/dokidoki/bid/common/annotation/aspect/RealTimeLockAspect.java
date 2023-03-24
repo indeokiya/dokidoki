@@ -30,51 +30,34 @@ import java.util.concurrent.locks.Lock;
 public class RealTimeLockAspect {
 
     private final RedissonClient redisson;
-    private RSemaphore semaphore;
+    private RLock lock;
 
     @Autowired
     public void setRealTimeLockAspect() {
-        semaphore = redisson.getSemaphore(LockInfo.REALTIME.getLockName());
-        semaphore.trySetPermits(1);
+        lock = redisson.getLock(LockInfo.REALTIME.getLockName());
     }
-
 
     @Around("@annotation(realTimeLock)")
     public Object realtimeLock(ProceedingJoinPoint pjp, RealTimeLock realTimeLock) throws Throwable {
         log.info("start realtime lock");
-        
+
         // [1] REALTIME 락 가져오도록 시도하기
-        RFuture<Boolean> acquireFuture = semaphore.tryAcquireAsync(LockInfo.REALTIME.getWaitTime(), LockInfo.REALTIME.getTimeUnit());
-
-        acquireFuture.whenComplete((res, exception) -> {
-
-            semaphore.releaseAsync();
-        });
-
-        try {
-            // [1] REALTIME 락 가져오도록 시도하기
-            boolean res = lock.tryLock(LockInfo.REALTIME.getWaitTime(), LockInfo.REALTIME.getUnlockTime(), LockInfo.REALTIME.getTimeUnit());
-            // [2] 락을 못가져오면 예외 처리
-            if (!res) {
-                throw new BusinessException("realtime lock 을 얻는데 실패했습니다.", ErrorCode.FAILURE_GET_REALTIME_LOCK);
+        boolean res = lock.tryLock(LockInfo.REALTIME.getWaitTime(), LockInfo.REALTIME.getUnlockTime(), LockInfo.REALTIME.getTimeUnit());
+        if (res) {
+            try {
+                // [2] 로직 실행
+                log.info("realtime lock 이 걸린 채로 로직 실행");
+                Object proceed = pjp.proceed();
+                return proceed;
+            } finally {
+                log.info("realtime lock 해제");
+                lock.unlock();
             }
-            // [3] 락을 가져오면 프로세스를 진행하고
-            Object proceed = pjp.proceed();
-            // [4] 다음으로 넘어간다.
-            return proceed;
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            // [*] 로직이 끝나기 전엔 락 해제하기
-            if (lock.isLocked()) {
-                log.info("isLocked");
-                if (lock.isHeldByCurrentThread()) {
-                    lock.unlock();
-                } else {
-                    log.info("최근 스레드가 lock을 들고 있지 않음");
-                }
-            }
+        } else {
+            throw new BusinessException("realtime Lock 을 얻는 데 실패했습니다.", ErrorCode.FAILURE_GET_REALTIME_LOCK);
         }
+
     }
+
 
 }

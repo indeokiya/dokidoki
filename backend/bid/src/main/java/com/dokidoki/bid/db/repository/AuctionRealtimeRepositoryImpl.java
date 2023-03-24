@@ -1,5 +1,6 @@
 package com.dokidoki.bid.db.repository;
 
+import com.dokidoki.bid.common.annotation.RTransactional;
 import com.dokidoki.bid.common.codes.RealTimeConstants;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 import lombok.RequiredArgsConstructor;
@@ -40,39 +41,20 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
     }
 
     @Override
+    @RTransactional
     public void save(AuctionRealtime auctionRealtime) {
-        RTransaction transaction = redisson.createTransaction(TransactionOptions.defaults());
-        try {
-            map.put(auctionRealtime.getAuctionId(), auctionRealtime);
-            transaction.commit();
-        } catch(Exception e) {
-            transaction.rollback();
-            throw e;
-        }
+        map.put(auctionRealtime.getAuctionId(), auctionRealtime);
     }
 
     @Override
+    @RTransactional
     public void save(AuctionRealtime auctionRealtime, long ttl, TimeUnit timeUnit) {
-        RTransaction transaction = redisson.createTransaction(TransactionOptions.defaults());
-        try {
-            map.put(auctionRealtime.getAuctionId(), auctionRealtime, ttl, timeUnit);
-            transaction.commit();
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
+        map.put(auctionRealtime.getAuctionId(), auctionRealtime, ttl, timeUnit);
     }
 
     @Override
+    @RTransactional
     public boolean deleteAll() {
-        RTransaction transaction = redisson.createTransaction(TransactionOptions.defaults());
-        try {
-            boolean res = map.delete();
-            transaction.commit();
-            return res;
-        } catch (Exception e) {
-            transaction.rollback();
-            throw e;
-        }
+        return map.delete();
     }
 }
