@@ -20,21 +20,11 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
 
              
             <Grid item >
-            <Typography variant='h5' color={"inherit"} sx={{marginTop:"30px"}}> {props.selectedMenu}</Typography>
+            <Typography variant='h5' color={"inherit"} sx={{marginTop:"30px", marginLeft:"20px"}}> {props.selectedMenu}</Typography>
             </Grid>
-            <Grid item xs />
-          </Grid>
-        </Toolbar>
-      </AppBar>
-      <AppBar
-        component="div"
-        color="primary"
-        position="static"
-        elevation={0}
-        sx={{ zIndex: 0 }}
-      ></AppBar>
-      <AppBar component="div" position="static" elevation={0} sx={{ zIndex: 0 }}>
-        {props.selectedMenu !== '내 정보' && props.selectedMenu !== '알림 내역' && (
+
+            <Grid item xs={12}>
+            {props.selectedMenu !== '내 정보' && props.selectedMenu !== '알림 내역' && (
           <Tabs
             value={tabValue}
             onChange={handleChange}
@@ -61,6 +51,13 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
             <Tab value="입찰 강탈" label="입찰 강탈" />
           </Tabs>
         )}
+            </Grid>
+          </Grid>
+        </Toolbar>
+      </AppBar>
+
+      <AppBar component="div" position="sticky" elevation={0} sx={{ zIndex: 0 }}>
+       
       </AppBar>
     </React.Fragment>
   );

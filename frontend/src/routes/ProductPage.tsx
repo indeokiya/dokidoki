@@ -9,6 +9,9 @@ import ProductDescription from '../components/leaderBoard/ProductDescription';
 import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
 import Header from '../components/header/Header';
+import Paper from '@mui/material/Paper';
+
+import { Box } from '@mui/material';
 
 const ProductPage = () => {
   const StyledDiv = styled.div`
@@ -16,36 +19,48 @@ const ProductPage = () => {
     box-sizing: border-box;
   `;
 
+  const BackgroundDiv = styled.div`
+    background-color: #dddddd;
+  `;
+
   return (
     <>
-      <Header />
-      <Container>
-        <ScrollTop />
-        <Grid container spacing={3} mb={10} mt={10}>
-          <Grid item xs={2} />
-          <Grid item xs={4}>
-            {/* 제품 이미지 */}
-            <ProductImages />
+      <BackgroundDiv>
+        <Box
+          sx={{
+            border: '1px solid white',
+            backgroundColor: 'white',
+            width:"80%",
+            margin:"0 auto"
+          }}
+        >
+          <ScrollTop />
+          <Grid container spacing={3}>
+            <Grid item xs={2} />
+            <Grid item xs={4}>
+              {/* 제품 이미지 */}
+              <ProductImages />
+            </Grid>
+            <Grid item xs={4}>
+              {/* 제품 정보 */}
+              <ProductInfo />
+            </Grid>
           </Grid>
-          <Grid item xs={4}>
-            {/* 제품 정보 */}
-            <ProductInfo />
-          </Grid>
-        </Grid>
-        <Divider />
+          <Divider />
 
-        <StyledDiv>
-          <ProductDescription />
-        </StyledDiv>
+          <StyledDiv>
+            <ProductDescription />
+          </StyledDiv>
 
-        {/* 제품 카테고리 평균 가격 */}
-        <ProductGraph />
+          {/* 제품 카테고리 평균 가격 */}
+          <ProductGraph />
 
-        {/* 댓글 작성과 댓글들  */}
-        <CommentsList />
+          {/* 댓글 작성과 댓글들  */}
+          <CommentsList />
 
-        {/* 모달창 하단에 존재하는 버튼 */}
-      </Container>
+          {/* 모달창 하단에 존재하는 버튼 */}
+        </Box>
+      </BackgroundDiv>
     </>
   );
 };

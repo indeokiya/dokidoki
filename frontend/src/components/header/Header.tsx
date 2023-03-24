@@ -13,6 +13,7 @@ const Header = () => {
     padding-right: 1rem;
     padding-left: 1rem;
     border-bottom: 1px solid grey;
+    
   `;
   const LogoImg = styled.img`
     height: 30px;
@@ -27,7 +28,7 @@ const Header = () => {
   }
   return (
     <HeaderBox>
-      <Grid container spacing={2} alignItems={'center'}>
+      <Grid container alignItems={'center'}>
         <Grid item xs>
           <Link to="/">
             <LogoImg src={LogoImgSrc}></LogoImg>

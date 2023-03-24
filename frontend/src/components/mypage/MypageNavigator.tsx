@@ -7,7 +7,6 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
 import Drawer, { DrawerProps } from '@mui/material/Drawer';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -15,12 +14,12 @@ import SellIcon from '@mui/icons-material/Sell';
 import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import Avatar from '@mui/material/Avatar';
 import ProfileImgSrc from '../../assets/image/profile.png';
-import Typography from '@mui/material/Typography';
-
+import { Typography, Badge } from '@mui/material';
+import styled from 'styled-components';
 import { useState } from 'react';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 
 const item = {
   py: '2px',
@@ -66,29 +65,53 @@ const MypageNavigator: React.FC<{
 
   const { ...other } = props;
 
+  const StyledDiv = styled.div`
+    text-align: center;
+  `;
+
+  const StyledEditIcon = styled.div`
+    color:white;
+    background-color:gray;
+    border:1px solid white;
+    border-radius:100px;
+    width:40px;
+    height:40px;
+    line-height:55px;
+    cursor:pointer;
+    transition : 0.5s;
+    &:hover{
+      background-color:silver;
+    }
+  `
+
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}>DOKIDOKI</ListItem>
-        <ListItem >
-          <Avatar
-            src={ProfileImgSrc}
-            sx={{ width: '150px', height: '150px', marginTop:"2rem"}}
+        <StyledDiv>
+          <Badge
+            overlap="circular"
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            badgeContent={
+              <StyledEditIcon>
+                <EditOutlinedIcon />
+              </StyledEditIcon>
+            }
           >
-          </Avatar>
-        </ListItem>
+            <Avatar
+              src={ProfileImgSrc}
+              sx={{ width: '150px', height: '150px', margin: '1rem auto' }}
+            ></Avatar>
+          </Badge>
+          <Typography color="white" variant="subtitle1">
+            김범식
+          </Typography>
+        </StyledDiv>
         <ListItem>
-          <ListItemText sx={{ color: 'white', textAlign: 'center'}}>
-            <Typography variant="subtitle1">김범식</Typography>
-            
-          </ListItemText>
-              
-          <ListItemText>
-
-          </ListItemText>
+          <ListItemText></ListItemText>
         </ListItem>
 
-        <Box sx={{ bgcolor: '#101F33', marginTop:"2rem" }}>
+        <Box sx={{ bgcolor: '#101F33', marginTop: '2rem' }}>
           <ListItem sx={{ py: 2, px: 3 }}>
             <ListItemText sx={{ color: '#fff' }}>Menu</ListItemText>
           </ListItem>

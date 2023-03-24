@@ -50,7 +50,7 @@ const ContentsList = () => {
           <Grid key={i} item xs={4} mb={4}>
             <div
               onClick={() => {
-                navigate('/product/' + data);
+                navigate('/auction/product/' + data);
               }}
             >
                 <Content />
