@@ -8,6 +8,7 @@ import java.util.List;
 @Getter
 public class DetailAuctionIngResponse {
     private final String auction_title;
+    private final LocalDateTime start_time;
     private final LocalDateTime end_time;
     private final String product_name;
     private final String category_name;
@@ -30,6 +31,7 @@ public class DetailAuctionIngResponse {
                                     List<CommentResponse> comments,
                                     List<LeaderboardHistoryResponse> leaderboard) {
         this.auction_title = detailAuctionIngInterface.getAuction_title();
+        this.start_time = detailAuctionIngInterface.getStart_time();
         this.end_time = detailAuctionIngInterface.getEnd_time();
         this.product_name = detailAuctionIngInterface.getProduct_name();
         this.category_name = detailAuctionIngInterface.getCategory_name();

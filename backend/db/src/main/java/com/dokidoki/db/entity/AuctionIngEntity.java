@@ -4,14 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import java.lang.reflect.Member;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "auction_ing")
 @Getter
 @Builder
@@ -47,6 +47,10 @@ public class AuctionIngEntity{
 
     @Column(name = "price_size")
     private Integer priceSize;              // 경매 단위
+
+    @CreatedDate
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
     @Column(name = "end_at")
     private LocalDateTime endAt;        // 경매 종료 시점

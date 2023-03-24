@@ -5,7 +5,11 @@ import com.dokidoki.auction.common.JWTUtil;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
+import com.dokidoki.auction.dto.response.DetailAuctionEndResponse;
+import com.dokidoki.auction.dto.response.DetailAuctionIngResponse;
 import com.dokidoki.auction.dto.response.ProductResp;
+import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
+import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import com.dokidoki.auction.service.AuctionService;
 import com.dokidoki.auction.service.InterestService;
 import io.swagger.annotations.ApiParam;
@@ -67,6 +71,10 @@ public class AuctionController {
                     .body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         String msg = auctionService.createAuction(auctionRegisterReq, sellerId);
+        if (msg == null)
+            return ResponseEntity
+                    .status(400)
+                    .body(BaseResponseBody.of("실패"));
 
         if (msg.equals("제품에 대한 정보가 존재하지 않습니다."))
             return ResponseEntity
@@ -74,7 +82,7 @@ public class AuctionController {
                     .body(BaseResponseBody.of(msg));
 
         // 성공적으로 등록되면 카프카에 auction.register 메시지 발행.
-         producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(auctionRegisterReq));
+        producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(auctionRegisterReq));
 
         return ResponseEntity.status(201).body(BaseResponseBody.of(msg));
     }
@@ -116,6 +124,9 @@ public class AuctionController {
      */
     @GetMapping("/in-progress/{auction_id}")
     public ResponseEntity<BaseResponseBody> readAuctionIng(@PathVariable Long auction_id) {
+        DetailAuctionIngResponse detailAuctionIngResponse = auctionService.readAuctionIng(auction_id);
+        if (detailAuctionIngResponse == null)
+            return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
                 .body(BaseResponseBody.of("성공", auctionService.readAuctionIng(auction_id)));
@@ -123,6 +134,9 @@ public class AuctionController {
 
     @GetMapping("/end/{auction_id}")
     public ResponseEntity<BaseResponseBody> readAuctionEnd(@PathVariable Long auction_id) {
+        DetailAuctionEndResponse detailAuctionEndResponse = auctionService.readAuctionEnd(auction_id);
+        if (detailAuctionEndResponse == null)
+            return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
                 .body(BaseResponseBody.of("성공", auctionService.readAuctionEnd(auction_id)));

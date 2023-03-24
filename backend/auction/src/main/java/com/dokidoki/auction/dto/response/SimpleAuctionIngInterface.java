@@ -5,7 +5,8 @@ import java.time.LocalDateTime;
 public interface SimpleAuctionIngInterface {
     Long getAuction_id();
     String getAuction_title();
-    LocalDateTime  getEnd_time();
+    LocalDateTime getStart_time();
+    LocalDateTime getEnd_time();
     String getProduct_name();
     String getCategory_name();
     Integer getOffer_price();

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
@@ -33,6 +34,10 @@ public class CommentEntity {
     @CreatedDate
     @Column(name = "written_time")
     private LocalDateTime writtenTime;
+
+    @LastModifiedDate
+    @Column(name = "modified_time")
+    private LocalDateTime modifiedTime;
 
     @Column(name = "parent_id")
     private Long parentId;

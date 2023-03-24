@@ -17,17 +17,17 @@ public class KafkaAuctionProducer {
     @Value(value = "${spring.kafka.auctionRegisterConfig.topic}")
     private String auctionRegisterTopic;
 
-//    @Value(value = "${spring.kafka.auctionUpdateConfig.topic}")
-//    private String auctionUpdateTopic;
-//    private final KafkaTemplate<String, KafkaAuctionRegisterDTO> auctionRegisterKafkaTemplate;
-//    private final KafkaTemplate<String, KafkaAuctionUpdateDTO> auctionUpdateKafkaTemplate;
-//    @Autowired
-//    public KafkaAuctionProducer(
-//            KafkaTemplate<String, KafkaAuctionRegisterDTO> auctionRegisterKafkaTemplate,
-//            KafkaTemplate<String, KafkaAuctionUpdateDTO> auctionUpdateKafkaTemplate) {
-//        this.auctionRegisterKafkaTemplate = auctionRegisterKafkaTemplate;
-//        this.auctionUpdateKafkaTemplate = auctionUpdateKafkaTemplate;
-//    }
+    @Value(value = "${spring.kafka.auctionUpdateConfig.topic}")
+    private String auctionUpdateTopic;
+    private final KafkaTemplate<String, KafkaAuctionRegisterDTO> auctionRegisterKafkaTemplate;
+    private final KafkaTemplate<String, KafkaAuctionUpdateDTO> auctionUpdateKafkaTemplate;
+    @Autowired
+    public KafkaAuctionProducer(
+            KafkaTemplate<String, KafkaAuctionRegisterDTO> auctionRegisterKafkaTemplate,
+            KafkaTemplate<String, KafkaAuctionUpdateDTO> auctionUpdateKafkaTemplate) {
+        this.auctionRegisterKafkaTemplate = auctionRegisterKafkaTemplate;
+        this.auctionUpdateKafkaTemplate = auctionUpdateKafkaTemplate;
+    }
 
     public void sendAuctionRegister(KafkaAuctionRegisterDTO auction) {
         ListenableFuture<SendResult<String, KafkaAuctionRegisterDTO>> future = auctionRegisterKafkaTemplate.send(auctionRegisterTopic, auction);

@@ -16,7 +16,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     /*
     진행중인 경매의 상세정보 조회
      */
-    @Query("SELECT a.title as auction_title, a.endAt as end_time, a.description as description " +
+    @Query("SELECT a.title as auction_title, a.startTime as start_time, a.endAt as end_time, a.description as description " +
             ", a.meetingPlace as meeting_place, a.priceSize as price_size, a.offerPrice as offer_price " +
             ", a.highestPrice as highest_price, s.name as seller_name, s.id as seller_id " +
             ", p.name as product_name, c.categoryName as category_name " +
@@ -32,7 +32,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     진행중인 경매 목록 (전체)
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
@@ -44,7 +44,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     마감임박 경매 목록, 1시간
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
@@ -62,7 +62,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     카테고리 & 키워드로 진행중인 경매 목록 검색 (동적쿼리로 아래 조회 메서드랑 합치는 게 좋을 듯)
      */
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offerPrice, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
@@ -77,7 +77,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     키워드로 진행중인 경매 목록 검색
      */
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
@@ -91,7 +91,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     특정 사용자가 판매중인 경매 목록 조회
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
@@ -104,13 +104,13 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     특정 사용자가 입찰중인 경매 목록 조회
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
             "WHERE :member_id IN " +
-            " (SELECT DISTINCT l.memberEntity.id FROM leaderboard l WHERE l.auctionId = a.id) " +
+            " (SELECT DISTINCT l.memberEntity.id FROM LeaderboardEntity l WHERE l.auctionId = a.id) " +
             "ORDER BY a.id DESC ")
     Page<SimpleAuctionIngInterface> findAllMyBiddingAuction(@Param("member_id") Long memberId, Pageable pageable);
 
@@ -118,7 +118,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     특정 사용자가 관심 갖는 경매 목록 조회
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
+            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
             " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
