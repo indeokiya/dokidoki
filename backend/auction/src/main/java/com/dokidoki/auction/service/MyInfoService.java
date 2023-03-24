@@ -29,7 +29,7 @@ public class MyInfoService {
                 .findAllMySellingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
@@ -42,7 +42,7 @@ public class MyInfoService {
                 .findAllMyBiddingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
@@ -55,7 +55,7 @@ public class MyInfoService {
                 .findAllMyInterestingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*

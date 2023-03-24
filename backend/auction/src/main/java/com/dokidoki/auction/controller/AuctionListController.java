@@ -1,6 +1,7 @@
 package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
+import com.dokidoki.auction.common.JWTUtil;
 import com.dokidoki.auction.dto.response.PaginationResponse;
 import com.dokidoki.auction.service.AuctionListService;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @Slf4j
@@ -20,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuctionListController {
     private final AuctionListService auctionListService;
+    private final JWTUtil jwtUtil;
 
     /*
     메인 페이지 : 종료된 경매 목록 가져오기
@@ -41,10 +43,14 @@ public class AuctionListController {
      */
     @GetMapping("/in-progress")
     public ResponseEntity<BaseResponseBody> readSimpleAuctionIng(
-            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
+            HttpServletRequest request) {
+        // 토큰 member id 확인
+        Long memberId = jwtUtil.getUserId(request);
+
         // 데이터 조회
         PaginationResponse paginationResponse = auctionListService
-                .readSimpleAuctionIng(PageRequest.of(page, size));
+                .readSimpleAuctionIng(memberId, PageRequest.of(page, size));
 
         return ResponseEntity
                 .status(200)
@@ -56,10 +62,14 @@ public class AuctionListController {
      */
     @GetMapping("/deadline")
     public ResponseEntity<BaseResponseBody> readSimpleAuctionDeadline(
-            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
+            HttpServletRequest request) {
+            // 토큰 member id 확인
+            Long memberId = jwtUtil.getUserId(request);
+
             // 데이터 조회
             PaginationResponse paginationResponse = auctionListService
-                    .readSimpleAuctionDeadline(PageRequest.of(page, size));
+                    .readSimpleAuctionDeadline(memberId, PageRequest.of(page, size));
 
             return ResponseEntity
                     .status(200)
@@ -72,9 +82,13 @@ public class AuctionListController {
     @GetMapping("/search")
     public ResponseEntity<BaseResponseBody> searchSimpleAuctionIng(
             @RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "0") Long category_id,
-            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
+            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
+            HttpServletRequest request) {
+        // 토큰 member id 확인
+        Long memberId = jwtUtil.getUserId(request);
+
         PaginationResponse paginationResponse = auctionListService
-                .searchSimpleAuctionIng(keyword, category_id, PageRequest.of(page, size));
+                .searchSimpleAuctionIng(memberId, keyword, category_id, PageRequest.of(page, size));
 
         return ResponseEntity
                 .status(200)

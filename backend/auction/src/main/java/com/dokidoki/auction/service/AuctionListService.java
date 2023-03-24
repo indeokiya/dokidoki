@@ -61,22 +61,22 @@ public class AuctionListService {
     진행중인 전체 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readSimpleAuctionIng(Pageable pageable) {
+    public PaginationResponse readSimpleAuctionIng(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllSimpleIngList(pageable);
-        return convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     진행중인 마감임박 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readSimpleAuctionDeadline(Pageable pageable) {
+    public PaginationResponse readSimpleAuctionDeadline(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllSimpleDeadlineList(pageable);
-        return convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
@@ -84,7 +84,7 @@ public class AuctionListService {
      */
     @Transactional(readOnly = true)
     public PaginationResponse searchSimpleAuctionIng(
-            String keyword, Long categoryId, Pageable pageable) {
+            Long memberId, String keyword, Long categoryId, Pageable pageable) {
         // 불필요 문자 제거
         keyword = keyword.strip();
 
@@ -97,23 +97,24 @@ public class AuctionListService {
             simpleAuctionIngInterfaces = auctionIngRepository
                     .findAllSimpleIngListByKeywordANDCategoryId(keyword, categoryId, pageable);
 
-        return convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     DB에서 조회한 진행중인 경매 목록 데이터에 제품 이미지를 추가하며 DTO로 변환
      */
     public PaginationResponse convertToDTOWithImages(
+            Long memberId,
             Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces) {
         // 관심있는 경매 ID 가져오기
-        List<InterestMapping> interestMappings = interestRepository.findAllByMemberEntity_Id(2L);
+        List<InterestMapping> interestMappings = interestRepository.findAllByMemberEntity_Id(memberId);
         Set<Long> interestsOfUser = new HashSet<>();
         interestMappings.forEach(interestMapping -> {
             interestsOfUser.add(interestMapping.getAuctionIngEntity().getId());
         });
 
         // 판매중인 경매 ID 가져오기
-        List<AuctionIngMapping> auctionIngMappings = auctionIngRepository.findAuctionIngEntityBySeller_Id(2L);
+        List<AuctionIngMapping> auctionIngMappings = auctionIngRepository.findAuctionIngEntityBySeller_Id(memberId);
         Set<Long> salesOfUser = new HashSet<>();
         auctionIngMappings.forEach(auctionIngMapping -> {
             salesOfUser.add(auctionIngMapping.getSeller().getId());
