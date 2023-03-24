@@ -45,8 +45,7 @@ const RegisterPage = () => {
     meeting_place: "",
   })
 
-  const createAuctionurl = "auctions/new"; // 재휘 로컬에 보내는거
-  // const createAuctionurl = "api/auction/auctions"
+  const createAuctionurl = "new"; 
 
   const register = () => {
     console.log("서버에 보낸 데이터 >> ",dataRef.current)
