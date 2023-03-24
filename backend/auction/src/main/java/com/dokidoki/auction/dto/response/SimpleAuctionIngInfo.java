@@ -23,6 +23,7 @@ public class SimpleAuctionIngInfo {
     private final Integer offer_price;
     private final Integer cur_price;
 
+    private final LocalDateTime start_time;
     private final Long remain_hours;
     private final Long remain_minutes;
     private final Long remain_seconds;
@@ -62,6 +63,7 @@ public class SimpleAuctionIngInfo {
             log.error("SimpleAuctionIngInfo > 끝나는 시간이 존재하지 않습니다.");
         }
 
+        this.start_time = simpleAuctionIngInterface.getStart_time();
         this.remain_hours = seconds / 3600;
         seconds %= 3600;
         this.remain_minutes = seconds / 60;

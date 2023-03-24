@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 
 public interface DetailAuctionIngInterface {
     String getAuction_title();
+    LocalDateTime getStart_time();
     LocalDateTime  getEnd_time();
     String getProduct_name();
     String getCategory_name();

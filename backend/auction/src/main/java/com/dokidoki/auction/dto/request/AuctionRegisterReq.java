@@ -23,7 +23,7 @@ public class AuctionRegisterReq {
 
     private Integer price_size;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime end_at;
 
     private String meeting_place;
