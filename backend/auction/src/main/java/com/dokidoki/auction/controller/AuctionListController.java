@@ -16,7 +16,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/auctions/lists")
+@RequestMapping("/lists")
 @RequiredArgsConstructor
 public class AuctionListController {
     private final AuctionListService auctionListService;
