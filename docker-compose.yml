@@ -83,7 +83,8 @@ services:
 
 networks:
   dokidoki_net:
+    driver: bridge
     ipam:
-      driver: bridge
+      driver: default
       config:
-        - subnet: "172.16.238.0/24"
+        - subnet: 172.16.238.0/24
