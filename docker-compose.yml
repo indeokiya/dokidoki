@@ -14,7 +14,8 @@ services:
     restart: always
     tty: true
     networks:
-      - dokidoki_net
+      dokidoki_net:
+        ipv4_address: 172.20.128.3
 
 
   database_redis:
@@ -33,10 +34,10 @@ services:
     restart: always
     stdin_open: true
     tty: true
-    ports:
-      - 8080:8080
     networks:
-      - dokidoki_net
+      dokidoki_net:
+        ipv4_address: 172.20.128.4
+
 
   bid-server:
     container_name: bid-server
@@ -83,3 +84,6 @@ services:
 networks:
   dokidoki_net:
     driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
