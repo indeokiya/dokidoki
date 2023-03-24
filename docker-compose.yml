@@ -15,7 +15,7 @@ services:
     tty: true
     networks:
       dokidoki_net:
-        ipv4_address: 172.16.238.3
+        ipv4_address: 172.20.153.3
 
 
   database_redis:
@@ -36,7 +36,7 @@ services:
     tty: true
     networks:
       dokidoki_net:
-        ipv4_address: 172.16.238.4
+        ipv4_address: 172.20.128.2
 
 
   bid-server:
@@ -45,7 +45,7 @@ services:
       context: ./backend/bid
       dockerfile: dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
       SPRING_REDIS_HOST: database_redis
@@ -61,7 +61,7 @@ services:
       context: ./backend/auction
       dockerfile: dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
     restart: always
@@ -74,17 +74,18 @@ services:
       context: ./backend/user-server
       dockerfile: dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://host.docker.internal:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
     restart: always
     networks:
       - dokidoki_net
 
+  
 networks:
   dokidoki_net:
     driver: bridge
     ipam:
       driver: default
       config:
-        - subnet: 172.16.238.0/24
+        - subnet: 172.20.0.0/16
