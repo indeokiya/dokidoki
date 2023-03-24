@@ -26,7 +26,7 @@ spring:
       max-file-size: 10MB
   kafka:
     bootstrap-servers:
-      - localhost:9092
+      - 3.35.49.175:9092
     consumer:
       group-id: test.group
       # Kafka 서버에 초기 offset이 없거나, 서버에 현재 offset이 더 이상 존재하지 않을 경우 수행할 작업을 설정

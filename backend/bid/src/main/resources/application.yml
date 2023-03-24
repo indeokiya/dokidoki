@@ -22,7 +22,7 @@ spring:
         format_sql: true
   kafka:
     bootstrap-servers:
-      - localhost:9092
+      - 3.35.49.175:9092
     consumer:
       # consumer bootstrap servers가 따로 존재하면 설정
       # bootstrap-servers: localhost:9092
