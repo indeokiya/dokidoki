@@ -49,9 +49,18 @@ const RegisterPage = () => {
 
   const register = () => {
     console.log("서버에 보낸 데이터 >> ",dataRef.current)
+    const formData = new FormData();
+    formData.set('product_id', String(dataRef.current.product_id));
+    formData.set('title', dataRef.current.title);
+    formData.set('description', dataRef.current.description);
+    formData.set('offer_price', String(dataRef.current.offer_price));
+    formData.set('price_size', String(dataRef.current.price_size));
+    formData.set('end_at', dataRef.current.end_at);
+    formData.set('meeting_place', dataRef.current.meeting_place);
+
     // 카테고리를 통해 product_id 받아오는 로직도 어디선가 필요함. 일단 1로 박음
     const axios = auctionAPI;
-    axios.post(createAuctionurl, dataRef.current,)
+    axios.post(createAuctionurl, formData, {headers : {"Content-Type":"multipart/form-data"}})
       .then(res => {
         alert("성공")
         console.log(res)
