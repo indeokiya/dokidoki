@@ -2,6 +2,7 @@ package com.dokidoki.auction.dto.response;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -9,12 +10,14 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
+@Slf4j
 public class SimpleAuctionIngInfo {
     private final Long auction_id;
 
     private final String auction_title;
     private final String product_name;
     private final String category_name;
+    private final String meeting_place;
 
     private final Integer offer_price;
     private final Integer cur_price;
@@ -32,18 +35,27 @@ public class SimpleAuctionIngInfo {
         this.auction_title = simpleAuctionIngInterface.getAuction_title();
         this.product_name = simpleAuctionIngInterface.getProduct_name();
         this.category_name = simpleAuctionIngInterface.getCategory_name();
+        this.meeting_place = simpleAuctionIngInterface.getMeeting_place();
         this.offer_price = simpleAuctionIngInterface.getOffer_price();
         this.cur_price = simpleAuctionIngInterface.getCur_price();
 
         this.auction_image_urls = auction_image_urls;
 
         // 남은 시간 계산
-        Long seconds = ChronoUnit.SECONDS.between(
-                LocalDateTime.now(), simpleAuctionIngInterface.getEnd_time()
-        );
+        long seconds = 0L;
 
-        this.remain_hours = seconds / 3600; seconds %= 3600;
-        this.remain_minutes = seconds / 60; seconds %= 60;
+        try {
+            seconds = ChronoUnit.SECONDS.between(
+                    LocalDateTime.now(), simpleAuctionIngInterface.getEnd_time()
+            );
+        } catch (Exception e) {
+            log.error("SimpleAuctionIngInfo > 끝나는 시간이 존재하지 않습니다.");
+        }
+
+        this.remain_hours = seconds / 3600;
+        seconds %= 3600;
+        this.remain_minutes = seconds / 60;
+        seconds %= 60;
         this.remain_seconds = seconds;
     }
 }
