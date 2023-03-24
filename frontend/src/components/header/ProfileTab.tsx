@@ -1,13 +1,13 @@
-import styled from "styled-components";
-import { List, ListItem, IconButton, ListItemText } from "@mui/material";
+import styled from 'styled-components';
+import { List, ListItem, IconButton, ListItemText } from '@mui/material';
 
 const Profile = () => {
   const profileList = [
     {
-      text: "profile",
+      text: 'profile',
     },
     {
-      text: "alert",
+      text: 'alert',
     },
   ];
 
@@ -17,7 +17,7 @@ const Profile = () => {
     padding: 5px;
   `;
 
-  const Demo = styled("div")(({ theme }) => ({
+  const Demo = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
   }));
 

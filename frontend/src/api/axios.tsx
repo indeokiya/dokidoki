@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
 const auctionAPI = axios.create({
   baseURL: process.env.REACT_APP_AUCTION_SERVER_BASE_URL,
   headers: {
-    "Content-Type": "application/json"
-  }
+    'Content-Type': 'application/json',
+  },
 });
 
 auctionAPI.defaults.timeout = 3000;

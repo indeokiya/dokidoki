@@ -12,7 +12,7 @@ import Chip from '@mui/material/Chip';
 
 import Badge from '@mui/material/Badge';
 
-const Content = () => {
+const IngContentItem = () => {
   const [isHovered, setIsHovered] = useState(false);
 
   const StyledFlex = styled.div`
@@ -108,4 +108,5 @@ const Content = () => {
   );
 };
 
-export default Content;
+ export default IngContentItem;
+

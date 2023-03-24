@@ -73,13 +73,7 @@ const RegisterPage = () => {
       <StyledDiv>
         <Form>
           {/* 전체를 감싸는 Grid */}
-          <Grid
-            container
-            alignItems={"center"}
-            direction="column"
-            gap={4}
-            py={5}
-          >
+          <Grid container alignItems={'center'} direction="column" gap={4} py={5}>
             {/*상단 입력 박스 */}
             <Grid item xs={6}>
               <ProductInfoInput dataRef={dataRef} />

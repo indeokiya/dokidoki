@@ -1,11 +1,12 @@
-import Container from "@mui/material/Container";
-import SideBar from "../components/auction/sidebar/SideBar";
-import SearchBar from "../components/auction/SearchBar";
-import ContentsList from "../components/auction/contents/ContentsList";
-import Grid from "@mui/material/Grid"; // Grid version 1
-import { Outlet, Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
-import styled from "styled-components";
+import Container from '@mui/material/Container';
+import SideBar from '../components/auction/sidebar/SideBar';
+import SearchBar from '../components/auction/SearchBar';
+import ContentsList from '../components/auction/contents/ContentsList';
+import Grid from '@mui/material/Grid'; // Grid version 1
+import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import styled from 'styled-components';
+import Tooltip from '@mui/material/Tooltip';
 
 const ActionPageContent = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const ActionPageContent = () => {
     width: 60px;
     height: 60px;
     text-align: center;
-    line-height: 55px;
+    line-height: 50px;
     cursor: pointer;
     transition: all 0.3s;
     &:hover {
@@ -37,13 +38,15 @@ const ActionPageContent = () => {
   return (
     <>
       <Container>
-        <StyledIcon
-          onClick={() => {
-            navigate("/regist");
-          }}
-        >
-          +
-        </StyledIcon>
+        <Tooltip title="글 작성하기" placement="top">
+          <StyledIcon
+            onClick={() => {
+              navigate('/regist');
+            }}
+          >
+            +
+          </StyledIcon>
+        </Tooltip>
 
         <SearchBar />
         <Grid container spacing={2}>

@@ -1,11 +1,11 @@
 import Grid from '@mui/material/Grid'; // Grid version 1
-import Content from './Content';
+import Content from './IngContentItem';
 import styled from 'styled-components';
 import { useRef, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Badge from '@mui/material/Badge';
 
-const ContentsList = () => {
+const IngContentItemList = () => {
   const [posts, setPosts] = useState([
     1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
   ]);
@@ -73,4 +73,4 @@ const ContentsList = () => {
   );
 };
 
-export default ContentsList;
+export default IngContentItemList;
