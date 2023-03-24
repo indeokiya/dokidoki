@@ -15,7 +15,7 @@ services:
     tty: true
     networks:
       dokidoki_net:
-        ipv4_address: 172.20.128.3
+        ipv4_address: 172.16.238.3
 
 
   database_redis:
@@ -36,7 +36,7 @@ services:
     tty: true
     networks:
       dokidoki_net:
-        ipv4_address: 172.20.128.4
+        ipv4_address: 172.16.238.4
 
 
   bid-server:
@@ -85,5 +85,6 @@ networks:
   dokidoki_net:
     driver: bridge
     ipam:
+      driver: default
       config:
-        - subnet: 172.20.0.0/16
+        - subnet: 172.16.238.0/24
