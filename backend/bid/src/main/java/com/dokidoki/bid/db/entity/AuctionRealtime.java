@@ -19,8 +19,8 @@ public class AuctionRealtime {
 
     public static AuctionRealtime from(KafkaAuctionRegisterDTO dto) {
         AuctionRealtime auctionRealtime = AuctionRealtime.builder()
-                .auctionId(dto.getProductId())
-                .highestPrice(dto.getHighestPrice())
+                .auctionId(dto.getAuctionId())
+                .highestPrice(dto.getOfferPrice())
                 .priceSize(dto.getPriceSize())
                 .build();
         return auctionRealtime;

@@ -50,7 +50,7 @@ public class BiddingService {
      */
     public void registerAuctionInfo(KafkaAuctionRegisterDTO dto) {
         AuctionRealtime auctionRealtime = AuctionRealtime.from(dto);
-        auctionRealtimeRepository.save(auctionRealtime, dto.getTtl(), TimeUnit.HOURS);
+        auctionRealtimeRepository.save(auctionRealtime, dto.getTtl(), TimeUnit.MINUTES);
     }
 
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
