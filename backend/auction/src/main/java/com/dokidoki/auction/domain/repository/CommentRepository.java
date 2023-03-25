@@ -14,6 +14,6 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     List<CommentEntity> findCommentsByAuctionIdOrderByWrittenTime(Long auction_id);
 
     @Modifying
-    @Query("delete from comment c where c.parentId=:parent_id")
+    @Query("DELETE FROM CommentEntity c WHERE c.parentId=:parent_id")
     void deleteCommentsByParentId(@Param("parent_id") Long parent_id);
 }

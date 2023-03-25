@@ -2,6 +2,8 @@ package com.dokidoki.auction.domain.entity;
 
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 
@@ -15,6 +17,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Table(name = "auction_ing")
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class AuctionIngEntity {
 
     @Id
@@ -38,6 +41,10 @@ public class AuctionIngEntity {
 
     @Column(name = "price_size")
     private Integer priceSize;              // 경매 단위
+
+    @CreatedDate
+    @Column(name = "start_time")
+    private LocalDateTime startTime;
 
     @Column(name = "end_at")
     private LocalDateTime endAt;        // 경매 종료 시점

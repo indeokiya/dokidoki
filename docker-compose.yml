@@ -6,27 +6,25 @@ services:
     build:
       context: ./frontend
       dockerfile: dockerfile
-    ports:
-      - "3000:3000"
+    
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
     stdin_open: true
+    restart: always
     tty: true
     networks:
-      - default
-      - dokidoki_net
+      dokidoki_net:
+        ipv4_address: 172.20.153.3
 
 
   database_redis:
     container_name: database_redis
     image: redis
     command: ["redis-server", "--appendonly", "yes", "--replica-read-only", "no","--requirepass", "qhBb3Ht7Psvz54PCjlAw"]
-    ports:
-      - "6379:6379"
     networks:
-      - default
       - dokidoki_net
+    restart: always
 
   api-gateway-server:
     container_name: api-gateway-server
@@ -34,13 +32,12 @@ services:
       context: ./backend/api-gateway
       dockerfile: dockerfile
     restart: always
-    ports:
-      - 8080:8080
     stdin_open: true
     tty: true
     networks:
-      - default
-      - dokidoki_net
+      dokidoki_net:
+        ipv4_address: 172.20.128.2
+
 
   bid-server:
     container_name: bid-server
@@ -55,10 +52,7 @@ services:
       SPRING_REDIS_PORT: 6379
       SPRING_REDIS_PASSWORD: qhBb3Ht7Psvz54PCjlAw
     restart: always
-    ports:
-      - 8081:8081
     networks:
-      - default
       - dokidoki_net
 
   auction-server:
@@ -71,10 +65,7 @@ services:
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
     restart: always
-    ports:
-      - 8082:8082
     networks:
-      - default
       - dokidoki_net
 
   user-server:
@@ -87,12 +78,14 @@ services:
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
     restart: always
-    ports:
-      - 8083:8083
     networks:
-      - default
       - dokidoki_net
 
+  
 networks:
   dokidoki_net:
     driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.0/16

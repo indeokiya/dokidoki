@@ -11,8 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Long> {
     // 경매 End, 제품, 카테고리, 사용자 테이블 조인해서 데이터 검색하기
@@ -24,8 +22,9 @@ public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Lo
             " JOIN p.categoryEntity c " +
             " JOIN a.buyer b " +
             " JOIN a.seller s " +
-            "WHERE a.id = :auction_id")
-    List<DetailAuctionEndInterface> findDetailAuctionEndEntitiesById(@Param("auction_id") Long auctionId);
+            "WHERE a.id = :auction_id " +
+            "ORDER BY a.endTime DESC ")
+    DetailAuctionEndInterface findDetailAuctionEndEntityById(@Param("auction_id") Long auctionId);
     
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.startTime as start_time, a.endTime as end_time" +
             ", a.offerPrice as offer_price, a.finalPrice as final_price, a.buyer.id as buyer_id" +

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,42 +22,46 @@ public class MyInfoService {
     /*
     판매중인 경매 목록 조회
      */
+    @Transactional(readOnly = true)
     public PaginationResponse readAllMySellingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllMySellingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     입찰중인 경매 목록 조회
      */
+    @Transactional(readOnly = true)
     public PaginationResponse readAllMyBiddingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllMyBiddingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     입찰중인 경매 목록 조회
      */
+    @Transactional(readOnly = true)
     public PaginationResponse readAllMyInterestingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
                 .findAllMyInterestingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
     }
 
     /*
     구매내역 조회
      */
+    @Transactional(readOnly = true)
     public MyHistoryResponse readAllMyPurchases(Long memberId, Pageable pageable) {
         Page<MyHistoryInfoInterface> myHistoryInfoInterfaces = auctionEndRepository
                 .findAllMyPurchases(memberId, pageable);
@@ -77,6 +82,7 @@ public class MyInfoService {
     /*
     판매내역 조회
      */
+    @Transactional(readOnly = true)
     public MyHistoryResponse readAllMySales(Long memberId, Pageable pageable) {
         Page<MyHistoryInfoInterface> myHistoryInfoInterfaces = auctionEndRepository
                 .findAllMySales(memberId, pageable);

@@ -45,14 +45,26 @@ const RegisterPage = () => {
     meeting_place: "",
   })
 
-  const createAuctionurl = "auctions/new"; // 재휘 로컬에 보내는거
-  // const createAuctionurl = "api/auction/auctions"
+  const createAuctionurl = "new"; 
 
   const register = () => {
     console.log("서버에 보낸 데이터 >> ",dataRef.current)
+    const formData = new FormData();
+    formData.set('product_id', String(dataRef.current.product_id));
+    formData.set('title', dataRef.current.title);
+    formData.set('description', dataRef.current.description);
+    formData.set('offer_price', String(dataRef.current.offer_price));
+    formData.set('price_size', String(dataRef.current.price_size));
+    formData.set('end_at', dataRef.current.end_at);
+    formData.set('meeting_place', dataRef.current.meeting_place);
+
     // 카테고리를 통해 product_id 받아오는 로직도 어디선가 필요함. 일단 1로 박음
     const axios = auctionAPI;
-    axios.post(createAuctionurl, dataRef.current,)
+    axios.post(createAuctionurl, formData, {headers : {
+      "Content-Type":"multipart/form-data", 
+      "authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2NzkyOTAwNTAsImV4cCI6MTY3OTI5MzY1MCwidXNlcl9pZCI6Mn0.ATBKCYsyg8jC-GxTT41Tbw3uknZ1PQ7JkC9g1AyGhLg", 
+      "withCredentials":"true",
+    }})
       .then(res => {
         alert("성공")
         console.log(res)
@@ -74,13 +86,7 @@ const RegisterPage = () => {
       <StyledDiv>
         <Form>
           {/* 전체를 감싸는 Grid */}
-          <Grid
-            container
-            alignItems={"center"}
-            direction="column"
-            gap={4}
-            py={5}
-          >
+          <Grid container alignItems={'center'} direction="column" gap={4} py={5}>
             {/*상단 입력 박스 */}
             <Grid item xs={6}>
               <ProductInfoInput dataRef={dataRef} />
