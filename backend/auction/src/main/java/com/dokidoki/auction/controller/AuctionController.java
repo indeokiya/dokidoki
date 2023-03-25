@@ -2,6 +2,8 @@ package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
 import com.dokidoki.auction.common.JWTUtil;
+import com.dokidoki.auction.common.error.exception.ErrorCode;
+import com.dokidoki.auction.common.error.exception.InvalidValueException;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
@@ -34,7 +36,6 @@ public class AuctionController {
     private final AuctionService auctionService;
     private final JWTUtil jwtUtil;
 
-    private final KafkaAuctionProducer producer;
 
     // 카테고리 기준 제품 목록 조회
     @GetMapping("/products")
@@ -53,38 +54,12 @@ public class AuctionController {
      */
     @PostMapping("/new")
     @Operation(summary = "경매 게시글 생성 API", description = "경매 게시글을 작성한다.")
-    public ResponseEntity<BaseResponseBody> createAuction(
-            Optional<AuctionRegisterReq> auctionRegisterReqO,
-            HttpServletRequest request) {
-        log.debug("POST /auction request : {}", auctionRegisterReqO);
-
-        if (auctionRegisterReqO.isEmpty())
-            return ResponseEntity
-                    .status(400)
-                    .body(BaseResponseBody.of("요청받은 데이터가 없습니다."));
-
-        AuctionRegisterReq auctionRegisterReq = auctionRegisterReqO.get();
+    public ResponseEntity<?> createAuction(AuctionRegisterReq req, HttpServletRequest request) {
+        log.debug("POST /auction request : {}", req);
         Long sellerId = jwtUtil.getUserId(request);
-        if (sellerId == null)
-            return ResponseEntity
-                    .status(403)
-                    .body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
+        auctionService.createAuction(req, sellerId);
 
-        String msg = auctionService.createAuction(auctionRegisterReq, sellerId);
-        if (msg == null)
-            return ResponseEntity
-                    .status(400)
-                    .body(BaseResponseBody.of("실패"));
-
-        if (msg.equals("제품에 대한 정보가 존재하지 않습니다."))
-            return ResponseEntity
-                    .status(400)
-                    .body(BaseResponseBody.of(msg));
-
-        // 성공적으로 등록되면 카프카에 auction.register 메시지 발행.
-        producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(auctionRegisterReq));
-
-        return ResponseEntity.status(201).body(BaseResponseBody.of(msg));
+        return ResponseEntity.status(201).body(BaseResponseBody.of("경매 게시글이 작성되었습니다."));
     }
 
     @PutMapping("/{auction_id}")

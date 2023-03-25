@@ -13,7 +13,7 @@ public enum ErrorCode {
     INVALID_TYPE_VALUE(400, "C005", "유효하지 않은 타입입니다."),
     HANDLE_ACCESS_DENIED(403, "C006", "접근 권한이 없습니다."),
     UNAUTHORIZED(401, "C007", "인증이 거부되었습니다"),
-    INVALID_INPUT_USER(400, "C001", " 유효하지 않은 사용자 입니다."),
+    INVALID_INPUT_USER(400, "C008", " 유효하지 않은 사용자 입니다."),
 
 
     // Auction

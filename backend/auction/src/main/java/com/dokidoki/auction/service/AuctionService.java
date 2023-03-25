@@ -1,16 +1,21 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.common.error.exception.ErrorCode;
 import com.dokidoki.auction.common.error.exception.InvalidValueException;
 import com.dokidoki.auction.domain.entity.*;
 import com.dokidoki.auction.domain.repository.*;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.*;
+import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
+import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +32,7 @@ public class AuctionService {
     private final ImageService imageService;
     private final CommentService commentService;
     private final LeaderboardService leaderboardService;
+    private final KafkaAuctionProducer producer;
 
     // 카테고리 목록 조회
     @Transactional
@@ -124,42 +130,53 @@ public class AuctionService {
     }
 
     @Transactional
-    public String createAuction(AuctionRegisterReq auctionRegisterReq, Long sellerId) {
-        Optional<ProductEntity> productO = productRepository.findById(auctionRegisterReq.getProduct_id());
+    public void createAuction(AuctionRegisterReq req, Long sellerId) {
+        if (sellerId == null) {
+            throw new InvalidValueException("토큰이 유효하지 않습니다.", ErrorCode.INVALID_INPUT_USER);
+        }
+        
+        // 제품 정보 가져오기
+        Optional<ProductEntity> productO = productRepository.findById(req.getProduct_id());
 
         if (productO.isEmpty()) {
-            return "제품에 대한 정보가 존재하지 않습니다.";
+            throw new InvalidValueException("제품에 대한 정보가 존재하지 않습니다.", ErrorCode.BUSINESS_EXCEPTION_ERROR);
         }
 
         // 요청자 객체 획득
         MemberEntity requestMemberEntity = memberRepository.findById(sellerId).orElse(null);
         if (requestMemberEntity == null)
-            return null;
+            throw new InvalidValueException("유저 정보가 존재하지 않습니다. 유효하지 않은 접근입니다.");
 
         ProductEntity productEntity = productO.get();
 
         AuctionIngEntity auctionIngEntity = AuctionIngEntity.builder()
                 .seller(requestMemberEntity)
                 .productEntity(productEntity)
-                .title(auctionRegisterReq.getTitle())
-                .description(auctionRegisterReq.getDescription())
-                .offerPrice(auctionRegisterReq.getOffer_price())
-                .priceSize(auctionRegisterReq.getPrice_size())
-                .endAt(auctionRegisterReq.getEnd_at())
-                .meetingPlace(auctionRegisterReq.getMeeting_place())
+                .title(req.getTitle())
+                .description(req.getDescription())
+                .offerPrice(req.getOffer_price())
+                .priceSize(req.getPrice_size())
+                .endAt(req.getEnd_at())
+                .meetingPlace(req.getMeeting_place())
                 .build();
-
-        auctionIngRepository.save(auctionIngEntity);
+        
+        // 경매 등록하기
+        long auctionId = auctionIngRepository.save(auctionIngEntity).getId();
 
         // 이미지 등록
-        if (auctionRegisterReq.getFiles() != null && auctionRegisterReq.getFiles().length > 0) {
+        if (req.getFiles() != null && req.getFiles().length > 0) {
             imageService.createAuctionImages(
                     auctionIngEntity.getId(),
-                    auctionRegisterReq.getFiles()
+                    req.getFiles()
             );
         }
 
-        return "경매 게시글이 작성되었습니다.";
+        Duration duration = Duration.between(LocalDateTime.now(), req.getEnd_at());
+
+        long ttl = duration.toMinutes();
+
+        // 성공적으로 등록되면 카프카에 auction.register 메시지 발행.
+        producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(req, auctionId, ttl));
     }
 
     @Transactional
