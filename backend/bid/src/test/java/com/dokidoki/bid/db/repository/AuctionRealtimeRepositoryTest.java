@@ -102,17 +102,17 @@ class AuctionRealtimeRepositoryTest {
         }
 
         @Test
-        @DisplayName("TTL을 설정하면 그 이후 삭제되고")
+        @DisplayName("TTL 을 설정하면 그 이후 삭제되고")
         public void 실시간_경매_TTL() throws InterruptedException {
             // given
-            int ttl = 5;
+            int ttl = 3;
             auctionRealtimeRepository.save(auctionRealtime, ttl, TimeUnit.SECONDS);
             
             // when & then
             // 바로 확인하면 존재하지만
             assert(auctionRealtimeRepository.findById(auctionId).isPresent());
 
-            Thread.sleep(ttl * 1000);
+            Thread.sleep((ttl + 2) * 1000);
 
             assert(auctionRealtimeRepository.findById(auctionId).isEmpty());
 

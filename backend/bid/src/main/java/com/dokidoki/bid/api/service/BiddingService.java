@@ -16,6 +16,7 @@ import com.dokidoki.bid.db.entity.AuctionIngEntity;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 import com.dokidoki.bid.db.repository.AuctionIngRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
+import com.dokidoki.bid.kafka.dto.KafkaAuctionRegisterDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -39,8 +41,17 @@ public class BiddingService {
     private final AuctionRealtimeRepository auctionRealtimeRepository;
     private final RedissonClient redisson;
 
-    // TODO - 게시글을 등록하면서 시작 가격과 경매 단위가 레디스로 넘어오는 과정이 필요
-    //  TTL 설정도 해줘야.
+
+    // TODO - 적당히 재조정 해야됨
+    /**
+     * 게시글 등록 시 Redis 에 실시간 정보를 저장하는 메서드.
+     * Kafka 를 통해 받아옴
+     * @param dto
+     */
+    public void registerAuctionInfo(KafkaAuctionRegisterDTO dto) {
+        AuctionRealtime auctionRealtime = AuctionRealtime.from(dto);
+        auctionRealtimeRepository.save(auctionRealtime, dto.getTtl(), TimeUnit.HOURS);
+    }
 
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
 
