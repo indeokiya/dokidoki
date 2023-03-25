@@ -6,33 +6,29 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @ToString
 public class KafkaAuctionRegisterDTO {
 
-    private long productId;
+    private long auctionId;
 
     private int offerPrice;             // 시작 가격(호가)
 
     private int priceSize;              // 경매 단위
 
-    private int highestPrice;
+    private long ttl;
 
     public KafkaAuctionRegisterDTO() {}
 
-    @Builder
-    public KafkaAuctionRegisterDTO(long productId, int offerPrice, int priceSize, int highestPrice) {
-        this.productId = productId;
-        this.offerPrice = offerPrice;
-        this.priceSize = priceSize;
-        this.highestPrice = highestPrice;
-    }
 
-    public KafkaAuctionRegisterDTO(AuctionRegisterReq auction) {
-        this.productId = auction.getProduct_id();
+
+    public KafkaAuctionRegisterDTO(AuctionRegisterReq auction, long auctionId, long ttl) {
+        this.ttl = ttl;
         this.offerPrice = auction.getOffer_price();
         this.priceSize = auction.getPrice_size();
-        this.highestPrice = this.offerPrice;
+        this.auctionId = auctionId;
     }
 }
