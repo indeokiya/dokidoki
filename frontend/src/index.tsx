@@ -10,11 +10,12 @@ import ProfilePage from './routes/MyPage';
 import LoginPage from './routes/LoginPage';
 import RegisterPage from './routes/RegisterPage';
 import ProductPage from './routes/ProductPage';
-import IngContentItem from './components/mypage/ing_contents/IngContentItem';
-import EndContentItem from './components/mypage/end_contents/EndContentItem';
 import IngContentItemList from './components/mypage/ing_contents/IngContentItemList';
 import EndContentItemList from './components/mypage/end_contents/EndContentItemList';
 import AlertItemList from './components/mypage/alert_contents/AlertItemList';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
   {
@@ -84,7 +85,9 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   // <React.StrictMode>
-  <RouterProvider router={router}></RouterProvider>,
+  <QueryClientProvider client={queryClient}>
+    <RouterProvider router={router}></RouterProvider>,
+  </QueryClientProvider>
   // </React.StrictMode>
 );
 

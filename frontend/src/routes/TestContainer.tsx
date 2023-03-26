@@ -3,43 +3,59 @@ import Grid from '@mui/material/Grid';
 import axios from 'axios';
 import { Button } from '@mui/material';
 import DaumPostcode from 'react-daum-postcode';
+import { useQuery } from '@tanstack/react-query';
+import { auctionAPI } from '../api/axios';
+
+type Post = {
+  auction_id: number;
+  auction_title: string;
+  product_name: string;
+  category_name: string;
+  meeting_place: string;
+  offer_price: number;
+  cur_price: string | null;
+  remain_hours: number;
+  remain_minute: number;
+  remain_seconds: number;
+  is_my_interest: boolean;
+  is_my_auction: boolean;
+  auction_image_urls: string[];
+};
 
 const TestContainer = () => {
-  const [address, setAddress] = useState('');
-  const [visible, setVisible] = useState(false); // 우편번호 컴포넌트의 노출여부 상태
+  let { data, isLoading } = useQuery<Post[]>(['auctionsList'], () => {
+    return auctionAPI.get('/lists/in-progress').then(({ data }) => {
+      console.log("data:",data.data); //data
+      console.log("data.content:",data.content); //data
+      return data.data.contents;
+    });
+  });
 
-  const handleComplete = (data: any) => {
-    let fullAddress = data.address;
-    let extraAddress = '';
-
-    if (data.addressType === 'R') {
-      if (data.bname !== '') {
-        extraAddress += data.bname;
-      }
-      if (data.buildingName !== '') {
-        extraAddress += extraAddress !== '' ? `,${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
-    }
-    setAddress(fullAddress);
-  };
+  function printData(data: Post[]) {
+    return;
+  }
 
   return (
     <>
-      <Button
-        onClick={() => {
-          setVisible(true);
-        }}
-      >
-        열기
-      </Button>
-      {address}
-      {visible && (
-        <div>
-          <Button onClick={() => setVisible(false)}>닫기</Button>
-          <DaumPostcode onComplete={handleComplete} />
-        </div>
-      )}
+      <Grid container>
+        {!isLoading ? (
+          <Grid xs>
+            {data !== null ? (
+              <div>
+                {data?.map((res, i) => (
+                  <li key={i}>{res.auction_title}</li>
+                ))}
+              </div>
+            ) : (
+              <div>없지롱~</div>
+            )}
+          </Grid>
+        ) : (
+          <Grid>
+            <p>로딩중</p>
+          </Grid>
+        )}
+      </Grid>
     </>
   );
 };
