@@ -1,5 +1,6 @@
 package com.dokidoki.bid.db.repository;
 
+import com.dokidoki.bid.api.service.AlertService;
 import com.dokidoki.bid.common.annotation.RTransactional;
 import com.dokidoki.bid.common.codes.RealTimeConstants;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
@@ -20,8 +21,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
+public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository {
 
+    private final AlertService alertService;
     private final RedissonClient redisson;
     private String key = RealTimeConstants.key;
     private RMapCache<Long, AuctionRealtime> map;
@@ -71,12 +73,20 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
         EntryExpiredListener<Long, AuctionRealtime> expiredListener = new EntryExpiredListener<Long, AuctionRealtime>() {
             @Override
             public void onExpired(EntryEvent<Long, AuctionRealtime> event) {
-                Long key = event.getKey();
-                AuctionRealtime value = event.getValue();
-                log.info("auctionInfo expired. key: {}, value: {}", key, value);
+                long auctionId = event.getKey();
+                AuctionRealtime auctionRealtime = event.getValue();
+                log.info("auctionInfo expired. auctionId: {}, auctionRealtime: {}", auctionId, auctionRealtime);
 
-                // 1. TODO - 기간이 끝나면 Kafka 에 메시지 써서 (1) auction 서버 (2) 알림 메서드 에 알리기
+                // 1. TODO - 기간이 끝나면 Kafka 에 메시지 써서  (1) 알림 메서드 (2) auction 서버 에 알리기
+
+                // 1 - [1]
+                alertService.auctionSuccess(auctionRealtime);
+                alertService.auctionFail(auctionRealtime);
+                alertService.auctionComplete(auctionRealtime);
                 
+                // 1 - [2] kafka 를 통해 auction 서버로 전달 ?
+                
+
                 // auction 서버에는 리더보드 정보도 넘겨야 함 (안 넘긴다면 지울 필요는 없을 듯)
 
                 // 2. 리더보드 정보 지우기

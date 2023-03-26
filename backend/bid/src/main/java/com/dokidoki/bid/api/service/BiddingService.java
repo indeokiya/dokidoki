@@ -37,12 +37,10 @@ import java.util.concurrent.TimeUnit;
 @Transactional(readOnly = true)
 public class BiddingService {
 
-    private final AuctionIngRepository auctionIngRepository;
     private final AuctionRealtimeRepository auctionRealtimeRepository;
     private final RedissonClient redisson;
 
 
-    // TODO - 적당히 재조정 해야됨
     /**
      * 게시글 등록 시 Redis 에 실시간 정보를 저장하는 메서드.
      * Kafka 를 통해 받아옴
@@ -51,6 +49,9 @@ public class BiddingService {
     public void registerAuctionInfo(KafkaAuctionRegisterDTO dto) {
         AuctionRealtime auctionRealtime = AuctionRealtime.from(dto);
         auctionRealtimeRepository.save(auctionRealtime, dto.getTtl(), TimeUnit.MINUTES);
+        // 경매 실패 알림을 위한 경매 id - member id set 이 필요함
+        
+        // TODO - auctionId 별로 입찰한 사람마다 입찰했던 최고 가격 관리하기
     }
 
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
@@ -187,7 +188,6 @@ public class BiddingService {
      */
     @RealTimeLock
     public void updatePriceSize(long auctionId, AuctionUpdatePriceSizeReq req, long memberId) {
-        // TODO - 분산 락 처리 과정 필요
         log.info("req: {}", req);
         Optional<AuctionRealtime> auctionRealTimeO = auctionRealtimeRepository.findById(auctionId);
 
@@ -198,17 +198,13 @@ public class BiddingService {
         log.info("auctionRealTime: {}", auctionRealTimeO.get());
 
         // 2. 해당 경매를 올린 사용자가 아니면 에러 내기
-        Optional<AuctionIngEntity> auctionIngO = auctionIngRepository.findBySellerIdAndId(memberId, auctionId, AuctionIngEntity.class);
-
-        if (auctionIngO.isEmpty()) {
+        if (auctionRealTimeO.get().getSellerId() != memberId) {
             throw new BusinessException("권한이 없습니다.", ErrorCode.BUSINESS_EXCEPTION_ERROR);
         }
 
         // 3. 가격 수정하기
-
         auctionRealTimeO.get().updatePriceSize(req.getPriceSize());
 
-        // 수정사항 저장하기 (JPA 는 dirty check 가 되는데, redis 는 안되는 듯)
         auctionRealtimeRepository.save(auctionRealTimeO.get());
         
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
