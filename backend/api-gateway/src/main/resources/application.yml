@@ -31,6 +31,14 @@ spring:
           - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
           #- JwtAuthenticationFilter
 
+      - id: notice-server
+        uri: http://notice-server:8084
+        predicates:
+          - Path=/api/notices/**
+        filters:
+          - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
+          #- JwtAuthenticationFilter
+
       - id: user-server
         uri: http://user-server:8083
         predicates:
