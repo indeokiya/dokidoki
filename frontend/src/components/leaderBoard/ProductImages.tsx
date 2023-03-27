@@ -6,9 +6,13 @@ import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
 import { useState } from 'react';
 
-const ProductImages = () => {
+type Props = {
+  images: any[];
+}
+
+const ProductImages = ({images} : Props) => {
   const [index, setIndex] = useState(0);
-  let images = [imgSrc1, imgSrc2, imgSrc3, imgSrc4, imgSrc3];
+  // let images = [imgSrc1, imgSrc2, imgSrc3, imgSrc4, imgSrc3];
 
   const StyledImg = styled.img`
     cursor: pointer;
