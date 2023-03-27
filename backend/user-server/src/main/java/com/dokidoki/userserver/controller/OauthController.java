@@ -66,7 +66,7 @@ public class OauthController {
         GoogleUserInfo info = oauthService.getUserInfoGoogle(code);
 
         // 회원이 존재하면 반환, 아니면 가입 후 반환
-        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.GOOGLE).get();
+        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.GOOGLE).orElse(null);
 
         if(user == null){
                 user = userService.saveUser(
@@ -89,7 +89,7 @@ public class OauthController {
         KakaoUserInfo info = oauthService.getUserInfoKakao(code);
 
         // 회원이 존재하면 반환, 아니면 가입 후 반환
-        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.KAKAO).get();
+        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.KAKAO).orElse(null);
 
         if(user == null){
             user = userService.saveUser(
