@@ -40,33 +40,33 @@ public class ProducerConfig {
 //        return new KafkaTemplate<>(producerFactory());
 //    }
 
-    public ProducerFactory<String, KafkaAuctionEndDTO> AuctionEndProducerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        props.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(JsonSerializer.TYPE_MAPPINGS,
-                "auction-end:com.dokidoki.bid.kafka.dto.KafkaAuctionEndDTO");
-        return new DefaultKafkaProducerFactory<>(props);
-    }
+//    public ProducerFactory<String, KafkaAuctionEndDTO> AuctionEndProducerFactory() {
+//        Map<String, Object> props = new HashMap<>();
+//        props.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+//        props.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        props.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//        props.put(JsonSerializer.TYPE_MAPPINGS,
+//                "auction-end:com.dokidoki.notice.kafka.dto.KafkaAuctionEndDTO");
+//        return new DefaultKafkaProducerFactory<>(props);
+//    }
+//
+//    public ProducerFactory<String, KafkaBidDTO> BidProducerFactory() {
+//        Map<String, Object> props = new HashMap<>();
+//        props.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+//        props.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
+//        props.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+//        props.put(JsonSerializer.TYPE_MAPPINGS,
+//                "bid:com.dokidoki.bid.kafka.dto.KafkaBidDTO");
+//        return new DefaultKafkaProducerFactory<>(props);
+//    }
 
-    public ProducerFactory<String, KafkaBidDTO> BidProducerFactory() {
-        Map<String, Object> props = new HashMap<>();
-        props.put(org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
-        props.put(org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-        props.put(JsonSerializer.TYPE_MAPPINGS,
-                "bid:com.dokidoki.bid.kafka.dto.KafkaBidDTO");
-        return new DefaultKafkaProducerFactory<>(props);
-    }
-
-    @Bean
-    public KafkaTemplate<String, KafkaAuctionEndDTO> AuctionEndKafkaTemplate() {
-        return new KafkaTemplate<>(AuctionEndProducerFactory());
-    }
-
-    @Bean
-    public KafkaTemplate<String, KafkaBidDTO> BidKafkaTemplate() {
-        return new KafkaTemplate<>(BidProducerFactory());
-    }
+//    @Bean
+//    public KafkaTemplate<String, KafkaAuctionEndDTO> AuctionEndKafkaTemplate() {
+//        return new KafkaTemplate<>(AuctionEndProducerFactory());
+//    }
+//
+//    @Bean
+//    public KafkaTemplate<String, KafkaBidDTO> BidKafkaTemplate() {
+//        return new KafkaTemplate<>(BidProducerFactory());
+//    }
 }
