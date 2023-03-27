@@ -80,6 +80,18 @@ services:
     networks:
       - dokidoki_net
 
+  notice-server:
+    container_name: notice-server
+    build:
+      context: ./backend/notice
+      dockerfile: dockerfile
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_USERNAME: dokidoki
+      SPRING_DATASOURCE_PASSWORD: dokidoki202
+    restart: always
+    networks:
+      - dokidoki_net
   
 networks:
   dokidoki_net:
