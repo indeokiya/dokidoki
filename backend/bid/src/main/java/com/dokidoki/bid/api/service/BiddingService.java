@@ -111,15 +111,14 @@ public class BiddingService {
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
 
         LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
-        
 
         // TODO - 4. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
         //  MySQL 도 구독해놓고, 최고가 정보를 받아야 함
         producer.sendBid(new KafkaBidDTO().builder()
                 .memberId(memberId)
                 .auctionId(auctionId)
-                .name()
-                .highestPrice(req.)
+                .name(req.getName())
+                .highestPrice(req.getCurrentHighestPrice() + req.getCurrentPriceSize())
                 .bidTime(resp.getBidTime())
                 .build());
     }
