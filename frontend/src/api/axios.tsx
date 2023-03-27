@@ -32,7 +32,7 @@ function addRequestIntercepter(axiosApi : any){
   axiosApi.interceptors.request.use(
     (config:any) => {
         // 세션 스토리지에서 Access Token 가져오기, 없다면 Undefined
-        let accessToken =sessionStorage.getItem("access_token");
+        let accessToken = localStorage.getItem("access_token");
 
         // Authorization 헤더에 토큰 추가 및 credential 설정
         if (accessToken) {
