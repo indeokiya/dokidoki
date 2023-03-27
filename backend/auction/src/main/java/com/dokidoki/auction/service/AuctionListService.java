@@ -153,7 +153,7 @@ public class AuctionListService {
             ImageInterface imageInterface = imageInterfaces.get(imageIdx);
 
             // Auction Id가 다르면 사진이 없는 경매이므로 이미지 URL로 null 전달
-            if (imageInterface.getAuction_id().equals(simpleAuctionIngInterface.getAuction_id())) {
+            if (!imageInterface.getAuction_id().equals(simpleAuctionIngInterface.getAuction_id())) {
                 // Response DTO 담기
                 simpleAuctionIngInfos.add(
                         new SimpleAuctionIngInfo(
@@ -173,6 +173,7 @@ public class AuctionListService {
                                 salesOfUser
                         )
                 );
+                imageIdx++;  // 다음 이미지로 넘어가기
             }
         }
 
