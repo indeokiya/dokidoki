@@ -30,6 +30,9 @@ const TokenRedirectPage = () => {
             localStorage.setItem('user_info', user_info);
         }
         else console.log('리프레시 토큰 안들어감');
+
+        
+
         navigate('/',{replace:true})
     }, []);
 
