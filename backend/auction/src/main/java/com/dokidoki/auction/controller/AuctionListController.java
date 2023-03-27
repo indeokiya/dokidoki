@@ -43,18 +43,30 @@ public class AuctionListController {
      */
     @GetMapping("/in-progress")
     public ResponseEntity<BaseResponseBody> readSimpleAuctionIng(
+            @RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "0") Long category_id,
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
             HttpServletRequest request) {
         // 토큰 member id 확인
         Long memberId = jwtUtil.getUserId(request);
 
         // 데이터 조회
-        PaginationResponse paginationResponse = auctionListService
-                .readSimpleAuctionIng(memberId, PageRequest.of(page, size));
+        PaginationResponse paginationResponse;
+        String msg = "";
+
+        // 검색어, 카테고리 모두 비어있다면 전체 검색
+        if (keyword.equals("") && category_id == 0) {
+            paginationResponse = auctionListService
+                    .readSimpleAuctionIng(memberId, PageRequest.of(page, size));
+            msg = "진행중인 경매 목록 조회 성공";
+        } else {
+            paginationResponse = auctionListService
+                    .searchSimpleAuctionIng(memberId, keyword, category_id, PageRequest.of(page, size));
+            msg = "진행중인 경매 목록 검색 성공";
+        }
 
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("진행중인 경매 목록 조회 성공", paginationResponse));
+                .body(BaseResponseBody.of(msg, paginationResponse));
     }
 
     /*
@@ -74,24 +86,5 @@ public class AuctionListController {
             return ResponseEntity
                     .status(200)
                     .body(BaseResponseBody.of("마감임박 경매 목록 조회 성공", paginationResponse));
-    }
-
-    /*
-    메인 페이지 : 키워드 및 카테고리 검색
-     */
-    @GetMapping("/search")
-    public ResponseEntity<BaseResponseBody> searchSimpleAuctionIng(
-            @RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "0") Long category_id,
-            @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
-            HttpServletRequest request) {
-        // 토큰 member id 확인
-        Long memberId = jwtUtil.getUserId(request);
-
-        PaginationResponse paginationResponse = auctionListService
-                .searchSimpleAuctionIng(memberId, keyword, category_id, PageRequest.of(page, size));
-
-        return ResponseEntity
-                .status(200)
-                .body(BaseResponseBody.of("경매 목록 검색 성공", paginationResponse));
     }
 }
