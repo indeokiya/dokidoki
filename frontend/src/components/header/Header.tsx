@@ -1,13 +1,20 @@
 import { Grid } from '@mui/material';
 import AfterLoginMenu from './AfterloginMenu';
 import BeforLoginMenu from './BeforLoginMenu';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import LogoImgSrc from '../../assets/image/logo.png';
 import { Link } from 'react-router-dom';
 
 const Header = () => {
-  const [isLogin, setIsLogin] = useState(true);
+
+  const [isLogin, setIsLogin] = useState(
+    false
+  );
+
+  useEffect(()=>{
+    if(window.localStorage.getItem("user_info")) setIsLogin(true);
+  },[isLogin])
 
   const HeaderBox = styled.div`
     padding-right: 1rem;
