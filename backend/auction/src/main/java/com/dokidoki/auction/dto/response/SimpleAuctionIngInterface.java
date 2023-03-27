@@ -13,4 +13,5 @@ public interface SimpleAuctionIngInterface {
     Integer getCur_price();
     String getMeeting_place();
     Long getSeller_id();
+    Integer getPrice_size();
 }

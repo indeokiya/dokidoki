@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface AuctionImageRepository extends JpaRepository<AuctionImageEntity, Long> {
     List<AuctionImageEntity> findAuctionImagesByAuctionId(Long auctionId);
+    AuctionImageEntity findTopByAuctionIdOrderByAuctionIdAsc(Long auctionId);
 
     @Modifying
     @Query("delete from AuctionImageEntity a where a.auctionId=:auction_id")
