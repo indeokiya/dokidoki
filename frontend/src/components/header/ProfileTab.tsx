@@ -11,16 +11,6 @@ const Profile = () => {
     },
   ];
 
-  //커스텀 메뉴
-  const ProfileDiv = styled.div`
-    width: 150px;
-    padding: 5px;
-  `;
-
-  const Demo = styled('div')(({ theme }) => ({
-    backgroundColor: theme.palette.background.paper,
-  }));
-
   return (
     <ProfileDiv>
       <Demo>
@@ -43,3 +33,13 @@ const Profile = () => {
 };
 
 export default Profile;
+
+  //커스텀 메뉴
+  const ProfileDiv = styled.div`
+    width: 150px;
+    padding: 5px;
+  `;
+
+  const Demo = styled('div')(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+  }));

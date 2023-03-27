@@ -15,6 +15,8 @@ import com.dokidoki.bid.db.repository.AuctionRealtimeLeaderBoardRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeMemberRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import com.dokidoki.bid.kafka.dto.KafkaAuctionRegisterDTO;
+import com.dokidoki.bid.kafka.dto.KafkaBidDTO;
+import com.dokidoki.bid.kafka.service.KafkaBidProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.client.protocol.ScoredEntry;
@@ -36,6 +38,7 @@ public class BiddingService {
     private final AuctionRealtimeRepository auctionRealtimeRepository;
     private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
     private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
+    private final KafkaBidProducer producer;
 
     /**
      * 게시글 등록 시 Redis 에 실시간 정보를 저장하는 메서드.
@@ -112,7 +115,13 @@ public class BiddingService {
 
         // TODO - 4. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
         //  MySQL 도 구독해놓고, 최고가 정보를 받아야 함
-
+        producer.sendBid(new KafkaBidDTO().builder()
+                .memberId(memberId)
+                .auctionId(auctionId)
+                .name()
+                .highestPrice(req.)
+                .bidTime(resp.getBidTime())
+                .build());
     }
 
     /**

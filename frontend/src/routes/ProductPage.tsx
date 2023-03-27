@@ -33,7 +33,7 @@ const ProductPage = () => {
   console.log("total data >> ", data)  
   const {
     auction_image_urls,
-    auciton_title,
+    auction_title,
     category_name,
     comments,
     description,
@@ -72,6 +72,7 @@ const ProductPage = () => {
             <Grid item xs={4}>
               {/* 제품 정보 */}
               <ProductInfo 
+                auction_title={auction_title}
                 auction_id={id}
                 category={category_name}
                 offer_price={offer_price}

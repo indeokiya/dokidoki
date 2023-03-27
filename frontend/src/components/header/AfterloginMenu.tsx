@@ -2,9 +2,13 @@ import { Grid, Button, Avatar, Badge, Menu, MenuItem } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { userInfoState } from 'src/store/userInfoState';
+import { useRecoilValue, useResetRecoilState } from 'recoil';
 
 const AfterLoginMenu = () => {
   const navigate = useNavigate();
+  const userInfo = useRecoilValue(userInfoState);
+  const resetUserInfo = useResetRecoilState(userInfoState);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -19,40 +23,11 @@ const AfterLoginMenu = () => {
     navigate("/");
   };
 
-  const StyledBadge = styled(Badge)(({ theme }) => ({
-    '& .MuiBadge-badge': {
-      backgroundColor: '#44b700',
-      color: '#44b700',
-      boxShadow: `0 0 0 2px `,
-      '&::after': {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        borderRadius: '50%',
-        animation: 'ripple 1.2s infinite ease-in-out',
-        border: '1px solid currentColor',
-        content: '""',
-      },
-    },
-    '@keyframes ripple': {
-      '0%': {
-        transform: 'scale(.8)',
-        opacity: 1,
-      },
-      '100%': {
-        transform: 'scale(2.4)',
-        opacity: 0,
-      },
-    },
-  }));
-
-  const user = window.localStorage.getItem("user_info");
-  let userInfo;
-  
-  if(user != null) {userInfo = JSON.parse(user);}
-  else {navigate("/");}
+  const logout = () => {
+    resetUserInfo();
+    alert("성공적으로 로그아웃 되었습니다.");
+    setAnchorEl(null);
+  }
 
   return (
     <Grid container alignItems={'center'} spacing={1}>
@@ -97,7 +72,7 @@ const AfterLoginMenu = () => {
           >
             Mypage
           </MenuItem>
-          <MenuItem onClick={handleClose}>Logout</MenuItem>
+          <MenuItem onClick={logout}>Logout</MenuItem>
         </Menu>
       </Grid>
     </Grid>
@@ -105,3 +80,32 @@ const AfterLoginMenu = () => {
 };
 
 export default AfterLoginMenu;
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: '#44b700',
+    color: '#44b700',
+    boxShadow: `0 0 0 2px `,
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: 'ripple 1.2s infinite ease-in-out',
+      border: '1px solid currentColor',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(2.4)',
+      opacity: 0,
+    },
+  },
+}));

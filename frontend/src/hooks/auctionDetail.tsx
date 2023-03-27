@@ -54,9 +54,10 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
   
   const isLoading = results[0].isLoading || results[1].isLoading;
   const isError = results[0].isError || results[1].isError;
-  const error: any = results[0].isError ? results[0].error : results[1].error
+  const error: any = results[1].isError ? results[1].error : results[0].error
   const data = results[0].data
   console.log("results[0].data >> ", results[0].data)
+  console.log("results[1] >> ", results[1])
   if (!isLoading) {
     const data = {...results[0].data!.data!.data, ...results[1].data!.data!.data};
     // console.warn("재휘 >> ", results[0].data!.data!.data);
