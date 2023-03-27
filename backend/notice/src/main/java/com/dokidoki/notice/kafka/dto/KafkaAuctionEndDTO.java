@@ -1,4 +1,4 @@
-package com.dokidoki.bid.kafka.dto;
+package com.dokidoki.notice.kafka.dto;
 
 
 import lombok.Builder;
@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @ToString
 public class KafkaAuctionEndDTO {
-    // TODO 모든 정보를 다 담는게 맞는지, 아님 auctionRealtime 정보만 넘기고 저기서 처리하게 하는게 맞는건지..
+
     private long auctionId;
     private long sellerId;
     private long buyerId;

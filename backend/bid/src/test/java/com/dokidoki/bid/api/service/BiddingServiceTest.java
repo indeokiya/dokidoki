@@ -228,6 +228,8 @@ class BiddingServiceTest {
                     biddingService.bid(auctionId, req, memberIds[0]);
                 }
                 Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderboardInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
+                System.out.println(auctionRealtimeLeaderBoardRepository.getWinner(auctionId));
+                System.out.println(biddingService.getInitialInfo(auctionId));
                 assertEquals(limit, leaderboardInfos.size());
 
             }
@@ -254,7 +256,7 @@ class BiddingServiceTest {
             @Test
             @DisplayName("없는 경매면 에러를 낸다.")
             public void 입찰단위_수정_실패_없는대상() {
-                assertThrows(InvalidValueException.class, ()-> biddingService.updatePriceSize(auctionId + 20, req, sellerId));
+                assertThrows(InvalidValueException.class, () -> biddingService.updatePriceSize(auctionId + 20, req, sellerId));
             }
 
             @Test
