@@ -4,14 +4,12 @@ import googleLoginImgSrc from '../assets/icon/login/google_login.png';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import loginBackgroundImgSrc from '../assets/icon/login/login_background.png';
-import Paper from '@mui/material/Paper';
+import {userAPI} from "../api/axios";
 
 const LoginPage = () => {
   const OutterDiv = styled.div`
     border-radius: 10px;
     width: 20%;
-    margin: 5% auto;
-
     color: white;
     background-image: url(${loginBackgroundImgSrc});
     border: 1px solid silver;
@@ -33,8 +31,23 @@ const LoginPage = () => {
     box-sizing: border-box;
     padding: 40px 30px;
   `;
+
   const kakaoLoginHandler = () => {
-    console.log('카카오 로그인 입장');
+    console.log(process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/kakao");
+    userAPI.get(
+      process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/kakao"
+    ).then(({data})=>{
+      window.location.replace(data.url);
+    })
+  };
+
+  const googleLoginHandler = () => {
+    console.log(process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/google");
+    userAPI.get(
+      process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/google"
+    ).then(({data})=>{
+      window.location.replace(data.url);
+    })
   };
 
   return (
@@ -55,7 +68,7 @@ const LoginPage = () => {
           </Button>
           <br />
           <Button>
-            <img src={googleLoginImgSrc} alt="구글 로그인" width="255px" />
+            <img src={googleLoginImgSrc} alt="구글 로그인" width="255px" onClick={googleLoginHandler}/>
           </Button>
         </InnerDivBottom>
       </OutterDiv>
