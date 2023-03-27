@@ -29,10 +29,11 @@ public class LeaderBoardMemberResp {
         // 개인정보 가리기
         String name = info.getName();
         String modifiedName;
-        if (name.length() >= 2) {
-            modifiedName = name.substring(0, 1) + "*" + name.substring(2);
-        } else {
+        if (name == null || name.length() < 2) {
             modifiedName = name;
+        } else {
+            modifiedName = name.substring(0, 1) + "*" + name.substring(2);
+
         }
 
         String modifiedEmail = getModifiedEmail(info.getEmail());
@@ -45,6 +46,9 @@ public class LeaderBoardMemberResp {
     }
 
     public static String getModifiedEmail(String email) {
+        if (email == null || email.equals("")) {
+            return email;
+        }
         StringBuilder sb = new StringBuilder();
         int indexOfAt = email.indexOf('@');
         sb.append(email.substring(0, 2));
