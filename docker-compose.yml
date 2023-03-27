@@ -25,6 +25,8 @@ services:
     networks:
       - dokidoki_net
     restart: always
+    ports:
+      - 3306:3306
 
   api-gateway-server:
     container_name: api-gateway-server
@@ -48,9 +50,6 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
-      SPRING_REDIS_HOST: database_redis
-      SPRING_REDIS_PORT: 6379
-      SPRING_REDIS_PASSWORD: qhBb3Ht7Psvz54PCjlAw
     restart: always
     networks:
       - dokidoki_net
