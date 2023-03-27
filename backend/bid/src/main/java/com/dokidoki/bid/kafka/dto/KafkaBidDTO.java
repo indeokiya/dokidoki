@@ -20,7 +20,7 @@ public class KafkaBidDTO {
     public KafkaBidDTO() {}
 
     @Builder
-    public KafkaBidDTO(long memberId, long auctionId, String name, String email, int highestPrice, LocalDateTime bidTime) {
+    public KafkaBidDTO(long memberId, long auctionId, String name, int highestPrice, LocalDateTime bidTime) {
         this.memberId = memberId;
         this.auctionId = auctionId;
         this.name = name;

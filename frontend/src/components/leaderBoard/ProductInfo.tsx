@@ -47,10 +47,6 @@ const ProductInfo = ({auction_title, auction_id, category, offer_price, price_si
     axios.post(
       `auctions/${auction_id}/bid`,
       {current_highest_price: highest_price, current_price_size: price_size, name: userInfo.name },
-      // {headers : {
-      //   "authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2NzkyOTAwNTAsImV4cCI6MTY3OTI5MzY1MCwidXNlcl9pZCI6Mn0.ATBKCYsyg8jC-GxTT41Tbw3uknZ1PQ7JkC9g1AyGhLg", 
-      //   "withCredentials":"true",
-      // }}
     ).then(res => { // 성공 로직
       console.log(res);
       alert("()원에 입찰에 성공했습니다.")
