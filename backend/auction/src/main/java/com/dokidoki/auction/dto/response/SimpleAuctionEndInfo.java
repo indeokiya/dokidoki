@@ -21,13 +21,13 @@ public class SimpleAuctionEndInfo {
     private final LocalDateTime start_time;
     private final LocalDateTime end_time;
 
-    private List<String> auction_image_urls;
+    private String auction_image_url;
 
     private Boolean is_sold_out;
 
     public SimpleAuctionEndInfo(
             SimpleAuctionEndInterface simpleAuctionEndInterface,
-            List<String> auction_image_urls) {
+            String auction_image_url) {
         this.auction_id = simpleAuctionEndInterface.getAuction_id();
         this.auction_title = simpleAuctionEndInterface.getAuction_title();
         this.product_name = simpleAuctionEndInterface.getProduct_name();
@@ -37,7 +37,7 @@ public class SimpleAuctionEndInfo {
         this.start_time = simpleAuctionEndInterface.getStart_time();
         this.end_time = simpleAuctionEndInterface.getEnd_time();
 
-        this.auction_image_urls = auction_image_urls;
+        this.auction_image_url = auction_image_url;
         this.is_sold_out = simpleAuctionEndInterface.getBuyer_id() != null;
     }
 }
