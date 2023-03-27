@@ -33,7 +33,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -45,7 +45,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -63,7 +63,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offerPrice, a.highestPrice as cur_price, a.seller.id as seller_id " +
+            " , a.offerPrice as offerPrice, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -78,7 +78,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -92,7 +92,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -105,7 +105,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +
@@ -119,7 +119,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id " +
+            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
             "FROM AuctionIngEntity a " +
             " JOIN a.productEntity p " +
             " JOIN p.categoryEntity c " +

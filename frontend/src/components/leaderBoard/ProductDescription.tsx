@@ -1,7 +1,13 @@
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 
-const ProductDescription = () => {
+type Props = {
+  description: string,
+}
+
+// const marked = require('marked');
+
+const ProductDescription = ({ description }: Props) => {
   const StyledDiv = styled.div`
     padding: 10px;
     box-sizing: border-box;
@@ -9,7 +15,7 @@ const ProductDescription = () => {
   return (
     <StyledDiv>
       <Typography variant="h1" gutterBottom>
-        h1. Heading
+        {description}
       </Typography>
     </StyledDiv>
   );

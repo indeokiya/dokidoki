@@ -6,17 +6,8 @@ import Button from "@mui/material/Button";
 import { useState, useRef } from "react";
 import ProductInfoInput from "../components/resigter/ProductInfoInput";
 import ActionInfoInput from "../components/resigter/AuctionInfoInput";
-import { ProductionQuantityLimitsRounded } from "@mui/icons-material";
-import {auctionAPI, bidAPI} from "../api/axios"
-
-// AuctionRegisterReq {
-//   private String title;
-//   private String Description;
-//   private Integer offerPrice;
-//   private Integer priceSize;
-//   private LocalDateTime endAt;
-//   private String meetingPlace;
-// }
+import {auctionAPI } from "../api/axios"
+import { useNavigate } from "react-router-dom";
 
 export type AuctionRegisterType = {
   productId: number
@@ -24,16 +15,14 @@ export type AuctionRegisterType = {
   description: string
   offerPrice: number
   priceSize: number
-  endAt: Date,
+  endAt: Date
   meetingPlace: string
+  files: any[]
 }
 
 const RegisterPage = () => {
-  const StyledDiv = styled.div`
-    width: 100%;
-    height: 1000%;
-    background-color: gainsboro;
-  `;
+
+  const navigate = useNavigate();
 
   const dataRef = useRef({
     product_id: 1,
@@ -43,12 +32,11 @@ const RegisterPage = () => {
     price_size: -1,
     end_at: "",
     meeting_place: "",
+    files: [],
   })
 
-  const createAuctionurl = "new"; 
-
   const register = () => {
-    console.log("서버에 보낸 데이터 >> ",dataRef.current)
+    console.log("서버에 보낼 데이터 >> ",dataRef.current)
     const formData = new FormData();
     formData.set('product_id', String(dataRef.current.product_id));
     formData.set('title', dataRef.current.title);
@@ -57,10 +45,14 @@ const RegisterPage = () => {
     formData.set('price_size', String(dataRef.current.price_size));
     formData.set('end_at', dataRef.current.end_at);
     formData.set('meeting_place', dataRef.current.meeting_place);
+    for (let i=0; i<dataRef.current.files.length; i++) {
+      formData.append('files', dataRef.current.files[i]);
+    }
 
     // 카테고리를 통해 product_id 받아오는 로직도 어디선가 필요함. 일단 1로 박음
     const axios = auctionAPI;
-    axios.post(createAuctionurl, formData, {headers : {
+    axios
+      .post("new", formData, {headers : {
       "Content-Type":"multipart/form-data", 
       "authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2NzkyOTAwNTAsImV4cCI6MTY3OTI5MzY1MCwidXNlcl9pZCI6Mn0.ATBKCYsyg8jC-GxTT41Tbw3uknZ1PQ7JkC9g1AyGhLg", 
       "withCredentials":"true",
@@ -69,9 +61,10 @@ const RegisterPage = () => {
         alert("성공")
         console.log(res)
         // 성공하면 alert 알림 후 location.href , location.replace 또는 navigator로 이동 
+        navigate("/auction");
       })
       .catch(err => {
-        alert("실패")
+        alert("최대 10MB 까지 보낼 수 있습니다.")
         console.error(err);
       })
     
@@ -79,6 +72,7 @@ const RegisterPage = () => {
 
   const cancel = () => {
     // 뒤로가기 로직
+    navigate("/auction");
   }
 
   return (
@@ -124,3 +118,9 @@ const RegisterPage = () => {
 };
 
 export default RegisterPage;
+
+const StyledDiv = styled.div`
+width: 100%;
+height: 1000%;
+background-color: gainsboro;
+`;

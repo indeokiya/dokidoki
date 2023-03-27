@@ -47,6 +47,10 @@ public class ImageService {
 
         return new AuctionImageResponse(auction_id, auctionImageUrls);
     }
+    @Transactional(readOnly = true)
+    public AuctionImageEntity readAuctionImage(Long auctionId) {
+        return auctionImageRepository.findTopByAuctionIdOrderByAuctionIdAsc(auctionId);
+    }
 
     @Transactional
     public List<String> createAuctionImages(Long auctionId, MultipartFile[] files) {
