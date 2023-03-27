@@ -13,8 +13,6 @@ import org.redisson.api.map.event.EntryExpiredListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -23,14 +21,14 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository {
 
-    private final AlertService alertService;
-    private final RedissonClient redisson;
-    private String key = RealTimeConstants.key;
+    private AlertService alertService;
+    private String key = RealTimeConstants.mapKey;
     private RMapCache<Long, AuctionRealtime> map;
 
     @Autowired
-    public void setAuctionRealtimeRepositoryImpl() {
-        this.key = RealTimeConstants.key;
+    public void setAuctionRealtimeRepositoryImpl(RedissonClient redisson, AlertService alertService) {
+        this.key = RealTimeConstants.mapKey;
+        this.alertService = alertService;
         this.map = redisson.getMapCache(key);
         map.addListener(getExpiredListener());
 
@@ -85,7 +83,6 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
                 alertService.auctionComplete(auctionRealtime);
                 
                 // 1 - [2] kafka 를 통해 auction 서버로 전달 ?
-                
 
                 // auction 서버에는 리더보드 정보도 넘겨야 함 (안 넘긴다면 지울 필요는 없을 듯)
 
