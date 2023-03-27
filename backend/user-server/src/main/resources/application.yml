@@ -41,13 +41,13 @@ oauth2:
     token_uri: https://oauth2.googleapis.com/token
     profile_uri: https://www.googleapis.com/oauth2/v3/userinfo
     redirect_uri: https://j8a202.p.ssafy.io/api/users/oauth2/google/redirect
-    #redirect_uri: http://localhost:8080/oauth2/google/redirect
+    #redirect_uri: http://localhost:8083/oauth2/google/redirect
   kakao:
     # REST API 키
     client_id: 355cfcf503170ecfb98fae9e4aa9a4df
     client_secret: DrtbGue1SrkzOWMJPLVx9g2by9YlNIWk
     redirect_uri: https://j8a202.p.ssafy.io/api/users/oauth2/kakao/redirect
-    #redirect_uri: http://localhost:8080/oauth2/kakao/redirect
+    #redirect_uri: http://localhost:8083/oauth2/kakao/redirect
     token_uri: https://kauth.kakao.com/oauth/token
 
 jwt:
@@ -60,3 +60,4 @@ jwt:
 
 front:
   redirect_uri: https://j8a202.p.ssafy.io/redirect
+  #redirect_uri: http://localhost:3000/redirect

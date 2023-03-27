@@ -66,16 +66,18 @@ public class OauthController {
         GoogleUserInfo info = oauthService.getUserInfoGoogle(code);
 
         // 회원이 존재하면 반환, 아니면 가입 후 반환
-        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.GOOGLE).orElse(
-                userService.saveUser(
+        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.GOOGLE).get();
+
+        if(user == null){
+                user = userService.saveUser(
                         UserEntity.builder()
                                 .sub(info.getSub())
                                 .email(info.getEmail())
                                 .picture(info.getPicture())
                                 .name(info.getName())
                                 .providerType(ProviderType.GOOGLE)
-                                .build())
-        );
+                                .build());
+        }
         String accessToken = jwtProvider.getAccessToken(user.getId());
         String refreshToken = jwtProvider.getRefreshToken(user);
 
@@ -87,16 +89,18 @@ public class OauthController {
         KakaoUserInfo info = oauthService.getUserInfoKakao(code);
 
         // 회원이 존재하면 반환, 아니면 가입 후 반환
-        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.KAKAO).orElse(
-                userService.saveUser(
-                        UserEntity.builder()
-                                .sub(info.getSub())
-                                .email(info.getEmail())
-                                .picture(info.getPicture())
-                                .name(info.getNickname())
-                                .providerType(ProviderType.KAKAO)
-                                .build())
-        );
+        UserEntity user = userService.getUserFromSubAndProvider(info.getSub(), ProviderType.KAKAO).get();
+
+        if(user == null){
+            user = userService.saveUser(
+                    UserEntity.builder()
+                            .sub(info.getSub())
+                            .email(info.getEmail())
+                            .picture(info.getPicture())
+                            .name(info.getNickname())
+                            .providerType(ProviderType.KAKAO)
+                            .build());
+        }
         String accessToken = jwtProvider.getAccessToken(user.getId());
         String refreshToken = jwtProvider.getRefreshToken(user);
 
