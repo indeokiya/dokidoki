@@ -1,10 +1,10 @@
 import Grid from '@mui/material/Grid';
 import Content from './Content';
 import { auctionAPI } from '../../../api/axios';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { Post, endPost } from '../../../datatype/datatype';
-import { useState, useEffect } from 'react';
-import { KeyboardReturn } from '@mui/icons-material';
+import { useState, useEffect, useRef } from 'react';
+import {useInView} from "react-intersection-observer";
 
 //get 함수로 전체 경매 불러오기
 const getInProgress = (page: number, size: number) => {
@@ -32,7 +32,7 @@ const getEndList = (page: number, size: number) => {
     })
     .then(({ data }) => {
       console.log('경매가 끝난 물건 : ', data.data.contents);
-      return data.data.contens;
+      return data.data.contents;
     });
 };
 
@@ -73,57 +73,86 @@ const getSearchByKeyword = (category_id: number, keyword: string, page: number, 
 const ContentsList: React.FC<{ category: number; keyword: string }> = (props) => {
   let { category, keyword } = props;
 
+  const[ref ,inView] = useInView();
+
+
+
   //무한스크롤 구현을 위한 페이지
-  const [page, setPage] = useState(1);
-  const [size, setSize] = useState(10);
-  const [posts, setPosts] = useState<Post[] | undefined>([]);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(12);
 
-  let { data, isLoading, isError, error } = useQuery<Post[]>(
-    ['postList', category],
-    () => {
-      if (category == 0) {
-        return getInProgress(page, size);
-      } else if (category > 0 && category < 9) {
-        return getSearchByKeyword(category, keyword, page, size);
-      } else {
-        return getDeadline(page, size);
+  
+
+  const { fetchNextPage, isLoading, data, isError, isFetchingNextPage, hasNextPage } =
+    useInfiniteQuery<Post[]>(
+      ['infinity', category, keyword],
+      ({ pageParam = 0 }) => {
+        console.log('useInfinity 함수 동작하는 중~');
+
+        //조건에 따른 api 분기
+        if (category == 0){
+          return getInProgress(pageParam, size); // 여기서 분기할 수 있을 것 같음
+        }else if(category > 0 && category < 9){
+          return getSearchByKeyword(category, keyword, pageParam, size)
+        }else{
+          return getDeadline(pageParam, size)
+        }
+
+      },
+      {
+        getNextPageParam: (lastPage, allPages) => {
+          if (lastPage.length < size) {
+            return false;
+          } else {
+            return allPages.length; //여기서 return 되는 값이 pageParam에 삽입된다.
+          }
+        },
+      },
+    );
+
+    useEffect(()=>{
+      if(inView && !isFetchingNextPage){
+        fetchNextPage();
       }
-    },
-    {
-      retry: 0,
-      staleTime:1000*60,
-      refetchOnWindowFocus:false,
+    },[inView])
 
-    },
-  );
-
-  useEffect(() => {
-    setPosts(data);
-  }, []);
-
-  if (isLoading) return <h1>isLoading...</h1>
-  if (isError) return <h1>error</h1>
+  if (isLoading) return <h1>isLoading...</h1>;
+  if (isError) return <h1>error</h1>;
   // data is not undefined
 
-
-  console.log('category :', category, 'keyword : ', keyword);
   return (
     <div id="scroll">
       {/* 데이터가 있다면.. */}
-      {data ? (
+      {data.pages !== null ? (
         <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
-          {data?.map((data, i) => (
-            <Grid key={i} item xs={4} mb={4}>
-              <Content auctionData={data} />
-            </Grid>
-          ))}
+          {data.pages.map((data) =>
+            data.map((data, i) => (
+              <Grid key={i} item xs={4} mb={4}>
+                <Content auctionData={data} />
+              </Grid>
+            )),
+          )}
         </Grid>
-      ) : null}
+      ) : (
+        <h1>데이터가 없습니다.</h1>
+      )}
 
-      {/* 데이터가 없다면 */}
-      {posts === null && <div>데이터 없음 에러 </div>}
+
+        {/* 무한 스크롤 하단*/}
+      {hasNextPage ? (
+
+        isFetchingNextPage ? (
+          <div>로딩중~</div>
+        ) : (
+       	<div> 더보기 버튼 있던 곳</div>
+        )
+      ) : (
+        <div> 데이터가 없습니다.</div>
+      )}
+
+    <div ref={ref}></div>
     </div>
   );
-}
+};
 
 export default ContentsList;

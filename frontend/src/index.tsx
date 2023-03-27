@@ -10,12 +10,14 @@ import ProfilePage from './routes/MyPage';
 import LoginPage from './routes/LoginPage';
 import RegisterPage from './routes/RegisterPage';
 import ProductPage from './routes/ProductPage';
+import TokenRedirectPage from './routes/TokenRedirectPage';
 import IngContentItemList from './components/mypage/ing_contents/IngContentItemList';
 import EndContentItemList from './components/mypage/end_contents/EndContentItemList';
 import AlertItemList from './components/mypage/alert_contents/AlertItemList';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const queryClient = new QueryClient();
+
 
 const router = createBrowserRouter([
   {
@@ -34,6 +36,10 @@ const router = createBrowserRouter([
       {
         path: 'login',
         element: <LoginPage />,
+      },
+      {
+        path: 'redirect',
+        element: <TokenRedirectPage />,
       },
       {
         path: 'regist',

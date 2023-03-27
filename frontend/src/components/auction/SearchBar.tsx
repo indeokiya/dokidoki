@@ -6,22 +6,18 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useRef } from 'react';
 import styled from 'styled-components';
 
-const SearchBar:React.FC<{setKeyword:(data:string)=> void}> = (props) => {
-  const {setKeyword} = props;
+const SearchBar: React.FC<{ setKeyword: (data: string) => void }> = (props) => {
+  const { setKeyword } = props;
 
   const searchBarRef = useRef<any>();
 
   const SearchHandler = (event: any) => {
-    event.preventDefault();
+    event.preventDefault(); // 기본동작 중지
     let keyword = searchBarRef.current.value;
-    setKeyword(keyword)
+    setKeyword(keyword);
   };
 
-  const StyledForm = styled.form`
-    margin: 5% auto;
-    width: 80%;
-    text-align: center;
-  `;
+
 
   return (
     <>
@@ -29,6 +25,7 @@ const SearchBar:React.FC<{setKeyword:(data:string)=> void}> = (props) => {
         <FormControl fullWidth sx={{ m: 1 }}>
           <InputLabel htmlFor="outlined-adornment-amount">search</InputLabel>
           <OutlinedInput
+            
             inputRef={searchBarRef}
             id="outlined-adornment-amount"
             endAdornment={
@@ -45,3 +42,9 @@ const SearchBar:React.FC<{setKeyword:(data:string)=> void}> = (props) => {
 };
 
 export default SearchBar;
+
+const StyledForm = styled.form`
+  margin: 5% auto;
+  width: 80%;
+  text-align: center;
+`;

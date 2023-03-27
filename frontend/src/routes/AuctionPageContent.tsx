@@ -4,41 +4,21 @@ import SearchBar from '../components/auction/SearchBar';
 import ContentsList from '../components/auction/contents/ContentsList';
 import Grid from '@mui/material/Grid'; // Grid version 1
 import { Outlet, Link, useNavigate } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Tooltip from '@mui/material/Tooltip';
 
-const ActionPageContent = () => {
+const AuctionPageContent = () => {
 
   //query키로 사용할 키 값
   const[category, setCategory] = useState(0);
   const[keyword, setKeyword] = useState("");
 
+  useEffect(()=>{
+    console.log("auctionPageContent : category : ",category," keyword : ",keyword)
+  },[])
   const navigate = useNavigate();
 
-  const StyledIcon = styled.div`
-    position: fixed;
-    right: 5%;
-    top: 90%;
-    background-color: #3a77ee;
-    border-radius: 100px;
-    font-size: 50px;
-    color: white;
-    font-weight: bold;
-    width: 60px;
-    height: 60px;
-    text-align: center;
-    line-height: 50px;
-    cursor: pointer;
-    transition: all 0.3s;
-    &:hover {
-      top: 89.5%;
-      box-shadow: 1px 1rem 15px #dddddd;
-    }
-    &:active {
-      background-color: #4285f4;
-    }
-  `;
 
   return (
     <>
@@ -67,4 +47,30 @@ const ActionPageContent = () => {
   );
 };
 
-export default ActionPageContent;
+export default AuctionPageContent;
+
+
+
+const StyledIcon = styled.div`
+position: fixed;
+right: 5%;
+top: 90%;
+background-color: #3a77ee;
+border-radius: 100px;
+font-size: 50px;
+color: white;
+font-weight: bold;
+width: 60px;
+height: 60px;
+text-align: center;
+line-height: 50px;
+cursor: pointer;
+transition: all 0.3s;
+&:hover {
+  top: 89.5%;
+  box-shadow: 1px 1rem 15px #dddddd;
+}
+&:active {
+  background-color: #4285f4;
+}
+`;

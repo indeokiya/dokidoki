@@ -1,5 +1,4 @@
 import { Grid, Button, Avatar, Badge, Menu, MenuItem } from '@mui/material';
-import imgSrc from '../../../src/assets/image/profile.png';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,6 +13,10 @@ const AfterLoginMenu = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
+    localStorage.removeItem("user_info");
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("access_token");    
+    navigate("/");
   };
 
   const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -45,7 +48,12 @@ const AfterLoginMenu = () => {
     },
   }));
 
-  const loginUser = { name: '김범식' };
+  const user = window.localStorage.getItem("user_info");
+  let userInfo;
+  
+  if(user != null) {userInfo = JSON.parse(user);}
+  else {navigate("/");}
+
   return (
     <Grid container alignItems={'center'} spacing={1}>
       <Grid item>
@@ -54,7 +62,7 @@ const AfterLoginMenu = () => {
         </Link>
       </Grid>
       <Grid item>
-        <p>{loginUser.name}님 환영합니다.</p>
+        <p>{userInfo.name}님 환영합니다.</p>
       </Grid>
       <Grid item>
         <Button
@@ -69,7 +77,7 @@ const AfterLoginMenu = () => {
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
             variant="dot"
           >
-            <Avatar alt="Remy Sharp" src={imgSrc} />
+            <Avatar alt="Remy Sharp" src={userInfo.picture} />
           </StyledBadge>
         </Button>
         <Menu

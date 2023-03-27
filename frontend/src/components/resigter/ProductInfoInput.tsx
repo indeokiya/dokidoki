@@ -14,7 +14,6 @@ type AuctionRegisterProps = {
 
 const ProductInfoInput = ( {dataRef} : any ) : React.ReactElement => {
   const [imageCnt,setImageCnt] = useState(0)
-  const imageRef = useRef(null);
   const editorRef:any = useRef(null);
 
   const ImageInputLabel = styled.div`
@@ -58,20 +57,23 @@ const onChange = (e: any) => {
                       </ImageInputLabel>
                     </label>
                     <ImageInput
-                      ref={imageRef}
+                      id="imageInput"
+                      type="file"
+                      accept="image/*"
+                      // accept=".jpg,.jpeg,.png"
+                      multiple
                       onChange={(e: any) => {
-                        const files = e.target.files;
+                        const files: any[] = e.target.files;
                         setImageCnt(files.length)
                         if (files.length > 5) {
                           alert("사진을 5개 이상 등록할 수 없습니다.");
                           e.target.value = null;
                           return;
                         }
-                        console.log(files);
+                        console.log("files >> ", files);
+                        dataRef.current.files = files;
+                        console.log("dataRef.current.files >> ", dataRef.current.files);
                       }}
-                      type="file"
-                      multiple
-                      id="imageInput"
                     />
                   </Grid>
 

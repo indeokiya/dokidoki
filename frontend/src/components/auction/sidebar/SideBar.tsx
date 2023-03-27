@@ -49,6 +49,7 @@ const SideBar:React.FC<{setCategory:(data:number)=>void}> = (props) => {
 
           {category.map((category, i) => (
             <ListItemButton
+            key={i}
               selected={selectedIndex === i}
               onClick={(event) => { 
                 handleListItemClick(event, i)

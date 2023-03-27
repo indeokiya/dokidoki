@@ -13,15 +13,41 @@ import Paper from '@mui/material/Paper';
 
 import { Box } from '@mui/material';
 
-const ProductPage = () => {
-  const StyledDiv = styled.div`
-    padding: 30px;
-    box-sizing: border-box;
-  `;
+import { useParams } from 'react-router-dom';
 
-  const BackgroundDiv = styled.div`
-    background-color: #dddddd;
-  `;
+// const { useAuctionDetail, test } = require("../hooks/auctionDetail");
+import { useAuctionDetail } from '../hooks/auctionDetail'
+
+const ProductPage = () => {
+
+  // test();
+
+  const { id } = useParams() as {id: string};
+
+  // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
+  // data fetching logic
+  const { isLoading, isError, error, data} = useAuctionDetail({id});
+  if (isLoading) return <h1>isLoading..</h1>
+  if (isError) return <h1>{error.message}</h1>
+  // 이 아래부터는 data가 존재함이 보장됨
+  console.log("total data >> ", data)  
+  const {
+    auction_image_urls,
+    auciton_title,
+    category_name,
+    comments,
+    description,
+    end_time,
+    highest_price,
+    leaderboard,
+    meeting_place,
+    offer_price,
+    price_size,
+    product_name,
+    seller_id,
+    seller_name,
+    start_time,
+  } = data
 
   return (
     <>
@@ -39,17 +65,27 @@ const ProductPage = () => {
             <Grid item xs={2} />
             <Grid item xs={4}>
               {/* 제품 이미지 */}
-              <ProductImages />
+              <ProductImages 
+                images={auction_image_urls}
+              />
             </Grid>
             <Grid item xs={4}>
               {/* 제품 정보 */}
-              <ProductInfo />
+              <ProductInfo 
+                auction_id={id}
+                category={category_name}
+                offer_price={offer_price}
+                price_size={price_size}
+                highest_price={highest_price}
+              />
             </Grid>
           </Grid>
           <Divider />
 
           <StyledDiv>
-            <ProductDescription />
+            <ProductDescription 
+              description={description}  
+            />
           </StyledDiv>
 
           {/* 제품 카테고리 평균 가격 */}
@@ -66,3 +102,12 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
+
+const StyledDiv = styled.div`
+padding: 30px;
+box-sizing: border-box;
+`;
+
+const BackgroundDiv = styled.div`
+background-color: #dddddd;
+`;

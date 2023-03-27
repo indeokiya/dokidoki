@@ -30,8 +30,8 @@ function timeFormat(myNum: number) {
   return hours + ':' + minutes + ':' + seconds;
 }
 
-function getPercentage(a:number,b:number){
-  return a/b*100;
+function getPercentage(curr:number,offer:number){
+  return (curr-offer)/offer;
 }
 
 // 1000 => '1,000 원' 으로 바꿔주는 함수
@@ -54,7 +54,6 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
 
   //시작하면서 경매시간 정보를 세팅한다.
   useEffect(() => {
-    console.log(auctionData.auction_image_url)
     let hour = auctionData.remain_hours;
     let minute = auctionData.remain_minutes;
     let second = auctionData.remain_seconds;
@@ -77,7 +76,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         boxShadow: isHovered ? '' : 'none',
       }}
       onClick={() => {
-          navigate('product/' + auctionData.auction_id);
+          navigate('auction/product/' + auctionData.auction_id);
       }}
     >
       {/* 내가 판매하고 있는 제품이라는 표시 */}
