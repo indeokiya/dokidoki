@@ -1,5 +1,6 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.domain.entity.AuctionImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.InterestRepository;
@@ -124,14 +125,14 @@ public class AuctionListService {
         List<SimpleAuctionIngInfo> simpleAuctionIngInfos = new ArrayList<>();
         for (SimpleAuctionIngInterface simpleAuctionIngInterface : simpleAuctionIngInterfaces) {
             // 경매 제품 사진 검색
-            AuctionImageResponse auctionImageResponse = imageService
-                    .readAuctionImages(simpleAuctionIngInterface.getAuction_id());
+            AuctionImageEntity auctionImageEntity = imageService
+                    .readAuctionImage(simpleAuctionIngInterface.getAuction_id());
 
             // Response DTO 담기
             simpleAuctionIngInfos.add(
                     new SimpleAuctionIngInfo(
                             simpleAuctionIngInterface,
-                            auctionImageResponse.getImage_urls(),
+                            auctionImageEntity.getImageUrl(),
                             interestsOfUser,
                             salesOfUser
                     )

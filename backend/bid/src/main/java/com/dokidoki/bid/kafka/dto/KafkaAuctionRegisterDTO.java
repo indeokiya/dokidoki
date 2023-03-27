@@ -10,22 +10,15 @@ import lombok.ToString;
 @ToString
 public class KafkaAuctionRegisterDTO {
 
-    private long productId;
+    private long auctionId;
 
     private int offerPrice;             // 시작 가격(호가)
 
     private int priceSize;              // 경매 단위
 
-    private int highestPrice;
+    private long ttl;
 
     public KafkaAuctionRegisterDTO() {}
 
-    @Builder
-    public KafkaAuctionRegisterDTO(long productId, int offerPrice, int priceSize, int highestPrice) {
-        this.productId = productId;
-        this.offerPrice = offerPrice;
-        this.priceSize = priceSize;
-        this.highestPrice = highestPrice;
-    }
 
 }
