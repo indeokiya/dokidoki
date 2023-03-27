@@ -48,13 +48,21 @@ const ProductInfo = ({auction_title, auction_id, category, offer_price, price_si
       `auctions/${auction_id}/bid`,
       {current_highest_price: highest_price, current_price_size: price_size, name: userInfo.name },
     ).then(res => { // 성공 로직
-      console.log(res);
-      alert("()원에 입찰에 성공했습니다.")
+      console.log("입찰 성공 res >> ", res);
+      alert(`${highest_price + price_size}원에 입찰에 성공했습니다.`)
     }).catch(err => { // 실패 로직
       console.log(err)
-      alert("입찰에 실패했습니다. 사유: ");
+      const error_message = err.response.data.message;
+      if (error_message === "Different Highest Price") {
+        alert("현재 최고가격이 갱신되어 입찰에 실패했습니다.");
+      } else if (error_message === "Different Price Size") {
+        alert("경매 단위가 수정되었습니다. 다시 시도하세요.");
+      } else if (error_message === "Already Ended") {
+        alert("이미 종료된 경매입니다.");
+      } else {
+        alert("알 수 없는 이유로 입찰에 실패했습니다.");
+      }
     })
-
   }
 
   return (
