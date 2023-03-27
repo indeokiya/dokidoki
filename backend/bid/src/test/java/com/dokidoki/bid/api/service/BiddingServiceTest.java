@@ -231,6 +231,8 @@ class BiddingServiceTest {
                 System.out.println(auctionRealtimeLeaderBoardRepository.getWinner(auctionId));
                 System.out.println(biddingService.getInitialInfo(auctionId));
                 assertEquals(limit, leaderboardInfos.size());
+                System.out.println(limit);
+                System.out.println(leaderboardInfos.size());
 
             }
         }

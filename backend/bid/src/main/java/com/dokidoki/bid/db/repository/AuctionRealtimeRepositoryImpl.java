@@ -3,6 +3,8 @@ package com.dokidoki.bid.db.repository;
 import com.dokidoki.bid.common.annotation.RTransactional;
 import com.dokidoki.bid.common.codes.RealTimeConstants;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
+import com.dokidoki.bid.kafka.dto.KafkaAuctionEndDTO;
+import com.dokidoki.bid.kafka.service.KafkaBidProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMapCache;
@@ -22,6 +24,7 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
 
     private String key = RealTimeConstants.mapKey;
     private RMapCache<Long, AuctionRealtime> map;
+    private final KafkaBidProducer kafkaBidProducer;
 
     @Autowired
     public void setAuctionRealtimeRepositoryImpl(RedissonClient redisson) {
@@ -72,15 +75,10 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
                 AuctionRealtime auctionRealtime = event.getValue();
                 log.info("auctionInfo expired. auctionId: {}, auctionRealtime: {}", auctionId, auctionRealtime);
 
-                // 1. TODO - 기간이 끝나면 Kafka 에 메시지 써서  (1) 알림 서버 (2) auction 서버 에 알리기
+                // 1. 기간이 끝나면 Kafka 에 메시지 써서  (1) 알림 서버 (2) auction 서버 에 알리기
+                KafkaAuctionEndDTO dto = KafkaAuctionEndDTO.of(auctionRealtime);
+                kafkaBidProducer.sendAuctionEnd(dto);
 
-                // 1 - [1] kafka 를 통해 알림 서버로 전달
-
-                // 1 - [2] kafka 를 통해 auction 서버로 전달
-
-                // auction 서버에는 리더보드 정보도 넘겨야 함 (안 넘긴다면 지울 필요는 없을 듯)
-
-                // 2. 리더보드 정보 지우기
             }
         };
 

@@ -1,4 +1,4 @@
-package com.dokidoki.bid.api.response;
+package com.dokidoki.notice.api.response;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

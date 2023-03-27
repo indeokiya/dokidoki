@@ -31,6 +31,13 @@ public class AuctionRealtimeLeaderBoardRepository {
         return sb.toString();
     }
 
+    public LeaderBoardMemberInfo getWinner(long auctionId) {
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
+        LeaderBoardMemberInfo last = scoredSortedSet.last();
+        log.info("score: {}", scoredSortedSet.getScore(last));
+        return last;
+    }
+
     public Collection<ScoredEntry<LeaderBoardMemberInfo>> getAll(long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         return scoredSortedSet.entryRangeReversed(0, -1);

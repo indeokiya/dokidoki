@@ -1,9 +1,9 @@
-package com.dokidoki.bid.api.controller;
+package com.dokidoki.notice.api.controller;
 
-import com.dokidoki.bid.api.dto.SocketBidInfoDTO;
-import com.dokidoki.bid.api.dto.SocketPriceSizeDTO;
-import com.dokidoki.bid.kafka.dto.KafkaAuctionUpdateDTO;
-import com.dokidoki.bid.kafka.dto.KafkaBidDTO;
+import com.dokidoki.notice.api.dto.SocketBidInfoDTO;
+import com.dokidoki.notice.api.dto.SocketPriceSizeDTO;
+import com.dokidoki.notice.kafka.dto.KafkaAuctionUpdateDTO;
+import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;

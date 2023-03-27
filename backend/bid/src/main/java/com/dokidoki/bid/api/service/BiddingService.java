@@ -37,7 +37,6 @@ public class BiddingService {
     private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
     private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
 
-
     /**
      * 게시글 등록 시 Redis 에 실시간 정보를 저장하는 메서드.
      * Kafka 를 통해 받아옴
@@ -49,7 +48,15 @@ public class BiddingService {
         // 경매 실패 알림을 위한 경매 id - member id set 이 필요함
     }
 
+    /**
+     * 경매 초기 정보 실시간 정보를 가져오는 메서드. 컨트롤러에서 접근하는 메서드
+     * 실시간 정보가 없을 때에는 리더보드 정보만을 제공하고,
+     * 실시간 정보가 있을 때에는 highestPrice 와 priceSize 도 함께 보내준다.
+     * @param auctionId
+     * @return
+     */
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
+        // TODO - 실시간 정보가 없을 경우 구현 따로 필요함
 
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
         
@@ -101,6 +108,7 @@ public class BiddingService {
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
 
         LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
+        
 
         // TODO - 4. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
         //  MySQL 도 구독해놓고, 최고가 정보를 받아야 함
@@ -150,12 +158,14 @@ public class BiddingService {
         List<LeaderBoardMemberResp> list = new ArrayList<>();
 
         Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderBoardMemberInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
+        System.out.println(leaderBoardMemberInfos.size());
 
         for (ScoredEntry<LeaderBoardMemberInfo> info: leaderBoardMemberInfos) {
             int bidPrice = info.getScore().intValue();
             LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(info.getValue(), bidPrice);
             list.add(resp);
         }
+        System.out.println(list.size());
 
         return list;
     }
@@ -189,6 +199,7 @@ public class BiddingService {
         
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
         //  -> MySQL 도 구독해놔야
+
     }
 
 }

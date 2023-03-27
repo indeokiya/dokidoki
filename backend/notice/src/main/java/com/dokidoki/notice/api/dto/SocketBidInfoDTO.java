@@ -1,7 +1,7 @@
-package com.dokidoki.bid.api.dto;
+package com.dokidoki.notice.api.dto;
 
-import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
-import com.dokidoki.bid.kafka.dto.KafkaBidDTO;
+import com.dokidoki.notice.api.response.LeaderBoardMemberResp;
+import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;

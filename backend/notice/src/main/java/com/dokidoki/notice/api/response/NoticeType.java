@@ -1,4 +1,4 @@
-package com.dokidoki.notice.kafka.dto.alert;
+package com.dokidoki.notice.api.response;
 
 public enum NoticeType {
     PURCHASE_SUCCESS, PURCHASE_FAIL,

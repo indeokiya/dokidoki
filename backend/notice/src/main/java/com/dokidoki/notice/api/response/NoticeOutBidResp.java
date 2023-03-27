@@ -1,4 +1,4 @@
-package com.dokidoki.notice.kafka.dto.alert;
+package com.dokidoki.notice.api.response;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class KafkaAlertOutBidDTO {
+public class NoticeOutBidResp {
     private NoticeType type;
     private long productId;
     private String productName;

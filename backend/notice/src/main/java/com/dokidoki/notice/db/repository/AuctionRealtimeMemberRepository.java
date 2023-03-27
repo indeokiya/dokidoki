@@ -9,6 +9,9 @@ import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+import java.util.Set;
+
 
 @RequiredArgsConstructor
 @Component
@@ -22,6 +25,11 @@ public class AuctionRealtimeMemberRepository {
         StringBuilder sb = new StringBuilder();
         sb.append(keyPrefix).append(":").append(auctionId);
         return sb.toString();
+    }
+
+    public Set<Map.Entry<Long, Integer>> getAll(long auctionId) {
+        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+        return map.entrySet();
     }
 
     public int findById(long auctionId, long memberId) {
