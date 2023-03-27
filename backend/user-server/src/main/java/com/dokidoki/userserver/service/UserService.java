@@ -29,6 +29,7 @@ public class UserService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
+
     @Transactional(readOnly = true)
     public Optional<UserEntity> getUserFromSubAndProvider(String sub, ProviderType type){
         return userRepository.findBySubAndProviderType(sub,type);

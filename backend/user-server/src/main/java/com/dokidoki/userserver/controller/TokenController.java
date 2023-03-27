@@ -22,6 +22,7 @@ public class TokenController {
     private final JwtProvider jwtProvider;
     private final UserService userService;
 
+    // refresh 토큰으로 토큰 재발급
     @GetMapping("/refresh")
     public ResponseEntity<?> refresh(HttpServletRequest request){
         String token = jwtProvider.getToken(request);

@@ -36,6 +36,7 @@ public class OauthController {
     @Value("${front.redirect_uri}")
     private String FRONT_REDIRECT_URI;
 
+    // 구글, 카카오 로그인 url 반환
     @GetMapping("/login/{provider}")
     public ResponseEntity<OauthLoginUrlRes> oauth2LoginUrl(
             @PathVariable(name = "provider") String provider
@@ -78,6 +79,7 @@ public class OauthController {
                                 .providerType(ProviderType.GOOGLE)
                                 .build());
         }
+        // 토큰 생성
         String accessToken = jwtProvider.getAccessToken(user.getId());
         String refreshToken = jwtProvider.getRefreshToken(user);
 
@@ -101,12 +103,14 @@ public class OauthController {
                             .providerType(ProviderType.KAKAO)
                             .build());
         }
+        // 토큰 생성
         String accessToken = jwtProvider.getAccessToken(user.getId());
         String refreshToken = jwtProvider.getRefreshToken(user);
 
         response.sendRedirect(getFrontRedirectUrl(accessToken, refreshToken));
     }
 
+    // query string에 토큰을 담아 front page redirect
     private String getFrontRedirectUrl(String accessToken, String refreshToken){
         return FRONT_REDIRECT_URI + "?access_token=" + accessToken + "&refresh_token=" + refreshToken;
     }
