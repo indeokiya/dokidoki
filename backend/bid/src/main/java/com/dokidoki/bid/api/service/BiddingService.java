@@ -88,12 +88,13 @@ public class BiddingService {
     public void bid(long auctionId, AuctionBidReq req, long memberId) throws InterruptedException {
         log.info("req: {}", req);
 
-        // 1. 경매 정보가 없는 경우 - 에러 발생시키기
+        // 1. 경매 정보가 없는 경우 - 에러 발생시키기 (종료된 경매)
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
 
         if (auctionRealtimeO.isEmpty()) {
-            throw new InvalidValueException("잘못된 접근입니다. auctionId가 존재하지 않습니다.");
+            throw new BusinessException("종료된 경매입니다. auctionId가 존재하지 않습니다.", ErrorCode.AUCTION_ALREADY_ENDED);
         }
+
         log.info("auctionRealtime: {}", auctionRealtimeO.get());
         // 2. 실시간 DB 정보와 client 측 정보가 일치하는지 확인하기 (경매 단위, 현재 가격)
 
@@ -106,21 +107,19 @@ public class BiddingService {
         if (auctionRealtimeO.get().getHighestPrice() != req.getCurrentHighestPrice()) {
             throw new BusinessException("현재 가격이 갱신되었습니다. 다시 시도해주세요", ErrorCode.DIFFERENT_HIGHEST_PRICE);
         }
+        
+        // 3. 입찰 강탈 여부를 확인하기 위해, 이전 최고값 입찰자 구해놓기
+        long beforeWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
 
-        // 3. 실시간 최고가, 리더보드 갱신하기
+        // 4. 실시간 최고가, 리더보드 갱신하기
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
 
         LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
 
-        // TODO - 4. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
-        //  MySQL 도 구독해놓고, 최고가 정보를 받아야 함
-        producer.sendBid(new KafkaBidDTO().builder()
-                .memberId(memberId)
-                .auctionId(auctionId)
-                .name(req.getName())
-                .highestPrice(req.getCurrentHighestPrice() + req.getCurrentPriceSize())
-                .bidTime(resp.getBidTime())
-                .build());
+        long nowWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
+
+        // 5. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
+        producer.sendBid(KafkaBidDTO.of(auctionId, resp, req, memberId, beforeWinnerId));
     }
 
     /**
@@ -151,8 +150,6 @@ public class BiddingService {
 
         LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(memberInfo, newHighestPrice);
         
-        // TODO - 입찰 강탈 시 메시지 보내기
-
         return resp;
     }
 
@@ -204,9 +201,11 @@ public class BiddingService {
         auctionRealTimeO.get().updatePriceSize(req.getPriceSize());
 
         auctionRealtimeRepository.save(auctionRealTimeO.get());
-        
+
+
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
         //  -> MySQL 도 구독해놔야
+//        producer.sendAuctionUpdate(KafkaAuctionUpdateDTO.of(auctionRealTimeO.get()));
 
     }
 
