@@ -1,38 +1,16 @@
 import { Grid } from '@mui/material';
 import AfterLoginMenu from './AfterloginMenu';
-import BeforLoginMenu from './BeforLoginMenu';
-import { useState, useEffect } from 'react';
+import BeforeLoginMenu from './BeforeLoginMenu';
+import { useState } from 'react';
 import styled from 'styled-components';
 import LogoImgSrc from '../../assets/image/logo.png';
 import { Link } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from 'src/store/userInfoState';
 
 const Header = () => {
+  const userInfo = useRecoilValue(userInfoState)
 
-  const [isLogin, setIsLogin] = useState(
-    false
-  );
-
-  useEffect(()=>{
-    if(window.localStorage.getItem("user_info")) setIsLogin(true);
-  },[isLogin])
-
-  const HeaderBox = styled.div`
-    padding-right: 1rem;
-    padding-left: 1rem;
-    border-bottom: 1px solid grey;
-    
-  `;
-  const LogoImg = styled.img`
-    height: 30px;
-    margin: 5px;
-  `;
-
-  let HeaderMenu;
-  if (isLogin) {
-    HeaderMenu = <AfterLoginMenu />;
-  } else {
-    HeaderMenu = <BeforLoginMenu />;
-  }
   return (
     <HeaderBox>
       <Grid container alignItems={'center'}>
@@ -41,10 +19,20 @@ const Header = () => {
             <LogoImg src={LogoImgSrc}></LogoImg>
           </Link>
         </Grid>
-        <Grid item>{HeaderMenu}</Grid>
+        <Grid item>{userInfo.is_logged_in ? <AfterLoginMenu /> : <BeforeLoginMenu />}</Grid>
       </Grid>
     </HeaderBox>
   );
 };
 
 export default Header;
+
+const HeaderBox = styled.div`
+padding-right: 1rem;
+padding-left: 1rem;
+border-bottom: 1px solid grey;
+`;
+const LogoImg = styled.img`
+height: 30px;
+margin: 5px;
+`;

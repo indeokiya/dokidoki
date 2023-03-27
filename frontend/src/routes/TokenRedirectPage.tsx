@@ -1,11 +1,13 @@
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {useEffect} from 'react'
-
+import { useSetRecoilState } from "recoil";
+import { userInfoState } from "src/store/userInfoState";
 
 const TokenRedirectPage = () => {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
-    
+    const setUserInfoState = useSetRecoilState(userInfoState);
+
     function parseJwt (token : string) {
         var base64Url = token.split('.')[1];
         var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
@@ -26,8 +28,9 @@ const TokenRedirectPage = () => {
         if(refresh_token) {
             localStorage.setItem('refresh_token', refresh_token);
             
-            const user_info = parseJwt(refresh_token);
-            localStorage.setItem('user_info', user_info);
+            let user_info = JSON.parse(parseJwt(refresh_token));
+            user_info = {...user_info, is_logged_in: true};
+            setUserInfoState(user_info);
         }
         else console.log('리프레시 토큰 안들어감');
 

@@ -1,8 +1,11 @@
 package com.dokidoki.bid.kafka.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -10,6 +13,18 @@ import lombok.ToString;
 public class KafkaBidDTO {
 
     private long memberId;
+    private long auctionId;
     private String name;
-    private String email;
+    private int highestPrice;
+    private LocalDateTime bidTime;
+    public KafkaBidDTO() {}
+
+    @Builder
+    public KafkaBidDTO(long memberId, long auctionId, String name, String email, int highestPrice, LocalDateTime bidTime) {
+        this.memberId = memberId;
+        this.auctionId = auctionId;
+        this.name = name;
+        this.highestPrice = highestPrice;
+        this.bidTime = bidTime;
+    }
 }

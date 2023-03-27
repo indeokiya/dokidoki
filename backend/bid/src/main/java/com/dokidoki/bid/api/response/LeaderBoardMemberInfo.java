@@ -10,6 +10,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @Builder
 @AllArgsConstructor
@@ -20,7 +21,6 @@ import java.time.LocalDateTime;
 public class LeaderBoardMemberInfo {
     private long memberId;
     private String name;
-    private String email;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -30,7 +30,6 @@ public class LeaderBoardMemberInfo {
         return LeaderBoardMemberInfo.builder()
                 .memberId(memberId)
                 .name(req.getName())
-                .email(req.getEmail())
-                .bidTime(LocalDateTime.now()).build();
+                .bidTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
     }
 }
