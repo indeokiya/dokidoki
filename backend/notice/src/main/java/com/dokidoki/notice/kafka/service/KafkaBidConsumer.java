@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaBidConsumer {
 
-    private final BiddingService biddingService;
-
     @KafkaListener(topics = "${spring.kafka.auctionRegisterConfig.topic}", containerFactory = "auctionRegisterKafkaListenerContainerFactory")
     public void auctionRegisterListener(
             @Payload KafkaAuctionRegisterDTO dto,
@@ -29,8 +27,6 @@ public class KafkaBidConsumer {
         System.out.println("");
 
         System.out.println();
-
-        biddingService.registerAuctionInfo(dto);
 
         // auction : memberid, name, email .....
         // websocket method_bid_success(memberid, name, email)

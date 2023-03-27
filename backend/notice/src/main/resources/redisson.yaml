@@ -4,10 +4,11 @@ singleServerConfig:
   timeout: 3000
   retryAttempts: 3
   retryInterval: 1500
-  password: null
+  password: "qhBb3Ht7Psvz54PCjlAw"
+#  password: null
   subscriptionsPerConnection: 5
   clientName: null
-  address: "redis://172.26.1.201:6379"
+  address: "redis://j8a202.p.ssafy.io:6379"
 #  address: "redis://127.0.0.1:6379"
   subscriptionConnectionMinimumIdleSize: 1
   subscriptionConnectionPoolSize: 50
