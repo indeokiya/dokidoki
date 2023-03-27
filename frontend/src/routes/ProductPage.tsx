@@ -28,7 +28,7 @@ const ProductPage = () => {
   // data fetching logic
   const { isLoading, isError, error, data} = useAuctionDetail({id});
   if (isLoading) return <h1>isLoading..</h1>
-  if (isError) return <h1>{error.message}</h1>
+  if (isError) return <h1>auction id: {id}에 해당하는 물품이 없습니다. </h1>
   // 이 아래부터는 data가 존재함이 보장됨
   console.log("total data >> ", data)  
   const {
