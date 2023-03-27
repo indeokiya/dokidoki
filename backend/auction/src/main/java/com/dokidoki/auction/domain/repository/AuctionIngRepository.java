@@ -41,7 +41,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     Page<SimpleAuctionIngInterface> findAllSimpleIngList(Pageable pageable);
 
     /*
-    마감임박 경매 목록, 1시간
+    마감임박 경매 목록, 6시간
      */
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
             " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
@@ -55,7 +55,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
             @Param("within_an_hour") LocalDateTime withinAnHour, Pageable pageable);
     default Page<SimpleAuctionIngInterface> findAllSimpleDeadlineList(Pageable pageable) {
         // 현재로부터 한 시간 뒤의 시간을 구한 뒤, endAt과 비교 연산
-        return findAuctionIngEntitiesByEndAtLessThan(LocalDateTime.now().plusMinutes(60), pageable);
+        return findAuctionIngEntitiesByEndAtLessThan(LocalDateTime.now().plusHours(6), pageable);
     }
 
     /*

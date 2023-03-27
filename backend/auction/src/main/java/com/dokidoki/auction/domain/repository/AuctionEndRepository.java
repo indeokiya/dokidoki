@@ -23,7 +23,7 @@ public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Lo
             " JOIN a.buyer b " +
             " JOIN a.seller s " +
             "WHERE a.id = :auction_id " +
-            "ORDER BY a.endTime DESC ")
+            "ORDER BY a.id DESC ")
     DetailAuctionEndInterface findDetailAuctionEndEntityById(@Param("auction_id") Long auctionId);
     
     @Query("SELECT a.id as auction_id, a.title as auction_title, a.startTime as start_time, a.endTime as end_time" +
@@ -32,7 +32,7 @@ public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Lo
             "FROM AuctionEndEntity a " +
             " JOIN a.product p " +
             " JOIN p.categoryEntity c " +
-            "ORDER BY a.endTime DESC ")
+            "ORDER BY a.id DESC ")
     Page<SimpleAuctionEndInterface> findAllSimpleEndList(Pageable pageable);
 
     /*
