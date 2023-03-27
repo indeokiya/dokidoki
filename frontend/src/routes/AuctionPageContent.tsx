@@ -9,6 +9,11 @@ import styled from 'styled-components';
 import Tooltip from '@mui/material/Tooltip';
 
 const ActionPageContent = () => {
+
+  //query키로 사용할 키 값
+  const[category, setCategory] = useState(0);
+  const[keyword, setKeyword] = useState("");
+
   const navigate = useNavigate();
 
   const StyledIcon = styled.div`
@@ -48,13 +53,13 @@ const ActionPageContent = () => {
           </StyledIcon>
         </Tooltip>
 
-        <SearchBar />
+        <SearchBar setKeyword={setKeyword}/>
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            <SideBar />
+            <SideBar setCategory={setCategory}/>
           </Grid>
           <Grid xs={10}>
-            <ContentsList />
+            <ContentsList  category={category} keyword={keyword}/>
           </Grid>
         </Grid>
       </Container>

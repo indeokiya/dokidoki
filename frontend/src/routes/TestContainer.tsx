@@ -1,8 +1,4 @@
-import { useState, useCallback, useRef } from 'react';
 import Grid from '@mui/material/Grid';
-import axios from 'axios';
-import { Button } from '@mui/material';
-import DaumPostcode from 'react-daum-postcode';
 import { useQuery } from '@tanstack/react-query';
 import { auctionAPI } from '../api/axios';
 
@@ -31,9 +27,7 @@ const TestContainer = () => {
     });
   });
 
-  function printData(data: Post[]) {
-    return;
-  }
+  
 
   return (
     <>

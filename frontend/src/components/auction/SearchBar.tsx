@@ -6,13 +6,15 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useRef } from 'react';
 import styled from 'styled-components';
 
-const SearchBar = () => {
+const SearchBar:React.FC<{setKeyword:(data:string)=> void}> = (props) => {
+  const {setKeyword} = props;
+
   const searchBarRef = useRef<any>();
 
   const SearchHandler = (event: any) => {
     event.preventDefault();
-    console.log(searchBarRef.current.value);
-    searchBarRef.current.value = '';
+    let keyword = searchBarRef.current.value;
+    setKeyword(keyword)
   };
 
   const StyledForm = styled.form`

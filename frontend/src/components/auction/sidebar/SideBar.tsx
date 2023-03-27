@@ -3,14 +3,13 @@ import Box from '@mui/material/Box';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import styled from 'styled-components';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
-import ViewOpeion from './ViewOption';
 import Typography from '@mui/material/Typography';
 
-export default function SelectedListItem() {
+const SideBar:React.FC<{setCategory:(data:number)=>void}> = (props) => {
+  const {setCategory} = props
   const category = [
     '전체',
     '스마트폰',
@@ -21,8 +20,10 @@ export default function SelectedListItem() {
     '생활가전',
     'TV&오디오',
     '노트북/PC',
+    '마감임박',
+    '경매완료',
   ];
-  const [selectedIndex, setSelectedIndex] = React.useState(1);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const handleListItemClick = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>,
@@ -49,7 +50,11 @@ export default function SelectedListItem() {
           {category.map((category, i) => (
             <ListItemButton
               selected={selectedIndex === i}
-              onClick={(event) => handleListItemClick(event, i)}
+              onClick={(event) => { 
+                handleListItemClick(event, i)
+                setCategory(i);
+              }}
+              
             >
               {selectedIndex === i && (
                 <ListItemIcon>
@@ -61,7 +66,8 @@ export default function SelectedListItem() {
           ))}
         </List>
       </Box>
-      <ViewOpeion />
     </div>
   );
 }
+
+export default SideBar;

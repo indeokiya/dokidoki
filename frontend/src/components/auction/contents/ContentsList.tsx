@@ -1,76 +1,129 @@
-import Grid from '@mui/material/Grid'; // Grid version 1
+import Grid from '@mui/material/Grid';
 import Content from './Content';
-import styled from 'styled-components';
-import { useRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Badge from '@mui/material/Badge';
+import { auctionAPI } from '../../../api/axios';
+import { useQuery } from '@tanstack/react-query';
+import { Post, endPost } from '../../../datatype/datatype';
+import { useState, useEffect } from 'react';
+import { KeyboardReturn } from '@mui/icons-material';
 
-const ContentsList = () => {
-  const [posts, setPosts] = useState([
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
-  ]);
-  const navigate = useNavigate();
+//get 함수로 전체 경매 불러오기
+const getInProgress = (page: number, size: number) => {
+  return auctionAPI
+    .get('/lists/in-progress', {
+      params: {
+        page,
+        size,
+      },
+    })
+    .then(({ data }) => {
+      console.log('경매중인 물건 : ', data.data.contents);
+      return data.data.contents;
+    });
+};
 
-  const [isLoading, setIsLoading] = useState(true);
-  const Target = styled.div`
-    width: auto;
-    height: 200px;
-  `;
+//경매가 종료된 물건 불러오기
+const getEndList = (page: number, size: number) => {
+  return auctionAPI
+    .get('/lists/end', {
+      params: {
+        page,
+        size,
+      },
+    })
+    .then(({ data }) => {
+      console.log('경매가 끝난 물건 : ', data.data.contents);
+      return data.data.contens;
+    });
+};
 
-  //타겟 설정
-  const targetRef = useRef<HTMLDivElement>(null);
+//마감이 임박한
+const getDeadline = (page: number, size: number) => {
+  return auctionAPI
+    .get('/lists/deadline', {
+      params: {
+        page,
+        size,
+      },
+    })
+    .then(({ data }) => {
+      console.log('마감이 임박한 경매 데이터 : ', data.data.contents);
+      return data.data.contents;
+    });
+};
 
-  //스크롤 option 설정
-  const options = {
-    rootMargin: '0px',
-    threshold: 0.5,
-  };
+//키워드와 페이지로 불러오는 데이터 타입
+const getSearchByKeyword = (category_id: number, keyword: string, page: number, size: number) => {
+  return auctionAPI
+    .get(`/lists/search`, {
+      params: {
+        category_id,
+        keyword,
+        page,
+        size,
+      },
+    })
+    .then(({ data }) => {
+      console.log('키워드로 불러온 데이터 : ', data.data.contents);
+      return data.data.contents;
+    });
+};
 
-  //
-  const observer = new IntersectionObserver(() => {
-    console.log('api 호출하기 ');
-    const target: any = targetRef.current;
-    // observer.unobserve(target); //이순간 옵져버 함수가 다시 실행된다. 즉 시작하자마자 호출되는걸 방지해야함
-    // setPosts([...posts,1,2,3])
-    setIsLoading(false);
-    setTimeout(() => {
-      setIsLoading(true);
-    }, 2000);
-  }, options);
+//================================================================= 컴포넌트 시작
+
+const ContentsList: React.FC<{ category: number; keyword: string }> = (props) => {
+  let { category, keyword } = props;
+
+  //무한스크롤 구현을 위한 페이지
+  const [page, setPage] = useState(1);
+  const [size, setSize] = useState(10);
+  const [posts, setPosts] = useState<Post[] | undefined>([]);
+
+  let { data, isLoading, isError, error } = useQuery<Post[]>(
+    ['postList', category],
+    () => {
+      if (category == 0) {
+        return getInProgress(page, size);
+      } else if (category > 0 && category < 9) {
+        return getSearchByKeyword(category, keyword, page, size);
+      } else {
+        return getDeadline(page, size);
+      }
+    },
+    {
+      retry: 0,
+      staleTime:1000*60,
+      refetchOnWindowFocus:false,
+
+    },
+  );
 
   useEffect(() => {
-    const target: any = targetRef.current;
-    observer.observe(target);
+    setPosts(data);
   }, []);
 
+  if (isLoading) return <h1>isLoading...</h1>
+  if (isError) return <h1>error</h1>
+  // data is not undefined
+
+
+  console.log('category :', category, 'keyword : ', keyword);
   return (
     <div id="scroll">
-      <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
-        {posts.map((data, i) => (
-          <Grid key={i} item xs={4} mb={4}>
-            <div
-              onClick={() => {
-                navigate('/auction/product/' + data);
-              }}
-            >
-                <Content />
-            </div>
-          </Grid>
-        ))}
-        <Grid item xs={12}>
-          {isLoading ? (
-            <div
-              id="test"
-              style={{ height: '100px', border: '1px solid black' }}
-              ref={targetRef}
-            ></div>
-          ) : (
-            <h1>로딩중...</h1>
-          )}
+      {/* 데이터가 있다면.. */}
+      {data ? (
+        <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
+          {data?.map((data, i) => (
+            <Grid key={i} item xs={4} mb={4}>
+              <Content auctionData={data} />
+            </Grid>
+          ))}
         </Grid>
-      </Grid>
+      ) : null}
+
+      {/* 데이터가 없다면 */}
+      {posts === null && <div>데이터 없음 에러 </div>}
     </div>
   );
-};
+}
 
 export default ContentsList;
