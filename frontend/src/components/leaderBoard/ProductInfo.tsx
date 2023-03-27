@@ -11,27 +11,34 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 
-const ProductInfo = () => {
+// public class AuctionBidReq {
+//   private int currentHighestPrice;
+//   private int currentPriceSize;
+// }
+
+type Props = {
+  auction_id: any;
+  category: string;
+  offer_price: number;
+  price_size: number;
+  highest_price: number;
+}
+
+const ProductInfo = ({auction_id, category, offer_price, price_size, highest_price}: Props) => {
   const dataLeft = ['카테고리', '남은시간', '시작가격', '경매단위'];
-  const dataRight = ['mobile', '20:00:10', '20,000', '2,000'];
+  const dataRight = [category, '20:00:10', offer_price, price_size];
   const [bookmark, setBookmaek] = useState(false);
 
   const [loginUser, setloginUser] = useState(true);
-  const StyledH1 = styled.h1`
-    margin-top: 5px;
-  `;
 
-  const StyledSpan = styled.span`
-    margin-right: 10px;
-    font-size: 20px;
-  `;
+  const bid = () => {
+    // const axios = bidAPI;
+    // axios.post(
+    //   `${auction_id}/bid`,
+    //   {current_highest_price: , email: "이메일", }
+    // )
 
-  const StyeldDiv = styled.div`
-    text-align: right;
-    padding-right: 5px;
-    box-sizing: border-box;
-    margin: 0px;
-  `;
+  }
 
   return (
     <div>
@@ -75,13 +82,16 @@ const ProductInfo = () => {
         <Grid item xs={6} mt={2}>
           <Typography variant="h5" fontWeight={'bold'}>
             {' '}
-            43,000{' '}
+            {highest_price}{' '}
           </Typography>
-          <Typography color="red"> +3,000원</Typography>
+          <Typography color="red"> +{price_size}원</Typography>
         </Grid>
       </Grid>
       <Stack spacing={2} direction="row" mt={5}>
-        <Button variant="contained" sx={{ width: '50%', height: '50px' }}>
+        <Button 
+          variant="contained" 
+          sx={{ width: '50%', height: '50px' }}
+          onClick={bid}>
           <StyledSpan>입찰하기</StyledSpan>
         </Button>
         <Button
@@ -100,3 +110,19 @@ const ProductInfo = () => {
 };
 
 export default ProductInfo;
+
+const StyledH1 = styled.h1`
+margin-top: 5px;
+`;
+
+const StyledSpan = styled.span`
+margin-right: 10px;
+font-size: 20px;
+`;
+
+const StyeldDiv = styled.div`
+text-align: right;
+padding-right: 5px;
+box-sizing: border-box;
+margin: 0px;
+`;
