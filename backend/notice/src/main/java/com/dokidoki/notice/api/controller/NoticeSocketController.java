@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 public class NoticeSocketController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    //private final JWTUtil jwtUtil;
 
     @MessageMapping("ws/notice/{memberId}/success")
     public void sendSuccessNotice(@DestinationVariable long memberId, @Payload NoticeSuccessResp resp) {

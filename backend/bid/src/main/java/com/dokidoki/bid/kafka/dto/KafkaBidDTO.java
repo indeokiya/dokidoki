@@ -2,16 +2,16 @@ package com.dokidoki.bid.kafka.dto;
 
 import com.dokidoki.bid.api.request.AuctionBidReq;
 import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.dokidoki.bid.db.entity.AuctionRealtime;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@Builder
 public class KafkaBidDTO {
 
     private long beforeWinnerId;
@@ -19,28 +19,23 @@ public class KafkaBidDTO {
     private long auctionId;
     private String name;
     private int highestPrice;
+    private String productName;
+    private long productId;
     private LocalDateTime bidTime;
     public KafkaBidDTO() {}
 
-    public static KafkaBidDTO of(long auctionId, LeaderBoardMemberResp resp, AuctionBidReq req, long memberId, long beforeWinnerId) {
+    public static KafkaBidDTO of(AuctionRealtime auctionRealtime, AuctionBidReq req, LeaderBoardMemberResp resp, long memberId, long beforeWinnerId) {
         KafkaBidDTO dto = KafkaBidDTO.builder()
                 .beforeWinnerId(beforeWinnerId)
                 .memberId(memberId)
-                .auctionId(auctionId)
+                .auctionId(auctionRealtime.getAuctionId())
                 .name(req.getName())
                 .highestPrice(resp.getBidPrice())
+                .productName(auctionRealtime.getProductName())
+                .productId(auctionRealtime.getProductId())
                 .bidTime(resp.getBidTime())
                 .build();
         return dto;
     }
 
-    @Builder
-    public KafkaBidDTO(long memberId, long auctionId, String name, int highestPrice, LocalDateTime bidTime, long beforeWinnerId) {
-        this.memberId = memberId;
-        this.auctionId = auctionId;
-        this.name = name;
-        this.highestPrice = highestPrice;
-        this.bidTime = bidTime;
-        this.beforeWinnerId = beforeWinnerId;
-    }
 }

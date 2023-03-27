@@ -119,7 +119,7 @@ public class BiddingService {
         long nowWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
 
         // 5. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
-        producer.sendBid(KafkaBidDTO.of(auctionId, resp, req, memberId, beforeWinnerId));
+        producer.sendBid(KafkaBidDTO.of(auctionRealtime, req, resp, memberId, beforeWinnerId));
     }
 
     /**
