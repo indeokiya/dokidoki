@@ -121,22 +121,42 @@ public class AuctionListService {
             salesOfUser.add(auctionIngMapping.getSeller().getId());
         });
 
+        // 각 경매의 대표 이미지 가져오기
+        List<Long> auctionIdList = new ArrayList<>();
+        for (SimpleAuctionIngInterface simpleAuctionIngInterface : simpleAuctionIngInterfaces)
+            auctionIdList.add(simpleAuctionIngInterface.getAuction_id());
+        List<ImageInterface> imageInterfaces = imageService
+                .readAuctionThumbnailImage(auctionIdList);
+
         // 데이터 조합
         List<SimpleAuctionIngInfo> simpleAuctionIngInfos = new ArrayList<>();
-        for (SimpleAuctionIngInterface simpleAuctionIngInterface : simpleAuctionIngInterfaces) {
-            // 경매 제품 사진 검색
-            AuctionImageEntity auctionImageEntity = imageService
-                    .readAuctionImage(simpleAuctionIngInterface.getAuction_id());
+        int imageIdx = 0;
+        for (int i = 0; i < simpleAuctionIngInterfaces.getContent().size(); i++) {
+            SimpleAuctionIngInterface simpleAuctionIngInterface = simpleAuctionIngInterfaces.getContent().get(i);
+            ImageInterface imageInterface = imageInterfaces.get(imageIdx);
 
-            // Response DTO 담기
-            simpleAuctionIngInfos.add(
-                    new SimpleAuctionIngInfo(
-                            simpleAuctionIngInterface,
-                            auctionImageEntity.getImageUrl(),
-                            interestsOfUser,
-                            salesOfUser
-                    )
-            );
+            // Auction Id가 다르면 사진이 없는 경매이므로 이미지 URL로 null 전달
+            if (imageInterface.getAuction_id().equals(simpleAuctionIngInterface.getAuction_id())) {
+                // Response DTO 담기
+                simpleAuctionIngInfos.add(
+                        new SimpleAuctionIngInfo(
+                                simpleAuctionIngInterface,
+                                null,
+                                interestsOfUser,
+                                salesOfUser
+                        )
+                );
+            } else {
+                // Response DTO 담기
+                simpleAuctionIngInfos.add(
+                        new SimpleAuctionIngInfo(
+                                simpleAuctionIngInterface,
+                                imageInterface.getImage_url(),
+                                interestsOfUser,
+                                salesOfUser
+                        )
+                );
+            }
         }
 
         // Response DTO 생성 및 반환
