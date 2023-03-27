@@ -3,6 +3,8 @@ package com.dokidoki.bid.db.repository;
 import com.dokidoki.bid.common.annotation.RTransactional;
 import com.dokidoki.bid.common.codes.RealTimeConstants;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
+import com.dokidoki.bid.kafka.dto.KafkaAuctionEndDTO;
+import com.dokidoki.bid.kafka.service.KafkaBidProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMapCache;
@@ -12,23 +14,21 @@ import org.redisson.api.map.event.EntryExpiredListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
+public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository {
 
-    private final RedissonClient redisson;
-    private String key = RealTimeConstants.key;
+    private String key = RealTimeConstants.mapKey;
     private RMapCache<Long, AuctionRealtime> map;
+    private final KafkaBidProducer kafkaBidProducer;
 
     @Autowired
-    public void setAuctionRealtimeRepositoryImpl() {
-        this.key = RealTimeConstants.key;
+    public void setAuctionRealtimeRepositoryImpl(RedissonClient redisson) {
+        this.key = RealTimeConstants.mapKey;
         this.map = redisson.getMapCache(key);
         map.addListener(getExpiredListener());
 
@@ -71,15 +71,14 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository{
         EntryExpiredListener<Long, AuctionRealtime> expiredListener = new EntryExpiredListener<Long, AuctionRealtime>() {
             @Override
             public void onExpired(EntryEvent<Long, AuctionRealtime> event) {
-                Long key = event.getKey();
-                AuctionRealtime value = event.getValue();
-                log.info("auctionInfo expired. key: {}, value: {}", key, value);
+                long auctionId = event.getKey();
+                AuctionRealtime auctionRealtime = event.getValue();
+                log.info("auctionInfo expired. auctionId: {}, auctionRealtime: {}", auctionId, auctionRealtime);
 
-                // 1. TODO - 기간이 끝나면 Kafka 에 메시지 써서 (1) auction 서버 (2) 알림 메서드 에 알리기
-                
-                // auction 서버에는 리더보드 정보도 넘겨야 함 (안 넘긴다면 지울 필요는 없을 듯)
+                // 1. 기간이 끝나면 Kafka 에 메시지 써서  (1) 알림 서버 (2) auction 서버 에 알리기
+                KafkaAuctionEndDTO dto = KafkaAuctionEndDTO.of(auctionRealtime);
+                kafkaBidProducer.sendAuctionEnd(dto);
 
-                // 2. 리더보드 정보 지우기
             }
         };
 

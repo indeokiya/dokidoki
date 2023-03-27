@@ -7,21 +7,17 @@ import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
 import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
 import com.dokidoki.bid.common.annotation.RTransactional;
 import com.dokidoki.bid.common.annotation.RealTimeLock;
-import com.dokidoki.bid.common.codes.LeaderBoardConstants;
-import com.dokidoki.bid.common.codes.LockInfo;
 import com.dokidoki.bid.common.error.exception.BusinessException;
 import com.dokidoki.bid.common.error.exception.ErrorCode;
 import com.dokidoki.bid.common.error.exception.InvalidValueException;
-import com.dokidoki.bid.db.entity.AuctionIngEntity;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
-import com.dokidoki.bid.db.repository.AuctionIngRepository;
+import com.dokidoki.bid.db.repository.AuctionRealtimeLeaderBoardRepository;
+import com.dokidoki.bid.db.repository.AuctionRealtimeMemberRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import com.dokidoki.bid.kafka.dto.KafkaAuctionRegisterDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
-import org.redisson.api.RScoredSortedSet;
-import org.redisson.api.RedissonClient;
+import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,12 +33,10 @@ import java.util.concurrent.TimeUnit;
 @Transactional(readOnly = true)
 public class BiddingService {
 
-    private final AuctionIngRepository auctionIngRepository;
     private final AuctionRealtimeRepository auctionRealtimeRepository;
-    private final RedissonClient redisson;
+    private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
+    private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
 
-
-    // TODO - 적당히 재조정 해야됨
     /**
      * 게시글 등록 시 Redis 에 실시간 정보를 저장하는 메서드.
      * Kafka 를 통해 받아옴
@@ -51,9 +45,18 @@ public class BiddingService {
     public void registerAuctionInfo(KafkaAuctionRegisterDTO dto) {
         AuctionRealtime auctionRealtime = AuctionRealtime.from(dto);
         auctionRealtimeRepository.save(auctionRealtime, dto.getTtl(), TimeUnit.MINUTES);
+        // 경매 실패 알림을 위한 경매 id - member id set 이 필요함
     }
 
+    /**
+     * 경매 초기 정보 실시간 정보를 가져오는 메서드. 컨트롤러에서 접근하는 메서드
+     * 실시간 정보가 없을 때에는 리더보드 정보만을 제공하고,
+     * 실시간 정보가 있을 때에는 highestPrice 와 priceSize 도 함께 보내준다.
+     * @param auctionId
+     * @return
+     */
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
+        // TODO - 실시간 정보가 없을 경우 구현 따로 필요함
 
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
         
@@ -103,9 +106,9 @@ public class BiddingService {
 
         // 3. 실시간 최고가, 리더보드 갱신하기
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
-        String key = getKey(auctionId);
 
-        LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, key, req, memberId);
+        LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
+        
 
         // TODO - 4. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
         //  MySQL 도 구독해놓고, 최고가 정보를 받아야 함
@@ -115,44 +118,34 @@ public class BiddingService {
     /**
      * 리더보드와 실시간 최고가를 갱신하는 메서드
      * @param auctionRealtime redis 에 저장되어 있는 실시간 경매 정보
-     * @param key redis 에 리더보드가 저장된 키
      * @param req client 측에서 넘어온 요청 정보
      * @param memberId 접근하는 사용자의 ID
      * @return newHighestPrice
      */
     @RTransactional
-    public LeaderBoardMemberResp updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, String key, AuctionBidReq req, long memberId) {
+    public LeaderBoardMemberResp updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, AuctionBidReq req, long memberId, long auctionId) {
 
         // 3-1. 실시간 최고가 갱신
         int newHighestPrice = auctionRealtime.updateHighestPrice();
 
         auctionRealtimeRepository.save(auctionRealtime);
+        
+        // 3-2. 유저별 입찰 최고가 정보 갱신하기
+        auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
 
-        // 3-2. 리더보드 갱신
-        int limit = LeaderBoardConstants.limit;
+        // 3-3. 리더보드 갱신
 
         LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
 
-        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(key);
+        auctionRealtimeLeaderBoardRepository.save(newHighestPrice, memberInfo, auctionId);
 
-        scoredSortedSet.add(newHighestPrice, memberInfo);
-
-        scoredSortedSet.removeRangeByRank(-limit -1, -limit -1);
+        auctionRealtimeLeaderBoardRepository.removeOutOfRange(auctionId);
 
         LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(memberInfo, newHighestPrice);
+        
+        // TODO - 입찰 강탈 시 메시지 보내기
 
         return resp;
-    }
-
-    /**
-     * auctionId로 Redis 에 leaderboard 를 저장할 키를 생성하는 메서드
-     * @param auctionId 경매 ID
-     * @return Redis 에 leaderboard 를 저장할 키
-     */
-    public String getKey(long auctionId) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("leaderboard:").append(auctionId);
-        return sb.toString();
     }
 
     /**
@@ -164,17 +157,15 @@ public class BiddingService {
     public List<LeaderBoardMemberResp> getInitialLeaderBoard(long auctionId) {
         List<LeaderBoardMemberResp> list = new ArrayList<>();
 
-        String key = getKey(auctionId);
+        Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderBoardMemberInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
+        System.out.println(leaderBoardMemberInfos.size());
 
-        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(key);
-        Collection<LeaderBoardMemberInfo> leaderBoardMemberInfos = scoredSortedSet.valueRangeReversed(0, -1);
-
-
-        for (LeaderBoardMemberInfo info: leaderBoardMemberInfos) {
-            int bidPrice = scoredSortedSet.getScore(info).intValue();
-            LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(info, bidPrice);
+        for (ScoredEntry<LeaderBoardMemberInfo> info: leaderBoardMemberInfos) {
+            int bidPrice = info.getScore().intValue();
+            LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(info.getValue(), bidPrice);
             list.add(resp);
         }
+        System.out.println(list.size());
 
         return list;
     }
@@ -187,7 +178,6 @@ public class BiddingService {
      */
     @RealTimeLock
     public void updatePriceSize(long auctionId, AuctionUpdatePriceSizeReq req, long memberId) {
-        // TODO - 분산 락 처리 과정 필요
         log.info("req: {}", req);
         Optional<AuctionRealtime> auctionRealTimeO = auctionRealtimeRepository.findById(auctionId);
 
@@ -198,21 +188,18 @@ public class BiddingService {
         log.info("auctionRealTime: {}", auctionRealTimeO.get());
 
         // 2. 해당 경매를 올린 사용자가 아니면 에러 내기
-        Optional<AuctionIngEntity> auctionIngO = auctionIngRepository.findBySellerIdAndId(memberId, auctionId, AuctionIngEntity.class);
-
-        if (auctionIngO.isEmpty()) {
+        if (auctionRealTimeO.get().getSellerId() != memberId) {
             throw new BusinessException("권한이 없습니다.", ErrorCode.BUSINESS_EXCEPTION_ERROR);
         }
 
         // 3. 가격 수정하기
-
         auctionRealTimeO.get().updatePriceSize(req.getPriceSize());
 
-        // 수정사항 저장하기 (JPA 는 dirty check 가 되는데, redis 는 안되는 듯)
         auctionRealtimeRepository.save(auctionRealTimeO.get());
         
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
         //  -> MySQL 도 구독해놔야
+
     }
 
 }

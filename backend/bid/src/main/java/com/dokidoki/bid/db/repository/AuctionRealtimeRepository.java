@@ -2,8 +2,6 @@ package com.dokidoki.bid.db.repository;
 
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 
-import java.time.Duration;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 

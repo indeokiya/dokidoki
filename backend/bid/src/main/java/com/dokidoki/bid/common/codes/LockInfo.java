@@ -11,8 +11,6 @@ public enum LockInfo {
     final private TimeUnit timeUnit;
 
 
-
-
     LockInfo(String lockName, long waitTime, long unlockTime, TimeUnit timeUnit) {
         this.lockName  = lockName;
         this.waitTime = waitTime;

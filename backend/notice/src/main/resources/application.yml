@@ -1,0 +1,55 @@
+server:
+  port: 8084
+
+spring:
+  datasource:
+    url: jdbc:mysql://j8a202.p.ssafy.io:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+#    url: jdbc:mysql://localhost:3306/dokidoki?serverTimezone=UTC&characterEncoding=UTF-8
+    username: dokidoki
+    password: dokidoki202
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  kafka:
+    bootstrap-servers:
+      - 3.35.49.175:9092
+    consumer:
+      # consumer bootstrap servers가 따로 존재하면 설정
+      # bootstrap-servers: localhost:9092
+      # 식별 가능한 Consumer Group Id
+      group-id: test.group
+      # Kafka 서버에 초기 offset이 없거나, 서버에 현재 offset이 더 이상 존재하지 않을 경우 수행할 작업을 설정
+      # latest: 가장 최근에 생산된 메시지로 offeset reset
+      # earliest: 가장 오래된 메시지로 offeset reset
+      # none: offset 정보가 없으면 Exception 발생
+      auto-offset-reset: latest
+      # 데이터를 받아올 때, key/value를 역직렬화
+      # JSON 데이터를 받아올 것이라면 JsonDeserializer
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.JsonDeserializer
+    auctionRegisterConfig:
+      topic: auction.register
+    auctionUpdateConfig:
+      topic: auction.update
+    auctionEndConfig:
+      topic: auction.end
+    BidConfig:
+      topic: bid
+#    producer:
+      # producer bootstrap servers가 따로 존재하면 설정
+      # bootstrap-servers: 3.34.97.97:9092
+jwt:
+  issuer: dokidoki.com
+  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
+  access_expiration: 3600000
+  refresh_expiration: 1296000000
