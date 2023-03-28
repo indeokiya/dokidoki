@@ -1,7 +1,7 @@
 package com.dokidoki.notice.api.controller;
 
-import com.dokidoki.notice.api.dto.SocketBidInfoDTO;
-import com.dokidoki.notice.api.dto.SocketPriceSizeDTO;
+import com.dokidoki.notice.api.response.SocketBidInfoResp;
+import com.dokidoki.notice.api.response.SocketPriceSizeResp;
 import com.dokidoki.notice.kafka.dto.KafkaAuctionUpdateDTO;
 import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.RequiredArgsConstructor;
@@ -20,28 +20,19 @@ public class AuctionSocketController {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     @MessageMapping("ws/auctions/{auctionId}/bid") // kafka 가 이쪽으로 메시지 보내면 함수가 호출됨
-    public void getBid(@DestinationVariable long auctionId, @Payload KafkaBidDTO kafkaBidDTO) {
-        System.out.println(kafkaBidDTO);
-        log.info("KafkaDTO:{}",kafkaBidDTO);
+    public void getBid(@DestinationVariable long auctionId, @Payload SocketBidInfoResp resp) {
+        log.info("sending socketBidInfoResp: {}", resp);
 
-        // Kafka DTO 가 바뀌면 from 메서드도 바꾸기!!
-        SocketBidInfoDTO dto = SocketBidInfoDTO.from(kafkaBidDTO);
-
-        log.info("sending socketBidInfoDTO: {}", dto);
         // 최종적으로 client 가 구독해 놓고 데이터를 받아야 하는 링크가 destination 에 들어감
-        simpMessagingTemplate.convertAndSend("/topic/auctions/"+auctionId+"/realtime", dto);
+        simpMessagingTemplate.convertAndSend("/topic/auctions/"+auctionId+"/realtime", resp);
 
     }
 
     @MessageMapping("ws/auctions/{auctionId}/price-size")
-    public void getPriceSize(@DestinationVariable long auctionId, @Payload KafkaAuctionUpdateDTO kafkaAuctionUpdateDTO) {
-        System.out.println(kafkaAuctionUpdateDTO);
-        log.info("KafkaUpdateDTO:{}, auctionId: {}",kafkaAuctionUpdateDTO, auctionId);
-        // Kafka DTO 가 바뀌면 from 메서드도 바꾸기!!
-        SocketPriceSizeDTO dto = SocketPriceSizeDTO.from(kafkaAuctionUpdateDTO);
+    public void getPriceSize(@DestinationVariable long auctionId, @Payload SocketPriceSizeResp resp) {
 
-        log.info("sending socketPriceSizeDTO: {}", dto);
+        log.info("sending socketPriceSizeResp: {}", resp);
         // 최종적으로 client 가 구독해 놓고 데이터를 받아야 하는 링크가 destination 에 들어감
-        simpMessagingTemplate.convertAndSend("/topic/auctions/"+auctionId+"/realtime", dto);
+        simpMessagingTemplate.convertAndSend("/topic/auctions/"+auctionId+"/realtime", resp);
     }
 }

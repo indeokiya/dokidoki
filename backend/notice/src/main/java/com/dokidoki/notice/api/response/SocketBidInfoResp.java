@@ -1,6 +1,5 @@
-package com.dokidoki.notice.api.dto;
+package com.dokidoki.notice.api.response;
 
-import com.dokidoki.notice.api.response.LeaderBoardMemberResp;
 import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,21 +8,21 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SocketBidInfoDTO {
+public class SocketBidInfoResp {
     private String type;
     private LeaderBoardMemberResp bidInfo;
 
-    public static SocketBidInfoDTO from(KafkaBidDTO dto) {
+    public static SocketBidInfoResp from(KafkaBidDTO dto) {
         // TODO - KafkaBidDTO 에서 담을 내용 더 있으면 알아서 넣기
-        LeaderBoardMemberResp resp = LeaderBoardMemberResp.builder()
+        LeaderBoardMemberResp memberResp = LeaderBoardMemberResp.builder()
                 .name(dto.getName()).build();
 
-        SocketBidInfoDTO resDTO = SocketBidInfoDTO.builder()
+        SocketBidInfoResp resp = SocketBidInfoResp.builder()
                 .type("bid")
-                .bidInfo(resp)
+                .bidInfo(memberResp)
                 .build();
 
-        return resDTO;
+        return resp;
 
     }
 }
