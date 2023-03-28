@@ -33,6 +33,7 @@ public class NoticeService {
      * @param dto
      */
     public void auctionSuccess(KafkaAuctionEndDTO dto) {
+        log.info("received kafkaAuctionEndDTO: {}", dto);
         NoticeSuccessResp resp = NoticeSuccessResp.of(dto);
         long memberId = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId()).getMemberId();
         messagingTemplate.convertAndSend("ws/notice/"+memberId+"/success", resp);
@@ -43,6 +44,7 @@ public class NoticeService {
      * @param dto
      */
     public void auctionFail(KafkaAuctionEndDTO dto) {
+        log.info("received kafkaAuctionEndDTO: {}", dto);
         long auctionId = dto.getAuctionId();
         long winnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
         Set<Map.Entry<Long, Integer>> entries = auctionRealtimeMemberRepository.getAll(auctionId);
@@ -62,6 +64,7 @@ public class NoticeService {
      * @param dto
      */
     public void auctionComplete(KafkaAuctionEndDTO dto) {
+        log.info("received kafkaAuctionEndDTO: {}", dto);
         long sellerId = dto.getSellerId();
         NoticeCompleteResp resp = NoticeCompleteResp.of(dto);
         messagingTemplate.convertAndSend("ws/notice/"+sellerId+"/complete", resp);
@@ -73,12 +76,14 @@ public class NoticeService {
      * @param dto
      */
     public void auctionOutBid(KafkaBidDTO dto) {
+        log.info("received kafkaBidDTO: {}", dto);
         long memberId = dto.getMemberId();
         long beforeWinnerId = dto.getBeforeWinnerId();
         if (memberId == beforeWinnerId) {
             return;
         }
         NoticeOutBidResp resp = NoticeOutBidResp.of(dto);
+        messagingTemplate.convertAndSend("ws/notice/"+beforeWinnerId+"/outbid", resp);
 
 
     }

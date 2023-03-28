@@ -90,6 +90,7 @@ class BiddingServiceTest {
     public void 경매_초기화_등록_정보_확인() {
         AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
         System.out.println(auctionRealtime);
+        System.out.println(biddingService.getInitialLeaderBoard(auctionId));
 
     }
 
@@ -105,7 +106,6 @@ class BiddingServiceTest {
             for (int i = 0; i < 2; i ++) {
                 reqs[i] = AuctionBidReq.builder()
                         .name(names[i])
-                        .email(emails[i])
                         .currentHighestPrice(highestPrice + priceSize * i)
                         .currentPriceSize(priceSize).build();
             }
@@ -117,13 +117,11 @@ class BiddingServiceTest {
 
             AuctionBidReq wrongHighestPriceReq = AuctionBidReq.builder()
                     .name(names[0])
-                    .email(emails[0])
                     .currentHighestPrice(highestPrice + 2 * priceSize)
                     .currentPriceSize(priceSize).build();
 
             AuctionBidReq wrongPriceSizeReq = AuctionBidReq.builder()
                     .name(names[0])
-                    .email(emails[0])
                     .currentHighestPrice(highestPrice)
                     .currentPriceSize(priceSize * 2).build();
 
@@ -222,7 +220,6 @@ class BiddingServiceTest {
                 for (int i = 0; i < limit + 2; i++) {
                     AuctionBidReq req = AuctionBidReq.builder()
                             .name(names[0])
-                            .email(emails[0])
                             .currentHighestPrice(highestPrice + i * priceSize)
                             .currentPriceSize(priceSize).build();
                     biddingService.bid(auctionId, req, memberIds[0]);
