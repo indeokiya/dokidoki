@@ -25,7 +25,7 @@ public class ConsumerConfig {
     @Value(value = "${spring.kafka.bootstrap-servers[0]}")
     private String bootstrapAddress;
 
-    @Value(value = "${spring.kafka.BidConfig.topic}")
+    @Value(value = "${spring.kafka.bidConfig.topic}")
     private String bidTopic;
     @Value(value = "${spring.kafka.auctionUpdateConfig.topic}")
     private String auctionUpdateTopic;
