@@ -20,17 +20,17 @@ public class KafkaBidProducer {
     @Value(value = "${spring.kafka.auctionEndConfig.topic}")
     private String auctionEndTopic;
 
-    @Value(value = "${spring.kafka.BidConfig.topic}")
+    @Value(value = "${spring.kafka.bidConfig.topic}")
     private String BidTopic;
 
     private final KafkaTemplate<String, KafkaAuctionEndDTO> auctionEndKafkaTemplate;
-    private final KafkaTemplate<String, KafkaBidDTO> BidKafkaTemplate;
+    private final KafkaTemplate<String, KafkaBidDTO> bidKafkaTemplate;
     @Autowired
     public KafkaBidProducer(
             KafkaTemplate<String, KafkaAuctionEndDTO> auctionEndKafkaTemplate,
-            KafkaTemplate<String, KafkaBidDTO> BidKafkaTemplate) {
+            KafkaTemplate<String, KafkaBidDTO> bidKafkaTemplate) {
         this.auctionEndKafkaTemplate = auctionEndKafkaTemplate;
-        this.BidKafkaTemplate = BidKafkaTemplate;
+        this.bidKafkaTemplate = bidKafkaTemplate;
     }
 
     public void sendAuctionEnd(KafkaAuctionEndDTO auctionEnd) {
@@ -52,7 +52,7 @@ public class KafkaBidProducer {
     }
 
     public void sendBid(KafkaBidDTO bid) {
-        ListenableFuture<SendResult<String, KafkaBidDTO>> future = BidKafkaTemplate.send(BidTopic, bid);
+        ListenableFuture<SendResult<String, KafkaBidDTO>> future = bidKafkaTemplate.send(BidTopic, bid);
         future.addCallback(new ListenableFutureCallback<>() {
             @Override
             public void onSuccess(SendResult<String, KafkaBidDTO> result) {
