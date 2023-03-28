@@ -43,7 +43,7 @@ spring:
       topic: auction.update
     auctionEndConfig:
       topic: auction.end
-    BidConfig:
+    bidConfig:
       topic: bid
 #    producer:
       # producer bootstrap servers가 따로 존재하면 설정
