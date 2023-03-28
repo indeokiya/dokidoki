@@ -1,47 +1,116 @@
-import { useState, useCallback, useRef } from 'react';
-import Grid from '@mui/material/Grid';
-import axios from 'axios';
-import { Button } from '@mui/material';
-import DaumPostcode from 'react-daum-postcode';
+// InfiniteScroll.tsx
+import React, { useState, useCallback, useEffect } from 'react';
+import styled from 'styled-components';
 
-const TestContainer = () => {
-  const [address, setAddress] = useState('');
-  const [visible, setVisible] = useState(false); // 우편번호 컴포넌트의 노출여부 상태
 
-  const handleComplete = (data: any) => {
-    let fullAddress = data.address;
-    let extraAddress = '';
+const TestContainer = (): JSX.Element => {
+  const [page, setPage] = useState<number>(1); //가져올 페이지 
+  const [posts, setPosts] = useState<postType[]>(getPostList(1)); //초반 posts셋팅하기 
 
-    if (data.addressType === 'R') {
-      if (data.bname !== '') {
-        extraAddress += data.bname;
-      }
-      if (data.buildingName !== '') {
-        extraAddress += extraAddress !== '' ? `,${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
+  const handleScroll = useCallback((): void => { // 콜백을 지정해 주는데 왜그러는지 모르겠음 일단 그렇다고 하자 
+    const { innerHeight } = window;
+    const { scrollHeight } = document.body;
+    const { scrollTop } = document.documentElement;
+
+    if (Math.round(scrollTop + innerHeight) >= scrollHeight) {
+      setPosts(posts.concat(getPostList(page + 1)));
+      setPage((prevPage: number) => prevPage + 1);
     }
-    setAddress(fullAddress);
-  };
+  }, [page, posts]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, true);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll, true);
+    }
+  }, [handleScroll]);
 
   return (
-    <>
-      <Button
-        onClick={() => {
-          setVisible(true);
-        }}
-      >
-        열기
-      </Button>
-      {address}
-      {visible && (
-        <div>
-          <Button onClick={() => setVisible(false)}>닫기</Button>
-          <DaumPostcode onComplete={handleComplete} />
-        </div>
-      )}
-    </>
+    <Container>
+      {
+        posts.map((post: postType, idx: number) => (
+          <PostItem key={idx}>{post.contents}</PostItem>
+        ))
+      }
+    </Container>
   );
 };
 
 export default TestContainer;
+
+const Container = styled.div`
+  width: 100%;
+  max-width: 1000px;
+  margin: 4rem auto;
+`;
+
+const PostItem = styled.div`
+  width: 100%;
+  height: 350px;
+  border: 2px solid black;
+`;
+
+
+
+// lib/postList.ts
+export type postType = {
+  page: number;
+  contents: string;
+};
+
+ const getPostList = (page: number): postType[] => {
+  return postList.filter((post: postType) => post.page === page);
+};
+
+export const postList: postType[] = [
+  {
+    page: 1,
+    contents: '안녕하세요 1번째 글',
+  },
+
+  {
+    page: 1,
+    contents: '안녕하세요 2번째 글',
+  },
+
+  {
+    page: 1,
+    contents: '안녕하세요 3번째 글',
+  },
+
+  {
+    page: 2,
+    contents: '안녕하세요 4번째 글',
+  },
+
+  {
+    page: 2,
+    contents: '안녕하세요 5번째 글',
+  },
+
+  {
+    page: 2,
+    contents: '안녕하세요 6번째 글',
+  },
+
+  {
+    page: 3,
+    contents: '안녕하세요 7번째 글',
+  },
+
+  {
+    page: 3,
+    contents: '안녕하세요 8번째 글',
+  },
+
+  {
+    page: 3,
+    contents: '안녕하세요 9번째 글',
+  },
+
+  {
+    page: 4,
+    contents: '안녕하세요 10번째 글',
+  },
+];
