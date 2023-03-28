@@ -8,8 +8,6 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class KafkaBidDTO {
 
     private long beforeWinnerId;
