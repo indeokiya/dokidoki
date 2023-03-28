@@ -18,12 +18,11 @@ public class KafkaAuctionConsumer {
             @Payload KafkaAuctionEndDTO auction,
             @Headers MessageHeaders headers) {
         System.out.println("Received auction end message : " + auction);
-        System.out.print("header | ");
+        log.info("Received auction end message: [{}]", auction);
         headers.keySet().forEach(key -> {
-//            log.debug("header | key: [{}] value: [{}]", key, headers.get(key));
-            System.out.print("{" + key + ", " + headers.get(key) + "} ");
+            log.info("header | key: [{}] value: [{}]", key, headers.get(key));
         });
-        System.out.println("");
+
 
         // auction : memberid, name, email .....
         // websocket method_bid_success(memberid, name, email)
@@ -35,11 +34,11 @@ public class KafkaAuctionConsumer {
             @Payload KafkaBidDTO bid,
             @Headers MessageHeaders headers) {
         System.out.println("Received bid message : " + bid);
-        System.out.print("header | ");
+        log.info("Received bid message: [{}]", bid);
         headers.keySet().forEach(key -> {
-//            log.debug("header | key: [{}] value: [{}]", key, headers.get(key));
-            System.out.print("{" + key + ", " + headers.get(key) + "} ");
+            log.info("header | key: [{}] value: [{}]", key, headers.get(key));
+
         });
-        System.out.println("");
+
     }
 }
