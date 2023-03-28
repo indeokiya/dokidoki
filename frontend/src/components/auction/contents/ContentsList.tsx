@@ -21,7 +21,7 @@ const getInProgress = (category_id: number, keyword: string, page: number, size:
       },
     })
     .then(({ data }) => {
-      console.log('경매중인 물건 : ', data.data);
+      console.log('경매중인 물건 >> ', data.data);
       return data.data;
     });
 };
@@ -36,7 +36,7 @@ const getEndList = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('경매가 끝난 물건 : ', data.data);
+      console.log('경매가 끝난 물건 >> ', data.data);
       return data.data;
     });
 };
@@ -51,7 +51,7 @@ const getDeadline = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('마감이 임박한 경매 데이터 : ', data.data);
+      console.log('마감이 임박한 경매 데이터 >> ', data.data);
       return data.data;
     });
 };
@@ -69,20 +69,22 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
       ['infinity', category, keyword, size],
       ({ pageParam = 0 }) => {
         console.log('useInfinity 함수 동작하는 중~');
-        console.log('category : ', category);
-        console.log('keyword : ', keyword ? keyword : 'undefined');
+        console.log('category >> ', category);
+        console.log('keyword >> ', keyword );
 
         //조건에 따른 api 분기
         if (category < 9) {
           return getInProgress(category, keyword, pageParam, size); // 여기서 분기할 수 있을 것 같음
-        } else {
+        } else if(category ==9){
           return getDeadline(pageParam, size);
+        }else{
+          return getEndList(pageParam,size);
         }
       },
       {
         getNextPageParam: (lastPage, allPages) => {
           //is_last:true이면 false리턴해서 hasNextpage 변수를 false로 변경해줌 => 무한스크롤 정지
-          if (lastPage.contents.is_last) {
+          if (lastPage.is_last) {
             return false;
           } else {
             return allPages.length;
@@ -95,6 +97,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
   useEffect(() => {
     if (inView && !isFetchingNextPage) {
       fetchNextPage();
+      console.log("hasNextPage >> ",hasNextPage)
     }
   }, [inView]);
 
