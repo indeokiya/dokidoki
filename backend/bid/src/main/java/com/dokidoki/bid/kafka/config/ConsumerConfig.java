@@ -45,8 +45,8 @@ public class ConsumerConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, KafkaAuctionRegisterDTO> auctionRegisterKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
-        factory.setConsumerFactory(auctionRegisterConsumerFactory(auctionRegisterTopic + ".bidGroup"));
-        factory.setConcurrency(1);
+        factory.setConsumerFactory(auctionRegisterConsumerFactory(auctionRegisterTopic + ".bid.group"));
+        factory.setConcurrency(3);
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }
@@ -68,8 +68,8 @@ public class ConsumerConfig {
     @Bean
     public ConcurrentKafkaListenerContainerFactory<String, KafkaAuctionUpdateDTO> auctionUpdateKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
-        factory.setConsumerFactory(auctionUpdateConsumerFactory(auctionUpdateTopic + ".bidGroup"));
-        factory.setConcurrency(1);
+        factory.setConsumerFactory(auctionUpdateConsumerFactory(auctionUpdateTopic + ".bid.group"));
+        factory.setConcurrency(3);
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }
