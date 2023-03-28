@@ -19,7 +19,7 @@ export type Post = {
 
 
     //정료된 옥션에 추가되는 데이터
-    final_price : number|-1;
+    final_price?: number|-1;
     start_time:string|"00:00:00";
     end_tiem:string|"00:00:00";
     is_sold_out:boolean|false;

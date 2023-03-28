@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import Content from './Content';
 import { auctionAPI } from '../../../api/axios';
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from 'react-query';
 import {  useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
 import CircularProgress from '@mui/material/CircularProgress';
