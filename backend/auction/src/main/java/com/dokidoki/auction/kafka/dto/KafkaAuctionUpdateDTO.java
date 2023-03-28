@@ -9,12 +9,10 @@ import lombok.ToString;
 @Setter
 @ToString
 public class KafkaAuctionUpdateDTO {
-
     private long productId;
     private int priceSize;              // 경매 단위
 
     public KafkaAuctionUpdateDTO() {}
-
     @Builder
     public KafkaAuctionUpdateDTO(long productId, int priceSize) {
         this.productId = productId;
