@@ -17,23 +17,19 @@ class LeaderBoardMemberRespTest {
     String name = "임아무개";
 
     LeaderBoardMemberInfo nullNameInfo = LeaderBoardMemberInfo.builder()
-            .email(email)
             .name(null)
             .build();
 
     LeaderBoardMemberInfo nullEmailInfo = LeaderBoardMemberInfo.builder()
-            .email(null)
             .name(name)
             .build();
 
 
     LeaderBoardMemberInfo emptyNameInfo = LeaderBoardMemberInfo.builder()
-            .email(email)
             .name("")
             .build();
 
     LeaderBoardMemberInfo emptyEmailInfo = LeaderBoardMemberInfo.builder()
-            .email("")
             .name(name)
             .build();
 

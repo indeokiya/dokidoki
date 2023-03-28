@@ -15,6 +15,7 @@ import com.dokidoki.bid.db.repository.AuctionRealtimeLeaderBoardRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeMemberRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import com.dokidoki.bid.kafka.dto.KafkaAuctionRegisterDTO;
+import com.dokidoki.bid.kafka.dto.KafkaAuctionUpdateDTO;
 import com.dokidoki.bid.kafka.dto.KafkaBidDTO;
 import com.dokidoki.bid.kafka.service.KafkaBidProducer;
 import lombok.RequiredArgsConstructor;
@@ -59,21 +60,26 @@ public class BiddingService {
      * @return
      */
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
-        // TODO - 실시간 정보가 없을 경우 구현 따로 필요함
+
+        // 1. 초기 리더보드 정보 가져오기
+        List<LeaderBoardMemberResp> initialLeaderBoard = getInitialLeaderBoard(auctionId);
 
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
         
-        // 1. 경매 정보가 없는 경우, 에러 발생시키기
+        // 2. 경매 정보가 없는 경우, 리더보드 정보만 보내기
         if (auctionRealtimeO.isEmpty()) {
-            throw new InvalidValueException("잘못된 접근입니다. auctionId가 존재하지 않습니다.");
+            AuctionInitialInfoResp resp = AuctionInitialInfoResp.builder()
+                    .leaderBoard(initialLeaderBoard)
+                    .build();
+            return resp;
         }
-
+        
+        // 3. 경매 정보가 있는 경우, 현재 최고가와 경매 단위도 같이 보내기
         AuctionInitialInfoResp resp = AuctionInitialInfoResp.builder()
                 .highestPrice(auctionRealtimeO.get().getHighestPrice())
                 .priceSize(auctionRealtimeO.get().getPriceSize())
-                .leaderBoard(getInitialLeaderBoard(auctionId))
+                .leaderBoard(initialLeaderBoard)
                 .build();
-
         return resp;
     }
 
@@ -119,7 +125,9 @@ public class BiddingService {
         long nowWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
 
         // 5. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
-        producer.sendBid(KafkaBidDTO.of(auctionId, resp, req, memberId, beforeWinnerId));
+        KafkaBidDTO kafkaBidDTO = KafkaBidDTO.of(auctionRealtime, req, resp, memberId, beforeWinnerId);
+        log.info("sending KafkaBidDTO: {}", kafkaBidDTO);
+        producer.sendBid(kafkaBidDTO);
     }
 
     /**
@@ -155,7 +163,7 @@ public class BiddingService {
 
     /**
      * Redis 의 SortedSet 에 저장된 leaderboard 정보를 바탕으로
-     * client 에게 보내줄 리더보드 정보를 가공하는 메서드. 컨트롤러에서 접근하는 메서드.
+     * client 에게 보내줄 리더보드 정보를 가공하는 메서드.
      * @param auctionId 경매 ID
      * @return client 에게 보내줄 리더보드 정보
      */
@@ -163,14 +171,13 @@ public class BiddingService {
         List<LeaderBoardMemberResp> list = new ArrayList<>();
 
         Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderBoardMemberInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
-        System.out.println(leaderBoardMemberInfos.size());
 
         for (ScoredEntry<LeaderBoardMemberInfo> info: leaderBoardMemberInfos) {
             int bidPrice = info.getScore().intValue();
             LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(info.getValue(), bidPrice);
             list.add(resp);
         }
-        System.out.println(list.size());
+        log.info("initialLeaderBoard: {}", list);
 
         return list;
     }
@@ -202,10 +209,12 @@ public class BiddingService {
 
         auctionRealtimeRepository.save(auctionRealTimeO.get());
 
+        KafkaAuctionUpdateDTO kafkaAuctionUpdateDTO = KafkaAuctionUpdateDTO.of(auctionRealTimeO.get());
+        log.info("sending kafkaAuctionUpdateDTO: {}", kafkaAuctionUpdateDTO);
 
         // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
         //  -> MySQL 도 구독해놔야
-//        producer.sendAuctionUpdate(KafkaAuctionUpdateDTO.of(auctionRealTimeO.get()));
+//        producer.sendAuctionUpdate(kafkaAuctionUpdateDTO);
 
     }
 

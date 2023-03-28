@@ -21,26 +21,29 @@ import javax.servlet.http.HttpServletRequest;
 public class NoticeSocketController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
-    //private final JWTUtil jwtUtil;
 
     @MessageMapping("ws/notice/{memberId}/success")
     public void sendSuccessNotice(@DestinationVariable long memberId, @Payload NoticeSuccessResp resp) {
+        log.info("sending noticeSuccessResp to socket: {}, memberId: {}",resp, memberId);
         simpMessagingTemplate.convertAndSend("/topic/notice/"+memberId, resp);
     }
 
     @MessageMapping("ws/notice/{memberId}/fail")
     public void sendFailureNotice(@DestinationVariable long memberId, @Payload NoticeFailResp resp) {
+        log.info("sending noticeFailResp to socket: {}, memberId: {}",resp, memberId);
         simpMessagingTemplate.convertAndSend("/topic/notice/"+memberId, resp);
 
     }
 
     @MessageMapping("ws/notice/{memberId}/complete")
     public void sendCompleteNotice(@DestinationVariable long memberId, @Payload NoticeCompleteResp resp) {
+        log.info("sending noticeCompleteResp to socket: {}, memberId: {}",resp, memberId);
         simpMessagingTemplate.convertAndSend("/topic/notice/"+memberId, resp);
     }
 
     @MessageMapping("ws/notice/{memberId}/outbid")
     public void sendOutBidNotice(@DestinationVariable long memberId, @Payload NoticeOutBidResp resp) {
+        log.info("sending noticeOutBidResp to socket: {}, memberId: {}",resp, memberId);
         simpMessagingTemplate.convertAndSend("/topic/notice/"+memberId, resp);
     }
 }

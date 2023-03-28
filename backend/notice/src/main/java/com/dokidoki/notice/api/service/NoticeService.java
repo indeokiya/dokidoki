@@ -2,11 +2,13 @@ package com.dokidoki.notice.api.service;
 
 import com.dokidoki.notice.api.response.NoticeCompleteResp;
 import com.dokidoki.notice.api.response.NoticeFailResp;
+import com.dokidoki.notice.api.response.NoticeOutBidResp;
 import com.dokidoki.notice.db.entity.AuctionRealtime;
 import com.dokidoki.notice.db.repository.AuctionRealtimeLeaderBoardRepository;
 import com.dokidoki.notice.db.repository.AuctionRealtimeMemberRepository;
 import com.dokidoki.notice.api.response.NoticeSuccessResp;
 import com.dokidoki.notice.kafka.dto.KafkaAuctionEndDTO;
+import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
@@ -31,6 +33,7 @@ public class NoticeService {
      * @param dto
      */
     public void auctionSuccess(KafkaAuctionEndDTO dto) {
+        log.info("received kafkaAuctionEndDTO: {}", dto);
         NoticeSuccessResp resp = NoticeSuccessResp.of(dto);
         long memberId = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId()).getMemberId();
         messagingTemplate.convertAndSend("ws/notice/"+memberId+"/success", resp);
@@ -41,6 +44,7 @@ public class NoticeService {
      * @param dto
      */
     public void auctionFail(KafkaAuctionEndDTO dto) {
+        log.info("received kafkaAuctionEndDTO: {}", dto);
         long auctionId = dto.getAuctionId();
         long winnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
         Set<Map.Entry<Long, Integer>> entries = auctionRealtimeMemberRepository.getAll(auctionId);
@@ -60,6 +64,7 @@ public class NoticeService {
      * @param dto
      */
     public void auctionComplete(KafkaAuctionEndDTO dto) {
+        log.info("received kafkaAuctionEndDTO: {}", dto);
         long sellerId = dto.getSellerId();
         NoticeCompleteResp resp = NoticeCompleteResp.of(dto);
         messagingTemplate.convertAndSend("ws/notice/"+sellerId+"/complete", resp);
@@ -68,9 +73,18 @@ public class NoticeService {
 
     /**
      * 입찰 강탈되었다는 알림 발송
-     * @param auctionRealtime
+     * @param dto
      */
-    public void auctionOutBid(AuctionRealtime auctionRealtime) {
+    public void auctionOutBid(KafkaBidDTO dto) {
+        log.info("received kafkaBidDTO: {}", dto);
+        long memberId = dto.getMemberId();
+        long beforeWinnerId = dto.getBeforeWinnerId();
+        if (memberId == beforeWinnerId) {
+            return;
+        }
+        NoticeOutBidResp resp = NoticeOutBidResp.of(dto);
+        messagingTemplate.convertAndSend("ws/notice/"+beforeWinnerId+"/outbid", resp);
+
 
     }
 }
