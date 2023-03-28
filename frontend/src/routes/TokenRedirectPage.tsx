@@ -34,8 +34,6 @@ const TokenRedirectPage = () => {
         }
         else console.log('리프레시 토큰 안들어감');
 
-        
-
         navigate('/',{replace:true})
     }, []);
 

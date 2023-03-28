@@ -33,18 +33,16 @@ const LoginPage = () => {
   `;
 
   const kakaoLoginHandler = () => {
-    console.log(process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/kakao");
     userAPI.get(
-      process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/kakao"
+      "/oauth2/login/kakao"
     ).then(({data})=>{
       window.location.replace(data.url);
     })
   };
 
   const googleLoginHandler = () => {
-    console.log(process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/google");
     userAPI.get(
-      process.env.REACT_APP_USER_SERVER_BASE_URL + "/oauth2/login/google"
+      "/oauth2/login/google"
     ).then(({data})=>{
       window.location.replace(data.url);
     })
