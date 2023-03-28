@@ -4,12 +4,14 @@ import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
 import com.dokidoki.bid.common.codes.RealTimeConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.quota.ClientQuotaAlteration;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -31,11 +33,15 @@ public class AuctionRealtimeLeaderBoardRepository {
         return sb.toString();
     }
 
-    public LeaderBoardMemberInfo getWinner(long auctionId) {
+    public Optional<LeaderBoardMemberInfo> getWinner(long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         LeaderBoardMemberInfo last = scoredSortedSet.last();
         log.info("score: {}", scoredSortedSet.getScore(last));
-        return last;
+        if (last == null) {
+            return Optional.empty();
+        } else {
+            return  Optional.of(last);
+        }
     }
 
     public Collection<ScoredEntry<LeaderBoardMemberInfo>> getAll(long auctionId) {
