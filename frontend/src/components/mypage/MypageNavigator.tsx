@@ -1,13 +1,13 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-
+import { useGetRecoilValueInfo_UNSTABLE } from 'recoil';
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Drawer, { DrawerProps } from '@mui/material/Drawer';
+import Drawer from '@mui/material/Drawer';
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import SellIcon from '@mui/icons-material/Sell';
@@ -67,29 +67,13 @@ const MypageNavigator: React.FC<{
     );
   };
 
+
+  
+
+
   const { ...other } = props;
 
-  const StyledDiv = styled.div`
-    text-align: center;
-  `;
-
-  const StyledEditIcon = styled.div`
-    color: white;
-    background-color: gray;
-    border: 1px solid white;
-    border-radius: 100px;
-    width: 40px;
-    height: 40px;
-    line-height: 55px;
-    transition: 0.5s;
-    &:hover {
-      background-color: silver;
-    }
-  `;
-
-  const ImageInput = styled.input`
-    visibility: hidden;
-  `;
+  
 
   return (
     <Drawer variant="permanent" {...other}>
@@ -122,13 +106,6 @@ const MypageNavigator: React.FC<{
               sx={{ width: '150px', height: '150px', margin: '1rem auto' }}
             ></Avatar>
           </Badge>
-
-          {/* <label htmlFor="imageInput">
-              <ImageInputLabel>
-                <AddAPhotoIcon />
-                {imageCnt}/5
-              </ImageInputLabel>
-            </label> */}
 
           <Typography color="white" variant="subtitle1">
             김범식
@@ -171,3 +148,26 @@ const MypageNavigator: React.FC<{
 };
 
 export default MypageNavigator;
+
+
+const StyledDiv = styled.div`
+    text-align: center;
+  `;
+
+  const StyledEditIcon = styled.div`
+    color: white;
+    background-color: gray;
+    border: 1px solid white;
+    border-radius: 100px;
+    width: 40px;
+    height: 40px;
+    line-height: 55px;
+    transition: 0.5s;
+    &:hover {
+      background-color: silver;
+    }
+  `;
+
+  const ImageInput = styled.input`
+    visibility: hidden;
+  `;
