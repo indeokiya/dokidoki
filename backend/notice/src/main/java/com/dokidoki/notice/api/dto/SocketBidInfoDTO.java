@@ -16,8 +16,7 @@ public class SocketBidInfoDTO {
     public static SocketBidInfoDTO from(KafkaBidDTO dto) {
         // TODO - KafkaBidDTO 에서 담을 내용 더 있으면 알아서 넣기
         LeaderBoardMemberResp resp = LeaderBoardMemberResp.builder()
-                .name(dto.getName())
-                .email(dto.getEmail()).build();
+                .name(dto.getName()).build();
 
         SocketBidInfoDTO resDTO = SocketBidInfoDTO.builder()
                 .type("bid")
