@@ -2,12 +2,15 @@ import Grid from '@mui/material/Grid';
 import Content from './Content';
 import { auctionAPI } from '../../../api/axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { Post, endPost } from '../../../datatype/datatype';
-import { useState, useEffect, useRef } from 'react';
+import {  useEffect } from 'react';
 import { useInView } from 'react-intersection-observer';
+import CircularProgress from '@mui/material/CircularProgress';
+import styled from 'styled-components';
+import Typography from '@mui/material/Typography';
+import Sceleton from './Sceleton';
 
 //get 함수로 전체 경매 불러오기
-const getInProgress = (category_id:number, keyword:string, page: number, size: number) => {
+const getInProgress = (category_id: number, keyword: string, page: number, size: number) => {
   return auctionAPI
     .get('/lists/in-progress', {
       params: {
@@ -18,8 +21,8 @@ const getInProgress = (category_id:number, keyword:string, page: number, size: n
       },
     })
     .then(({ data }) => {
-      console.log('경매중인 물건 : ', data.data.contents);
-      return data.data.contents;
+      console.log('경매중인 물건 : ', data.data);
+      return data.data;
     });
 };
 
@@ -33,8 +36,8 @@ const getEndList = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('경매가 끝난 물건 : ', data.data.contents);
-      return data.data.contents;
+      console.log('경매가 끝난 물건 : ', data.data);
+      return data.data;
     });
 };
 
@@ -48,24 +51,22 @@ const getDeadline = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('마감이 임박한 경매 데이터 : ', data.data.contents);
-      return data.data.contents;
+      console.log('마감이 임박한 경매 데이터 : ', data.data);
+      return data.data;
     });
 };
 
-
-
 //================================================================= 컴포넌트 시작
 
-const ContentsList: React.FC<{ category: number; keyword: string, size:number }> = (props) => {
+const ContentsList: React.FC<{ category: number; keyword: string; size: number }> = (props) => {
   let { category, keyword, size } = props;
 
   const [ref, inView] = useInView();
 
   //무한스크롤 구현을 위한 페이지
   const { fetchNextPage, isLoading, data, isError, isFetchingNextPage, hasNextPage } =
-    useInfiniteQuery<Post[]>(
-      ['infinity', category, keyword],
+    useInfiniteQuery(
+      ['infinity', category, keyword, size],
       ({ pageParam = 0 }) => {
         console.log('useInfinity 함수 동작하는 중~');
         console.log('category : ', category);
@@ -73,20 +74,21 @@ const ContentsList: React.FC<{ category: number; keyword: string, size:number }>
 
         //조건에 따른 api 분기
         if (category < 9) {
-          return getInProgress(category,keyword,pageParam, size); // 여기서 분기할 수 있을 것 같음
-        } else{
+          return getInProgress(category, keyword, pageParam, size); // 여기서 분기할 수 있을 것 같음
+        } else {
           return getDeadline(pageParam, size);
         }
       },
       {
         getNextPageParam: (lastPage, allPages) => {
-          if (lastPage.length < size) {
+          //is_last:true이면 false리턴해서 hasNextpage 변수를 false로 변경해줌 => 무한스크롤 정지
+          if (lastPage.contents.is_last) {
             return false;
           } else {
-            return allPages.length; //여기서 return 되는 값이 pageParam에 삽입된다.
+            return allPages.length;
           }
         },
-        retry:0,
+        retry: 0,
       },
     );
 
@@ -96,41 +98,58 @@ const ContentsList: React.FC<{ category: number; keyword: string, size:number }>
     }
   }, [inView]);
 
-  if (isLoading) return <h1>isLoading...</h1>;
+  // if (isLoading) return <h1>isLoading...</h1>;
   if (isError) return <h1>error</h1>;
   // data is not undefined
+  if ( !isLoading){
+    console.log(data)
+  }
 
   return (
     <div id="scroll">
+      {isLoading &&(
+        <Sceleton></Sceleton>
+      )}
+
+
       {/* 데이터가 있다면.. */}
-      {data.pages !== null ? (
+      {data !== undefined && (
         <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
           {data.pages.map((data) =>
-            data.map((data, i) => (
+            data.contents.map((data: any, i: number) => (
               <Grid key={i} item xs={4} mb={4}>
                 <Content auctionData={data} />
               </Grid>
             )),
           )}
         </Grid>
-      ) : (
-        <h1>데이터가 없습니다.</h1>
       )}
 
-      {/* 무한 스크롤 하단*/}
+      {/* 무한 스크롤 타겟 */}
+      <Grid container></Grid>
       {hasNextPage ? (
         isFetchingNextPage ? (
-          <div>로딩중~</div>
+          <Grid item textAlign={"center"}><CircularProgress/></Grid> //로딩중일 때 타겟 숨기기
         ) : (
-          <div> 더보기 버튼 있던 곳</div>
+          <Target ref={ref}></Target>
         )
       ) : (
-        <div> 데이터가 없습니다.</div>
+        <Grid item textAlign={"center"}> 
+           <Typography variant="button" display="block" gutterBottom color={'primary'}>
+        마지막 게시글 입니다.
+      </Typography>
+        </Grid> //마지막 페이지라면 더이상 불러올 데이터가 없음을 표시
       )}
 
-      <div ref={ref}></div>
+     
     </div>
   );
 };
 
 export default ContentsList;
+
+const Target = styled.div`
+margin-top:50px;
+`
+
+

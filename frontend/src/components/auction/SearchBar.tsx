@@ -9,7 +9,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Grid from '@mui/material/Grid';
 
-const SearchBar: React.FC<{ setKeyword: (data: string) => void, setSize:(data:number)=>void, size:number }> = (props) => {
+const SearchBar:React.FC<{ setKeyword: (data: string) => void, setSize:(data:number)=>void, size:number }> = (props) => {
   const { setKeyword, setSize, size } = props;
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -18,20 +18,26 @@ const SearchBar: React.FC<{ setKeyword: (data: string) => void, setSize:(data:nu
 
   const searchBarRef = useRef<any>();
 
-  const SearchHandler = (event: any) => {
-    event.preventDefault(); // 기본동작 중지
-    let keyword = searchBarRef.current.value;
-    setKeyword(keyword);
-  };
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // 폼 제출 방지
+      let keyword = searchBarRef.current.value;
+      setKeyword(keyword);
+    }
+  }
+
+
+ 
 
   return (
     <>
-      <StyledForm onSubmit={SearchHandler}>
+      <StyledForm>
         <Grid container spacing={2}>
           <Grid item xs={9}>
             <FormControl fullWidth sx={{ m: 1 }}>
               <InputLabel htmlFor="outlined-adornment-amount">search</InputLabel>
               <OutlinedInput
+              onKeyDown={handleKeyDown}
                 inputRef={searchBarRef}
                 id="outlined-adornment-amount"
                 endAdornment={
@@ -45,7 +51,7 @@ const SearchBar: React.FC<{ setKeyword: (data: string) => void, setSize:(data:nu
           </Grid>
           <Grid item xs={2} sx={{ m:1 }}>
             <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Age</InputLabel>
+              <InputLabel id="demo-simple-select-label">count</InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
@@ -65,10 +71,12 @@ const SearchBar: React.FC<{ setKeyword: (data: string) => void, setSize:(data:nu
   );
 };
 
+
 export default SearchBar;
 
+
 const StyledForm = styled.form`
-  margin: 5% auto;
-  width: 80%;
-  text-align: center;
+margin: 5% auto;
+width: 80%;
+text-align: center;
 `;

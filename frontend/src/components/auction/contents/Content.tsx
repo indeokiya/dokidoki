@@ -76,7 +76,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         boxShadow: isHovered ? '' : 'none',
       }}
       onClick={() => {
-          navigate('auction/product/' + auctionData.auction_id);
+          navigate('/auction/product/' + auctionData.auction_id);
       }}
     >
       {/* 내가 판매하고 있는 제품이라는 표시 */}
