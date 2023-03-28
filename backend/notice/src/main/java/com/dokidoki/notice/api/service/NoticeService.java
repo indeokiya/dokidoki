@@ -79,12 +79,11 @@ public class NoticeService {
         log.info("received kafkaBidDTO: {}", dto);
         long memberId = dto.getMemberId();
         long beforeWinnerId = dto.getBeforeWinnerId();
-        if (memberId == beforeWinnerId) {
+        if (beforeWinnerId == -1 || memberId == beforeWinnerId) {
             return;
         }
         NoticeOutBidResp resp = NoticeOutBidResp.of(dto);
         messagingTemplate.convertAndSend("ws/notice/"+beforeWinnerId+"/outbid", resp);
-
 
     }
 }
