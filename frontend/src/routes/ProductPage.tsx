@@ -5,6 +5,7 @@ import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import styled from 'styled-components';
 import ProductGraph from '../components/leaderBoard/ProductGraph';
+import ProductLeaderBoard from '../components/leaderBoard/ProductLeaderBoard';
 import ProductDescription from '../components/leaderBoard/ProductDescription';
 import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
@@ -91,6 +92,7 @@ const ProductPage = () => {
 
           {/* 제품 카테고리 평균 가격 */}
           <ProductGraph />
+          <ProductLeaderBoard/>
 
           {/* 댓글 작성과 댓글들  */}
           <CommentsList />
