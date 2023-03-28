@@ -44,7 +44,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
   const navigate = useNavigate();
   //부모컴포넌트에서 받아온 게시글 정보
   const { auctionData } = props;
-
+console.log(auctionData.final_price)
   //마우스를 올리면 그림자형성됨
   const [isHovered, setIsHovered] = useState(false);
 
