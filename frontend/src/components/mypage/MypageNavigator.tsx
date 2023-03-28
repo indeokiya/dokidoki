@@ -22,6 +22,7 @@ import { useState } from 'react';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useNavigate } from 'react-router';
 import Tooltip from '@mui/material/Tooltip';
+import { userAPI } from 'src/api/axios';
 
 const item = {
   py: '2px',
@@ -53,6 +54,32 @@ const MypageNavigator: React.FC<{
     { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: false, path: 'bookmark-list' },
     { id: '알림 내역', icon: <NotificationsIcon />, active: false, path: 'alert-history' },
   ]);
+
+  const [profileImg, setProfileImg] = useState<File>();
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e)
+    const target = e.currentTarget;
+    const files = (target.files as FileList)[0];
+    if (files) {
+      setProfileImg(files)
+    }
+    console.log(files)
+    const formData = new FormData()
+    formData.append('file', files)
+
+    userAPI.put('/profiles', formData, {
+      headers : {
+        "Content-Type":"multipart/form-data",
+        "authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2NzkyOTAwNTAsImV4cCI6MTY3OTI5MzY1MCwidXNlcl9pZCI6Mn0.ATBKCYsyg8jC-GxTT41Tbw3uknZ1PQ7JkC9g1AyGhLg",
+        "withCredentials":"true"
+      }
+    })
+    .then(res => {
+      alert("성공")
+      console.log(res)
+    })
+  };
 
   const activeHandler = (_id: string) => {
     props.setSelectedMenu(_id);
@@ -113,7 +140,7 @@ const MypageNavigator: React.FC<{
                     <EditOutlinedIcon />
                   </label>
                 </Tooltip>
-                <ImageInput type="file" id="profileImgChange"></ImageInput>
+                <ImageInput type="file" accept="image/*" id="profileImgChange" onChange={handleUpload}></ImageInput>
               </StyledEditIcon>
             }
           >
@@ -122,14 +149,12 @@ const MypageNavigator: React.FC<{
               sx={{ width: '150px', height: '150px', margin: '1rem auto' }}
             ></Avatar>
           </Badge>
-
           {/* <label htmlFor="imageInput">
               <ImageInputLabel>
                 <AddAPhotoIcon />
                 {imageCnt}/5
               </ImageInputLabel>
             </label> */}
-
           <Typography color="white" variant="subtitle1">
             김범식
           </Typography>
