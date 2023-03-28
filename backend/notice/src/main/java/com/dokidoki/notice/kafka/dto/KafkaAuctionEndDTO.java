@@ -10,7 +10,6 @@ import lombok.ToString;
 @Setter
 @ToString
 public class KafkaAuctionEndDTO {
-
     private long auctionId;
     private long sellerId;
     private int finalPrice;
