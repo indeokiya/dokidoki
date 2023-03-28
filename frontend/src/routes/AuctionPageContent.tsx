@@ -10,6 +10,7 @@ import Tooltip from '@mui/material/Tooltip';
 
 const AuctionPageContent = () => {
 
+  const[size, setSize] = useState(12)
   //query키로 사용할 키 값
   const[category, setCategory] = useState(0);
   const[keyword, setKeyword] = useState("");
@@ -33,14 +34,15 @@ const AuctionPageContent = () => {
           </StyledIcon>
         </Tooltip>
 
-        <SearchBar setKeyword={setKeyword}/>
+        <SearchBar setKeyword={setKeyword} setSize={setSize} size={size}/>
         <Grid container spacing={2}>
           <Grid item xs={2}>
             <SideBar setCategory={setCategory}/>
           </Grid>
-          <Grid xs={10}>
-            <ContentsList  category={category} keyword={keyword}/>
+          <Grid xs={8}>
+            <ContentsList size={size} category={category} keyword={keyword}/>
           </Grid>
+          <Grid xs={2}></Grid>
         </Grid>
       </Container>
     </>
@@ -53,7 +55,7 @@ export default AuctionPageContent;
 
 const StyledIcon = styled.div`
 position: fixed;
-right: 5%;
+right: 15%;
 top: 90%;
 background-color: #3a77ee;
 border-radius: 100px;

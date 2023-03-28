@@ -4,13 +4,15 @@ import { auctionAPI } from '../../../api/axios';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Post, endPost } from '../../../datatype/datatype';
 import { useState, useEffect, useRef } from 'react';
-import {useInView} from "react-intersection-observer";
+import { useInView } from 'react-intersection-observer';
 
 //get 함수로 전체 경매 불러오기
-const getInProgress = (page: number, size: number) => {
+const getInProgress = (category_id:number, keyword:string, page: number, size: number) => {
   return auctionAPI
     .get('/lists/in-progress', {
       params: {
+        category_id,
+        keyword,
         page,
         size,
       },
@@ -51,53 +53,30 @@ const getDeadline = (page: number, size: number) => {
     });
 };
 
-//키워드와 페이지로 불러오는 데이터 타입
-const getSearchByKeyword = (category_id: number, keyword: string, page: number, size: number) => {
-  return auctionAPI
-    .get(`/lists/search`, {
-      params: {
-        category_id,
-        keyword,
-        page,
-        size,
-      },
-    })
-    .then(({ data }) => {
-      console.log('키워드로 불러온 데이터 : ', data.data.contents);
-      return data.data.contents;
-    });
-};
+
 
 //================================================================= 컴포넌트 시작
 
-const ContentsList: React.FC<{ category: number; keyword: string }> = (props) => {
-  let { category, keyword } = props;
+const ContentsList: React.FC<{ category: number; keyword: string, size:number }> = (props) => {
+  let { category, keyword, size } = props;
 
-  const[ref ,inView] = useInView();
-
-
+  const [ref, inView] = useInView();
 
   //무한스크롤 구현을 위한 페이지
-  const [page, setPage] = useState(0);
-  const [size, setSize] = useState(12);
-
-  
-
   const { fetchNextPage, isLoading, data, isError, isFetchingNextPage, hasNextPage } =
     useInfiniteQuery<Post[]>(
       ['infinity', category, keyword],
       ({ pageParam = 0 }) => {
         console.log('useInfinity 함수 동작하는 중~');
+        console.log('category : ', category);
+        console.log('keyword : ', keyword ? keyword : 'undefined');
 
         //조건에 따른 api 분기
-        if (category == 0){
-          return getInProgress(pageParam, size); // 여기서 분기할 수 있을 것 같음
-        }else if(category > 0 && category < 9){
-          return getSearchByKeyword(category, keyword, pageParam, size)
-        }else{
-          return getDeadline(pageParam, size)
+        if (category < 9) {
+          return getInProgress(category,keyword,pageParam, size); // 여기서 분기할 수 있을 것 같음
+        } else{
+          return getDeadline(pageParam, size);
         }
-
       },
       {
         getNextPageParam: (lastPage, allPages) => {
@@ -107,14 +86,15 @@ const ContentsList: React.FC<{ category: number; keyword: string }> = (props) =>
             return allPages.length; //여기서 return 되는 값이 pageParam에 삽입된다.
           }
         },
+        retry:0,
       },
     );
 
-    useEffect(()=>{
-      if(inView && !isFetchingNextPage){
-        fetchNextPage();
-      }
-    },[inView])
+  useEffect(() => {
+    if (inView && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView]);
 
   if (isLoading) return <h1>isLoading...</h1>;
   if (isError) return <h1>error</h1>;
@@ -137,20 +117,18 @@ const ContentsList: React.FC<{ category: number; keyword: string }> = (props) =>
         <h1>데이터가 없습니다.</h1>
       )}
 
-
-        {/* 무한 스크롤 하단*/}
+      {/* 무한 스크롤 하단*/}
       {hasNextPage ? (
-
         isFetchingNextPage ? (
           <div>로딩중~</div>
         ) : (
-       	<div> 더보기 버튼 있던 곳</div>
+          <div> 더보기 버튼 있던 곳</div>
         )
       ) : (
         <div> 데이터가 없습니다.</div>
       )}
 
-    <div ref={ref}></div>
+      <div ref={ref}></div>
     </div>
   );
 };
