@@ -17,7 +17,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         // queue : 한 명이 message 를 발행했을 때, 발행한 한 명에게 다시 정보를 보내는 경우에 사용
         registry.enableSimpleBroker("/topic");
         // 도착 경로에 대한 prefix 설정 "/app" 이라고 설정하면,
-        // /topic/hello 라는 토픽에 구독을 신청했을 때, 실제 경로는 /app/topic/hello 가 됨
+        // /topic/hello 라는 토픽에 구독을 신청했을 때, 여기에 app을 쓰면 실제 경로는 /app/topic/hello 가 됨
         registry.setApplicationDestinationPrefixes("/");
 
     }

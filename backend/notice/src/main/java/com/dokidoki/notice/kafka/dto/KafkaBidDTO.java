@@ -1,14 +1,15 @@
 package com.dokidoki.notice.kafka.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class KafkaBidDTO {
 
     private long beforeWinnerId;

@@ -12,6 +12,7 @@ import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +27,7 @@ public class NoticeService {
 
     private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
     private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
-    private final SimpMessageSendingOperations messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
 
     /**
      * 경매 성공한 한 명에게 알림 발송
