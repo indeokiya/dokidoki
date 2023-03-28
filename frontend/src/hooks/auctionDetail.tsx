@@ -19,10 +19,6 @@ type BidDetailResult = UseQueryResult<void, unknown>;
 
 // type AuctionDetailFn = ({ id }: strin) => UseQueryResult;
 
-const axios = bidAPI;
-
-
-
 export const useAuctionDetail = ({ id } : {id: string}) => {
 
     const results = useQueries([
@@ -34,7 +30,7 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
             // .then(res => console.log("fetched >> ", res))
             // .catch(err => console.error(err))
         },
-        staleTime: 0,
+        staleTime: 5*1000,
         retry: 0,
       },
       { // bid
@@ -45,7 +41,7 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
             // .then(res => console.log("fetched >> ", res))
             // .catch(err => console.error(err))
         },
-        staleTime: 0,
+        staleTime: 5*1000,
         retry: 0,
       },  
   ])
@@ -55,16 +51,17 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
   const isLoading = results[0].isLoading || results[1].isLoading;
   const isError = results[0].isError || results[1].isError;
   const error: any = results[1].isError ? results[1].error : results[0].error
-  const data = results[0].data
-  console.log("results[0].data >> ", results[0].data)
-  console.log("results[1] >> ", results[1])
-  if (!isLoading) {
+
+  if (!isError && !isLoading) {
     const data = {...results[0].data!.data!.data, ...results[1].data!.data!.data};
-    // console.warn("재휘 >> ", results[0].data!.data!.data);
-    // console.warn("혜진 >> ", results[1].data!.data!.data);
+    console.log("results[0].data >> ", results[0].data)
+    console.log("results[1] >> ", results[1])
     return {isLoading, isError, error, data}
-  }
+  } else {
+    const data = {};
     return {isLoading, isError, error, data};
+  }
+  
 }
 
 // select로 fetch 해온 데이터 가공
