@@ -25,7 +25,16 @@ const userAPI = axios.create({
   }
 });
 
-bidAPI.defaults.timeout = 3000;
+userAPI.defaults.timeout = 3000;
+
+const noticeAPI = axios.create({
+  baseURL: process.env.REACT_APP_NOTICE_SERVER_BASE_URL,
+  headers: {
+    "Content-Type": "application/json;charset=utf-8"
+  }
+});
+
+noticeAPI.defaults.timeout = 3000;
 
 // 공통 인터셉터
 function addRequestIntercepter(axiosApi : any){
@@ -47,5 +56,6 @@ function addRequestIntercepter(axiosApi : any){
 addRequestIntercepter(auctionAPI);
 addRequestIntercepter(bidAPI);
 addRequestIntercepter(userAPI);
+addRequestIntercepter(noticeAPI);
 
-export {auctionAPI, bidAPI, userAPI};
+export {auctionAPI, bidAPI, userAPI, noticeAPI};
