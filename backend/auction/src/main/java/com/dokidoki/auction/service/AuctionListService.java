@@ -1,6 +1,5 @@
 package com.dokidoki.auction.service;
 
-import com.dokidoki.auction.domain.entity.AuctionImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.InterestRepository;
@@ -47,25 +46,32 @@ public class AuctionListService {
         int imageIdx = 0;
         for (int i = 0; i < simpleAuctionEndInterfaces.getContent().size(); i++) {
             SimpleAuctionEndInterface simpleAuctionEndInterface = simpleAuctionEndInterfaces.getContent().get(i);
-            ImageInterface imageInterface = imageInterfaces.get(imageIdx);
 
-            // 경매 번호가 다르다면 현재 경매에 해당하는 이미지가 아니므로 건너뛰기
-            if (!imageInterface.getAuction_id().equals(simpleAuctionEndInterface.getAuction_id())) {
-                simpleAuctionEndInfos.add(
-                        new SimpleAuctionEndInfo(
-                                simpleAuctionEndInterface,
-                                null
-                        )
-                );
-            } else {  // 이미지 Entity와 Auction End Entity의 경매 번호가 일치한다면 DTO에 이미지 삽입
-                simpleAuctionEndInfos.add(
-                        new SimpleAuctionEndInfo(
-                                simpleAuctionEndInterface,
-                                imageInterface.getImage_url()
-                        )
-                );
-                imageIdx++;  // 다음 이미지로 넘어가기
+            /*
+            조회한 경매 목록과 각 경매의 이미지 조회
+            e.g.)
+                i: 경매1, 경매2, 경매3, 경매4, ...
+                imageIdx : 사진1, 사진2, 사진4, ...
+                위와 같이 데이터가 존재할 것을 대비해 imageIdx를 따로 생성하여 관리
+             */
+            // 이미지 정보 가져오기
+            String imageUrl = null;  // 이미지 URL
+            if (imageIdx < imageInterfaces.size()) {
+                Long imageAuctionId = imageInterfaces.get(imageIdx).getAuction_id();
+                // 조회한 경매와 이미지가 동일 제품이라면 imageUrl 설정
+                if (imageAuctionId.equals(simpleAuctionEndInterface.getAuction_id())) {
+                    imageUrl = imageInterfaces.get(imageIdx).getImage_url();
+                    imageIdx++;  // 다음 이미지로 넘어가기
+                }
             }
+
+            // Response DTO 구성
+            simpleAuctionEndInfos.add(
+                    new SimpleAuctionEndInfo(
+                            simpleAuctionEndInterface,
+                            imageUrl
+                    )
+            );
         }
 
         // Response DTO 생성 및 반환
@@ -150,31 +156,26 @@ public class AuctionListService {
         int imageIdx = 0;
         for (int i = 0; i < simpleAuctionIngInterfaces.getContent().size(); i++) {
             SimpleAuctionIngInterface simpleAuctionIngInterface = simpleAuctionIngInterfaces.getContent().get(i);
-            ImageInterface imageInterface = imageInterfaces.get(imageIdx);
 
-            // Auction Id가 다르면 사진이 없는 경매이므로 이미지 URL로 null 전달
-            if (!imageInterface.getAuction_id().equals(simpleAuctionIngInterface.getAuction_id())) {
-                // Response DTO 담기
-                simpleAuctionIngInfos.add(
-                        new SimpleAuctionIngInfo(
-                                simpleAuctionIngInterface,
-                                null,
-                                interestsOfUser,
-                                salesOfUser
-                        )
-                );
-            } else {
-                // Response DTO 담기
-                simpleAuctionIngInfos.add(
-                        new SimpleAuctionIngInfo(
-                                simpleAuctionIngInterface,
-                                imageInterface.getImage_url(),
-                                interestsOfUser,
-                                salesOfUser
-                        )
-                );
-                imageIdx++;  // 다음 이미지로 넘어가기
+            // 경매번호 및 이미지 가져오기, readSimpleAuctionEnd와 동일
+            String imageUrl = null;
+            if (imageIdx < imageInterfaces.size()) {
+                Long imageAuctionId = imageInterfaces.get(imageIdx).getAuction_id();
+                if (imageAuctionId.equals(simpleAuctionIngInterface.getAuction_id())) {
+                    imageUrl = imageInterfaces.get(imageIdx).getImage_url();
+                    imageIdx++;
+                }
             }
+
+            // Response DTO 담기
+            simpleAuctionIngInfos.add(
+                    new SimpleAuctionIngInfo(
+                            simpleAuctionIngInterface,
+                            imageUrl,
+                            interestsOfUser,
+                            salesOfUser
+                    )
+            );
         }
 
         // Response DTO 생성 및 반환
