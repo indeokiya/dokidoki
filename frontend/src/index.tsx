@@ -14,7 +14,8 @@ import TokenRedirectPage from './routes/TokenRedirectPage';
 import IngContentItemList from './components/mypage/ing_contents/IngContentItemList';
 import EndContentItemList from './components/mypage/end_contents/EndContentItemList';
 import AlertItemList from './components/mypage/alert_contents/AlertItemList';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { RecoilRoot } from 'recoil';
 
 const queryClient = new QueryClient();
 
@@ -91,9 +92,12 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(
   // <React.StrictMode>
-  <QueryClientProvider client={queryClient}>
-    <RouterProvider router={router}></RouterProvider>,
-  </QueryClientProvider>
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router}></RouterProvider>,
+    </QueryClientProvider>
+  </RecoilRoot>
+
   // </React.StrictMode>
 );
 

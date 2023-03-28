@@ -7,6 +7,7 @@ import com.dokidoki.auction.domain.entity.AuctionImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionImageRepository;
 import com.dokidoki.auction.dto.request.AuctionImagesRequest;
 import com.dokidoki.auction.dto.response.AuctionImageResponse;
+import com.dokidoki.auction.dto.response.ImageInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,8 +49,8 @@ public class ImageService {
         return new AuctionImageResponse(auction_id, auctionImageUrls);
     }
     @Transactional(readOnly = true)
-    public AuctionImageEntity readAuctionImage(Long auctionId) {
-        return auctionImageRepository.findTopByAuctionIdOrderByAuctionIdAsc(auctionId);
+    public List<ImageInterface> readAuctionThumbnailImage(List<Long> auctionIdList) {
+        return auctionImageRepository.findImagesByAuctionIdIn(auctionIdList);
     }
 
     @Transactional

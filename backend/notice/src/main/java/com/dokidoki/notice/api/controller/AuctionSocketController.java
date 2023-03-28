@@ -1,9 +1,9 @@
-package com.dokidoki.bid.api.controller;
+package com.dokidoki.notice.api.controller;
 
-import com.dokidoki.bid.api.dto.SocketBidInfoDTO;
-import com.dokidoki.bid.api.dto.SocketPriceSizeDTO;
-import com.dokidoki.bid.kafka.dto.KafkaAuctionUpdateDTO;
-import com.dokidoki.bid.kafka.dto.KafkaBidDTO;
+import com.dokidoki.notice.api.dto.SocketBidInfoDTO;
+import com.dokidoki.notice.api.dto.SocketPriceSizeDTO;
+import com.dokidoki.notice.kafka.dto.KafkaAuctionUpdateDTO;
+import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -27,6 +27,7 @@ public class AuctionSocketController {
         // Kafka DTO 가 바뀌면 from 메서드도 바꾸기!!
         SocketBidInfoDTO dto = SocketBidInfoDTO.from(kafkaBidDTO);
 
+        log.info("sending socketBidInfoDTO: {}", dto);
         // 최종적으로 client 가 구독해 놓고 데이터를 받아야 하는 링크가 destination 에 들어감
         simpMessagingTemplate.convertAndSend("/topic/auctions/"+auctionId+"/realtime", dto);
 
@@ -35,10 +36,11 @@ public class AuctionSocketController {
     @MessageMapping("ws/auctions/{auctionId}/price-size")
     public void getPriceSize(@DestinationVariable long auctionId, @Payload KafkaAuctionUpdateDTO kafkaAuctionUpdateDTO) {
         System.out.println(kafkaAuctionUpdateDTO);
-        log.info("KafkaUpdateDTO:{}",kafkaAuctionUpdateDTO);
+        log.info("KafkaUpdateDTO:{}, auctionId: {}",kafkaAuctionUpdateDTO, auctionId);
         // Kafka DTO 가 바뀌면 from 메서드도 바꾸기!!
         SocketPriceSizeDTO dto = SocketPriceSizeDTO.from(kafkaAuctionUpdateDTO);
 
+        log.info("sending socketPriceSizeDTO: {}", dto);
         // 최종적으로 client 가 구독해 놓고 데이터를 받아야 하는 링크가 destination 에 들어감
         simpMessagingTemplate.convertAndSend("/topic/auctions/"+auctionId+"/realtime", dto);
     }

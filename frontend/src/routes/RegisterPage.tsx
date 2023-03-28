@@ -18,6 +18,7 @@ export type AuctionRegisterType = {
   endAt: Date
   meetingPlace: string
   files: any[]
+  name: string
 }
 
 const RegisterPage = () => {
@@ -35,6 +36,12 @@ const RegisterPage = () => {
     files: [],
   })
 
+  let userName = "defaultName";
+  let localStorageInfo = window.localStorage.getItem('user-info');
+  if (localStorageInfo) {
+    userName = JSON.parse(localStorageInfo).name;
+  }
+
   const register = () => {
     console.log("서버에 보낼 데이터 >> ",dataRef.current)
     const formData = new FormData();
@@ -45,6 +52,7 @@ const RegisterPage = () => {
     formData.set('price_size', String(dataRef.current.price_size));
     formData.set('end_at', dataRef.current.end_at);
     formData.set('meeting_place', dataRef.current.meeting_place);
+    formData.set('name', userName);
     for (let i=0; i<dataRef.current.files.length; i++) {
       formData.append('files', dataRef.current.files[i]);
     }

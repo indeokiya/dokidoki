@@ -14,7 +14,6 @@ import lombok.ToString;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AuctionBidReq {
     private String name;
-    private String email;
     private int currentHighestPrice;
     private int currentPriceSize;
 }

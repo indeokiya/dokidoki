@@ -11,12 +11,18 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 
+import { bidAPI } from '../../api/axios'
+import { userInfoState } from 'src/store/userInfoState';
+
+import { useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router';
 // public class AuctionBidReq {
 //   private int currentHighestPrice;
 //   private int currentPriceSize;
 // }
 
 type Props = {
+  auction_title: string;
   auction_id: any;
   category: string;
   offer_price: number;
@@ -24,32 +30,51 @@ type Props = {
   highest_price: number;
 }
 
-const ProductInfo = ({auction_id, category, offer_price, price_size, highest_price}: Props) => {
+const ProductInfo = ({auction_title, auction_id, category, offer_price, price_size, highest_price}: Props) => {
+  const navigate = useNavigate();
   const dataLeft = ['카테고리', '남은시간', '시작가격', '경매단위'];
   const dataRight = [category, '20:00:10', offer_price, price_size];
+  const userInfo = useRecoilValue(userInfoState);
   const [bookmark, setBookmaek] = useState(false);
 
-  const [loginUser, setloginUser] = useState(true);
-
   const bid = () => {
-    // const axios = bidAPI;
-    // axios.post(
-    //   `${auction_id}/bid`,
-    //   {current_highest_price: , email: "이메일", }
-    // )
+    if (!userInfo.is_logged_in) {
+      alert("먼저 로그인해주세요.")
+      navigate("/login");
+    }
 
+    const axios = bidAPI;
+    axios.post(
+      `auctions/${auction_id}/bid`,
+      {current_highest_price: highest_price, current_price_size: price_size, name: userInfo.name },
+    ).then(res => { // 성공 로직
+      console.log("입찰 성공 res >> ", res);
+      alert(`${highest_price + price_size}원에 입찰에 성공했습니다.`)
+    }).catch(err => { // 실패 로직
+      console.log(err)
+      const error_message = err.response.data.message;
+      if (error_message === "Different Highest Price") {
+        alert("현재 최고가격이 갱신되어 입찰에 실패했습니다.");
+      } else if (error_message === "Different Price Size") {
+        alert("경매 단위가 수정되었습니다. 다시 시도하세요.");
+      } else if (error_message === "Already Ended") {
+        alert("이미 종료된 경매입니다.");
+      } else {
+        alert("알 수 없는 이유로 입찰에 실패했습니다.");
+      }
+    })
   }
 
   return (
     <div>
-      {loginUser && (
+      {userInfo.is_logged_in && (
         <StyeldDiv>
           <IconButton>
             <EditOutlinedIcon />
           </IconButton>
         </StyeldDiv>
       )}
-      <StyledH1>제목</StyledH1>
+      <StyledH1>{auction_title}</StyledH1>
 
       <Divider />
       <Grid container>
@@ -82,7 +107,7 @@ const ProductInfo = ({auction_id, category, offer_price, price_size, highest_pri
         <Grid item xs={6} mt={2}>
           <Typography variant="h5" fontWeight={'bold'}>
             {' '}
-            {highest_price}{' '}
+            {highest_price}{' '}원
           </Typography>
           <Typography color="red"> +{price_size}원</Typography>
         </Grid>

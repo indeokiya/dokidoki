@@ -28,12 +28,15 @@ const ProductPage = () => {
   // data fetching logic
   const { isLoading, isError, error, data} = useAuctionDetail({id});
   if (isLoading) return <h1>isLoading..</h1>
-  if (isError) return <h1>{error.message}</h1>
+  if (isError) {
+    console.error("error occured >> ", error.message);
+    return <h1>error occured while fetching auction_id: {id}</h1>
+  }
   // 이 아래부터는 data가 존재함이 보장됨
   console.log("total data >> ", data)  
   const {
     auction_image_urls,
-    auciton_title,
+    auction_title,
     category_name,
     comments,
     description,
@@ -72,6 +75,7 @@ const ProductPage = () => {
             <Grid item xs={4}>
               {/* 제품 정보 */}
               <ProductInfo 
+                auction_title={auction_title}
                 auction_id={id}
                 category={category_name}
                 offer_price={offer_price}

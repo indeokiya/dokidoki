@@ -18,6 +18,7 @@ import java.net.URI;
 @Component
 @RequiredArgsConstructor
 @Slf4j
+// 설정한 redirect URL로 받아온 code을 통해 토큰을 받아오는 객체
 public class CodeToToken {
 
     private final RestTemplate restTemplate;

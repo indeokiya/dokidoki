@@ -5,23 +5,23 @@ import com.dokidoki.bid.api.request.AuctionUpdatePriceSizeReq;
 import com.dokidoki.bid.api.response.AuctionInitialInfoResp;
 import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
 import com.dokidoki.bid.api.response.LeaderBoardMemberResp;
-import com.dokidoki.bid.common.codes.LeaderBoardConstants;
+import com.dokidoki.bid.common.codes.RealTimeConstants;
 import com.dokidoki.bid.common.error.exception.BusinessException;
 import com.dokidoki.bid.common.error.exception.ErrorCode;
 import com.dokidoki.bid.common.error.exception.InvalidValueException;
-import com.dokidoki.bid.db.entity.AuctionIngEntity;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
 import com.dokidoki.bid.db.entity.MemberEntity;
-import com.dokidoki.bid.db.repository.AuctionIngRepository;
+import com.dokidoki.bid.db.repository.AuctionRealtimeLeaderBoardRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
 import com.dokidoki.bid.db.repository.MemberRepository;
+import com.dokidoki.bid.kafka.dto.KafkaAuctionRegisterDTO;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
+import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -40,15 +40,13 @@ class BiddingServiceTest {
 
     @Autowired BiddingService biddingService;
     @Autowired MemberRepository memberRepository;
-    @Autowired AuctionIngRepository auctionIngRepository;
     @Autowired AuctionRealtimeRepository auctionRealtimeRepository;
+    @Autowired AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
     @Autowired RedissonClient redisson;
 
-    static long auctionId;
-    static long realTimeAuctionId;
-    static String key;
     static long sellerId;
     static long[] memberIds = {0, 0};
+    final static long auctionId = 70_000;
     final static int highestPrice = 7_000_000;
     final static int priceSize = 10_000;
     final static String[] names = {"사용자0", "사용자1"};
@@ -58,7 +56,6 @@ class BiddingServiceTest {
     public void 준비() {
         // 기존 DB 내용 삭제
         auctionRealtimeRepository.deleteAll();
-        auctionIngRepository.deleteAll();
         memberRepository.deleteAll();
 
         // 사용자 회원가입
@@ -77,37 +74,23 @@ class BiddingServiceTest {
         System.out.println(sellerId);
 
         // 경매 등록
-        AuctionIngEntity auctionIng = AuctionIngEntity.builder()
-                .sellerId(sellerId).title("싸트북 팝니다").description("단돈 150만원~")
-                .offerPrice(highestPrice).priceSize(priceSize).highestPrice(highestPrice).build();
-
-        auctionIngRepository.save(auctionIng);
-        auctionId = auctionIng.getId();
-        System.out.println(auctionId);
-        key = biddingService.getKey(auctionId);
-
-
-        // 실시간 경매 초기화 정보 등록 (나중엔 메서드로 대체하기)
-
-        AuctionRealtime auctionRealtime = AuctionRealtime.builder()
-                        .auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
-
-        System.out.println(auctionRealtime);
-        auctionRealtimeRepository.save(auctionRealtime);
-        realTimeAuctionId = auctionRealtime.getAuctionId();
+        KafkaAuctionRegisterDTO dto = KafkaAuctionRegisterDTO.builder()
+                .auctionId(auctionId).offerPrice(highestPrice).priceSize(priceSize)
+                .ttl(20).sellerId(sellerId)
+                .productName("싸트북").productId(1).build();
+        biddingService.registerAuctionInfo(dto);
 
         System.out.println("sellerId: "+ sellerId);
         System.out.println(Arrays.toString(memberIds));
-        System.out.println("auctionId: "+ auctionId);
-        System.out.println("realTimeAuctionId: "+ realTimeAuctionId);
 
     }
 
     @Test
     @DisplayName("경매 초기화 등록 정보 확인")
     public void 경매_초기화_등록_정보_확인() {
-        AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(realTimeAuctionId).get();
+        AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
         System.out.println(auctionRealtime);
+        System.out.println(biddingService.getInitialLeaderBoard(auctionId));
 
     }
 
@@ -123,7 +106,6 @@ class BiddingServiceTest {
             for (int i = 0; i < 2; i ++) {
                 reqs[i] = AuctionBidReq.builder()
                         .name(names[i])
-                        .email(emails[i])
                         .currentHighestPrice(highestPrice + priceSize * i)
                         .currentPriceSize(priceSize).build();
             }
@@ -135,13 +117,11 @@ class BiddingServiceTest {
 
             AuctionBidReq wrongHighestPriceReq = AuctionBidReq.builder()
                     .name(names[0])
-                    .email(emails[0])
                     .currentHighestPrice(highestPrice + 2 * priceSize)
                     .currentPriceSize(priceSize).build();
 
             AuctionBidReq wrongPriceSizeReq = AuctionBidReq.builder()
                     .name(names[0])
-                    .email(emails[0])
                     .currentHighestPrice(highestPrice)
                     .currentPriceSize(priceSize * 2).build();
 
@@ -153,9 +133,8 @@ class BiddingServiceTest {
 
                 auctionRealtimeRepository.save(auctionRealtime);
 
-                RScoredSortedSet<Object> scoredSortedSet = redisson.getScoredSortedSet(key);
+                auctionRealtimeLeaderBoardRepository.deleteAll(auctionId);
 
-                scoredSortedSet.delete();
 
             }
 
@@ -195,23 +174,20 @@ class BiddingServiceTest {
                 // auctionRealtime 값 갱신 확인
                 assertEquals(highestPrice + priceSize, auctionRealtime.getHighestPrice());
 
-                String key = biddingService.getKey(auctionId);
-
                 // 랭킹 갱신 확인
                 AuctionInitialInfoResp initialInfo = biddingService.getInitialInfo(auctionId);
                 List<LeaderBoardMemberResp> leaderBoard = initialInfo.getLeaderBoard();
                 System.out.println(leaderBoard);
                 assertEquals(1, leaderBoard.size());
 
-                RScoredSortedSet<LeaderBoardMemberInfo> set = redisson.getScoredSortedSet(key);
-                Collection<LeaderBoardMemberInfo> leaderBoardMemberInfos = set.valueRangeReversed(0, -1);
+                Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderBoardMemberInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
 
-                assertEquals(1, set.size());
+                assertEquals(1, leaderBoardMemberInfos.size());
 
-                for (LeaderBoardMemberInfo info: leaderBoardMemberInfos) {
-                    int bidPrice = set.getScore(info).intValue();
+                for (ScoredEntry<LeaderBoardMemberInfo> info: leaderBoardMemberInfos) {
+                    int bidPrice = info.getScore().intValue();
                     assertEquals(highestPrice + priceSize, bidPrice);
-                    assertEquals(memberIds[0], info.getMemberId());
+                    assertEquals(memberIds[0], info.getValue().getMemberId());
                     System.out.println(info);
                 }
             }
@@ -222,18 +198,15 @@ class BiddingServiceTest {
                 biddingService.bid(auctionId, reqs[0], memberIds[0]);
                 biddingService.bid(auctionId, reqs[1], memberIds[1]);
 
-                String key = biddingService.getKey(auctionId);
-
                 System.out.println(biddingService.getInitialInfo(auctionId).getLeaderBoard());
 
                 // 랭킹 갱신 확인
-                RScoredSortedSet<LeaderBoardMemberInfo> set = redisson.getScoredSortedSet(key);
-                Collection<LeaderBoardMemberInfo> leaderBoardMemberInfos = set.valueRangeReversed(0, -1);
+                Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderBoardMemberInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
 
-                for (LeaderBoardMemberInfo info : leaderBoardMemberInfos) {
-                    int bidPrice = set.getScore(info).intValue();
+                for (ScoredEntry<LeaderBoardMemberInfo> info: leaderBoardMemberInfos) {
+                    int bidPrice = info.getScore().intValue();
                     assertEquals(highestPrice + priceSize * 2 , bidPrice);
-                    assertEquals(info.getMemberId(), memberIds[1]);
+                    assertEquals( memberIds[1], info.getValue().getMemberId());
                     System.out.println(info);
                     break;
                 }
@@ -242,18 +215,21 @@ class BiddingServiceTest {
             @Test
             @DisplayName("제한된 수 이상으로 입찰될 경우, 그 개수만큼 최근 입찰된 결과만 sorted Set 에 남는다.")
             public void 제한수_유지() throws InterruptedException {
-                int limit = LeaderBoardConstants.limit;
+                int limit = RealTimeConstants.leaderboardLimit;
 
                 for (int i = 0; i < limit + 2; i++) {
                     AuctionBidReq req = AuctionBidReq.builder()
                             .name(names[0])
-                            .email(emails[0])
                             .currentHighestPrice(highestPrice + i * priceSize)
                             .currentPriceSize(priceSize).build();
                     biddingService.bid(auctionId, req, memberIds[0]);
                 }
-                RScoredSortedSet<LeaderBoardMemberInfo> set = redisson.getScoredSortedSet(key);
-                assertEquals(limit, set.size());
+                Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderboardInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
+                System.out.println(auctionRealtimeLeaderBoardRepository.getWinner(auctionId));
+                System.out.println(biddingService.getInitialInfo(auctionId));
+                assertEquals(limit, leaderboardInfos.size());
+                System.out.println(limit);
+                System.out.println(leaderboardInfos.size());
 
             }
         }
@@ -279,7 +255,7 @@ class BiddingServiceTest {
             @Test
             @DisplayName("없는 경매면 에러를 낸다.")
             public void 입찰단위_수정_실패_없는대상() {
-                assertThrows(InvalidValueException.class, ()-> biddingService.updatePriceSize(auctionId + 20, req, sellerId));
+                assertThrows(InvalidValueException.class, () -> biddingService.updatePriceSize(auctionId + 20, req, sellerId));
             }
 
             @Test

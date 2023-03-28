@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -170,13 +171,14 @@ public class AuctionService {
                     req.getFiles()
             );
         }
-
-        Duration duration = Duration.between(LocalDateTime.now(), req.getEnd_at());
+        
+        // TTL 구하기
+        Duration duration = Duration.between(LocalDateTime.now(ZoneId.of("Asia/Seoul")), req.getEnd_at());
 
         long ttl = duration.toMinutes();
 
         // 성공적으로 등록되면 카프카에 auction.register 메시지 발행.
-        producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(req, auctionId, ttl));
+        producer.sendAuctionRegister(new KafkaAuctionRegisterDTO(req, auctionId, ttl, sellerId, req.getProduct_id(), productEntity.getName()));
     }
 
     @Transactional
