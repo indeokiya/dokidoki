@@ -51,7 +51,7 @@ public class ConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, KafkaBidDTO> bidKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
         factory.setConsumerFactory(bidConsumerFactory(bidTopic + ".noticeGroup"));
-        factory.setConcurrency(3);
+        factory.setConcurrency(1);
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }

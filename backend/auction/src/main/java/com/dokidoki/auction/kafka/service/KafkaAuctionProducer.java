@@ -35,12 +35,12 @@ public class KafkaAuctionProducer {
             @Override
             public void onSuccess(SendResult<String, KafkaAuctionRegisterDTO> result) {
                 System.out.println("auction created: [" + auction + "] with partition = [" + result.getRecordMetadata().partition() + "] offset=[" + result.getRecordMetadata().offset() +"]");
-//                log.debug("auction created: [{}] with partition = [{}] offset=[{}]", auction, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
+                log.debug("auction created: [{}] with partition = [{}] offset=[{}]", auction, result.getRecordMetadata().partition(), result.getRecordMetadata().offset());
             }
 
             @Override
             public void onFailure(Throwable ex) {
-//                log.debug("Unable to send message: [{}] due to : {}", auction, ex.getMessage());
+                log.debug("Unable to send message: [{}] due to : {}", auction, ex.getMessage());
                 System.out.println("Unable to send message: [" + auction + "] due to : " + ex.getMessage());
             }
 
