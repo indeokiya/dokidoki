@@ -41,7 +41,7 @@ public class ConsumerConfig {
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         props.put(JsonDeserializer.TYPE_MAPPINGS,
-                "auction-register:com.dokidoki.notice.kafka.dto.KafkaBidDTO");
+                "bid:com.dokidoki.notice.kafka.dto.KafkaBidDTO");
         return new DefaultKafkaConsumerFactory<>(props,
                 new StringDeserializer(), // key
                 new JsonDeserializer<>(KafkaBidDTO.class)); // value
@@ -87,7 +87,7 @@ public class ConsumerConfig {
         props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
         props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, JsonDeserializer.class);
         props.put(JsonDeserializer.TYPE_MAPPINGS,
-                "auction-update:com.dokidoki.notice.kafka.dto.KafkaAuctionEndDTO");
+                "auction-end:com.dokidoki.notice.kafka.dto.KafkaAuctionEndDTO");
         return new DefaultKafkaConsumerFactory<>(props,
                 new StringDeserializer(), // key
                 new JsonDeserializer<>(KafkaAuctionEndDTO.class)); // value
