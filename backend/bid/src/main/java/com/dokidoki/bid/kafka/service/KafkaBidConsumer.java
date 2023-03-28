@@ -23,14 +23,10 @@ public class KafkaBidConsumer {
             @Payload KafkaAuctionRegisterDTO dto,
             @Headers MessageHeaders headers) {
         System.out.println("Received auction register message : " + dto);
-        System.out.print("header | ");
+        log.info("Received auction register message: [{}]", dto);
         headers.keySet().forEach(key -> {
-//            log.debug("header | key: [{}] value: [{}]", key, headers.get(key));
-            System.out.print("{" + key + ", " + headers.get(key) + "} ");
+            log.info("header | key: [{}] value: [{}]", key, headers.get(key));
         });
-        System.out.println("");
-
-        System.out.println();
 
         biddingService.registerAuctionInfo(dto);
 
@@ -38,17 +34,17 @@ public class KafkaBidConsumer {
         // websocket method_bid_success(memberid, name, email)
 
     }
-//
-//    @KafkaListener(topics = "${spring.kafka.auctionUpdateConfig.topic}", containerFactory = "auctionUpdateKafkaListenerContainerFactory")
-//    public void auctionUpdateListener(
-//            @Payload KafkaAuctionUpdateDTO update,
-//            @Headers MessageHeaders headers) {
-//        System.out.println("Received auction update message : " + update);
-//        System.out.print("header | ");
-//        headers.keySet().forEach(key -> {
-////            log.debug("header | key: [{}] value: [{}]", key, headers.get(key));
-//            System.out.print("{" + key + ", " + headers.get(key) + "} ");
-//        });
-//        System.out.println("");
-//    }
+
+    @KafkaListener(topics = "${spring.kafka.auctionUpdateConfig.topic}", containerFactory = "auctionUpdateKafkaListenerContainerFactory")
+    public void auctionUpdateListener(
+            @Payload KafkaAuctionUpdateDTO update,
+            @Headers MessageHeaders headers) {
+        System.out.println("Received auction update message : " + update);
+        log.info("Received auction update message: [{}]", update);
+        headers.keySet().forEach(key -> {
+            log.info("header | key: [{}] value: [{}]", key, headers.get(key));
+        });
+
+//        biddingService.updatePriceSize();
+    }
 }
