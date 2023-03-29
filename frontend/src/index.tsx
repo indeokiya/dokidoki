@@ -57,7 +57,7 @@ const router = createBrowserRouter([
     element: <ProfilePage />,
     children: [
       {
-        path: 'action-item',
+        path: '', //기본 페이지라 path가 없음 
         element: <IngContentItemList />,
       },
       {
