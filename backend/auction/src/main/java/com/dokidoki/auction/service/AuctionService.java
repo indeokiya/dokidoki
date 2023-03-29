@@ -8,6 +8,7 @@ import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.*;
 import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
+import com.dokidoki.auction.kafka.dto.KafkaAuctionUpdateDTO;
 import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -196,6 +197,8 @@ public class AuctionService {
         // 요청자와 판매자가 동일한 경우에만 update 수행
         if (auction != null && sellerId.equals(auction.getSeller().getId())) {
             auction.update(auctionUpdateReq);
+            KafkaAuctionUpdateDTO dto = KafkaAuctionUpdateDTO.of(auctionUpdateReq, auctionId);
+            producer.sendAuctionUpdate(dto);
             return auction;
         }
 

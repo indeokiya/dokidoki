@@ -38,20 +38,4 @@ public class AuctionController {
         return ResponseEntity.ok(resultMap);
     }
 
-    @PutMapping("/{auctionId}/price-size")
-    public ResponseEntity<?> updatePriceSize(@RequestBody AuctionUpdatePriceSizeReq req, @PathVariable long auctionId, HttpServletRequest request) {
-        Map<String, Object> resultMap = new HashMap<>();
-        long memberId = JWTUtil.getUserId(request);
-        biddingService.updatePriceSize(auctionId, req, memberId);
-        resultMap.put("status_code", 200);
-        resultMap.put("message", "성공");
-        return ResponseEntity.ok(resultMap);
-    }
-
-    // access 토큰 발급 (테스트 용)
-    @GetMapping("/{memberId}")
-    public ResponseEntity<?> getAccessToken(@PathVariable long memberId) {
-        return ResponseEntity.ok(JWTUtil.getAccessToken(memberId));
-    }
-
 }
