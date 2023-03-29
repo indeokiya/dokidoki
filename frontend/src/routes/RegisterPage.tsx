@@ -8,7 +8,19 @@ import ProductInfoInput from '../components/resigter/ProductInfoInput';
 import ActionInfoInput from '../components/resigter/AuctionInfoInput';
 import { auctionAPI } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { AuctionRegisterType } from 'src/datatype/datatype';
+
+//경매 등록 타입
+export type AuctionRegisterType = {
+  productId: number;
+  title: string;
+  description: string;
+  offerPrice: number;
+  priceSize: number;
+  endAt: Date;
+  meetingPlace: string;
+  files: any[];
+  name: string;
+};
 
 const RegisterPage = () => {
   const navigate = useNavigate();
