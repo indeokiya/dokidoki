@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 
 const EndContentItemList = () => {
-
+const list =[1,2,3,4]
 
   return (
     <div>
