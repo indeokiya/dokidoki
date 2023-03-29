@@ -1,5 +1,6 @@
 package com.dokidoki.auction.dto.response;
 
+import com.dokidoki.auction.domain.entity.AuctionEndEntity;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -19,16 +20,16 @@ public class MyHistoryInfo {
 
     private final Integer year, month, day;
 
-    public MyHistoryInfo(MyHistoryInfoInterface myHistoryInfoInterface) {
-        this.auction_id = myHistoryInfoInterface.getAuction_id();
-        this.buyer_name = myHistoryInfoInterface.getBuyer_name();
-        this.seller_name = myHistoryInfoInterface.getSeller_name();
-        this.offer_price = myHistoryInfoInterface.getOffer_price();
-        this.final_price = myHistoryInfoInterface.getFinal_price();
-        this.category_name = myHistoryInfoInterface.getCategory_name();
-        this.product_name = myHistoryInfoInterface.getProduct_name();
+    public MyHistoryInfo(AuctionEndEntity auctionEndEntity) {
+        this.auction_id = auctionEndEntity.getId();
+        this.buyer_name = auctionEndEntity.getBuyer().getName();
+        this.seller_name = auctionEndEntity.getSeller().getName();
+        this.offer_price = auctionEndEntity.getOfferPrice();
+        this.final_price = auctionEndEntity.getFinalPrice();
+        this.category_name = auctionEndEntity.getProduct().getCategoryEntity().getCategoryName();
+        this.product_name = auctionEndEntity.getProduct().getName();
 
-        LocalDateTime endDate = myHistoryInfoInterface.getEnd_time();
+        LocalDateTime endDate = auctionEndEntity.getEndTime();
         this.year = endDate.getYear();
         this.month = endDate.getMonthValue();
         this.day = endDate.getDayOfMonth();

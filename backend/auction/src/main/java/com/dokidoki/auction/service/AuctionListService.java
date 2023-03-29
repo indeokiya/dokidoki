@@ -1,5 +1,6 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.domain.entity.AuctionEndEntity;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
@@ -32,23 +33,23 @@ public class AuctionListService {
     종료된 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readSimpleAuctionEnd(Pageable pageable) {
+    public PaginationResponse readAuctionEndList(Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionEndInterface> simpleAuctionEndInterfaces = auctionEndRepository
+        Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
                 .findAllSimpleEndList(pageable);
 
         // 각 경매의 대표 이미지 가져오기
         List<Long> auctionIdList = new ArrayList<>();
-        for (SimpleAuctionEndInterface simpleAuctionEndInterface : simpleAuctionEndInterfaces)
-            auctionIdList.add(simpleAuctionEndInterface.getAuction_id());
+        for (AuctionEndEntity auctionEndEntity : auctionEndEntities)
+            auctionIdList.add(auctionEndEntity.getId());
         List<ImageInterface> imageInterfaces = imageService
                 .readAuctionThumbnailImage(auctionIdList);
 
         // 데이터 조합
         List<SimpleAuctionEndInfo> simpleAuctionEndInfos = new ArrayList<>();
         int imageIdx = 0;
-        for (int i = 0; i < simpleAuctionEndInterfaces.getContent().size(); i++) {
-            SimpleAuctionEndInterface simpleAuctionEndInterface = simpleAuctionEndInterfaces.getContent().get(i);
+        for (int i = 0; i < auctionEndEntities.getContent().size(); i++) {
+            AuctionEndEntity auctionEndEntity = auctionEndEntities.getContent().get(i);
 
             /*
             조회한 경매 목록과 각 경매의 이미지 조회
@@ -62,7 +63,7 @@ public class AuctionListService {
             if (imageIdx < imageInterfaces.size()) {
                 Long imageAuctionId = imageInterfaces.get(imageIdx).getAuction_id();
                 // 조회한 경매와 이미지가 동일 제품이라면 imageUrl 설정
-                if (imageAuctionId.equals(simpleAuctionEndInterface.getAuction_id())) {
+                if (imageAuctionId.equals(auctionEndEntity.getId())) {
                     imageUrl = imageInterfaces.get(imageIdx).getImage_url();
                     imageIdx++;  // 다음 이미지로 넘어가기
                 }
@@ -71,7 +72,7 @@ public class AuctionListService {
             // Response DTO 구성
             simpleAuctionEndInfos.add(
                     new SimpleAuctionEndInfo(
-                            simpleAuctionEndInterface,
+                            auctionEndEntity,
                             imageUrl
                     )
             );
@@ -80,7 +81,7 @@ public class AuctionListService {
         // Response DTO 생성 및 반환
         return PaginationResponse.of(
                 simpleAuctionEndInfos,
-                simpleAuctionEndInterfaces.isLast()
+                auctionEndEntities.isLast()
         );
     }
 
@@ -88,7 +89,7 @@ public class AuctionListService {
     진행중인 전체 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readSimpleAuctionIng(Long memberId, Integer page, Integer size) {
+    public PaginationResponse readAuctionIngList(Long memberId, Integer page, Integer size) {
         // 데이터 조회
         Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
@@ -110,7 +111,7 @@ public class AuctionListService {
     진행중인 경매 목록 검색
      */
     @Transactional(readOnly = true)
-    public PaginationResponse searchSimpleAuctionIng(
+    public PaginationResponse searchAuctionIngList(
             Long memberId, String keyword, Long categoryId, Pageable pageable) {
         // 불필요 문자 제거
         keyword = keyword.strip();
