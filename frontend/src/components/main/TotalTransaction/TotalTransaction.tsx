@@ -37,9 +37,9 @@ const TotalTransaction = () => {
     auctionAPI.get(
       "/total-prices"
     ).then(({data})=>{
-      setTotalPrice(pre => data)
+      setTotalPrice(pre => data.data)
     })
-  },1000)
+  },3000)
 
   return (
     <>
