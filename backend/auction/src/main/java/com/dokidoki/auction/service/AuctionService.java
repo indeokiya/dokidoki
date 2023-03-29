@@ -81,7 +81,7 @@ public class AuctionService {
         List<CommentResponse> commentResponses = commentService.readComment(auctionId);
 
         // 찜꽁 경매 여부 구하기
-        InterestEntity interestEntity = interestRepository.findByMemberIdAndAuctionId(memberId, auctionId);
+        InterestEntity interestEntity = interestRepository.findByMemberEntity_IdAndAuctionIngEntity_Id(memberId, auctionId);
 
         return new DetailAuctionIngResponse(
                 auctionIngEntity,
@@ -95,11 +95,11 @@ public class AuctionService {
     @Transactional(readOnly = true)
     public DetailAuctionEndResponse readAuctionEnd(Long auction_id) {
         // 완료된 경매 정보
-        DetailAuctionEndInterface detailAuctionEndInterface = auctionEndRepository
-                .findDetailAuctionEndEntityById(auction_id);
+        AuctionEndEntity auctionEndEntity = auctionEndRepository
+                .findAuctionEndEntityById(auction_id);
 
         // 존재하지 않는다면 null 반환
-        if (detailAuctionEndInterface == null)
+        if (auctionEndEntity == null)
             return null;
 
         // 경매 제품 사진 URL 구하기
@@ -112,7 +112,7 @@ public class AuctionService {
         List<LeaderboardHistoryResponse> leaderboardHistoryResponses = leaderboardService.readLeaderboard(auction_id);
 
         return new DetailAuctionEndResponse(
-                detailAuctionEndInterface,
+                auctionEndEntity,
                 auctionImageUrls,
                 commentResponses,
                 leaderboardHistoryResponses

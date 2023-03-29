@@ -24,15 +24,15 @@ public class InterestService {
 
     @Transactional
     public boolean addInterest(Long memberId, Long auctionId) {
-
-        MemberEntity memberEntity = memberService.getMemberById(memberId);
-        AuctionIngEntity auctionIngEntity = auctionService.getAuctioningById(auctionId);
-
-        InterestEntity exInterestEntity = interestRepository.findByMemberEntityAndAuctionIngEntity(memberEntity, auctionIngEntity);
+        InterestEntity exInterestEntity = interestRepository
+                .findByMemberEntity_IdAndAuctionIngEntity_Id(memberId, auctionId);
 
         // 이미 관심경매로 등록되어 있는 경우
         if (exInterestEntity != null)
             return false;
+
+        MemberEntity memberEntity = memberService.getMemberById(memberId);
+        AuctionIngEntity auctionIngEntity = auctionService.getAuctioningById(auctionId);
 
         InterestEntity interestEntity =  InterestEntity.builder()
                 .memberEntity(memberEntity)
@@ -46,7 +46,7 @@ public class InterestService {
 
     @Transactional
     public boolean deleteInterest(Long memberId, Long auctionId) {
-        InterestEntity interestEntity = interestRepository.findByMemberIdAndAuctionId(memberId, auctionId);
+        InterestEntity interestEntity = interestRepository.findByMemberEntity_IdAndAuctionIngEntity_Id(memberId, auctionId);
 
         // 관심등록이 안되어있을 경우
         if (interestEntity == null) {
