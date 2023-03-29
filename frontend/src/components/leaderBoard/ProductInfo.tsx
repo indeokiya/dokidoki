@@ -11,7 +11,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 
-import { bidAPI } from '../../api/axios'
+import { bidAPI, auctionAPI } from '../../api/axios'
 import { userInfoState } from 'src/store/userInfoState';
 
 import { useRecoilValue } from 'recoil';
@@ -35,7 +35,7 @@ const ProductInfo = ({auction_title, auction_id, category, offer_price, price_si
   const dataLeft = ['카테고리', '남은시간', '시작가격', '경매단위'];
   const dataRight = [category, '20:00:10', offer_price, price_size];
   const userInfo = useRecoilValue(userInfoState);
-  const [bookmark, setBookmaek] = useState(false);
+  const [bookmark, setBookmark] = useState(false);
 
   const bid = () => {
     if (!userInfo.is_logged_in) {
@@ -63,6 +63,26 @@ const ProductInfo = ({auction_title, auction_id, category, offer_price, price_si
         alert("알 수 없는 이유로 입찰에 실패했습니다.");
       }
     })
+  }
+
+  const changeBookmark = () => {
+    if (bookmark) { // 찜을 해놓은 경우
+      auctionAPI.delete(`interests/${auction_id}`)
+      .then(res => {
+        setBookmark(!bookmark)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    } else {
+      auctionAPI.post(`interests/${auction_id}`)
+      .then(res => {
+        setBookmark(!bookmark)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    }
   }
 
   return (
@@ -123,7 +143,7 @@ const ProductInfo = ({auction_title, auction_id, category, offer_price, price_si
           variant="outlined"
           sx={{ width: '50%', height: '50px' }}
           onClick={() => {
-            setBookmaek(!bookmark);
+            changeBookmark()
           }}
         >
           <StyledSpan>찜하기 </StyledSpan>

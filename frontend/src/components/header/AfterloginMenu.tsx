@@ -17,10 +17,6 @@ const AfterLoginMenu = () => {
   };
   const handleClose = () => {
     setAnchorEl(null);
-    localStorage.removeItem("user_info");
-    localStorage.removeItem("refresh_token");
-    localStorage.removeItem("access_token");    
-    navigate("/");
   };
 
   const logout = () => {

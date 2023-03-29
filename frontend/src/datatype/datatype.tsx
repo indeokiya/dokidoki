@@ -27,8 +27,7 @@ export type Post = {
 
 
 
-
-  //경매가 종료된 물건
+//경매가 종료된 물건
 export type endPost =  {
   final_price: number;
   start_time: string;
@@ -38,3 +37,15 @@ export type endPost =  {
 
 
  
+//경매 등록 타입
+export type AuctionRegisterType = {
+  productId: number
+  title: string
+  description: string
+  offerPrice: number
+  priceSize: number
+  endAt: Date
+  meetingPlace: string
+  files: any[]
+  name: string
+}

@@ -63,7 +63,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
   //마우스를 올리면 그림자형성됨
   const [isHovered, setIsHovered] = useState(false);
 
-  //현제 경매시간
+  //현재 경매시간
   const [auctionTime, setAuctionTime] = useState(0);
 
   //시작하면서 경매시간 정보를 세팅한다.

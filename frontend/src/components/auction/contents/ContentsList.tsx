@@ -129,7 +129,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
       )}
 
       {/* 무한 스크롤 타겟 */}
-      <Grid container></Grid>
+      <Grid container>
       {hasNextPage ? (
         isFetchingNextPage ? (
           <Grid item textAlign={"center"}><CircularProgress/></Grid> //로딩중일 때 타겟 숨기기
@@ -143,7 +143,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
       </Typography>
         </Grid> //마지막 페이지라면 더이상 불러올 데이터가 없음을 표시
       )}
-
+</Grid>
      
     </div>
   );

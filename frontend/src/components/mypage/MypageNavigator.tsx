@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import { useGetRecoilValueInfo_UNSTABLE } from 'recoil';
+
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
@@ -15,7 +15,6 @@ import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlin
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Avatar from '@mui/material/Avatar';
-import ProfileImgSrc from '../../assets/image/profile.png';
 import { Typography, Badge } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
@@ -23,6 +22,9 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useNavigate } from 'react-router';
 import Tooltip from '@mui/material/Tooltip';
 import { userAPI } from 'src/api/axios';
+import { useRecoilState } from 'recoil';
+import { userInfoState } from 'src/store/userInfoState';
+
 
 const item = {
   py: '2px',
@@ -47,7 +49,7 @@ const MypageNavigator: React.FC<{
   const navigate = useNavigate();
 
   const [categories, setCategories] = useState([
-    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: true, path: 'action-item' },
+    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: true, path: '' },
     { id: '구매 내역', icon: <ShoppingCartIcon />, active: false, path: 'action-history' },
     { id: '판매 중', icon: <SellOutlinedIcon />, active: false, path: 'sale-item' },
     { id: '판매 내역', icon: <SellIcon />, active: false, path: 'sale-history' },
@@ -55,29 +57,24 @@ const MypageNavigator: React.FC<{
     { id: '알림 내역', icon: <NotificationsIcon />, active: false, path: 'alert-history' },
   ]);
 
-  const [profileImg, setProfileImg] = useState<File>();
+  const [loginUser, setLoginUser]= useRecoilState(userInfoState);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     console.log(e)
     const target = e.currentTarget;
     const files = (target.files as FileList)[0];
-    if (files) {
-      setProfileImg(files)
-    }
-    console.log(files)
     const formData = new FormData()
     formData.append('file', files)
 
     userAPI.put('/profiles', formData, {
       headers : {
         "Content-Type":"multipart/form-data",
-        "authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2NzkyOTAwNTAsImV4cCI6MTY3OTI5MzY1MCwidXNlcl9pZCI6Mn0.ATBKCYsyg8jC-GxTT41Tbw3uknZ1PQ7JkC9g1AyGhLg",
-        "withCredentials":"true"
       }
     })
     .then(res => {
       alert("성공")
-      console.log(res)
+      setLoginUser({...loginUser, picture:res.data.data})
+      console.log("res >> ",res)
     })
   };
 
@@ -129,13 +126,13 @@ const MypageNavigator: React.FC<{
             }
           >
             <Avatar
-              src={ProfileImgSrc}
+              src={loginUser.picture}
               sx={{ width: '150px', height: '150px', margin: '1rem auto' }}
             ></Avatar>
           </Badge>
 
           <Typography color="white" variant="subtitle1">
-            김범식
+            {loginUser.name}
           </Typography>
         </StyledDiv>
         <ListItem>
