@@ -1,9 +1,10 @@
 package com.dokidoki.notice.api.service;
 
+import com.dokidoki.notice.api.controller.WebSocketController;
 import com.dokidoki.notice.api.response.NoticeCompleteResp;
 import com.dokidoki.notice.api.response.NoticeFailResp;
 import com.dokidoki.notice.api.response.NoticeOutBidResp;
-import com.dokidoki.notice.db.entity.AuctionRealtime;
+import com.dokidoki.notice.common.utils.PayloadUtil;
 import com.dokidoki.notice.db.repository.AuctionRealtimeLeaderBoardRepository;
 import com.dokidoki.notice.db.repository.AuctionRealtimeMemberRepository;
 import com.dokidoki.notice.api.response.NoticeSuccessResp;
@@ -11,8 +12,6 @@ import com.dokidoki.notice.kafka.dto.KafkaAuctionEndDTO;
 import com.dokidoki.notice.kafka.dto.KafkaBidDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,8 +26,8 @@ public class NoticeService {
 
     private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
     private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
-    private final SimpMessagingTemplate messagingTemplate;
-
+    private final WebSocketController webSocketController;
+    private final PayloadUtil payloadUtil;
     /**
      * 경매 성공한 한 명에게 알림 발송
      * @param dto
@@ -37,7 +36,7 @@ public class NoticeService {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         NoticeSuccessResp resp = NoticeSuccessResp.of(dto);
         long memberId = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId()).getMemberId();
-        messagingTemplate.convertAndSend("ws/notice/"+memberId+"/success", resp);
+        webSocketController.sendAlert(memberId, payloadUtil.getStringValue(resp));
     }
 
     /**
@@ -56,7 +55,7 @@ public class NoticeService {
                 continue;
             }
             NoticeFailResp resp = NoticeFailResp.of(dto, myFinalPrice);
-            messagingTemplate.convertAndSend("ws/notice/"+memberId+"/fail", resp);
+            webSocketController.sendAlert(memberId, payloadUtil.getStringValue(resp));
         }
     }
 
@@ -68,7 +67,7 @@ public class NoticeService {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         long sellerId = dto.getSellerId();
         NoticeCompleteResp resp = NoticeCompleteResp.of(dto);
-        messagingTemplate.convertAndSend("ws/notice/"+sellerId+"/complete", resp);
+        webSocketController.sendAlert(sellerId, payloadUtil.getStringValue(resp));
 
     }
 
@@ -84,7 +83,7 @@ public class NoticeService {
             return;
         }
         NoticeOutBidResp resp = NoticeOutBidResp.of(dto);
-        messagingTemplate.convertAndSend("ws/notice/"+beforeWinnerId+"/outbid", resp);
+        webSocketController.sendAlert(memberId, payloadUtil.getStringValue(resp));
 
     }
 }
