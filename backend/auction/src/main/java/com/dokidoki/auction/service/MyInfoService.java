@@ -1,5 +1,6 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.dto.response.*;
@@ -25,11 +26,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMySellingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMySellingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -38,11 +39,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMyBiddingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyBiddingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -51,11 +52,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMyInterestingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyInterestingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*

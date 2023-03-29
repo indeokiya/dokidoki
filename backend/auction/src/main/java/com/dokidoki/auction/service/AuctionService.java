@@ -81,7 +81,7 @@ public class AuctionService {
         List<CommentResponse> commentResponses = commentService.readComment(auctionId);
 
         // 찜꽁 경매 여부 구하기
-        InterestEntity interestEntity = interestRepository.findByMemberIdAndAuctionId(memberId, auctionId);
+        InterestEntity interestEntity = interestRepository.findByMemberEntity_IdAndAuctionIngEntity_Id(memberId, auctionId);
 
         return new DetailAuctionIngResponse(
                 auctionIngEntity,

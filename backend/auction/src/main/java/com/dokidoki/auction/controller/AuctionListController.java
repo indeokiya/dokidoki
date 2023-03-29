@@ -56,7 +56,7 @@ public class AuctionListController {
         // 검색어, 카테고리 모두 비어있다면 전체 검색
         if (keyword.equals("") && category_id == 0) {
             paginationResponse = auctionListService
-                    .readSimpleAuctionIng(memberId, PageRequest.of(page, size));
+                    .readSimpleAuctionIng(memberId, page, size);
             msg = "진행중인 경매 목록 조회 성공";
         } else {
             paginationResponse = auctionListService
