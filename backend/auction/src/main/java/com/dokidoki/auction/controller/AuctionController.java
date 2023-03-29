@@ -36,6 +36,12 @@ public class AuctionController {
     private final AuctionService auctionService;
     private final JWTUtil jwtUtil;
 
+    // 총 거래금액 조회
+    @GetMapping("/total-prices")
+    public ResponseEntity<BaseResponseBody> getTotalPrice() {
+        Long totalPrice = auctionService.getTotalPrice();
+        return ResponseEntity.status(200).body(BaseResponseBody.of("총 거래금액 조회 성공", totalPrice));
+    }
 
     // 카테고리 기준 제품 목록 조회
     @GetMapping("/products")
