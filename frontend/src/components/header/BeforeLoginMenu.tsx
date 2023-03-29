@@ -10,9 +10,6 @@ const BeforLoginMenu = () => {
       <Grid item>
         <Button variant="contained" onClick={() => navigate("/login")}>로그인</Button>
       </Grid>
-      <Grid item>
-        <Button variant="outlined" onClick={() => navigate("/login")}>회원가입</Button>
-      </Grid>
     </Grid>
   );
 };

@@ -1,4 +1,4 @@
-package com.dokidoki.bid.config;
+package com.dokidoki.userserver.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;

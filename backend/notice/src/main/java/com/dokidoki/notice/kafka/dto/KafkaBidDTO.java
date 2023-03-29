@@ -1,14 +1,13 @@
 package com.dokidoki.notice.kafka.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
 @Setter
 @ToString
+@Builder
 public class KafkaBidDTO {
 
     private long beforeWinnerId;
@@ -20,4 +19,16 @@ public class KafkaBidDTO {
     private long productId;
     private LocalDateTime bidTime;
 
+    public KafkaBidDTO() {}
+
+    public KafkaBidDTO(long beforeWinnerId, long memberId, long auctionId, String name, int highestPrice, String productName, long productId, LocalDateTime bidTime) {
+        this.beforeWinnerId = beforeWinnerId;
+        this.memberId = memberId;
+        this.auctionId = auctionId;
+        this.name = name;
+        this.highestPrice = highestPrice;
+        this.productName = productName;
+        this.productId = productId;
+        this.bidTime = bidTime;
+    }
 }

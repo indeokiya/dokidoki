@@ -39,10 +39,10 @@ const AuctionPageContent = () => {
           <Grid item xs={2}>
             <SideBar setCategory={setCategory}/>
           </Grid>
-          <Grid xs={8}>
+          <Grid xs={9}>
             <ContentsList size={size} category={category} keyword={keyword}/>
           </Grid>
-          <Grid xs={2}></Grid>
+          <Grid xs={1}></Grid>
         </Grid>
       </Container>
     </>

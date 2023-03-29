@@ -1,5 +1,6 @@
 package com.dokidoki.notice.kafka.service;
 
+import com.dokidoki.notice.api.service.AuctionSocketService;
 import com.dokidoki.notice.api.service.NoticeService;
 import com.dokidoki.notice.kafka.dto.KafkaAuctionEndDTO;
 import com.dokidoki.notice.kafka.dto.KafkaAuctionRegisterDTO;
@@ -19,8 +20,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class KafkaBidConsumer {
 
-    @Autowired
-    NoticeService noticeService;
+    private final NoticeService noticeService;
+    private final AuctionSocketService auctionSocketService;
 
     @KafkaListener(topics = "${spring.kafka.auctionUpdateConfig.topic}", containerFactory = "auctionUpdateKafkaListenerContainerFactory")
     public void auctionUpdateListener(
@@ -34,6 +35,7 @@ public class KafkaBidConsumer {
 
         // auction : memberid, name, email .....
         // websocket method_bid_success(memberid, name, email)
+        auctionSocketService.auctionUpdate(dto);
     }
 
     @KafkaListener(topics = "${spring.kafka.auctionEndConfig.topic}", containerFactory = "auctionEndKafkaListenerContainerFactory")
@@ -62,5 +64,6 @@ public class KafkaBidConsumer {
         });
 
         noticeService.auctionOutBid(dto);
+        auctionSocketService.auctionBid(dto);
     }
 }

@@ -113,16 +113,21 @@ public class BiddingService {
         if (auctionRealtimeO.get().getHighestPrice() != req.getCurrentHighestPrice()) {
             throw new BusinessException("현재 가격이 갱신되었습니다. 다시 시도해주세요", ErrorCode.DIFFERENT_HIGHEST_PRICE);
         }
+
+        long beforeWinnerId = -1;
         
         // 3. 입찰 강탈 여부를 확인하기 위해, 이전 최고값 입찰자 구해놓기
-        long beforeWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
+        Optional<LeaderBoardMemberInfo> winnerO = auctionRealtimeLeaderBoardRepository.getWinner(auctionId);
+        if (winnerO.isPresent()) {
+            beforeWinnerId = winnerO.get().getMemberId();
+        }
 
         // 4. 실시간 최고가, 리더보드 갱신하기
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
 
         LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
 
-        long nowWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
+        long nowWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).get().getMemberId();
 
         // 5. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
         KafkaBidDTO kafkaBidDTO = KafkaBidDTO.of(auctionRealtime, req, resp, memberId, beforeWinnerId);

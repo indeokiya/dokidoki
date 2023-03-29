@@ -53,6 +53,13 @@ public class AuctionService {
         return categoryList;
     }
 
+    // 총 거래금액 조회
+    @Transactional(readOnly = true)
+    public Long getTotalPrice() {
+        Long totalPrice = auctionEndRepository.getTotalPrice();
+        return totalPrice != null ? totalPrice : 0;
+    }
+
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
     public List<ProductResp> getProductList(String keyword) {
