@@ -27,7 +27,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Service
 public class AuctionService {
-    private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
     private final AuctionIngRepository auctionIngRepository;
     private final AuctionEndRepository auctionEndRepository;
@@ -198,7 +197,7 @@ public class AuctionService {
         }
 
         // 최고가 갱신
-        if (highestPrice > auctionIngEntity.getHighestPrice()) {
+        if (auctionIngEntity.getHighestPrice() == null || highestPrice > auctionIngEntity.getHighestPrice()) {
             AuctionIngEntity newAuctionIngEntity = AuctionIngEntity.builder()
                     .id(auctionIngEntity.getId())
                     .seller(auctionIngEntity.getSeller())
@@ -216,14 +215,36 @@ public class AuctionService {
     }
 
     @Transactional
-    public void auctionEndEvent(Long auctionId) {
+    public void auctionEndEvent(Long auctionId, Long buyerId) {
         AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
         if (auctionIngEntity == null) {
             log.error("auctionEndEvent >> 존재하지 않는 경매입니다.");
             return;
         }
+        MemberEntity buyer = memberRepository.findById(buyerId).orElse(null);
+        if (buyer == null) {
+            log.error("auctionEndEvent >> 존재하지 않는 구매자입니다.");
+            return;
+        }
 
         // 경매완료 데이터 삽입
+        LocalDateTime endTime = LocalDateTime.now();
+        if (endTime.isAfter(auctionIngEntity.getEndAt()))
+            endTime = auctionIngEntity.getEndAt();
+
+        AuctionEndEntity auctionEndEntity = AuctionEndEntity.createAuctionEnd(
+                auctionIngEntity.getId(),
+                auctionIngEntity.getSeller(),
+                buyer,
+                auctionIngEntity.getProductEntity(),
+                auctionIngEntity.getStartTime(),
+                endTime,
+                auctionIngEntity.getTitle(),
+                auctionIngEntity.getOfferPrice(),
+                auctionIngEntity.getHighestPrice(),
+                auctionIngEntity.getDescription()
+        );
+        auctionEndRepository.save(auctionEndEntity);
 
         // 경매중 데이터 삭제
         auctionIngRepository.delete(auctionIngEntity);
