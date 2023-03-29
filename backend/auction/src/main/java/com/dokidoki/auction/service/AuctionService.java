@@ -11,9 +11,11 @@ import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
 import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -180,6 +182,51 @@ public class AuctionService {
         }
 
         return null;
+    }
+
+    /*
+    카프카에서 호출될 이벤트
+        1. 입찰 시 최고가 갱신을 위한 메서드
+        2. 경매 종료 시 '경매중' 테이블에서 '경매 종료' 테이블로 옮기기 위한 메서드
+     */
+    @Transactional
+    public void updateHighestPrice(Long auctionId, Integer highestPrice) {
+        AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
+        if (auctionIngEntity == null) {
+            log.error("updateHighestPrice >> 존재하지 않는 경매입니다.");
+            return;
+        }
+
+        // 최고가 갱신
+        if (highestPrice > auctionIngEntity.getHighestPrice()) {
+            AuctionIngEntity newAuctionIngEntity = AuctionIngEntity.builder()
+                    .id(auctionIngEntity.getId())
+                    .seller(auctionIngEntity.getSeller())
+                    .title(auctionIngEntity.getTitle())
+                    .description(auctionIngEntity.getDescription())
+                    .offerPrice(auctionIngEntity.getOfferPrice())
+                    .priceSize(auctionIngEntity.getPriceSize())
+                    .startTime(auctionIngEntity.getStartTime())
+                    .endAt(auctionIngEntity.getEndAt())
+                    .meetingPlace(auctionIngEntity.getMeetingPlace())
+                    .highestPrice(highestPrice)
+                    .build();
+            auctionIngRepository.save(newAuctionIngEntity);
+        }
+    }
+
+    @Transactional
+    public void auctionEndEvent(Long auctionId) {
+        AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
+        if (auctionIngEntity == null) {
+            log.error("auctionEndEvent >> 존재하지 않는 경매입니다.");
+            return;
+        }
+
+        // 경매완료 데이터 삽입
+
+        // 경매중 데이터 삭제
+        auctionIngRepository.delete(auctionIngEntity);
     }
 
     /**
