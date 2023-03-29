@@ -13,11 +13,8 @@ import java.util.List;
 
 @Repository
 public interface InterestRepository extends JpaRepository<InterestEntity, Long> {
-
-    InterestEntity findByMemberEntityAndAuctionIngEntity(MemberEntity memberEntity, AuctionIngEntity auctionIngEntity);
-
-    @Query("SELECT i FROM InterestEntity i WHERE i.memberEntity.id = :member_id AND i.auctionIngEntity.id = :auction_id")
-    InterestEntity findByMemberIdAndAuctionId(@Param("member_id") Long memberId, @Param("auction_id") Long auctionId);
+    InterestEntity findByMemberEntity_IdAndAuctionIngEntity_Id(
+            @Param("member_id") Long memberId, @Param("auction_id") Long auctionId);
 
     List<InterestMapping> findAllByMemberEntity_Id(Long memberId);
 }
