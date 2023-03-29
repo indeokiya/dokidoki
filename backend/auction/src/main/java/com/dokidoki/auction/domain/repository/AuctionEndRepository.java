@@ -76,4 +76,10 @@ public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Lo
      */
     @Query("SELECT SUM(a.finalPrice) FROM AuctionEndEntity a WHERE a.seller.id = :member_id")
     Long getMyTotalOfSales(@Param("member_id") Long memberId);
+
+    /*
+    총 거래금액 조회
+     */
+    @Query("SELECT SUM(a.finalPrice) FROM AuctionEndEntity a")
+    Long getTotalPrice();
 }
