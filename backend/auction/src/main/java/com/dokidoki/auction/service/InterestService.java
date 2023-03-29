@@ -7,8 +7,9 @@ import com.dokidoki.auction.domain.repository.InterestRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -43,21 +44,15 @@ public class InterestService {
         return true;
     }
 
-
     @Transactional
     public boolean deleteInterest(Long memberId, Long auctionId) {
-
-        MemberEntity memberEntity = memberService.getMemberById(memberId);
-        AuctionIngEntity auctionIngEntity = auctionService.getAuctioningById(auctionId);
-        InterestEntity interestEntity = interestRepository.findByMemberEntityAndAuctionIngEntity(memberEntity, auctionIngEntity);
+        InterestEntity interestEntity = interestRepository.findByMemberIdAndAuctionId(memberId, auctionId);
 
         // 관심등록이 안되어있을 경우
         if (interestEntity == null) {
             return false;
         }
 
-        log.debug("member = {}", memberEntity);
-        log.debug("auctionIng = {}", auctionIngEntity);
         interestRepository.delete(interestEntity);
 
         return true;

@@ -104,13 +104,19 @@ public class AuctionController {
     경매글 상세정보 조회 (진행중, 완료)
      */
     @GetMapping("/in-progress/{auction_id}")
-    public ResponseEntity<BaseResponseBody> readAuctionIng(@PathVariable Long auction_id) {
-        DetailAuctionIngResponse detailAuctionIngResponse = auctionService.readAuctionIng(auction_id);
+    public ResponseEntity<BaseResponseBody> readAuctionIng(
+            @PathVariable Long auction_id,
+            HttpServletRequest request) {
+        Long memberId = jwtUtil.getUserId(request);
+        if (memberId == null)
+            return ResponseEntity.status(400).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
+
+        DetailAuctionIngResponse detailAuctionIngResponse = auctionService.readAuctionIng(memberId, auction_id);
         if (detailAuctionIngResponse == null)
             return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("성공", auctionService.readAuctionIng(auction_id)));
+                .body(BaseResponseBody.of("성공", detailAuctionIngResponse));
     }
 
     @GetMapping("/end/{auction_id}")
@@ -120,7 +126,7 @@ public class AuctionController {
             return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("성공", auctionService.readAuctionEnd(auction_id)));
+                .body(BaseResponseBody.of("성공", detailAuctionEndResponse));
     }
 
     /*
