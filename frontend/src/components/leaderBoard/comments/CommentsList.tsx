@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography';
 import { CommentType } from 'src/datatype/datatype';
 
 
-const CommentsList: React.FC<{ comments: CommentType[], seller_id: number }> = (props) => {
-  const { comments, seller_id  } = props
+const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], seller_id: number }> = (props) => {
+  const { auction_id, comments, seller_id  } = props
 
   // 현재 사용자
   const loginUser = { id: null }
@@ -23,7 +23,7 @@ const CommentsList: React.FC<{ comments: CommentType[], seller_id: number }> = (
           {' '}
           Q & A
         </Typography>
-        <CommentInput />
+        <CommentInput auction_id={auction_id} parent_id={null} />
         {comments.map((data) => {
           return (
             <>

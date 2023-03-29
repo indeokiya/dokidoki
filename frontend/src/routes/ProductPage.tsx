@@ -97,7 +97,7 @@ const ProductPage = () => {
           <ProductGraph />
 
           {/* 댓글 작성과 댓글들  */}
-          <CommentsList comments={comments} seller_id={seller_id} />
+          <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
 
           {/* 모달창 하단에 존재하는 버튼 */}
         </Box>
