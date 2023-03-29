@@ -37,15 +37,3 @@ export type endPost =  {
 
 
  
-//경매 등록 타입
-export type AuctionRegisterType = {
-  productId: number
-  title: string
-  description: string
-  offerPrice: number
-  priceSize: number
-  endAt: Date
-  meetingPlace: string
-  files: any[]
-  name: string
-}
