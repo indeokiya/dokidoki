@@ -127,9 +127,7 @@ public class BiddingService {
 
         LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
 
-        long nowWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).get().getMemberId();
-
-        // 5. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
+        // 5. Kafka 에 갱신된 최고 입찰 정보 (DTO) 보내기
         KafkaBidDTO kafkaBidDTO = KafkaBidDTO.of(auctionRealtime, req, resp, memberId, beforeWinnerId);
         log.info("sending KafkaBidDTO: {}", kafkaBidDTO);
         producer.sendBid(kafkaBidDTO);
@@ -154,13 +152,13 @@ public class BiddingService {
         auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
 
         // 3-3. 리더보드 갱신
-
+        // 받은 request 와 memberId로 DB에 저장되는 리더보드 정보 갱신
         LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
-
         auctionRealtimeLeaderBoardRepository.save(newHighestPrice, memberInfo, auctionId);
-
+        // limit 을 넘어가는 리더보드 정보는 지우기
         auctionRealtimeLeaderBoardRepository.removeOutOfRange(auctionId);
-
+        
+        // 프론트에 보내줄 리더보드 갱신 정보 가공하기
         LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(memberInfo, newHighestPrice);
         
         return resp;

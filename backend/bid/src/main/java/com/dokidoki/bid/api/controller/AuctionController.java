@@ -31,7 +31,7 @@ public class AuctionController {
     @PostMapping("/{auctionId}/bid")
     public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId, HttpServletRequest request) throws InterruptedException {
         Map<String, Object> resultMap = new HashMap<>();
-        long memberId = JWTUtil.getUserId(request).longValue();
+        long memberId = JWTUtil.getUserId(request);
         biddingService.bid(auctionId, req, memberId);
         resultMap.put("status_code", 200);
         resultMap.put("message", "성공");
@@ -41,7 +41,7 @@ public class AuctionController {
     @PutMapping("/{auctionId}/price-size")
     public ResponseEntity<?> updatePriceSize(@RequestBody AuctionUpdatePriceSizeReq req, @PathVariable long auctionId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
-        long memberId = JWTUtil.getUserId(request).longValue();
+        long memberId = JWTUtil.getUserId(request);
         biddingService.updatePriceSize(auctionId, req, memberId);
         resultMap.put("status_code", 200);
         resultMap.put("message", "성공");
