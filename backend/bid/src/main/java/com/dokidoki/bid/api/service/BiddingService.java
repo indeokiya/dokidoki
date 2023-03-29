@@ -127,9 +127,7 @@ public class BiddingService {
 
         LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
 
-        long nowWinnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).get().getMemberId();
-
-        // 5. Kafka 에 갱신된 최고 입찰 정보 (resp) 보내기
+        // 5. Kafka 에 갱신된 최고 입찰 정보 (DTO) 보내기
         KafkaBidDTO kafkaBidDTO = KafkaBidDTO.of(auctionRealtime, req, resp, memberId, beforeWinnerId);
         log.info("sending KafkaBidDTO: {}", kafkaBidDTO);
         producer.sendBid(kafkaBidDTO);
@@ -154,13 +152,13 @@ public class BiddingService {
         auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
 
         // 3-3. 리더보드 갱신
-
+        // 받은 request 와 memberId로 DB에 저장되는 리더보드 정보 갱신
         LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
-
         auctionRealtimeLeaderBoardRepository.save(newHighestPrice, memberInfo, auctionId);
-
+        // limit 을 넘어가는 리더보드 정보는 지우기
         auctionRealtimeLeaderBoardRepository.removeOutOfRange(auctionId);
-
+        
+        // 프론트에 보내줄 리더보드 갱신 정보 가공하기
         LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(memberInfo, newHighestPrice);
         
         return resp;
@@ -188,15 +186,13 @@ public class BiddingService {
     }
 
     /**
-     * 경매 단위를 수정하는 메서드. 컨트롤러에서 접근하는 메서드
-     * @param auctionId 경매 ID
-     * @param req client 측에서 넘어온 요청 정보
-     * @param memberId 접근하는 사용자의 ID
+     * 경매 단위를 수정하는 메서드. Kafka 의 Consumer 가 사용
+     * @param dto KafkaAuctionUpdateDTO
      */
     @RealTimeLock
-    public void updatePriceSize(long auctionId, AuctionUpdatePriceSizeReq req, long memberId) {
-        log.info("req: {}", req);
-        Optional<AuctionRealtime> auctionRealTimeO = auctionRealtimeRepository.findById(auctionId);
+    public void updatePriceSize(KafkaAuctionUpdateDTO dto) {
+        log.info("KafkaAuctionUpdateDTO: {}", dto);
+        Optional<AuctionRealtime> auctionRealTimeO = auctionRealtimeRepository.findById(dto.getAuctionId());
 
         // 1. 없는 auctionId면 에러 내기
         if (auctionRealTimeO.isEmpty()) {
@@ -204,22 +200,13 @@ public class BiddingService {
         }
         log.info("auctionRealTime: {}", auctionRealTimeO.get());
 
-        // 2. 해당 경매를 올린 사용자가 아니면 에러 내기
-        if (auctionRealTimeO.get().getSellerId() != memberId) {
-            throw new BusinessException("권한이 없습니다.", ErrorCode.BUSINESS_EXCEPTION_ERROR);
-        }
-
-        // 3. 가격 수정하기
-        auctionRealTimeO.get().updatePriceSize(req.getPriceSize());
+        // 2. 가격 수정하기
+        auctionRealTimeO.get().updatePriceSize(dto.getPriceSize());
 
         auctionRealtimeRepository.save(auctionRealTimeO.get());
 
         KafkaAuctionUpdateDTO kafkaAuctionUpdateDTO = KafkaAuctionUpdateDTO.of(auctionRealTimeO.get());
         log.info("sending kafkaAuctionUpdateDTO: {}", kafkaAuctionUpdateDTO);
-
-        // TODO - 4. Kafka 에 수정된 단위 가격 (req.getPriceSize()) 보내기
-        //  -> MySQL 도 구독해놔야
-//        producer.sendAuctionUpdate(kafkaAuctionUpdateDTO);
 
     }
 

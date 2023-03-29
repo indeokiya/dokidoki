@@ -37,14 +37,14 @@ public class KafkaBidConsumer {
 
     @KafkaListener(topics = "${spring.kafka.auctionUpdateConfig.topic}", containerFactory = "auctionUpdateKafkaListenerContainerFactory")
     public void auctionUpdateListener(
-            @Payload KafkaAuctionUpdateDTO update,
+            @Payload KafkaAuctionUpdateDTO dto,
             @Headers MessageHeaders headers) {
-        System.out.println("Received auction update message : " + update);
-        log.info("Received auction update message: [{}]", update);
+        System.out.println("Received auction update message : " + dto);
+        log.info("Received auction update message: [{}]", dto);
         headers.keySet().forEach(key -> {
             log.info("header | key: [{}] value: [{}]", key, headers.get(key));
         });
 
-//        biddingService.updatePriceSize();
+        biddingService.updatePriceSize(dto);
     }
 }
