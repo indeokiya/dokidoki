@@ -16,17 +16,7 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     /*
     진행중인 경매의 상세정보 조회
      */
-    @Query("SELECT a.title as auction_title, a.startTime as start_time, a.endAt as end_time, a.description as description " +
-            ", a.meetingPlace as meeting_place, a.priceSize as price_size, a.offerPrice as offer_price " +
-            ", a.highestPrice as highest_price, s.name as seller_name, s.id as seller_id " +
-            ", p.name as product_name, c.categoryName as category_name " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
-            " JOIN a.seller s " +
-            "WHERE a.id = :auction_id " +
-            "ORDER BY a.id DESC ")
-    DetailAuctionIngInterface findAuctionIngEntityById(@Param("auction_id") Long auctionId);
+    AuctionIngEntity findAuctionIngEntityByIdOrderById(Long auctionId);
 
     /*
     진행중인 경매 목록 (전체)

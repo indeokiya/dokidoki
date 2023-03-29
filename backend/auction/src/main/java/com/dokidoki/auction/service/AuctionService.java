@@ -33,25 +33,8 @@ public class AuctionService {
     private final ImageService imageService;
     private final CommentService commentService;
     private final LeaderboardService leaderboardService;
+    private final InterestRepository interestRepository;
     private final KafkaAuctionProducer producer;
-
-    // 카테고리 목록 조회
-    @Transactional
-    public List<CategoryResp> getCategoryList() {
-        List<CategoryEntity> categories = categoryRepository.findAll();
-        List<CategoryResp> categoryList = new ArrayList<>();
-
-        for (CategoryEntity categoryEntity : categories) {
-            CategoryResp categoryResp = CategoryResp.builder()
-                    .id(categoryEntity.getId())
-                    .categoryName(categoryEntity.getCategoryName())
-                    .build();
-
-            categoryList.add(categoryResp);
-        }
-
-        return categoryList;
-    }
 
     // 총 거래금액 조회
     @Transactional(readOnly = true)
@@ -83,13 +66,10 @@ public class AuctionService {
 
     // 진행중인 경매 상세정보 조회
     @Transactional(readOnly = true)
-    public DetailAuctionIngResponse readAuctionIng(Long auctionId) {
-        // 완료된 경매 정보
-        DetailAuctionIngInterface detailAuctionIngInterface = auctionIngRepository
-                .findAuctionIngEntityById(auctionId);
-
-        // 존재하지 않는다면 null 반환
-        if (detailAuctionIngInterface == null)
+    public DetailAuctionIngResponse readAuctionIng(Long memberId, Long auctionId) {
+        // 진행중 경매 정보
+        AuctionIngEntity auctionIngEntity = auctionIngRepository.findAuctionIngEntityByIdOrderById(auctionId);
+        if (auctionIngEntity == null)
             return null;
 
         // 경매 제품 사진 URL 구하기
@@ -98,14 +78,14 @@ public class AuctionService {
         // 댓글 구하기
         List<CommentResponse> commentResponses = commentService.readComment(auctionId);
 
-        // 입찰 내역 구하기
-        List<LeaderboardHistoryResponse> leaderboardHistoryResponses = leaderboardService.readLeaderboard(auctionId);
+        // 찜꽁 경매 여부 구하기
+        InterestEntity interestEntity = interestRepository.findByMemberIdAndAuctionId(memberId, auctionId);
 
         return new DetailAuctionIngResponse(
-                detailAuctionIngInterface,
+                auctionIngEntity,
                 auctionImageUrls,
                 commentResponses,
-                leaderboardHistoryResponses
+                interestEntity != null
         );
     }
 
