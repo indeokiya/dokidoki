@@ -12,16 +12,11 @@ import org.springframework.stereotype.Repository;
 public interface AuctionEndRepository extends JpaRepository<AuctionEndEntity, Long> {
     AuctionEndEntity findAuctionEndEntityById(Long auctionId);
 
-    @Query("SELECT a FROM AuctionEndEntity a ORDER BY a.id DESC")
-    Page<AuctionEndEntity> findAllSimpleEndList(Pageable pageable);
-
     // 특정 사용자가 과거에 구매했던 내역 조회
-    @Query("SELECT a FROM AuctionEndEntity a WHERE a.buyer.id = :member_id ORDER BY a.id DESC")
-    Page<AuctionEndEntity> findAllMyPurchases(@Param("member_id") Long memberId, Pageable pageable);
+    Page<AuctionEndEntity> findAllByBuyer_IdOrderByIdDesc(Long buyerId, Pageable pageable);
 
     // 특정 사용자가 과거에 판매했던 내역 조회
-    @Query("SELECT a FROM AuctionEndEntity a WHERE a.seller.id = :member_id ORDER BY a.id DESC")
-    Page<AuctionEndEntity> findAllMySales(@Param("member_id") Long memberId, Pageable pageable);
+    Page<AuctionEndEntity> findAllBySeller_IdOrderByIdDesc(Long sellerId, Pageable pageable);
 
     // 총 구매가 조회
     @Query("SELECT SUM(a.finalPrice) FROM AuctionEndEntity a WHERE a.buyer.id = :member_id")

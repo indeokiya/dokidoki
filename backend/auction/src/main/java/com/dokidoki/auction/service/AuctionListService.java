@@ -33,10 +33,10 @@ public class AuctionListService {
     종료된 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readAuctionEndList(Pageable pageable) {
+    public PaginationResponse readAuctionEndList(Integer page, Integer size) {
         // 데이터 조회
         Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
-                .findAllSimpleEndList(pageable);
+                .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
 
         // 각 경매의 대표 이미지 가져오기
         List<Long> auctionIdList = new ArrayList<>();
