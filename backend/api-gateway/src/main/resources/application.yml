@@ -33,7 +33,7 @@ spring:
           - Path=/api/bids/**
         filters:
           - RewritePath=/api/bids/(?<segment>.*), /$\{segment}
-          #- JwtAuthenticationFilter
+          - JwtAuthenticationFilter
 
       - id: auction-server
         uri: http://auction-server:8082
@@ -41,15 +41,15 @@ spring:
           - Path=/api/auctions/**
         filters:
           - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
-          #- JwtAuthenticationFilter
+          - JwtAuthenticationFilter
 
       - id: notice-server
         uri: http://notice-server:8084
         predicates:
           - Path=/api/notices/**
         filters:
-          - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
-          #- JwtAuthenticationFilter
+          - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
+          - JwtAuthenticationFilter
 
       - id: user-server
         uri: http://user-server:8083
@@ -65,4 +65,4 @@ spring:
           - Method=DELETE
         filters:
           - RewritePath=/api/users/(?<segment>.*), /$\{segment}
-          #- JwtAuthenticationFilter
+          - JwtAuthenticationFilter
