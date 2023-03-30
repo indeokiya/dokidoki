@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Logout } from 'src/hooks/logout';
 
 const auctionAPI = axios.create({
   baseURL: process.env.REACT_APP_AUCTION_SERVER_BASE_URL,
@@ -36,7 +37,7 @@ const noticeAPI = axios.create({
 
 noticeAPI.defaults.timeout = 3000;
 
-// 공통 인터셉터
+// 공통 request 인터셉터
 function addRequestIntercepter(axiosApi : any){
   console.log("해더 붙지롱")
   axiosApi.interceptors.request.use(
@@ -44,15 +45,19 @@ function addRequestIntercepter(axiosApi : any){
         // 로컬 스토리지에서 Access Token 가져오기, 없다면 Undefined
         let accessToken = localStorage.getItem("access_token");
         console.log("accessToken >> ", accessToken)
-
+        
         // Authorization 헤더에 토큰 추가 및 credential 설정
-        if (accessToken) {
-            config.headers["authorization"] = "Bearer " + accessToken;
-            
-        }
+        if (accessToken) config.headers["authorization"] = "Bearer " + accessToken;
         config.withCredentials = true;
         return config;
     }
+  );
+}
+
+// 공통 response 인터셉터
+function addResponseIntercepter(axiosApi : any){
+  axiosApi.interceptors.response.use(
+    //.. to do
   );
 }
 
