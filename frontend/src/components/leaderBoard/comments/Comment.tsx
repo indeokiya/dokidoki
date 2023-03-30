@@ -7,6 +7,7 @@ import Button from '@mui/material/Button';
 import CommentInput from './CommentInput';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { commentAuctionIdState, parentIdState } from 'src/store/CommentStates';
+import { auctionAPI } from 'src/api/axios';
 //댓글 하나의 형태 만들기
 //child : 대댓글 인지 여부
 //isWriter : 자신이 작성자 인지 확인 id값을 비교해서 true false로 넘겨준다.
@@ -26,10 +27,25 @@ const Comment: React.FC<{
   // 댓글 PK
   const { commentId, refetch } = props
 
+  // Auction Id
+  const auctionId = useRecoilValue(commentAuctionIdState)
+
   // 답글 달기를 눌렀을 때 본인의 댓글 ID를 set
   const [parentId, setParentId] = useRecoilState(parentIdState)
   const clickReply = () => {
     setParentId(commentId)
+  }
+
+  // 삭제
+  const deleteComment = () => {
+    const confirm = window.confirm("댓글을 삭제하시겠습니까?")
+    if (confirm === false)
+      return
+    
+    auctionAPI
+      .delete(`${auctionId}/comments/${commentId}`)
+      .then(() => { refetch() })
+      .catch(() => { alert("댓글이 삭제되지 않았습니다.") })
   }
 
   return (
@@ -62,14 +78,14 @@ const Comment: React.FC<{
               </Typography>
               {/* 답글 버튼 */}
               {!props.isChild ? <Button variant="text" color="error" onClick={clickReply}>
-                  답글 달기
+                  답글
               </Button> : null}
               {/* 댓글의 주인이라면 수정 및 삭제 버튼을 볼 수 있다. */}
               {props.isMine && (<>
                 <Button variant="text" color="error">
                   수정
                 </Button>
-                <Button variant="text" color="error">
+                <Button variant="text" color="error" onClick={deleteComment}>
                   삭제
                 </Button></>
               )}
