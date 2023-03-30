@@ -8,7 +8,7 @@ import { auctionAPI } from 'src/api/axios';
 import { useInView } from 'react-intersection-observer';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
-import Sceleton from 'src/components/auction/contents/Sceleton';
+import IngSceleton from 'src/components/sceleton/IngSceleton';
 import IngContentItem from './IngContentItem';
 
 //입찰 중
@@ -99,7 +99,7 @@ const IngContentItemList = () => {
 
   return (
     <div id="scroll">
-      {isLoading && <Sceleton></Sceleton>}
+      {isLoading && <IngSceleton/>}
 
       {/* 데이터가 있다면.. */}
         <Grid container spacing={2} paddingLeft={2} maxWidth="100%">

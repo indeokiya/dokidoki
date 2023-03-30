@@ -7,6 +7,8 @@ import imgSrc from '../../../assets/image/phone1.png';
 import { Post } from 'src/datatype/datatype';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from 'src/store/userInfoState';
+import Chip from '@mui/material/Chip';
+import { color } from '@mui/system';
 
 const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
   const loginUser = useRecoilValue(userInfoState);
@@ -29,13 +31,13 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
 
   return (
     <React.Fragment>
-      <Paper elevation={3} >
-        <Grid container mx={1} maxWidth={"880px"}>
+      <Paper elevation={3} sx={{minWidth:"660px"}}>
+        <Grid container mx={1} >
           <Grid item xs={2} maxHeight={'150px'} alignItems={'center'}>
             <StyledImg src={imgSrc}></StyledImg>
           </Grid>
           <Grid item xs={4} py={3}>
-            <Typography variant="subtitle2">{auctionData.category_name}</Typography>
+            <Chip label={auctionData.category_name} variant="outlined" />
             <Typography variant="h6">{auctionData.auction_title}</Typography>
 
             {/*내가 판매자일 때와 내가 구매자일 때를 나눈다. */}
@@ -53,8 +55,8 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
             )}
           </Grid>
           <Grid item xs />
-          <Grid item xs={5} pt={6} pr={5} alignItems="end">
-            <Typography variant="subtitle2" sx={{ textAlign: 'end' }}>
+          <Grid item xs={5} pt={6} pr={5} alignContent={"end"}>
+            <Typography variant="subtitle2" sx={{ textAlign: 'end' ,color:"#ff0000"}}>
                (+ {translatePrice()})
             </Typography>
             <Typography variant="h4" sx={{ textAlign: 'end' }}>
@@ -71,6 +73,7 @@ export default EndContentItem;
 
 
 const StyledImg = styled.img`
-height: 100%;
+width: 100%;
+height:100%;
 object-fit: cover;
 `;

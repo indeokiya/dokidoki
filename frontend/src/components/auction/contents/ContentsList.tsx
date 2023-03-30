@@ -7,7 +7,7 @@ import { useInView } from 'react-intersection-observer';
 import CircularProgress from '@mui/material/CircularProgress';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
-import Sceleton from './Sceleton';
+import IngSceleton from 'src/components/sceleton/IngSceleton';
 
 //get 함수로 전체 경매 불러오기
 const getInProgress = (category_id: number, keyword: string, page: number, size: number) => {
@@ -108,13 +108,13 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
     console.log(data)
   }
 
+
+  if(isLoading){
+    return <IngSceleton/>
+  }
+
   return (
-    <div id="scroll">
-      {isLoading &&(
-        <Sceleton></Sceleton>
-      )}
-
-
+    <>
       {/* 데이터가 있다면.. */}
       {data !== undefined && (
         <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
@@ -145,7 +145,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
       )}
 </Grid>
      
-    </div>
+    </>
   );
 };
 

@@ -32,6 +32,7 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
         },
         staleTime: 5*1000,
         retry: 0,
+        refetchOnWindowFocus: false,
       },
       { // bid
         queryKey: ["auctionDetailBid", id],
@@ -43,6 +44,7 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
         },
         staleTime: 5*1000,
         retry: 0,
+        refetchOnWindowFocus: false,
       },  
   ])
 

@@ -23,8 +23,7 @@ import { useNavigate } from 'react-router';
 import Tooltip from '@mui/material/Tooltip';
 import { userAPI } from 'src/api/axios';
 import { useRecoilState } from 'recoil';
-import { userInfoState } from 'src/store/userInfoState';
-
+import { userInfoState, myPageMenuState } from 'src/store/userInfoState';
 
 const item = {
   py: '2px',
@@ -48,14 +47,20 @@ const MypageNavigator: React.FC<{
 }> = (props: any) => {
   const navigate = useNavigate();
 
+  const [menu, setMenu] = useRecoilState(myPageMenuState);
+
+
+
   const [categories, setCategories] = useState([
-    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: true, path: '' },
-    { id: '구매 내역', icon: <ShoppingCartIcon />, active: false, path: 'action-history' },
-    { id: '판매 중', icon: <SellOutlinedIcon />, active: false, path: 'sale-item' },
-    { id: '판매 내역', icon: <SellIcon />, active: false, path: 'sale-history' },
-    { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: false, path: 'bookmark-list' },
-    { id: '알림 내역', icon: <NotificationsIcon />, active: false, path: 'alert-history' },
+    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: menu.menu === "입찰 중", path: '' },
+    { id: '구매 내역', icon: <ShoppingCartIcon />, active: menu.menu === "구매 내역", path: 'action-history' },
+    { id: '판매 중', icon: <SellOutlinedIcon />, active: menu.menu === "판매 중", path: 'sale-item' },
+    { id: '판매 내역', icon: <SellIcon />, active: menu.menu === "판매 내역", path: 'sale-history' },
+    { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: menu.menu === "관심 내역", path: 'bookmark-list' },
+    { id: '알림 내역', icon: <NotificationsIcon />, active: menu.menu === "알림 내역", path: 'alert-history' },
   ]);
+
+  //이거 true세팅하기 
 
   const [loginUser, setLoginUser]= useRecoilState(userInfoState);
 

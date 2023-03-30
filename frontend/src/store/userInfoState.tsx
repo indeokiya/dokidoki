@@ -32,6 +32,9 @@ export const userInfoState = atom({
   });
 
 
+
+
+  //마이페이지 메뉴항목
   export const myPageMenuState = atom({
     key:"myPageMenuState",
     default:{

@@ -5,12 +5,12 @@ import { auctionAPI } from 'src/api/axios';
 import { useInfiniteQuery } from 'react-query';
 import { myPageMenuState } from 'src/store/userInfoState';
 import CircularProgress from '@mui/material/CircularProgress';
-import Sceleton from 'src/components/auction/contents/Sceleton';
 import { useRecoilValue } from 'recoil';
 import { useInView } from 'react-intersection-observer';
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Post } from 'src/datatype/datatype';
+import EndSceleton from 'src/components/sceleton/EndSceleton';
 
 //구매 내역
 const purchaseHitory = (page: number, size: number) => {
@@ -90,19 +90,14 @@ const EndContentItemList = () => {
 
   if (isLoading) {
     return (
-      <div id="scroll">
-        <Sceleton />
-      </div>
+        <EndSceleton/>
     );
   }
-
   console.log('data >>', data);
   console.log('posts >> ', posts);
 
   return (
     <div id="scroll">
-
-
       {/* 데이터가 있다면.. */}
       <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
           {data !== undefined &&

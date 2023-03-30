@@ -116,6 +116,7 @@ const ProductPage = () => {
     seller_id,
     seller_name,
     start_time,
+    is_my_interest,
   } = data
 
   return (
@@ -147,6 +148,7 @@ const ProductPage = () => {
                 offer_price={offer_price}
                 price_size={price_size}
                 highest_price={highest_price}
+                is_my_interest={is_my_interest}
               />
             </Grid>
           </Grid>
