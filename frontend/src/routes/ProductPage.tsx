@@ -35,7 +35,7 @@ const ProductPage = () => {
 
   const connect = () => { // 연결할 때
     clientRef.current = new Client({
-      brokerURL: `ws://j8a202.p.ssafy.io/api/notices/ws`,
+      brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
       onConnect: () => {
         console.log("socket connected");
 
