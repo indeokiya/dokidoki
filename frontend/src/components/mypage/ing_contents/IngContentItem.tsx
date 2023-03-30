@@ -106,7 +106,7 @@ const IngContentItem: React.FC<{ auctionData: Post }> = (props) => {
         component="img"
         alt="green iguana"
         height="200"
-        image={sampleImg}
+        image={auctionData.auction_image_url}
       />
 
       <CardContent sx={{ padding: 3, boxSizing: 'border-box' }}>
