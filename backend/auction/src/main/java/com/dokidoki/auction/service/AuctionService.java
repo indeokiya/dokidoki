@@ -209,6 +209,7 @@ public class AuctionService {
                     .seller(auctionIngEntity.getSeller())
                     .title(auctionIngEntity.getTitle())
                     .description(auctionIngEntity.getDescription())
+                    .productEntity(auctionIngEntity.getProductEntity())
                     .offerPrice(auctionIngEntity.getOfferPrice())
                     .priceSize(auctionIngEntity.getPriceSize())
                     .startTime(auctionIngEntity.getStartTime())
