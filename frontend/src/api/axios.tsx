@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Logout, RedirectLogin} from 'src/hooks/logout';
-import { useNavigate } from 'react-router-dom';
 
 const auctionAPI = axios.create({
   baseURL: process.env.REACT_APP_AUCTION_SERVER_BASE_URL,
@@ -60,10 +59,11 @@ const refreshTokenAPI = axios.create({
 });
 
 const getRefreshToken = async () =>{
+  const refresh_token = localStorage.getItem("refresh_token");
   return await refreshTokenAPI.get('/tokens/refresh',
         {
           headers: {
-            Authorization: "Bearer " + localStorage.getItem("refresh_token")
+            Authorization: "Bearer " + refresh_token
           }
         }
   )
@@ -80,15 +80,18 @@ function addResponseIntercepter(axiosApi : any){
     // 응답 오류가 있는 작업 수행
     
     const res = error.response;
-    if (res && res.status){
+    console.log(res);
+    if (res && res.data){
       const message = res.data.message;
+      console.log("axios response intercepter : " + message);
       
       // api gateway에서 인가가 막힌 경우 처리
       if(message === "만료된 토큰입니다."){
-
       // access token 유효기간이 다 된 경우
       // refresh token으로 토큰을 다시 받아온다.
         return getRefreshToken().then(({data})=>{
+          alert("토큰 재발급 성공!");
+
           const access_token = data.access_token;
           const refresh_token = data.refresh_token;
           
@@ -96,20 +99,23 @@ function addResponseIntercepter(axiosApi : any){
           localStorage.setItem("refresh_token", refresh_token);
           
           // refresh token이 유효한 경우 토큰 재발급
-          return Promise.reject(new Error("토큰 재발급 받았음. 다시 시도해 주세요"));
-        }).catch(()=>{
+          return Promise.resolve("토큰 재발급 받았음. 다시 시도해 주세요");
+        }).catch((err)=>{
+          alert("refresh failed");
           Logout();
           // refresh token이 유효하지 않은 경우 로그아웃
-          return Promise.reject(new Error("로그인 TimeOut!"));
+          return Promise.resolve("재발급 실패");
         })
       }else if(message === "유효하지 않은 토큰입니다."
       || message === "지원하지 않는 토큰입니다."
       || message === "토큰의 클레임이 비어있습니다"){
+        console.log("이상한 토큰 일 때!");
         Logout();
         // access token이 변조 된 경우
-        return Promise.reject(new Error("이상한 토큰 쓰지 마세요 ㅡㅡ."));
+        return Promise.resolve("이상한 토큰 쓰지 마세요 ㅡㅡ.");
       }else if(message === "로그인이 필요한 서비스입니다."){
         // 토큰이 비어 있는 경우
+        alert(message);
         RedirectLogin();
         return Promise.reject(new Error("로그인하라고 아 ㅋㅋ"));
       }
