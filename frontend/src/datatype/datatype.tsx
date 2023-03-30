@@ -43,4 +43,15 @@ export type endPost =  {
 }
 
 
- 
+// 댓글
+export type CommentType = {
+  id: string,
+  parent_id: number | null,
+  member_id: number,
+  member_name: string,
+  member_profile: string,
+  content: string,
+  written_time: string,
+  modified_time: string,
+  sub_comments: CommentType[]
+};

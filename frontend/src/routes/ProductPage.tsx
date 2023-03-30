@@ -21,6 +21,7 @@ import { useEffect, useRef } from 'react';
 
 // const { useAuctionDetail, test } = require("../hooks/auctionDetail");
 import { useAuctionDetail } from '../hooks/auctionDetail'
+import { CommentType } from 'src/datatype/datatype';
 
 const ProductPage = () => {
   const { id } = useParams() as {id: string};
@@ -89,7 +90,8 @@ const ProductPage = () => {
 
 
 
-
+  const { id } = useParams() as { id: string };
+  
   // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
   // data fetching logic
   const { isLoading, isError, error, data} = useAuctionDetail({id});
@@ -165,7 +167,7 @@ const ProductPage = () => {
           <ProductLeaderBoard/>
 
           {/* 댓글 작성과 댓글들  */}
-          <CommentsList />
+          <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
 
           {/* 모달창 하단에 존재하는 버튼 */}
         </Box>
