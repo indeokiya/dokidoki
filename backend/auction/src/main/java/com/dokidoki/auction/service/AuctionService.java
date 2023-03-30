@@ -193,14 +193,17 @@ public class AuctionService {
      */
     @Transactional
     public void updateHighestPrice(Long auctionId, Integer highestPrice) {
+        log.info("updateHighestPrice >> start method");
         AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
         if (auctionIngEntity == null) {
             log.error("updateHighestPrice >> 존재하지 않는 경매입니다.");
             return;
         }
 
+        log.info("updateHighestPrice >> check updating the highest price");
         // 최고가 갱신
         if (auctionIngEntity.getHighestPrice() == null || highestPrice > auctionIngEntity.getHighestPrice()) {
+            log.info("updateHighestPrice >> create new entity");
             AuctionIngEntity newAuctionIngEntity = AuctionIngEntity.builder()
                     .id(auctionIngEntity.getId())
                     .seller(auctionIngEntity.getSeller())
@@ -214,27 +217,28 @@ public class AuctionService {
                     .highestPrice(highestPrice)
                     .build();
             auctionIngRepository.save(newAuctionIngEntity);
+            log.info("updateHighestPrice >> save entity");
         }
     }
 
     @Transactional
     public void auctionEndEvent(Long auctionId, Long buyerId) {
+        log.info("auctionEndEvent >> start method");
         AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
         if (auctionIngEntity == null) {
             log.error("auctionEndEvent >> 존재하지 않는 경매입니다.");
             return;
         }
+        log.info("auctionEndEvent >> find buyer entity");
+        // 구매자가 없을 수 있으므로 예외처리 X
         MemberEntity buyer = memberRepository.findById(buyerId).orElse(null);
-        if (buyer == null) {
-            log.error("auctionEndEvent >> 존재하지 않는 구매자입니다.");
-            return;
-        }
 
         // 경매완료 데이터 삽입
         LocalDateTime endTime = LocalDateTime.now();
         if (endTime.isAfter(auctionIngEntity.getEndAt()))
             endTime = auctionIngEntity.getEndAt();
 
+        log.info("auctionEndEvent >> create new entity");
         AuctionEndEntity auctionEndEntity = AuctionEndEntity.createAuctionEnd(
                 auctionIngEntity.getId(),
                 auctionIngEntity.getSeller(),
@@ -248,9 +252,11 @@ public class AuctionService {
                 auctionIngEntity.getDescription()
         );
         auctionEndRepository.save(auctionEndEntity);
+        log.info("auctionEndEvent >> save entity");
 
         // 경매중 데이터 삭제
         auctionIngRepository.delete(auctionIngEntity);
+        log.info("auctionEndEvent >> delete auction-ing entity");
     }
 
     /**
