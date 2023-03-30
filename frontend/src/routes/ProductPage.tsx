@@ -12,7 +12,7 @@ import ScrollTop from '../components/util/ScrollTop';
 import Header from '../components/header/Header';
 import Paper from '@mui/material/Paper';
 import SockJS from 'sockjs-client'
-import { Client, Message } from '@stomp/stompjs'
+import { Client, Message, StompHeaders } from '@stomp/stompjs'
 
 import { Box } from '@mui/material';
 
@@ -27,17 +27,20 @@ const ProductPage = () => {
   
   // let socket = new SockJS("ws");
   let clientRef = useRef<Client>();
+  const test = useRef<boolean>();
   
   useEffect(() => {
-    if (!clientRef.current) connect();
+    if (!clientRef.current && !test.current) connect();
     return () => disconnect();
   }, []);
 
+
   const connect = () => { // 연결할 때
+    test.current = true;
     clientRef.current = new Client({
       brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
       connectHeaders: {
-        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+        authorization: "Bearer " + localStorage.getItem('access_token')
       },
       onConnect: () => {
         console.log("socket connected");
