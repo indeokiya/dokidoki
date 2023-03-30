@@ -11,3 +11,13 @@ export const Logout = () =>{
 
     return null;
 }
+
+export const RedirectLogin = ()=>{
+
+
+    const navigate = useNavigate();
+
+    navigate('/login', {replace : true});
+
+    return null;
+}
