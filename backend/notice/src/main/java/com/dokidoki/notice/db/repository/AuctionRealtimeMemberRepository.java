@@ -38,13 +38,19 @@ public class AuctionRealtimeMemberRepository {
         if (myBidPrice == null) {
             throw new InvalidValueException("조회할 수 없는 값입니다.");
         }
-        return myBidPrice.intValue();
+        return myBidPrice;
     }
 
     @RTransactional
     public void save(long auctionId, long memberId, int bidPrice) {
         RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
         map.put(memberId, bidPrice);
+    }
+
+    @RTransactional
+    public boolean deleteAll(long auctionId) {
+        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+        return map.delete();
     }
 
 

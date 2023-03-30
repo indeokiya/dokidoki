@@ -31,7 +31,7 @@ public class KafkaAuctionConsumer {
         // auction : memberid, name, email .....
         // websocket method_bid_success(memberid, name, email)
         // 경매 종료 이벤트
-        auctionService.auctionEndEvent(auction.getAuctionId(), 1L);
+        auctionService.auctionEndEvent(auction.getAuctionId(), auction.getBuyerId());
     }
 
     @KafkaListener(topics = "${spring.kafka.bidConfig.topic}", containerFactory = "bidKafkaListenerContainerFactory")

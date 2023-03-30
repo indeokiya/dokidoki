@@ -36,6 +36,12 @@ public class NoticeRepository {
         return noticeList.readAll();
     }
 
+    @RTransactional
+    public void deleteAll(long memberId) {
+        RList<NoticeResp> noticeList = redisson.getList(getKey(memberId));
+        noticeList.delete();
+    }
+
 
 
 }

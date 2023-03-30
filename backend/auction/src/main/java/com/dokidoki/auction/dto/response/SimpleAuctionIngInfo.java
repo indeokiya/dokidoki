@@ -50,7 +50,7 @@ public class SimpleAuctionIngInfo {
         this.price_size = auctionIngEntity.getPriceSize();  // 경매 단위
 
         // 최고가
-        Integer cur_price = auctionIngEntity.getPriceSize();
+        Integer cur_price = auctionIngEntity.getHighestPrice();
         if (cur_price == null)
             cur_price = this.offer_price;
         this.cur_price = cur_price;

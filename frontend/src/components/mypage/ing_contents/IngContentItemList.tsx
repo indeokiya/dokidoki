@@ -1,8 +1,6 @@
 import Grid from '@mui/material/Grid'; // Grid version 1
-import Content from './IngContentItem';
 import styled from 'styled-components';
 import { useRef, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { useInfiniteQuery } from 'react-query';
 import { myPageMenuState } from 'src/store/userInfoState';
@@ -11,6 +9,7 @@ import { useInView } from 'react-intersection-observer';
 import Typography from '@mui/material/Typography';
 import CircularProgress from '@mui/material/CircularProgress';
 import Sceleton from 'src/components/auction/contents/Sceleton';
+import IngContentItem from './IngContentItem';
 
 //입찰 중
 const bidding = (page: number, size: number) => {
@@ -58,11 +57,9 @@ const wishlist = (page: number, size: number) => {
 };
 
 const IngContentItemList = () => {
-  const [size, setSize] = useState(12);
-
+  const size = 12;
   const menu = useRecoilValue(myPageMenuState); // 메뉴 가져옴
-
-  const [ref, inView] = useInView();
+  const [ref, inView] = useInView(); //무한 스크롤 타겟
 
   //무한스크롤 구현을 위한 페이지
   const { fetchNextPage, isLoading, data, isError, isFetchingNextPage, hasNextPage } =
@@ -97,33 +94,27 @@ const IngContentItemList = () => {
   useEffect(() => {
     if (inView && !isFetchingNextPage) {
       fetchNextPage();
-      console.log('hasNextPage >> ', hasNextPage);
     }
   }, [inView]);
-
-
-  const Target = styled.div`
-    width: auto;
-    height: 200px;
-  `;
 
   return (
     <div id="scroll">
       {isLoading && <Sceleton></Sceleton>}
 
       {/* 데이터가 있다면.. */}
-      {data !== undefined && (
         <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
-          {data.pages.map((data) =>
-            data.contents.map((data: any, i: number) => (
-              <Grid key={i} item xs={4} mb={4}>
-                <Content auctionData={data} />
-              </Grid>
-            )),
-          )}
+          {data !== undefined &&
+            data.pages &&
+            data.pages.map((data) =>
+              data?.contents?.map((data: any, i: number) => (
+                <Grid key={i} item xs={4} mb={4}>
+                  <IngContentItem auctionData={data} />
+                </Grid>
+              )),
+            )}
         </Grid>
-      )}
 
+      {/* 무한 스크롤을 위한 타겟 엘리먼트 */}
       <Grid container>
         {hasNextPage ? (
           isFetchingNextPage ? (
@@ -146,3 +137,8 @@ const IngContentItemList = () => {
 };
 
 export default IngContentItemList;
+
+const Target = styled.div`
+  width: auto;
+  height: 200px;
+`;
