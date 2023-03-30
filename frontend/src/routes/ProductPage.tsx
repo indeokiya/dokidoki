@@ -36,6 +36,9 @@ const ProductPage = () => {
   const connect = () => { // 연결할 때
     clientRef.current = new Client({
       brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
+      connectHeaders: {
+        Authorization: 'Bearer ' + localStorage.getItem('access_token'),
+      },
       onConnect: () => {
         console.log("socket connected");
 
