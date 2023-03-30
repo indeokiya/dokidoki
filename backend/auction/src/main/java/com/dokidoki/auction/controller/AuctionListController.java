@@ -31,7 +31,7 @@ public class AuctionListController {
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         // 데이터 조회
         PaginationResponse paginationResponse = auctionListService
-                .readAuctionEndList(PageRequest.of(page, size));
+                .readAuctionEndList(page, size);
 
         return ResponseEntity
                 .status(200)

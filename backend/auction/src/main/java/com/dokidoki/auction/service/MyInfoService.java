@@ -66,7 +66,7 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public MyHistoryResponse readAllMyPurchases(Long memberId, Pageable pageable) {
         Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
-                .findAllMyPurchases(memberId, pageable);
+                .findAllByBuyer_IdOrderByIdDesc(memberId, pageable);
 
         // ResultSet -> DTO
         List<MyHistoryInfo> myHistoryInfos = new ArrayList<>();
@@ -87,7 +87,7 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public MyHistoryResponse readAllMySales(Long memberId, Pageable pageable) {
         Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
-                .findAllMySales(memberId, pageable);
+                .findAllBySeller_IdOrderByIdDesc(memberId, pageable);
 
         // ResultSet -> DTO
         List<MyHistoryInfo> myHistoryInfos = new ArrayList<>();
