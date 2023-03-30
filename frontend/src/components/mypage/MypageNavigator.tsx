@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Divider from '@mui/material/Divider';
-import { useGetRecoilValueInfo_UNSTABLE } from 'recoil';
+
 import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import ListItem from '@mui/material/ListItem';
@@ -15,13 +15,15 @@ import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlin
 import SellOutlinedIcon from '@mui/icons-material/SellOutlined';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Avatar from '@mui/material/Avatar';
-import ProfileImgSrc from '../../assets/image/profile.png';
 import { Typography, Badge } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import { useNavigate } from 'react-router';
 import Tooltip from '@mui/material/Tooltip';
+import { userAPI } from 'src/api/axios';
+import { useRecoilState } from 'recoil';
+import { userInfoState, myPageMenuState } from 'src/store/userInfoState';
 
 const item = {
   py: '2px',
@@ -45,14 +47,41 @@ const MypageNavigator: React.FC<{
 }> = (props: any) => {
   const navigate = useNavigate();
 
+  const [menu, setMenu] = useRecoilState(myPageMenuState);
+
+
+
   const [categories, setCategories] = useState([
-    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: true, path: 'action-item' },
-    { id: '구매 내역', icon: <ShoppingCartIcon />, active: false, path: 'action-history' },
-    { id: '판매 중', icon: <SellOutlinedIcon />, active: false, path: 'sale-item' },
-    { id: '판매 내역', icon: <SellIcon />, active: false, path: 'sale-history' },
-    { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: false, path: 'bookmark-list' },
-    { id: '알림 내역', icon: <NotificationsIcon />, active: false, path: 'alert-history' },
+    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: menu.menu === "입찰 중", path: '' },
+    { id: '구매 내역', icon: <ShoppingCartIcon />, active: menu.menu === "구매 내역", path: 'action-history' },
+    { id: '판매 중', icon: <SellOutlinedIcon />, active: menu.menu === "판매 중", path: 'sale-item' },
+    { id: '판매 내역', icon: <SellIcon />, active: menu.menu === "판매 내역", path: 'sale-history' },
+    { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: menu.menu === "관심 내역", path: 'bookmark-list' },
+    { id: '알림 내역', icon: <NotificationsIcon />, active: menu.menu === "알림 내역", path: 'alert-history' },
   ]);
+
+  //이거 true세팅하기 
+
+  const [loginUser, setLoginUser]= useRecoilState(userInfoState);
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log(e)
+    const target = e.currentTarget;
+    const files = (target.files as FileList)[0];
+    const formData = new FormData()
+    formData.append('file', files)
+
+    userAPI.put('/profiles', formData, {
+      headers : {
+        "Content-Type":"multipart/form-data",
+      }
+    })
+    .then(res => {
+      alert("성공")
+      setLoginUser({...loginUser, picture:res.data.data})
+      console.log("res >> ",res)
+    })
+  };
 
   const activeHandler = (_id: string) => {
     props.setSelectedMenu(_id);
@@ -97,18 +126,18 @@ const MypageNavigator: React.FC<{
                     <EditOutlinedIcon />
                   </label>
                 </Tooltip>
-                <ImageInput type="file" id="profileImgChange"></ImageInput>
+                <ImageInput type="file" accept="image/*" id="profileImgChange" onChange={handleUpload}></ImageInput>
               </StyledEditIcon>
             }
           >
             <Avatar
-              src={ProfileImgSrc}
+              src={loginUser.picture}
               sx={{ width: '150px', height: '150px', margin: '1rem auto' }}
             ></Avatar>
           </Badge>
 
           <Typography color="white" variant="subtitle1">
-            김범식
+            {loginUser.name}
           </Typography>
         </StyledDiv>
         <ListItem>

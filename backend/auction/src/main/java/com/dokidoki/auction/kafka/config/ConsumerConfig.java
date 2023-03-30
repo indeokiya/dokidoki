@@ -46,7 +46,7 @@ public class ConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, KafkaAuctionEndDTO> auctionEndKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
         factory.setConsumerFactory(auctionEndConsumerFactory(auctionEndTopic + ".auctionGroup"));
-        factory.setConcurrency(1);
+        factory.setConcurrency(3);
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }
@@ -69,7 +69,7 @@ public class ConsumerConfig {
     public ConcurrentKafkaListenerContainerFactory<String, KafkaBidDTO> bidKafkaListenerContainerFactory() {
         ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
         factory.setConsumerFactory(bidConsumerFactory(bidTopic + ".auctionGroup"));
-        factory.setConcurrency(1);
+        factory.setConcurrency(3);
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }

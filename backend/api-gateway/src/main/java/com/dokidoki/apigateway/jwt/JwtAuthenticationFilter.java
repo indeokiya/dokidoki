@@ -5,9 +5,14 @@ import com.dokidoki.apigateway.exception.JwtAuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.GatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 @Component
@@ -22,12 +27,11 @@ public class JwtAuthenticationFilter implements GatewayFilterFactory<JwtAuthenti
             log.info(request.getPath().toString());
 
             if(!request.getHeaders().containsKey("Authorization"))
-                throw new JwtAuthenticationException("권한 없는 사용자입니다", HttpStatus.FORBIDDEN);
+                throw new JwtAuthenticationException("로그인이 필요한 서비스입니다.", HttpStatus.FORBIDDEN);
 
             String accessToken = request.getHeaders().get("Authorization").get(0).substring(7);
 
-            if(!JwtUtil.isValidToken(accessToken))
-                throw new JwtAuthenticationException("권한 없는 사용자입니다", HttpStatus.FORBIDDEN);
+            JwtUtil.isValidToken(accessToken);
 
             return chain.filter(exchange);
         };

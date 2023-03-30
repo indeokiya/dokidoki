@@ -1,5 +1,6 @@
 package com.dokidoki.auction.dto.response;
 
+import com.dokidoki.auction.domain.entity.AuctionEndEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -26,20 +27,20 @@ public class DetailAuctionEndResponse {
     private final List<CommentResponse> comments;
     private final List<LeaderboardHistoryResponse> leaderboard;
 
-    public DetailAuctionEndResponse(DetailAuctionEndInterface detailAuctionEndInterface,
+    public DetailAuctionEndResponse(AuctionEndEntity auctionEndEntity,
                                     List<String> auction_image_urls,
                                     List<CommentResponse> comments,
                                     List<LeaderboardHistoryResponse> leaderboard) {
-        this.auction_title = detailAuctionEndInterface.getAuction_title();
-        this.start_time = detailAuctionEndInterface.getStart_time();
-        this.end_time = detailAuctionEndInterface.getEnd_time();
-        this.product_name = detailAuctionEndInterface.getProduct_name();
-        this.category_name = detailAuctionEndInterface.getCategory_name();
-        this.description = detailAuctionEndInterface.getDescription();
-        this.offer_price = detailAuctionEndInterface.getOffer_price();
-        this.final_price = detailAuctionEndInterface.getFinal_price();
-        this.seller_name = detailAuctionEndInterface.getSeller_name();
-        this.buyer_name = detailAuctionEndInterface.getBuyer_name();
+        this.auction_title = auctionEndEntity.getTitle();
+        this.start_time = auctionEndEntity.getStartTime();
+        this.end_time = auctionEndEntity.getEndTime();
+        this.product_name = auctionEndEntity.getProduct().getName();
+        this.category_name = auctionEndEntity.getProduct().getCategoryEntity().getCategoryName();
+        this.description = auctionEndEntity.getDescription();
+        this.offer_price = auctionEndEntity.getOfferPrice();
+        this.final_price = auctionEndEntity.getFinalPrice();
+        this.seller_name = auctionEndEntity.getSeller().getName();
+        this.buyer_name = auctionEndEntity.getBuyer().getName();
 
         this.auction_image_urls = auction_image_urls;
         this.comments = comments;

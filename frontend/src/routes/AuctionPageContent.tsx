@@ -54,8 +54,9 @@ export default AuctionPageContent;
 
 
 const StyledIcon = styled.div`
+z-index:10;
 position: fixed;
-right: 15%;
+right: 10%;
 top: 90%;
 background-color: #3a77ee;
 border-radius: 100px;

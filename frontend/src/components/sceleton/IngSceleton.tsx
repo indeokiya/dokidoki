@@ -4,7 +4,7 @@ import Grid from '@mui/material/Grid';
 
 
 //로딩되기전 
-const Sceleton = () =>{
+const IngSceleton = () =>{
     const page= [1,2,3,4,5,6,7,8,9,10,11,12];
 
     return ( 
@@ -24,4 +24,4 @@ const Sceleton = () =>{
 
 }
 
-export default Sceleton;
+export default IngSceleton

@@ -1,5 +1,6 @@
 package com.dokidoki.auction.dto.response;
 
+import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -16,35 +17,31 @@ public class DetailAuctionIngResponse {
     private final String description;
 
     private final Integer offer_price;
-    private final Integer price_size;
-    private final Integer cur_price;
 
     private final Long seller_id;
     private final String seller_name;
 
     private final List<String> auction_image_urls;
     private final List<CommentResponse> comments;
-    private final List<LeaderboardHistoryResponse> leaderboard;
+    private final Boolean is_my_interest;
 
-    public DetailAuctionIngResponse(DetailAuctionIngInterface detailAuctionIngInterface,
+    public DetailAuctionIngResponse(AuctionIngEntity auctionIngEntity,
                                     List<String> auction_image_urls,
                                     List<CommentResponse> comments,
-                                    List<LeaderboardHistoryResponse> leaderboard) {
-        this.auction_title = detailAuctionIngInterface.getAuction_title();
-        this.start_time = detailAuctionIngInterface.getStart_time();
-        this.end_time = detailAuctionIngInterface.getEnd_time();
-        this.product_name = detailAuctionIngInterface.getProduct_name();
-        this.category_name = detailAuctionIngInterface.getCategory_name();
-        this.description = detailAuctionIngInterface.getDescription();
-        this.meeting_place = detailAuctionIngInterface.getMeeting_place();
-        this.offer_price = detailAuctionIngInterface.getOffer_price();
-        this.price_size = detailAuctionIngInterface.getPrice_size();
-        this.cur_price = detailAuctionIngInterface.getHighest_price();
-        this.seller_id = detailAuctionIngInterface.getSeller_id();
-        this.seller_name = detailAuctionIngInterface.getSeller_name();
+                                    Boolean isMyInterest) {
+        this.auction_title = auctionIngEntity.getTitle();
+        this.start_time = auctionIngEntity.getStartTime();
+        this.end_time = auctionIngEntity.getEndAt();
+        this.product_name = auctionIngEntity.getProductEntity().getName();
+        this.category_name = auctionIngEntity.getProductEntity().getCategoryEntity().getCategoryName();
+        this.description = auctionIngEntity.getDescription();
+        this.meeting_place = auctionIngEntity.getMeetingPlace();
+        this.offer_price = auctionIngEntity.getOfferPrice();
+        this.seller_id = auctionIngEntity.getSeller().getId();
+        this.seller_name = auctionIngEntity.getSeller().getName();
 
         this.auction_image_urls = auction_image_urls;
         this.comments = comments;
-        this.leaderboard = leaderboard;
+        this.is_my_interest = isMyInterest;
     }
 }

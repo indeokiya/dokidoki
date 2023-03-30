@@ -1,5 +1,7 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.domain.entity.AuctionEndEntity;
+import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.dto.response.*;
@@ -25,11 +27,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMySellingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMySellingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -38,11 +40,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMyBiddingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyBiddingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -51,11 +53,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMyInterestingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyInterestingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -63,19 +65,19 @@ public class MyInfoService {
      */
     @Transactional(readOnly = true)
     public MyHistoryResponse readAllMyPurchases(Long memberId, Pageable pageable) {
-        Page<MyHistoryInfoInterface> myHistoryInfoInterfaces = auctionEndRepository
+        Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
                 .findAllMyPurchases(memberId, pageable);
 
         // ResultSet -> DTO
         List<MyHistoryInfo> myHistoryInfos = new ArrayList<>();
-        for (MyHistoryInfoInterface myHistoryInfoInterface : myHistoryInfoInterfaces) {
-            myHistoryInfos.add(new MyHistoryInfo(myHistoryInfoInterface));
+        for (AuctionEndEntity auctionEndEntity : auctionEndEntities) {
+            myHistoryInfos.add(new MyHistoryInfo(auctionEndEntity));
         }
 
         // Response DTO
         return new MyHistoryResponse(
                 myHistoryInfos,
-                myHistoryInfoInterfaces.isLast()
+                auctionEndEntities.isLast()
         );
     }
 
@@ -84,19 +86,19 @@ public class MyInfoService {
      */
     @Transactional(readOnly = true)
     public MyHistoryResponse readAllMySales(Long memberId, Pageable pageable) {
-        Page<MyHistoryInfoInterface> myHistoryInfoInterfaces = auctionEndRepository
+        Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
                 .findAllMySales(memberId, pageable);
 
         // ResultSet -> DTO
         List<MyHistoryInfo> myHistoryInfos = new ArrayList<>();
-        for (MyHistoryInfoInterface myHistoryInfoInterface : myHistoryInfoInterfaces) {
-            myHistoryInfos.add(new MyHistoryInfo(myHistoryInfoInterface));
+        for (AuctionEndEntity auctionEndEntity : auctionEndEntities) {
+            myHistoryInfos.add(new MyHistoryInfo(auctionEndEntity));
         }
 
         // Response DTO
         return new MyHistoryResponse(
                 myHistoryInfos,
-                myHistoryInfoInterfaces.isLast()
+                auctionEndEntities.isLast()
         );
     }
 

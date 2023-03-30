@@ -5,23 +5,90 @@ import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import styled from 'styled-components';
 import ProductGraph from '../components/leaderBoard/ProductGraph';
+import ProductLeaderBoard from '../components/leaderBoard/ProductLeaderBoard';
 import ProductDescription from '../components/leaderBoard/ProductDescription';
 import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
 import Header from '../components/header/Header';
 import Paper from '@mui/material/Paper';
+import SockJS from 'sockjs-client'
+import { Client, Message, StompHeaders } from '@stomp/stompjs'
 
 import { Box } from '@mui/material';
 
 import { useParams } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
 
 // const { useAuctionDetail, test } = require("../hooks/auctionDetail");
 import { useAuctionDetail } from '../hooks/auctionDetail'
 import { CommentType } from 'src/datatype/datatype';
 
 const ProductPage = () => {
+  const { id } = useParams() as {id: string};
+  
+  // let socket = new SockJS("ws");
+  let clientRef = useRef<Client>();
+  const test = useRef<boolean>();
+  
+  useEffect(() => {
+    if (!clientRef.current && !test.current) connect();
+    return () => disconnect();
+  }, []);
 
-  // test();
+
+  const connect = () => { // 연결할 때
+    test.current = true;
+    clientRef.current = new Client({
+      brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
+      connectHeaders: {
+        authorization: "Bearer " + localStorage.getItem('access_token')
+      },
+      onConnect: () => {
+        console.log("socket connected");
+
+        clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
+          console.log(`Received message: ${message.body}`);
+        });
+      },
+    });
+    clientRef.current?.activate(); // 클라이언트 활성화
+  };
+  
+  const disconnect = () => { // 연결이 끊겼을 때 
+    clientRef.current?.deactivate();
+    console.log("socket disconnected");
+  };
+
+  // 소켓 객체 생성
+  // useEffect(() => {
+  //   if (!ws.current) {
+  //     ws.current = new WebSocket(webSocketUrl);
+  //     ws.current.onopen = () => {
+  //       console.log("connected to " + webSocketUrl);
+  //       setSocketConnected(true);
+  //     };
+  //     ws.current.onclose = (error) => {
+  //       console.log("disconnect from " + webSocketUrl);
+  //       console.log(error);
+  //     };
+  //     ws.current.onerror = (error) => {
+  //       console.log("connection error " + webSocketUrl);
+  //       console.log(error);
+  //     };
+  //     ws.current.onmessage = (evt) => {
+  //       const data = JSON.parse(evt.data);
+  //       console.log(data);
+  //       setItems((prevItems) => [...prevItems, data]);
+  //     };
+  //   }
+
+  //   return () => {
+  //     console.log("clean up");
+  //     ws.current.close();
+  //   };
+  // }, []);
+
+
 
   const { id } = useParams() as { id: string };
   
@@ -51,6 +118,7 @@ const ProductPage = () => {
     seller_id,
     seller_name,
     start_time,
+    is_my_interest,
   } = data
 
   return (
@@ -82,6 +150,7 @@ const ProductPage = () => {
                 offer_price={offer_price}
                 price_size={price_size}
                 highest_price={highest_price}
+                is_my_interest={is_my_interest}
               />
             </Grid>
           </Grid>
@@ -95,6 +164,7 @@ const ProductPage = () => {
 
           {/* 제품 카테고리 평균 가격 */}
           <ProductGraph />
+          <ProductLeaderBoard/>
 
           {/* 댓글 작성과 댓글들  */}
           <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />

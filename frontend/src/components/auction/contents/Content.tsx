@@ -10,6 +10,7 @@ import BookmarkOutlinedIcon from '@mui/icons-material/BookmarkOutlined';
 import Chip from '@mui/material/Chip';
 import { Post } from '../../../datatype/datatype';
 import { useNavigate } from 'react-router-dom';
+import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
 
 function timeFormat(myNum: number) {
   if (myNum <= 0) return '마감';
@@ -30,26 +31,39 @@ function timeFormat(myNum: number) {
   return hours + ':' + minutes + ':' + seconds;
 }
 
-function getPercentage(curr:number,offer:number){
-  return (curr-offer)/offer;
+function getPercentage(curr: number, offer: number) {
+  return Math.round(((curr - offer) / offer )*100);
 }
 
 // 1000 => '1,000 원' 으로 바꿔주는 함수
 function numberFormat(price: number | null) {
-    return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+  return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
 }
 
-//컴포넌트 시작
+
+
+//컴포넌트 시작 ================== ================== ================== ================== ==================
 const Content: React.FC<{ auctionData: Post }> = (props) => {
+
+  const [openSnack, setOpenSnack] = useState(false);
+  const snackHandleClick = () => {
+    setOpenSnack(true);
+  };
+  const snackHandleClose = () => {
+    setOpenSnack(false);
+  };
+
+  
   const navigate = useNavigate();
   //부모컴포넌트에서 받아온 게시글 정보
   const { auctionData } = props;
-console.log(auctionData.final_price)
+
+  const auction_end:boolean = (auctionData.final_price !== undefined)
+
   //마우스를 올리면 그림자형성됨
   const [isHovered, setIsHovered] = useState(false);
 
-
-  //현제 경매시간
+  //현재 경매시간
   const [auctionTime, setAuctionTime] = useState(0);
 
   //시작하면서 경매시간 정보를 세팅한다.
@@ -60,9 +74,9 @@ console.log(auctionData.final_price)
     let total = hour * 60 * 60 + minute * 60 + second;
     setAuctionTime(total); // 음수로 셋팅된다.
 
-      setInterval(() => {
-        setAuctionTime((pretime) => pretime - 1); //1초씩 시간 줄이기
-      }, 1000 * 10);
+    setInterval(() => {
+      setAuctionTime((pretime) => pretime - 1); //1초씩 시간 줄이기
+    }, 1000 * 1);
   }, []);
 
   return (
@@ -76,7 +90,11 @@ console.log(auctionData.final_price)
         boxShadow: isHovered ? '' : 'none',
       }}
       onClick={() => {
+        if(!auction_end){
           navigate('/auction/product/' + auctionData.auction_id);
+        }else{
+          snackHandleClick();
+        }
       }}
     >
       {/* 내가 판매하고 있는 제품이라는 표시 */}
@@ -88,11 +106,14 @@ console.log(auctionData.final_price)
             position: 'absolute',
             fontSize: '12px',
             margin: '5px',
+            opacity: auction_end? (0.5):(1),
           }}
         />
       )}
 
-    
+      {auction_end && (
+        <SoldOut>sold<br/>out</SoldOut>
+      )}
 
       {/* 북마크 표시,  북마크 안했다면 지워야함  */}
       {auctionData.is_my_interest && (
@@ -103,7 +124,7 @@ console.log(auctionData.final_price)
       )}
 
       <CardMedia
-        sx={{marginTop:5}}
+        sx={{ marginTop: 5 }}
         component="img"
         alt="green iguana"
         height="200"
@@ -119,7 +140,7 @@ console.log(auctionData.final_price)
         <Box my={1}>
           <StyledFlex>
             <StyledSpan style={{ color: '#3A77EE' }}>남은 시간 : </StyledSpan>
-            <StyledSpan style={{ color: '#3A77EE' }}>{timeFormat(auctionTime)}</StyledSpan>
+            <StyledSpan style={{ color: '#3A77EE' }}>{auction_end ? "마감":timeFormat(auctionTime) }</StyledSpan>
           </StyledFlex>
           <StyledFlex>
             <StyledSpan>시작 가격 : </StyledSpan>
@@ -132,17 +153,29 @@ console.log(auctionData.final_price)
         </Box>
         <StyledFlex>
           <StyledSpan> </StyledSpan>
-          <StyledSpan style={{ color: 'red', fontSize: '12px' }}>( + {getPercentage(auctionData.cur_price, auctionData.offer_price)}%)</StyledSpan>
+          <StyledSpan style={{ color: 'red', fontSize: '12px' }}>
+            ( + {getPercentage( auctionData.final_price !== undefined ? auctionData.final_price :auctionData.cur_price , auctionData.offer_price)}%)
+          </StyledSpan>
         </StyledFlex>
         <StyledFlex>
           <StyledSpan style={{ fontWeight: 'bold' }}>현재 가격 : </StyledSpan>
           <StyledSpan style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-            {numberFormat(auctionData.cur_price)}
+            {numberFormat( auctionData.final_price !== undefined ? auctionData.final_price :auctionData.cur_price  )}
           </StyledSpan>
         </StyledFlex>
       </CardContent>
 
       <CardActions>{/* <Button size="small">Share</Button> */}</CardActions>
+
+      <Snackbar
+        anchorOrigin={{ vertical: 'bottom',
+        horizontal: 'left', }}
+        open={openSnack}
+        onClose={snackHandleClose}
+        message="판매 완료된 제품입니다."
+        color='red'
+      ></Snackbar>
+      
     </Card>
   );
 };
@@ -150,18 +183,18 @@ console.log(auctionData.final_price)
 export default Content;
 
 const SoldOut = styled.div`
-  right:25%;
-  top:20%;
+  right: 25%;
+  top: 20%;
   position: absolute;
   width: 150px;
   height: 100px;
   border-radius: 10px;
-  color:grey;
+  color: grey;
   border: 3px solid grey;
   font-weight: bold;
-  text-align:center;
-  line-height:50px;
-  font-size:30px;
+  text-align: center;
+  line-height: 50px;
+  font-size: 30px;
 `;
 
 const StyledFlex = styled.div`

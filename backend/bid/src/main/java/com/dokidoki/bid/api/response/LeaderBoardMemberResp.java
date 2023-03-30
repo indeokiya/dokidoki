@@ -10,6 +10,9 @@ import lombok.*;
 
 import java.time.LocalDateTime;
 
+/**
+ * 프론트에 보내줄 리더보드 정보
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor

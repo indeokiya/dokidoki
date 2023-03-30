@@ -12,124 +12,49 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Long> {
-    // 경매 End, 제품, 카테고리, 사용자 테이블 조인해서 데이터 검색하기
-    /*
-    진행중인 경매의 상세정보 조회
-     */
-    @Query("SELECT a.title as auction_title, a.startTime as start_time, a.endAt as end_time, a.description as description " +
-            ", a.meetingPlace as meeting_place, a.priceSize as price_size, a.offerPrice as offer_price " +
-            ", a.highestPrice as highest_price, s.name as seller_name, s.id as seller_id " +
-            ", p.name as product_name, c.categoryName as category_name " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
-            " JOIN a.seller s " +
-            "WHERE a.id = :auction_id " +
-            "ORDER BY a.id DESC ")
-    DetailAuctionIngInterface findAuctionIngEntityById(@Param("auction_id") Long auctionId);
+    // 진행중인 경매의 상세정보 조회
+    AuctionIngEntity findAuctionIngEntityByIdOrderById(Long auctionId);
 
-    /*
-    진행중인 경매 목록 (전체)
-     */
-    @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
-            "ORDER BY a.id DESC ")
-    Page<SimpleAuctionIngInterface> findAllSimpleIngList(Pageable pageable);
-
-    /*
-    마감임박 경매 목록, 6시간
-     */
-    @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
-            "WHERE a.endAt <= :within_six_hours " +
-            "ORDER BY a.id DESC ")
-    Page<SimpleAuctionIngInterface> findAuctionIngEntitiesByEndAtLessThan(
+    // 마감임박 경매 목록, 6시간
+    @Query("SELECT a FROM AuctionIngEntity a WHERE a.endAt <= :within_six_hours ORDER BY a.id DESC ")
+    Page<AuctionIngEntity> findAuctionIngEntitiesByEndAtLessThan(
             @Param("within_six_hours") LocalDateTime withinSixHours, Pageable pageable);
-    default Page<SimpleAuctionIngInterface> findAllSimpleDeadlineList(Pageable pageable) {
+    default Page<AuctionIngEntity> findAllSimpleDeadlineList(Pageable pageable) {
         // 현재로부터 6시간 뒤의 시간을 구한 뒤, endAt과 비교 연산
         return findAuctionIngEntitiesByEndAtLessThan(LocalDateTime.now().plusHours(6L), pageable);
     }
 
-    /*
-    카테고리 & 키워드로 진행중인 경매 목록 검색 (동적쿼리로 아래 조회 메서드랑 합치는 게 좋을 듯)
-     */
-    @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offerPrice, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
+    // 카테고리 & 키워드로 진행중인 경매 목록 검색 (동적쿼리로 아래 조회 메서드랑 합치는 게 좋을 듯)
+    @Query("SELECT a FROM AuctionIngEntity a JOIN a.productEntity p JOIN p.categoryEntity c " +
             "WHERE (p.name LIKE %:keyword% or c.categoryName LIKE %:keyword% or a.title LIKE %:keyword%) " +
             " AND c.id = :category_id " +
             "ORDER BY a.id DESC ")
-    Page<SimpleAuctionIngInterface> findAllSimpleIngListByKeywordANDCategoryId(
+    Page<AuctionIngEntity> findAllSimpleIngListByKeywordANDCategoryId(
             @Param("keyword") String keyword, @Param("category_id") Long categoryId, Pageable pageable);
 
-    /*
-    키워드로 진행중인 경매 목록 검색
-     */
-    @Query(value = "SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
+    // 키워드로 진행중인 경매 목록 검색
+    @Query("SELECT a FROM AuctionIngEntity a JOIN a.productEntity p JOIN p.categoryEntity c " +
             "WHERE (p.name LIKE %:keyword% or c.categoryName LIKE %:keyword% or a.title LIKE %:keyword%) " +
             "ORDER BY a.id DESC ")
-    Page<SimpleAuctionIngInterface> findAllSimpleIngListByKeyword(
+    Page<AuctionIngEntity> findAllSimpleIngListByKeyword(
             @Param("keyword") String keyword, Pageable pageable);
 
-    /*
-    특정 사용자가 판매중인 경매 목록 조회
-     */
-    @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
-            "WHERE a.seller.id = :member_id " +
-            "ORDER BY a.id DESC ")
-    Page<SimpleAuctionIngInterface> findAllMySellingAuction(@Param("member_id") Long memberId, Pageable pageable);
+    // 특정 사용자가 판매중인 경매 목록 조회
+    @Query("SELECT a FROM AuctionIngEntity a WHERE a.seller.id = :member_id ORDER BY a.id DESC ")
+    Page<AuctionIngEntity> findAllMySellingAuction(@Param("member_id") Long memberId, Pageable pageable);
 
-    /*
-    특정 사용자가 입찰중인 경매 목록 조회
-     */
-    @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
-            "WHERE :member_id IN " +
-            " (SELECT DISTINCT l.memberEntity.id FROM LeaderboardEntity l WHERE l.auctionId = a.id) " +
+    // 특정 사용자가 입찰중인 경매 목록 조회
+    @Query("SELECT a FROM AuctionIngEntity a " +
+            "WHERE :member_id IN (SELECT DISTINCT l.memberEntity.id FROM LeaderboardEntity l WHERE l.auctionId = a.id) " +
             "ORDER BY a.id DESC ")
-    Page<SimpleAuctionIngInterface> findAllMyBiddingAuction(@Param("member_id") Long memberId, Pageable pageable);
+    Page<AuctionIngEntity> findAllMyBiddingAuction(@Param("member_id") Long memberId, Pageable pageable);
 
-    /*
-    특정 사용자가 관심 갖는 경매 목록 조회
-     */
-    @Query("SELECT a.id as auction_id, a.title as auction_title, a.meetingPlace as meeting_place " +
-            " , a.startTime as start_time, a.endAt as end_time, p.name as product_name, c.categoryName as category_name " +
-            " , a.offerPrice as offer_price, a.highestPrice as cur_price, a.seller.id as seller_id, a.priceSize as price_size " +
-            "FROM AuctionIngEntity a " +
-            " JOIN a.productEntity p " +
-            " JOIN p.categoryEntity c " +
-            "WHERE :member_id IN " +
-            " (SELECT DISTINCT i.memberEntity.id FROM InterestEntity i WHERE i.auctionIngEntity.id = a.id) " +
+    // 특정 사용자가 관심 갖는 경매 목록 조회
+    @Query("SELECT a FROM AuctionIngEntity a " +
+            "WHERE :member_id IN (SELECT DISTINCT i.memberEntity.id FROM InterestEntity i WHERE i.auctionIngEntity.id = a.id) " +
             "ORDER BY a.id DESC ")
-    Page<SimpleAuctionIngInterface> findAllMyInterestingAuction(@Param("member_id") Long memberId, Pageable pageable);
+    Page<AuctionIngEntity> findAllMyInterestingAuction(@Param("member_id") Long memberId, Pageable pageable);
 
-    /*
-    특정 사용자가 판매중인 경매 ID 조회
-     */
+    // 특정 사용자가 판매중인 경매 ID 조회
     List<AuctionIngMapping> findAuctionIngEntityBySeller_Id(Long sellerId);
 }

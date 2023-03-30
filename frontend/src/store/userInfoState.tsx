@@ -31,3 +31,14 @@ export const userInfoState = atom({
     effects: [localStorageEffect('user_info')],
   });
 
+
+
+
+  //마이페이지 메뉴항목
+  export const myPageMenuState = atom({
+    key:"myPageMenuState",
+    default:{
+      menu:"입찰 중"
+    }
+  })
+

@@ -1,49 +1,49 @@
-import { Form } from "react-router-dom";
-import styled from "styled-components";
-import Grid from "@mui/material/Grid";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
-import { useState, useRef } from "react";
-import ProductInfoInput from "../components/resigter/ProductInfoInput";
-import ActionInfoInput from "../components/resigter/AuctionInfoInput";
-import {auctionAPI } from "../api/axios"
-import { useNavigate } from "react-router-dom";
+import { Form } from 'react-router-dom';
+import styled from 'styled-components';
+import Grid from '@mui/material/Grid';
+import Stack from '@mui/material/Stack';
+import Button from '@mui/material/Button';
+import { useState, useRef } from 'react';
+import ProductInfoInput from '../components/resigter/ProductInfoInput';
+import ActionInfoInput from '../components/resigter/AuctionInfoInput';
+import { auctionAPI } from '../api/axios';
+import { useNavigate } from 'react-router-dom';
 
+//경매 등록 타입
 export type AuctionRegisterType = {
-  productId: number
-  title: string
-  description: string
-  offerPrice: number
-  priceSize: number
-  endAt: Date
-  meetingPlace: string
-  files: any[]
-  name: string
-}
+  productId: number;
+  title: string;
+  description: string;
+  offerPrice: number;
+  priceSize: number;
+  endAt: Date;
+  meetingPlace: string;
+  files: any[];
+  name: string;
+};
 
 const RegisterPage = () => {
-
   const navigate = useNavigate();
 
   const dataRef = useRef({
     product_id: 1,
-    title: "",
-    description: "",
+    title: '',
+    description: '',
     offer_price: -1,
     price_size: -1,
-    end_at: "",
-    meeting_place: "",
+    end_at: '',
+    meeting_place: '',
     files: [],
-  })
+  });
 
-  let userName = "defaultName";
+  let userName = 'defaultName';
   let localStorageInfo = window.localStorage.getItem('user-info');
   if (localStorageInfo) {
     userName = JSON.parse(localStorageInfo).name;
   }
 
   const register = () => {
-    console.log("서버에 보낼 데이터 >> ",dataRef.current)
+    console.log('서버에 보낼 데이터 >> ', dataRef.current);
     const formData = new FormData();
     formData.set('product_id', String(dataRef.current.product_id));
     formData.set('title', dataRef.current.title);
@@ -53,35 +53,34 @@ const RegisterPage = () => {
     formData.set('end_at', dataRef.current.end_at);
     formData.set('meeting_place', dataRef.current.meeting_place);
     formData.set('name', userName);
-    for (let i=0; i<dataRef.current.files.length; i++) {
+    for (let i = 0; i < dataRef.current.files.length; i++) {
       formData.append('files', dataRef.current.files[i]);
     }
 
     // 카테고리를 통해 product_id 받아오는 로직도 어디선가 필요함. 일단 1로 박음
     const axios = auctionAPI;
     axios
-      .post("new", formData, {headers : {
-      "Content-Type":"multipart/form-data", 
-      "authorization":"Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2NzkyOTAwNTAsImV4cCI6MTY3OTI5MzY1MCwidXNlcl9pZCI6Mn0.ATBKCYsyg8jC-GxTT41Tbw3uknZ1PQ7JkC9g1AyGhLg", 
-      "withCredentials":"true",
-    }})
-      .then(res => {
-        alert("성공")
-        console.log(res)
-        // 성공하면 alert 알림 후 location.href , location.replace 또는 navigator로 이동 
-        navigate("/auction");
+      .post('new', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
-      .catch(err => {
-        alert("최대 10MB 까지 보낼 수 있습니다.")
+      .then((res) => {
+        alert('성공');
+        console.log(res);
+        // 성공하면 alert 알림 후 location.href , location.replace 또는 navigator로 이동
+        navigate('/auction');
+      })
+      .catch((err) => {
+        alert('최대 10MB 까지 보낼 수 있습니다.');
         console.error(err);
-      })
-    
-  }
+      });
+  };
 
   const cancel = () => {
     // 뒤로가기 로직
-    navigate("/auction");
-  }
+    navigate('/auction');
+  };
 
   return (
     <>
@@ -110,10 +109,7 @@ const RegisterPage = () => {
                 >
                   뒤로가기
                 </Button>
-                <Button 
-                  variant="contained" 
-                  sx={{ width: 340, fontSize: 25 }}
-                  onClick={register}>
+                <Button variant="contained" sx={{ width: 340, fontSize: 25 }} onClick={register}>
                   등록
                 </Button>
               </Stack>
@@ -128,7 +124,7 @@ const RegisterPage = () => {
 export default RegisterPage;
 
 const StyledDiv = styled.div`
-width: 100%;
-height: 1000%;
-background-color: gainsboro;
+  width: 100%;
+  height: 1000%;
+  background-color: gainsboro;
 `;

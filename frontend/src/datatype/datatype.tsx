@@ -19,16 +19,22 @@ export type Post = {
 
 
     //정료된 옥션에 추가되는 데이터
-    final_price?: number|-1;
+    final_price: number;
     start_time:string|"00:00:00";
-    end_tiem:string|"00:00:00";
+    end_time:string|"00:00:00";
     is_sold_out:boolean|false;
+
+    //판매 및 구매 내역에 추가되는 값 
+    year?:number,
+    month?:number,
+    day?:number,
+    seller_name?:string,
+    buyer_name?:string,
   };
 
 
 
-
-  //경매가 종료된 물건
+//경매가 종료된 물건
 export type endPost =  {
   final_price: number;
   start_time: string;

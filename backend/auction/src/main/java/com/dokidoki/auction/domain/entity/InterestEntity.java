@@ -1,9 +1,6 @@
 package com.dokidoki.auction.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @Table(name = "interest")
 @Entity
+@Getter
 public class InterestEntity {
 
     @Id

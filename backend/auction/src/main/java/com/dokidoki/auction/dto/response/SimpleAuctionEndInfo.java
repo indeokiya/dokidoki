@@ -1,5 +1,6 @@
 package com.dokidoki.auction.dto.response;
 
+import com.dokidoki.auction.domain.entity.AuctionEndEntity;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -26,18 +27,18 @@ public class SimpleAuctionEndInfo {
     private Boolean is_sold_out;
 
     public SimpleAuctionEndInfo(
-            SimpleAuctionEndInterface simpleAuctionEndInterface,
+            AuctionEndEntity auctionEndEntity,
             String auction_image_url) {
-        this.auction_id = simpleAuctionEndInterface.getAuction_id();
-        this.auction_title = simpleAuctionEndInterface.getAuction_title();
-        this.product_name = simpleAuctionEndInterface.getProduct_name();
-        this.category_name = simpleAuctionEndInterface.getCategory_name();
-        this.offer_price = simpleAuctionEndInterface.getOffer_price();
-        this.final_price = simpleAuctionEndInterface.getFinal_price();
-        this.start_time = simpleAuctionEndInterface.getStart_time();
-        this.end_time = simpleAuctionEndInterface.getEnd_time();
+        this.auction_id = auctionEndEntity.getId();
+        this.auction_title = auctionEndEntity.getTitle();
+        this.product_name = auctionEndEntity.getProduct().getName();
+        this.category_name = auctionEndEntity.getProduct().getCategoryEntity().getCategoryName();
+        this.offer_price = auctionEndEntity.getOfferPrice();
+        this.final_price = auctionEndEntity.getFinalPrice();
+        this.start_time = auctionEndEntity.getStartTime();
+        this.end_time = auctionEndEntity.getEndTime();
 
         this.auction_image_url = auction_image_url;
-        this.is_sold_out = simpleAuctionEndInterface.getBuyer_id() != null;
+        this.is_sold_out = auctionEndEntity.getBuyer() != null;
     }
 }
