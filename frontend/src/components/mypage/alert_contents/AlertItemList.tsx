@@ -1,31 +1,78 @@
 import AlertItem from './AlertItem';
 import { useState } from 'react';
+import { noticeAPI } from 'src/api/axios';
 
-type AlertData = {
-  type: string;
-  price: number;
-  productId: number;
-  title: string;
-  id: number;
-  isVisible:boolean;
-};
+// type AlertData = {
+//   type: string; // "PURCHASE_SUCCESS", "PURCHASE_FAIL", "SALE_COMPLETE", "OUTBID"
+//   productId: number;
+//   productName : string;
+//   auctionId : number;
+//   finalPrice : number;
+//   myFinalPrice : number;
+//   currentBidPrice : number;
+//   timeStamp : string;
+//   price: number;
+//   // title: string;
+//   // id: number;
+//   isVisible:boolean;
+// };
+interface AlertData {
+  type: string; // "PURCHASE_SUCCESS", "PURCHASE_FAIL", "SALE_COMPLETE", "OUTBID"
+  // productId: number;
+  // productName : string;
+  // auctionId : number;
+  // finalPrice : number;
+  // myFinalPrice : number;
+  // currentBidPrice : number;
+  // timeStamp : string;
+  // price: number;
+  // // title: string;
+  // // id: number;
+  // isVisible:boolean;
+}
+
 
 const AlertItemList = () => {
-  const [alertList, setAlertList] = useState([
-    { id: 1, type: '구매 성공', productId: 1, price: 123123, title: '휴대폰', isVisible: true },
-    { id: 2, type: '구매 실패', productId: 2, price: 123123, title: '컴퓨터', isVisible: true },
-    { id: 3, type: '판매 성공', productId: 3, price: 123123, title: '노트북', isVisible: true },
-    { id: 4, type: '입찰 강탈', productId: 4, price: 123123, title: '세탁기', isVisible: true },
-    { id: 5, type: '구매 성공', productId: 5, price: 123123, title: '에어컨', isVisible: true },
-    { id: 6, type: '구매 성공', productId: 6, price: 123123, title: '휴대폰', isVisible: true },
-  ]);
+  // const [alertList, setAlertList] = useState([
+  //   { id: 1, type: '구매 성공', productId: 1, price: 123123, title: '휴대폰', isVisible: true },
+  //   { id: 2, type: '구매 실패', productId: 2, price: 123123, title: '컴퓨터', isVisible: true },
+  //   { id: 3, type: '판매 성공', productId: 3, price: 123123, title: '노트북', isVisible: true },
+  //   { id: 4, type: '입찰 강탈', productId: 4, price: 123123, title: '세탁기', isVisible: true },
+  //   { id: 5, type: '구매 성공', productId: 5, price: 123123, title: '에어컨', isVisible: true },
+  //   { id: 6, type: '구매 성공', productId: 6, price: 123123, title: '휴대폰', isVisible: true },
+  // ]);
+  const [alertList, setAlertList] = useState<AlertData[]>([
+    {
+      type: "OUTBID",
+      productId: 1
+
+    },
+    {
+      type: "PURCHASE_SUCCESS"
+    }
+  ])
 
   const [alertCnt , setAlertCnt] = useState(alertList.length)
 
+  // 알림 내역
+  let datas:AlertData[] = []
+
+  noticeAPI
+  .get("/")
+  .then( ({ data }) => {
+    console.log('알림 내역 >> ', data)
+    setAlertList(datas)
+    datas = data
+    // setAlertList(datas)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+
   return (
     <div>
-      알람 개수 : {alertCnt}
-      {alertList.map((data, i) => {
+      알람 개수 : {datas.length}
+      {datas.map((data, i: number) => {
         return <AlertItem key={i} data={data} setAlertList={setAlertList} setAlertCnt={setAlertCnt}></AlertItem>;
       })}
     </div>

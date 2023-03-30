@@ -23,16 +23,26 @@ const PreFixSpan = styled.span`
 `;
 
 type AlertData = {
-  type: string;
-  price: number;
+  type: string; // "PURCHASE_SUCCESS", "PURCHASE_FAIL", "SALE_COMPLETE", "OUTBID"
   productId: number;
-  title: string;
-  id: number;
+  productName : string;
+  auctionId : number;
+  finalPrice : number;
+  myFinalPrice : number;
+  currentBidPrice : number;
+  timeStamp : string;
+  price: number;
+  // type: string;
+  // price: number;
+  // productId: number;
+  // title: string;
+  // id: number;
   isVisible: boolean;
 };
 
 const AlertItem: React.FC<{
   data: AlertData;
+  key: number;
   setAlertList: (data: any) => void;
   setAlertCnt: (data: any) => void;
 }> = (props) => {
