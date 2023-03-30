@@ -5,10 +5,19 @@ import Typography from '@mui/material/Typography';
 import { CommentType } from 'src/datatype/datatype';
 import { useReadCommentsQuery } from 'src/hooks/comment';
 import { useState, useEffect } from "react";
+import { useSetRecoilState } from 'recoil';
+import { commentAuctionIdState } from 'src/store/CommentStates';
 
 
 const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], seller_id: number }> = (props) => {
   const { auction_id, comments, seller_id } = props
+
+  // Comment 관련 컴포넌트에서 사용할 auction_id state
+  const setAuctionIdState = useSetRecoilState(commentAuctionIdState)
+  useEffect(() => {
+    // 렌더링 시 초기값 삽입
+    setAuctionIdState(auction_id)
+  }, [])
 
   // 댓글 리스트
   const [commentList, setCommentList] = useState(comments)
@@ -35,7 +44,7 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
           {' '}
           Q & A
         </Typography>
-        <CommentInput auction_id={auction_id} parent_id={null} refetch={refetch} />
+        <CommentInput parentId={null} refetch={refetch} />
         {commentList.map((data) => {
           return (
             <>
@@ -49,6 +58,8 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
                 isMine={data.member_id === loginUser.id}
                 written_time={data.written_time}
                 isColor={true}
+                commentId={data.id}
+                refetch={refetch}
               ></Comment>
               {data.sub_comments.length !== 0 &&
                 data.sub_comments.map((data, i) => {
@@ -64,6 +75,8 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
                         isWriter={seller_id === data.member_id}
                         isMine={data.member_id === loginUser.id}
                         written_time={data.written_time}
+                        commentId={data.id}
+                        refetch={refetch}
                       ></Comment>
                     </>
                   );
