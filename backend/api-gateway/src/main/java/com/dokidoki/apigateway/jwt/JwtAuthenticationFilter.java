@@ -25,14 +25,6 @@ public class JwtAuthenticationFilter implements GatewayFilterFactory<JwtAuthenti
 
             ServerHttpRequest request = exchange.getRequest();
             log.info(request.getPath().toString());
-            HttpHeaders headers = request.getHeaders();
-
-            Set<Map.Entry<String, List<String>>> s = headers.entrySet();
-
-            s.forEach((entry)->{
-                log.info("header : " + entry.getKey());
-                entry.getValue().forEach((str)->log.info("value : " + str));
-            });
 
             if(!request.getHeaders().containsKey("Authorization"))
                 throw new JwtAuthenticationException("로그인이 필요한 서비스입니다.", HttpStatus.FORBIDDEN);
