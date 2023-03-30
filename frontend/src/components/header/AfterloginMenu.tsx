@@ -21,6 +21,9 @@ const AfterLoginMenu = () => {
 
   const logout = () => {
     resetUserInfo();
+    localStorage.removeItem("refresh_token");
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("user_info");
     alert("성공적으로 로그아웃 되었습니다.");
     setAnchorEl(null);
   }
