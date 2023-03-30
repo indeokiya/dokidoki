@@ -7,21 +7,32 @@ import { useState } from "react";
 import { auctionAPI } from 'src/api/axios';
 
 
-const CommentInput: React.FC<{auction_id: string, parent_id: number | null}> = (props) => {
-  const { auction_id, parent_id } = props
+const CommentInput: React.FC<{auction_id: string, parent_id: number | null, refetch: Function}> = (props) => {
+  const { auction_id, parent_id, refetch } = props
 
   // 댓글 State
   const [content, setContent] = useState("")
 
-  const createComment = () => {
+  const createComment = (event: any) => {
+    event.preventDefault()
     auctionAPI.post(`${auction_id}/comments`, {
       content: content,
       parent_id: parent_id
-    }).then(res => {
-      console.log(res)
+    }).then(() => {
+      refetch()  // 댓글 다시 조회하기
+      setContent("")  // 댓글 초기화
+      alert("댓글이 등록되었습니다.")
     }).catch(err => {
-      console.log("!", err)
+      console.error("ERROR >>", err)
+      alert("댓글이 등록되지 않았습니다.")
     });
+  }
+
+  // Enter Event
+  const handleKeyDown = (event: any) => {
+    if (event.key === 'Enter') {
+      createComment(event)
+    }
   }
 
   return (
@@ -32,6 +43,7 @@ const CommentInput: React.FC<{auction_id: string, parent_id: number | null}> = (
         value={content}
         onChange={(e) => { setContent(e.target.value) }}
         placeholder="댓글을 작성하세요"
+        onKeyDown={handleKeyDown}
         endAdornment={
           <InputAdornment onClick={createComment} position="start">
             <SendIcon />

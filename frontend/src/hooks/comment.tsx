@@ -10,7 +10,8 @@ export const commentKey = {
 // 댓글 조회
 export const useReadCommentsQuery = (auction_id: string) => useQuery({
   queryKey: commentKey.readComments(auction_id),
-  queryFn: () => {
-    return auctionAPI.get(`${auction_id}/comments`)
-  }
+  queryFn: () => auctionAPI
+    .get(`${auction_id}/comments`)
+    .then(({ data }) => data.data),
+  enabled: false
 })

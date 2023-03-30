@@ -1,20 +1,32 @@
 import styled from 'styled-components';
-import avatarImgSrc from '../../../assets/image/profile.png';
 import Comment from './Comment';
 import CommentInput from './CommentInput';
 import Typography from '@mui/material/Typography';
 import { CommentType } from 'src/datatype/datatype';
+import { useReadCommentsQuery } from 'src/hooks/comment';
+import { useState, useEffect } from "react";
 
 
 const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], seller_id: number }> = (props) => {
-  const { auction_id, comments, seller_id  } = props
+  const { auction_id, comments, seller_id } = props
 
+  // 댓글 리스트
+  const [commentList, setCommentList] = useState(comments)
+  
   // 현재 사용자
   const loginUser = { id: null }
   const userInfo_json = localStorage.getItem("user_info")
   if (userInfo_json != null) {
     loginUser.id = JSON.parse(userInfo_json).user_id
   }
+
+  // 댓글 조회 useQuery. data가 변경되면 comments 갱신
+  const { data, refetch } = useReadCommentsQuery(auction_id)
+  useEffect(() => {
+    if (data !== undefined) {
+      setCommentList(data)
+    }
+  }, [data])
 
   return (
     <>
@@ -23,8 +35,8 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
           {' '}
           Q & A
         </Typography>
-        <CommentInput auction_id={auction_id} parent_id={null} />
-        {comments.map((data) => {
+        <CommentInput auction_id={auction_id} parent_id={null} refetch={refetch} />
+        {commentList.map((data) => {
           return (
             <>
               <Comment
