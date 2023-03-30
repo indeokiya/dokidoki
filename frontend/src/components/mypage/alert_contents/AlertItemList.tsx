@@ -10,7 +10,6 @@ type AlertData = {
   isVisible:boolean;
 };
 
-
 const AlertItemList = () => {
   const [alertList, setAlertList] = useState([
     { id: 1, type: '구매 성공', productId: 1, price: 123123, title: '휴대폰', isVisible: true },

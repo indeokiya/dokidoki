@@ -1,7 +1,7 @@
 import EndContentItem from './EndContentItem';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { auctionAPI } from 'src/api/axios';
+import { auctionAPI, noticeAPI } from 'src/api/axios';
 import { useInfiniteQuery } from 'react-query';
 import { myPageMenuState } from 'src/store/userInfoState';
 import CircularProgress from '@mui/material/CircularProgress';
@@ -41,6 +41,20 @@ const salesHistory = (page: number, size: number) => {
       return data.data;
     });
 };
+
+//알림 내역
+const alertData = () => {
+  return noticeAPI
+  .get("/")
+  .then( ({data}) => {
+    console.log('알림 내역 >> ', data)
+    return data;
+  })
+  .catch(err => {
+    console.log(err)
+  })
+
+}
 
 const EndContentItemList = () => {
   const [posts, setPosts] = useState<Post[]>();
@@ -98,6 +112,7 @@ const EndContentItemList = () => {
 
   console.log('data >>', data);
   console.log('posts >> ', posts);
+
 
   return (
     <div id="scroll">
