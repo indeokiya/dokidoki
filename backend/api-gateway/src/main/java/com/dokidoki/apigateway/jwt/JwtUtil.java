@@ -23,10 +23,9 @@ public class JwtUtil {
 
     };
 
-    public static boolean isValidToken(String token){
+    public static void isValidToken(String token){
         try {
             Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
-            return true;
         } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
             log.info("Invalid JWT Token", e);
             throw new JwtAuthenticationException("유효하지 않은 토큰입니다.", HttpStatus.UNAUTHORIZED);
