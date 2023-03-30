@@ -87,10 +87,6 @@ const ProductPage = () => {
   //     ws.current.close();
   //   };
   // }, []);
-
-
-
-  const { id } = useParams() as { id: string };
   
   // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
   // data fetching logic
