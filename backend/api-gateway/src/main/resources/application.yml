@@ -49,7 +49,7 @@ spring:
           - Path=/api/notices/**
         filters:
           - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
-          - JwtAuthenticationFilter
+          #- JwtAuthenticationFilter
 
       # 소켓 routing
       - id: notice-server
@@ -58,7 +58,7 @@ spring:
           - Path=/api/notices/ws
         filters:
           - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
-          - JwtAuthenticationFilter
+          #- JwtAuthenticationFilter
 
       - id: user-server
         uri: http://user-server:8083
