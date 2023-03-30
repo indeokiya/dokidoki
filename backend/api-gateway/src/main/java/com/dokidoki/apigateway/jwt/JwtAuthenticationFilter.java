@@ -5,9 +5,14 @@ import com.dokidoki.apigateway.exception.JwtAuthenticationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.GatewayFilterFactory;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 
 @Component
@@ -20,6 +25,14 @@ public class JwtAuthenticationFilter implements GatewayFilterFactory<JwtAuthenti
 
             ServerHttpRequest request = exchange.getRequest();
             log.info(request.getPath().toString());
+            HttpHeaders headers = request.getHeaders();
+
+            Set<Map.Entry<String, List<String>>> s = headers.entrySet();
+
+            s.forEach((entry)->{
+                log.info("header : " + entry.getKey());
+                entry.getValue().forEach((str)->log.info("value : " + str));
+            });
 
             if(!request.getHeaders().containsKey("Authorization"))
                 throw new JwtAuthenticationException("권한 없는 사용자입니다", HttpStatus.FORBIDDEN);
