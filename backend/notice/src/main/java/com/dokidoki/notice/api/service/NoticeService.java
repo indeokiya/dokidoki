@@ -28,6 +28,7 @@ public class NoticeService {
     private final NoticeRepository noticeRepository;
     private final WebSocketController webSocketController;
     private final PayloadUtil payloadUtil;
+
     /**
      * 경매 성공한 한 명에게 알림 발송
      * @param dto
@@ -88,7 +89,6 @@ public class NoticeService {
         NoticeOutBidResp resp = NoticeOutBidResp.of(dto);
         noticeRepository.save(memberId, resp);
         webSocketController.sendAlert(memberId, payloadUtil.getStringValue(resp));
-
     }
 
     /**
