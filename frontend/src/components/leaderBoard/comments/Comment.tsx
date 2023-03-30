@@ -82,9 +82,9 @@ const Comment: React.FC<{
               </Button> : null}
               {/* 댓글의 주인이라면 수정 및 삭제 버튼을 볼 수 있다. */}
               {props.isMine && (<>
-                <Button variant="text" color="error">
+                {/* <Button variant="text" color="error">
                   수정
-                </Button>
+                </Button> */}
                 <Button variant="text" color="error" onClick={deleteComment}>
                   삭제
                 </Button></>
