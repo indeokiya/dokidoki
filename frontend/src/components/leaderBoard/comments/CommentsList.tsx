@@ -83,8 +83,7 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
                 })}
               <br />
               <br />
-              <br />
-              <br />
+           
             </>
           );
         })}
