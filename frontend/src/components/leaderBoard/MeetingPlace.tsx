@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Map, MapMarker } from 'react-kakao-maps-sdk';
-
+import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
+import Badge from '@mui/material/Badge';
 
 // showMap={showMap} location={meeting_place}
-const MeetingPlace:React.FC<{location:string}> = (props) => {
-  let { location} = props;
+const MeetingPlace: React.FC<{ location: string }> = (props) => {
+  let { location } = props;
   // let showMap = true;
   // let location = "사당로 16바길 48"
-  let [showMap ,setShowMap] = useState(false);
-
+  let [showMap, setShowMap] = useState(false);
 
   const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
   const [markerPosition, setMarkerPosition] = useState({ lat: 37.5665, lng: 126.978 });
@@ -30,15 +29,21 @@ const MeetingPlace:React.FC<{location:string}> = (props) => {
   return (
     <div>
       <button onClick={handleSearch}>지도보기</button>
-      {showMap &&
-        <Map center={mapCenter} style={{ width: '400px', height: '400px' }}>
+      {showMap && (
+        <Map center={mapCenter} style={{ width: '400px', height: '400px' }}
+        draggable={false}
+        zoomable={false}>
           <MapMarker position={markerPosition} />
+          <CustomOverlayMap position={markerPosition}>
+            <div style={{  backgroundColor: '#fff', color: '#000' }}>
+              <Badge color="primary" badgeContent={location}/>
+                
+            </div>
+          </CustomOverlayMap>
         </Map>
-        }
-      
+      )}
     </div>
   );
-
 };
 
 export default MeetingPlace;

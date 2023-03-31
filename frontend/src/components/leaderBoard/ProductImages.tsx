@@ -1,35 +1,36 @@
-import imgSrc1 from '../../assets/image/phone1.png';
-import imgSrc2 from '../../assets/image/phone2.png';
-import imgSrc3 from '../../assets/image/phone3.png';
-import imgSrc4 from '../../assets/image/phone4.png';
 import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
+import blank_img from '../../assets/image/blank_img.png';
 import { useState } from 'react';
 
 type Props = {
   images: any[];
-}
+};
 
-const ProductImages = ({images} : Props) => {
+const ProductImages = ({ images }: Props) => {
   const [index, setIndex] = useState(0);
   // let images = [imgSrc1, imgSrc2, imgSrc3, imgSrc4, imgSrc3];
 
-  const StyledImg = styled.img`
-    cursor: pointer;
-    width: 100%;
-    &:hover {
-      opacity: 0.5;
-    }
+  const StyldImg = styled.img`
   `;
 
   return (
     <div>
       <Grid container>
-        <Grid item xs={12}>
-          <img src={images[index]} width={'100%'} height={400} />
+        <Grid
+          item
+          xs={12}
+          height={400}
+          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+         
+        >
+          {images.length === 0 ? (
+            <StyldImg src={blank_img} width={'100%'} />
+          ) : (
+            <StyldImg src={images[index]}width={'100%'} />
+          )}
         </Grid>
         {images.map((data, i) => {
-          console.log('이미지 나온다~');
           return (
             <Grid key={i} item xs={2}>
               <StyledImg
@@ -47,3 +48,11 @@ const ProductImages = ({images} : Props) => {
 };
 
 export default ProductImages;
+
+const StyledImg = styled.img`
+  cursor: pointer;
+  width: 100%;
+  &:hover {
+    opacity: 0.5;
+  }
+`;

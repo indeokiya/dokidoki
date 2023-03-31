@@ -11,42 +11,53 @@ import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
 import Header from '../components/header/Header';
 import Paper from '@mui/material/Paper';
-import SockJS from 'sockjs-client'
-import { Client, Message, StompHeaders } from '@stomp/stompjs'
-
+import SockJS from 'sockjs-client';
+import { Client, Message, StompHeaders } from '@stomp/stompjs';
 
 import { Box } from '@mui/material';
-import MeetingPlace from '../components/leaderBoard/MeetingPlace'
+import MeetingPlace from '../components/leaderBoard/MeetingPlace';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
 // const { useAuctionDetail, test } = require("../hooks/auctionDetail");
-import { useAuctionDetail } from '../hooks/auctionDetail'
+import { useAuctionDetail } from '../hooks/auctionDetail';
 import { Leaderboard } from '@mui/icons-material';
 import { CommentType } from 'src/datatype/datatype';
 
+import { useRecoilState } from 'recoil';
+import { userInfoState } from 'src/store/userInfoState';
+import { useNavigate } from 'react-router-dom';
+
 const ProductPage = () => {
-  const { id } = useParams() as {id: string};
-  
+  const [loginUser, setLoginUser] = useRecoilState(userInfoState);
+  const navigate = useNavigate();
+  const { id } = useParams() as { id: string };
+
   // let socket = new SockJS("ws");
   let clientRef = useRef<Client>();
   const test = useRef<boolean>();
-  
+
   useEffect(() => {
+    if (!loginUser.is_logged_in) {
+      console.log('loginUser >> ', loginUser.is_logged_in);
+      alert('로그인 부터 ㄱㄱ');
+      navigate('/login');
+    }
+
     if (!clientRef.current && !test.current) connect();
     return () => disconnect();
   }, []);
 
-
-  const connect = () => { // 연결할 때
+  const connect = () => {
+    // 연결할 때
     test.current = true;
     clientRef.current = new Client({
       brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
       connectHeaders: {
-        authorization: "Bearer " + localStorage.getItem('access_token')
+        authorization: 'Bearer ' + localStorage.getItem('access_token'),
       },
       onConnect: () => {
-        console.log("socket connected");
+        console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
           console.log(`Received message: ${message.body}`);
@@ -55,51 +66,23 @@ const ProductPage = () => {
     });
     clientRef.current?.activate(); // 클라이언트 활성화
   };
-  
-  const disconnect = () => { // 연결이 끊겼을 때 
+
+  const disconnect = () => {
+    // 연결이 끊겼을 때
     clientRef.current?.deactivate();
-    console.log("socket disconnected");
+    console.log('socket disconnected');
   };
 
-  // 소켓 객체 생성
-  // useEffect(() => {
-  //   if (!ws.current) {
-  //     ws.current = new WebSocket(webSocketUrl);
-  //     ws.current.onopen = () => {
-  //       console.log("connected to " + webSocketUrl);
-  //       setSocketConnected(true);
-  //     };
-  //     ws.current.onclose = (error) => {
-  //       console.log("disconnect from " + webSocketUrl);
-  //       console.log(error);
-  //     };
-  //     ws.current.onerror = (error) => {
-  //       console.log("connection error " + webSocketUrl);
-  //       console.log(error);
-  //     };
-  //     ws.current.onmessage = (evt) => {
-  //       const data = JSON.parse(evt.data);
-  //       console.log(data);
-  //       setItems((prevItems) => [...prevItems, data]);
-  //     };
-  //   }
-
-  //   return () => {
-  //     console.log("clean up");
-  //     ws.current.close();
-  //   };
-  // }, []);
-  
   // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
   // data fetching logic
-  const { isLoading, isError, error, data} = useAuctionDetail({id});
-  if (isLoading) return <h1>isLoading..</h1>
+  const { isLoading, isError, error, data } = useAuctionDetail({ id });
+  if (isLoading) return <h1>isLoading..</h1>;
   if (isError) {
-    console.error("error occured >> ", error.message);
-    return <h1>error occured while fetching auction_id: {id}</h1>
+    console.error('error occured >> ', error.message);
+    return <h1>error occured while fetching auction_id: {id}</h1>;
   }
   // 이 아래부터는 data가 존재함이 보장됨
-  console.log("total data >> ", data)  
+  console.log('total data >> ', data);
   const {
     auction_image_urls,
     auction_title,
@@ -117,7 +100,7 @@ const ProductPage = () => {
     seller_name,
     start_time,
     is_my_interest,
-  } = data
+  } = data;
 
   console.log(description);
 
@@ -128,8 +111,8 @@ const ProductPage = () => {
           sx={{
             border: '1px solid white',
             backgroundColor: 'white',
-            width:"80%",
-            margin:"0 auto"
+            width: '80%',
+            margin: '0 auto',
           }}
         >
           <ScrollTop />
@@ -137,13 +120,11 @@ const ProductPage = () => {
             <Grid item xs={2} />
             <Grid item xs={4}>
               {/* 제품 이미지 */}
-              <ProductImages 
-                images={auction_image_urls}
-              />
+              <ProductImages images={auction_image_urls} />
             </Grid>
             <Grid item xs={4}>
               {/* 제품 정보 */}
-              <ProductInfo 
+              <ProductInfo
                 auction_title={auction_title}
                 auction_id={id}
                 category={category_name}
@@ -151,24 +132,35 @@ const ProductPage = () => {
                 price_size={price_size}
                 highest_price={highest_price}
                 is_my_interest={is_my_interest}
+                end_time={end_time}
+                start_time={start_time}
               />
             </Grid>
           </Grid>
           <Divider />
+          <Grid container direction="column" justifyContent="flex-start" alignItems="center">
+              {/* 제품 카테고리 평균 가격 */}
+            <Grid item>
+              <ProductGraph />
+              <ProductLeaderBoard />
+            </Grid>
 
-          
-          <ProductDescription description={description}/>
-          
+            {/* 제품 설명 */}
+            <Grid item>
+              <ProductDescription description={description} />
+            </Grid>
 
-          {/* 제품 카테고리 평균 가격 */}
-          <ProductGraph />
-          <ProductLeaderBoard/>
-          <h5>{meeting_place}</h5>
-          <MeetingPlace location={meeting_place}/>
-          {/* 댓글 작성과 댓글들  */}
-          <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
+            {/* 지도 */}
+            <Grid item>
+              <MeetingPlace location={meeting_place} />
+            </Grid>
 
-          {/* 모달창 하단에 존재하는 버튼 */}
+            {/* 댓글 */}
+            <Grid item>
+              <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
+            </Grid>
+            <Grid item></Grid>
+          </Grid>
         </Box>
       </BackgroundDiv>
     </>
@@ -178,10 +170,10 @@ const ProductPage = () => {
 export default ProductPage;
 
 const StyledDiv = styled.div`
-padding: 30px;
-box-sizing: border-box;
+  padding: 30px;
+  box-sizing: border-box;
 `;
 
 const BackgroundDiv = styled.div`
-background-color: #dddddd;
+  background-color: #dddddd;
 `;
