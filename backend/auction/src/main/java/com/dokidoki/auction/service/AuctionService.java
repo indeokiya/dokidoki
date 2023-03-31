@@ -56,8 +56,6 @@ public class AuctionService {
         return productList;
     }
 
-    // 제품 등록시 판매 빈도 증가
-
     // 진행중인 경매 상세정보 조회
     @Transactional(readOnly = true)
     public DetailAuctionIngResp readAuctionIng(Long memberId, Long auctionId) {
@@ -250,6 +248,10 @@ public class AuctionService {
         // 경매중 데이터 삭제
         auctionIngRepository.delete(auctionIngEntity);
         log.info("auctionEndEvent >> delete auction-ing entity");
+
+        // 판매 빈도 증가
+        productRepository.updateSaleCount(auctionEndEntity.getProduct().getId());
+        log.info("auctionEndEvent >> increase product's sale count");
     }
 
     /**
