@@ -96,7 +96,7 @@ public class NoticeService {
      * @param memberId
      * @return
      */
-    public List<NoticeResp> getNoticeList(long memberId) {
+    public Map<Long, NoticeResp> getAllNotice(long memberId) {
         return noticeRepository.getAll(memberId);
     }
 }
