@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
-public class DetailAuctionIngResponse {
+public class DetailAuctionIngResp {
     private final String auction_title;
     private final LocalDateTime start_time;
     private final LocalDateTime end_time;
@@ -22,13 +22,13 @@ public class DetailAuctionIngResponse {
     private final String seller_name;
 
     private final List<String> auction_image_urls;
-    private final List<CommentResponse> comments;
+    private final List<CommentResp> comments;
     private final Boolean is_my_interest;
 
-    public DetailAuctionIngResponse(AuctionIngEntity auctionIngEntity,
-                                    List<String> auction_image_urls,
-                                    List<CommentResponse> comments,
-                                    Boolean isMyInterest) {
+    public DetailAuctionIngResp(AuctionIngEntity auctionIngEntity,
+                                List<String> auction_image_urls,
+                                List<CommentResp> comments,
+                                Boolean isMyInterest) {
         this.auction_title = auctionIngEntity.getTitle();
         this.start_time = auctionIngEntity.getStartTime();
         this.end_time = auctionIngEntity.getEndAt();

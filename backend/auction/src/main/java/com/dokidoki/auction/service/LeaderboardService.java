@@ -4,8 +4,8 @@ import com.dokidoki.auction.domain.entity.LeaderboardEntity;
 import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.repository.LeaderboardRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
-import com.dokidoki.auction.dto.request.LeaderboardRequest;
-import com.dokidoki.auction.dto.response.LeaderboardHistoryResponse;
+import com.dokidoki.auction.dto.request.LeaderboardReq;
+import com.dokidoki.auction.dto.response.LeaderboardHistoryResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +20,9 @@ public class LeaderboardService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public int createLeaderboard(Long auctionId, LeaderboardRequest leaderboardRequest) {
+    public int createLeaderboard(Long auctionId, LeaderboardReq leaderboardReq) {
         // 리더보드 입찰 내역 삽입
-        leaderboardRequest.getHistories().forEach(history -> {
+        leaderboardReq.getHistories().forEach(history -> {
             // 입찰한 사용자 가져오기
             MemberEntity memberEntity = memberRepository
                     .findById(history.getMember_id())
@@ -44,14 +44,14 @@ public class LeaderboardService {
     }
 
     @Transactional(readOnly = true)
-    public List<LeaderboardHistoryResponse> readLeaderboard(Long auctionId) {
+    public List<LeaderboardHistoryResp> readLeaderboard(Long auctionId) {
         List<LeaderboardEntity> leaderboardEntities = leaderboardRepository
                 .findLeaderboardEntitiesByAuctionIdOrderByBidTime(auctionId);
 
-        List<LeaderboardHistoryResponse> leaderboardHistoryResponses = new ArrayList<>();
+        List<LeaderboardHistoryResp> leaderboardHistoryRespons = new ArrayList<>();
         for (LeaderboardEntity leaderboardEntity : leaderboardEntities)
-            leaderboardHistoryResponses.add(new LeaderboardHistoryResponse(leaderboardEntity));
+            leaderboardHistoryRespons.add(new LeaderboardHistoryResp(leaderboardEntity));
 
-        return leaderboardHistoryResponses;
+        return leaderboardHistoryRespons;
     }
 }

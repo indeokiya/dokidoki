@@ -5,8 +5,8 @@ import com.dokidoki.auction.common.JWTUtil;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
-import com.dokidoki.auction.dto.response.DetailAuctionEndResponse;
-import com.dokidoki.auction.dto.response.DetailAuctionIngResponse;
+import com.dokidoki.auction.dto.response.DetailAuctionEndResp;
+import com.dokidoki.auction.dto.response.DetailAuctionIngResp;
 import com.dokidoki.auction.dto.response.ProductResp;
 import com.dokidoki.auction.service.AuctionService;
 import com.dokidoki.auction.service.InterestService;
@@ -99,22 +99,22 @@ public class AuctionController {
         if (memberId == null)
             return ResponseEntity.status(400).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
-        DetailAuctionIngResponse detailAuctionIngResponse = auctionService.readAuctionIng(memberId, auction_id);
-        if (detailAuctionIngResponse == null)
+        DetailAuctionIngResp detailAuctionIngResp = auctionService.readAuctionIng(memberId, auction_id);
+        if (detailAuctionIngResp == null)
             return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("성공", detailAuctionIngResponse));
+                .body(BaseResponseBody.of("성공", detailAuctionIngResp));
     }
 
     @GetMapping("/end/{auction_id}")
     public ResponseEntity<BaseResponseBody> readAuctionEnd(@PathVariable Long auction_id) {
-        DetailAuctionEndResponse detailAuctionEndResponse = auctionService.readAuctionEnd(auction_id);
-        if (detailAuctionEndResponse == null)
+        DetailAuctionEndResp detailAuctionEndResp = auctionService.readAuctionEnd(auction_id);
+        if (detailAuctionEndResp == null)
             return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("성공", detailAuctionEndResponse));
+                .body(BaseResponseBody.of("성공", detailAuctionEndResp));
     }
 
     /*

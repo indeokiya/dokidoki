@@ -8,9 +8,8 @@ import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.CommentRepository;
 import com.dokidoki.auction.domain.repository.MemberRepository;
-import com.dokidoki.auction.dto.request.CommentRequest;
-import com.dokidoki.auction.dto.request.PutCommentRequest;
-import com.dokidoki.auction.dto.response.CommentResponse;
+import com.dokidoki.auction.dto.request.CommentReq;
+import com.dokidoki.auction.dto.response.CommentResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +25,7 @@ public class CommentService {
     private final AuctionEndRepository auctionEndRepository;
 
     @Transactional(readOnly = true)
-    public List<CommentResponse> readComment(Long auctionId) {
+    public List<CommentResp> readComment(Long auctionId) {
         // 경매 식별번호로 모든 댓글 검색
         List<CommentEntity> commentEntities = commentRepository.findCommentsByAuctionIdOrderByWrittenTime(auctionId);
 
@@ -39,7 +38,7 @@ public class CommentService {
         //      2) 부모 댓글 객체로 접근한 뒤, 부모 댓글 sub_comments에 대댓글 추가
 
         // DTO 생성
-        List<CommentResponse> commentResponses = new ArrayList<>();
+        List<CommentResp> commentRespons = new ArrayList<>();
 
         // 부모 댓글의 인덱스를 관리할 변수
         Map<Long, Integer> indexOf = new HashMap<>();
@@ -48,24 +47,24 @@ public class CommentService {
         for (CommentEntity commentEntity : commentEntities) {
             // 댓글일 경우, commentResponses 에 삽입 후 indexOf 에 위치 저장
             if (commentEntity.getParentId() == null) {
-                indexOf.put(commentEntity.getId(), commentResponses.size());
-                commentResponses.add(new CommentResponse(commentEntity));
+                indexOf.put(commentEntity.getId(), commentRespons.size());
+                commentRespons.add(new CommentResp(commentEntity));
             }
             // 대댓글일 경우, 부모 댓글에 본인 추가
             else {
                 int parentIndex = indexOf.get(commentEntity.getParentId());
-                commentResponses
+                commentRespons
                         .get(parentIndex)
                         .getSub_comments()
-                        .add(new CommentResponse(commentEntity));
+                        .add(new CommentResp(commentEntity));
             }
         }
 
-        return commentResponses;
+        return commentRespons;
     }
 
     @Transactional
-    public int createComment(Long memberId, Long auctionId, CommentRequest commentRequest) {
+    public int createComment(Long memberId, Long auctionId, CommentReq commentReq) {
         // 존재하지 않는 경매 식별번호일 경우,
         if (!existsAuction(auctionId))
             return 1;
@@ -77,7 +76,7 @@ public class CommentService {
             return 2;
 
         // 댓글이 빈 문자열일 경우,
-        String comment = commentRequest.getContent();
+        String comment = commentReq.getContent();
         if (comment == null || comment.isBlank())
             return 3;
         // 댓글이 255자를 넘길 경우,
@@ -85,7 +84,7 @@ public class CommentService {
             return 4;
 
         // 부모 댓글이 설정되어 있으나, 존재하지 않는 댓글일 경우,
-        Long parentId = commentRequest.getParent_id();
+        Long parentId = commentReq.getParent_id();
         if (parentId != null) {
             CommentEntity parentCommentEntity = commentRepository.findById(parentId).orElse(null);
             if (parentCommentEntity == null)
@@ -104,7 +103,7 @@ public class CommentService {
     }
 
     @Transactional
-    public int updateComment(Long memberId, Long auctionId, Long commentId, PutCommentRequest commentRequest) {
+    public int updateComment(Long memberId, Long auctionId, Long commentId, String newComment) {
         // 존재하지 않는 경매 식별번호일 경우,
         if (!existsAuction(auctionId))
             return 1;
@@ -118,10 +117,10 @@ public class CommentService {
         if (!memberId.equals(commentEntity.getMemberEntity().getId()))
             return 6;
         // 새로운 댓글이 비어있을 경우
-        if (commentRequest.getContent().isBlank())
+        if (newComment.isBlank())
             return 3;
         // 255자를 초과할 경우
-        if (commentRequest.getContent().length() > 255)
+        if (newComment.length() > 255)
             return 4;
 
         // 업데이트
@@ -130,7 +129,7 @@ public class CommentService {
                 commentEntity.getId(),  // Update를 위해 PK도 기존대로 설정
                 commentEntity.getAuctionId(),
                 commentEntity.getMemberEntity(),
-                commentRequest.getContent(),
+                newComment,
                 commentEntity.getParentId()
         );
         // 2. 저장

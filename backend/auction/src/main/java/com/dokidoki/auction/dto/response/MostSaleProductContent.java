@@ -1,5 +1,6 @@
 package com.dokidoki.auction.dto.response;
 
+import com.dokidoki.auction.dto.db.MostSaleProductInterface;
 import lombok.Getter;
 
 @Getter

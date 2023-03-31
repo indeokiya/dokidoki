@@ -60,7 +60,7 @@ public class AuctionService {
 
     // 진행중인 경매 상세정보 조회
     @Transactional(readOnly = true)
-    public DetailAuctionIngResponse readAuctionIng(Long memberId, Long auctionId) {
+    public DetailAuctionIngResp readAuctionIng(Long memberId, Long auctionId) {
         // 진행중 경매 정보
         AuctionIngEntity auctionIngEntity = auctionIngRepository.findAuctionIngEntityByIdOrderById(auctionId);
         if (auctionIngEntity == null)
@@ -70,22 +70,22 @@ public class AuctionService {
         List<String> auctionImageUrls = imageService.readAuctionImages(auctionId).getImage_urls();
 
         // 댓글 구하기
-        List<CommentResponse> commentResponses = commentService.readComment(auctionId);
+        List<CommentResp> commentRespons = commentService.readComment(auctionId);
 
         // 찜꽁 경매 여부 구하기
         InterestEntity interestEntity = interestRepository.findByMemberEntity_IdAndAuctionIngEntity_Id(memberId, auctionId);
 
-        return new DetailAuctionIngResponse(
+        return new DetailAuctionIngResp(
                 auctionIngEntity,
                 auctionImageUrls,
-                commentResponses,
+                commentRespons,
                 interestEntity != null
         );
     }
 
     // 완료된 경매 상세정보 조회
     @Transactional(readOnly = true)
-    public DetailAuctionEndResponse readAuctionEnd(Long auction_id) {
+    public DetailAuctionEndResp readAuctionEnd(Long auction_id) {
         // 완료된 경매 정보
         AuctionEndEntity auctionEndEntity = auctionEndRepository
                 .findAuctionEndEntityById(auction_id);
@@ -98,16 +98,16 @@ public class AuctionService {
         List<String> auctionImageUrls = imageService.readAuctionImages(auction_id).getImage_urls();
 
         // 댓글 구하기
-        List<CommentResponse> commentResponses = commentService.readComment(auction_id);
+        List<CommentResp> commentRespons = commentService.readComment(auction_id);
 
         // 입찰 내역 구하기
-        List<LeaderboardHistoryResponse> leaderboardHistoryResponses = leaderboardService.readLeaderboard(auction_id);
+        List<LeaderboardHistoryResp> leaderboardHistoryRespons = leaderboardService.readLeaderboard(auction_id);
 
-        return new DetailAuctionEndResponse(
+        return new DetailAuctionEndResp(
                 auctionEndEntity,
                 auctionImageUrls,
-                commentResponses,
-                leaderboardHistoryResponses
+                commentRespons,
+                leaderboardHistoryRespons
         );
     }
 

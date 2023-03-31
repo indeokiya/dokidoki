@@ -1,11 +1,8 @@
 package com.dokidoki.auction.domain.repository;
 
-import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.entity.InterestEntity;
-import com.dokidoki.auction.domain.entity.MemberEntity;
-import com.dokidoki.auction.dto.response.InterestMapping;
+import com.dokidoki.auction.dto.db.InterestMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 

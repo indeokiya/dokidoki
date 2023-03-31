@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class DetailAuctionEndResponse {
+public class DetailAuctionEndResp {
     private final String auction_title;
     private final LocalDateTime start_time;
     private final LocalDateTime end_time;
@@ -24,13 +24,13 @@ public class DetailAuctionEndResponse {
     private final String buyer_name;
 
     private final List<String> auction_image_urls;
-    private final List<CommentResponse> comments;
-    private final List<LeaderboardHistoryResponse> leaderboard;
+    private final List<CommentResp> comments;
+    private final List<LeaderboardHistoryResp> leaderboard;
 
-    public DetailAuctionEndResponse(AuctionEndEntity auctionEndEntity,
-                                    List<String> auction_image_urls,
-                                    List<CommentResponse> comments,
-                                    List<LeaderboardHistoryResponse> leaderboard) {
+    public DetailAuctionEndResp(AuctionEndEntity auctionEndEntity,
+                                List<String> auction_image_urls,
+                                List<CommentResp> comments,
+                                List<LeaderboardHistoryResp> leaderboard) {
         this.auction_title = auctionEndEntity.getTitle();
         this.start_time = auctionEndEntity.getStartTime();
         this.end_time = auctionEndEntity.getEndTime();

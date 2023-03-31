@@ -5,9 +5,8 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dokidoki.auction.domain.entity.AuctionImageEntity;
 import com.dokidoki.auction.domain.repository.AuctionImageRepository;
-import com.dokidoki.auction.dto.request.AuctionImagesRequest;
-import com.dokidoki.auction.dto.response.AuctionImageResponse;
-import com.dokidoki.auction.dto.response.ImageInterface;
+import com.dokidoki.auction.dto.response.AuctionImageResp;
+import com.dokidoki.auction.dto.db.ImageInterface;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,7 +35,7 @@ public class ImageService {
         경메 제품 사진 관련 서비스
      */
     @Transactional(readOnly = true)
-    public AuctionImageResponse readAuctionImages(Long auction_id) {
+    public AuctionImageResp readAuctionImages(Long auction_id) {
         // AuctionImage Entity 검색
         List<AuctionImageEntity> auctionImageEntities = auctionImageRepository.findAuctionImagesByAuctionId(auction_id);
 
@@ -46,7 +45,7 @@ public class ImageService {
             auctionImageUrls.add(auctionImageEntity.getImageUrl());
         });
 
-        return new AuctionImageResponse(auction_id, auctionImageUrls);
+        return new AuctionImageResp(auction_id, auctionImageUrls);
     }
     @Transactional(readOnly = true)
     public List<ImageInterface> readAuctionThumbnailImage(List<Long> auctionIdList) {
