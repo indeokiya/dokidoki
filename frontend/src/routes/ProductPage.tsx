@@ -11,6 +11,8 @@ import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
 import Header from '../components/header/Header';
 import Paper from '@mui/material/Paper';
+import MettingPlace from '../components/leaderBoard/MeetingPlace'
+import { useState } from 'react';
 
 import { Box } from '@mui/material';
 
@@ -18,8 +20,11 @@ import { useParams } from 'react-router-dom';
 
 // const { useAuctionDetail, test } = require("../hooks/auctionDetail");
 import { useAuctionDetail } from '../hooks/auctionDetail'
+import { Leaderboard } from '@mui/icons-material';
+import MeetingPlace from '../components/leaderBoard/MeetingPlace';
 
 const ProductPage = () => {
+  const [showMap,setShowMap] = useState(false);
 
   // test();
 
@@ -98,9 +103,11 @@ const ProductPage = () => {
           {/* 제품 카테고리 평균 가격 */}
           <ProductGraph />
           <ProductLeaderBoard/>
-
+          <h5>{meeting_place}</h5>
+          <MeetingPlace location={meeting_place}/>
           {/* 댓글 작성과 댓글들  */}
           <CommentsList />
+          
 
           {/* 모달창 하단에 존재하는 버튼 */}
         </Box>

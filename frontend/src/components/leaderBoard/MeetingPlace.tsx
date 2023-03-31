@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
-const TestContainer = () => {
-  let showMap = true;
-  let location = "사당로 16바길 48"
+
+// showMap={showMap} location={meeting_place}
+const TestContainer:React.FC<{location:string}> = (props) => {
+  let { location} = props;
+  // let showMap = true;
+  // let location = "사당로 16바길 48"
+  let [showMap ,setShowMap] = useState(false);
+
 
   const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
   const [markerPosition, setMarkerPosition] = useState({ lat: 37.5665, lng: 126.978 });
 
   const handleSearch = () => {
-    console.log("함수 실행됨")
+    setShowMap(!showMap);
     const geocoder = new kakao.maps.services.Geocoder();
     geocoder.addressSearch(location, (result, status) => {
       if (status === kakao.maps.services.Status.OK) {
@@ -25,11 +30,12 @@ const TestContainer = () => {
   return (
     <div>
       <button onClick={handleSearch}>지도보기</button>
-      {showMap && (
+      {showMap &&
         <Map center={mapCenter} style={{ width: '400px', height: '400px' }}>
           <MapMarker position={markerPosition} />
         </Map>
-      )}
+        }
+      
     </div>
   );
 
