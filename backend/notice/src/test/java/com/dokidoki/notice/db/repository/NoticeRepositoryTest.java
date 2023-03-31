@@ -2,6 +2,7 @@ package com.dokidoki.notice.db.repository;
 
 import com.dokidoki.notice.api.response.NoticeFailResp;
 import com.dokidoki.notice.api.response.NoticeType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,10 +37,18 @@ class NoticeRepositoryTest {
             .timeStamp(LocalDateTime.now())
             .build();
 
+    @BeforeEach
+    public void 준비() {
+        noticeRepository.deleteAll(memberId);
+    }
+
     @Test
     public void 테스트() {
 
         noticeRepository.save(memberId, resp);
+        System.out.println(noticeRepository.getAll(memberId));
+
+        noticeRepository.updateIsRead(memberId, 0, true);
         System.out.println(noticeRepository.getAll(memberId));
 
     }
