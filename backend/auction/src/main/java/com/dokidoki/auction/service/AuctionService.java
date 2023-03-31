@@ -13,6 +13,8 @@ import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,7 +50,8 @@ public class AuctionService {
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
     public List<ProductResp> getProductList(String keyword) {
-        List<ProductEntity> productEntities = productRepository.findByKeyword(keyword);
+        List<ProductEntity> productEntities = productRepository
+                .findByKeyword(keyword, PageRequest.of(0, 10));
         List<ProductResp> productList = new ArrayList<>();
 
         for (ProductEntity productEntity : productEntities) {

@@ -34,6 +34,7 @@ public class AuctionEndEntity {
 
     private String title;               // 제목
 
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;         // 제품설명
 
     @Column(name = "offer_price")
