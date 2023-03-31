@@ -12,13 +12,10 @@ import com.dokidoki.auction.kafka.dto.KafkaAuctionUpdateDTO;
 import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,13 +36,6 @@ public class AuctionService {
     private final LeaderboardService leaderboardService;
     private final InterestRepository interestRepository;
     private final KafkaAuctionProducer producer;
-
-    // 총 거래금액 조회
-    @Transactional(readOnly = true)
-    public Long getTotalPrice() {
-        Long totalPrice = auctionEndRepository.getTotalPrice();
-        return totalPrice != null ? totalPrice : 0;
-    }
 
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
