@@ -11,5 +11,4 @@ RUN npm install --legacy-peer-deps
 copy . .
 RUN npm run build
 
-EXPOSE 80
 CMD ["npx", "serve", "-s", "build"]
