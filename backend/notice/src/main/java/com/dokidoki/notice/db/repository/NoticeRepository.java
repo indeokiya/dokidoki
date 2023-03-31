@@ -11,4 +11,6 @@ public interface NoticeRepository {
     public Map<Long, NoticeResp> getAll(long memberId);
 
     public void deleteAll(long memberId);
+
+    public void updateIsRead(long memberId, long noticeId, boolean isRead);
 }

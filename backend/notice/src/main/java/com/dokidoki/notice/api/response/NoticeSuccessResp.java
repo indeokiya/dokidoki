@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NoticeSuccessResp implements NoticeResp {
     private NoticeType type;
-    private long noticeId;
     private long productId;
     private String productName;
     private long auctionId;
@@ -47,13 +46,8 @@ public class NoticeSuccessResp implements NoticeResp {
     }
 
     @Override
-    public void read() {
-        this.isRead = true;
-    }
-
-    @Override
-    public void unRead() {
-        this.isRead = false;
+    public void setIsRead(boolean bool) {
+        this.isRead = bool;
     }
 
 }
