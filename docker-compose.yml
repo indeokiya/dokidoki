@@ -10,12 +10,9 @@ services:
     environment:
       - NODE_ENV=development
       - CHOKIDAR_USEPOLLING=true
-    stdin_open: true
-    restart: always
-    tty: true
-    networks:
-      dokidoki_net:
-        ipv4_address: 172.20.153.3
+    
+    volumes:
+      - /app/build:/var/www/dist
 
 
   database_redis:
