@@ -58,8 +58,7 @@ public class AuctionService {
             ProductResp productResp = ProductResp.builder()
                     .product_id(productEntity.getId())
                     .name(productEntity.getCategoryEntity().getCategoryName() + " - " + productEntity.getName())
-                    .imgUrl(productEntity.getImgUrl())
-                    .saleCnt(productEntity.getSaleCnt())
+                    .product_name(productEntity.getName())
                     .build();
             productList.add(productResp);
         }
