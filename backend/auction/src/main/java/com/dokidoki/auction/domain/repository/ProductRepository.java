@@ -4,6 +4,7 @@ import com.dokidoki.auction.domain.entity.ProductEntity;
 import com.dokidoki.auction.dto.db.MostSaleProductInterface;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -18,4 +19,8 @@ public interface ProductRepository extends JpaRepository<ProductEntity, Long> {
 
     @Query("SELECT p.name as name, p.saleCnt as sale_cnt FROM ProductEntity p WHERE p.saleCnt > 0 ORDER BY p.saleCnt DESC")
     List<MostSaleProductInterface> findMostSaleProducts(Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE ProductEntity p SET p.saleCnt = p.saleCnt + 1 WHERE p.id = :product_id")
+    void updateSaleCount(@Param("product_id") Long productId);
 }
