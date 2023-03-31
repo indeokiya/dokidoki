@@ -14,9 +14,7 @@ const ProductDescription = ({ description }: Props) => {
   `;
   return (
     <StyledDiv>
-      <Typography variant="h1" gutterBottom>
-        {description}
-      </Typography>
+      <div dangerouslySetInnerHTML={{__html: description}}/>
     </StyledDiv>
   );
 };
