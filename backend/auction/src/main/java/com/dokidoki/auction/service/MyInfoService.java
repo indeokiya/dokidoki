@@ -4,6 +4,7 @@ import com.dokidoki.auction.domain.entity.AuctionEndEntity;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
+import com.dokidoki.auction.dto.db.ImageInterface;
 import com.dokidoki.auction.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,7 +27,7 @@ public class MyInfoService {
     판매중인 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readAllMySellingAuction(Long memberId, Pageable pageable) {
+    public PaginationResp readAllMySellingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMySellingAuction(memberId, pageable);
@@ -39,7 +40,7 @@ public class MyInfoService {
     입찰중인 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readAllMyBiddingAuction(Long memberId, Pageable pageable) {
+    public PaginationResp readAllMyBiddingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyBiddingAuction(memberId, pageable);
@@ -52,7 +53,7 @@ public class MyInfoService {
     입찰중인 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readAllMyInterestingAuction(Long memberId, Pageable pageable) {
+    public PaginationResp readAllMyInterestingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyInterestingAuction(memberId, pageable);
@@ -65,12 +66,12 @@ public class MyInfoService {
     구매내역 조회
      */
     @Transactional(readOnly = true)
-    public MyHistoryResponse readAllMyPurchases(Long memberId, Pageable pageable) {
+    public MyHistoryResp readAllMyPurchases(Long memberId, Pageable pageable) {
         Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
                 .findAllByBuyer_IdOrderByIdDesc(memberId, pageable);
 
         // Response DTO
-        return new MyHistoryResponse(
+        return new MyHistoryResp(
                 combineHistoryWithImageURL(auctionEndEntities.getContent()),
                 auctionEndEntities.isLast()
         );
@@ -80,12 +81,12 @@ public class MyInfoService {
     판매내역 조회
      */
     @Transactional(readOnly = true)
-    public MyHistoryResponse readAllMySales(Long memberId, Pageable pageable) {
+    public MyHistoryResp readAllMySales(Long memberId, Pageable pageable) {
         Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
                 .findAllBySeller_IdOrderByIdDesc(memberId, pageable);
 
         // Response DTO
-        return new MyHistoryResponse(
+        return new MyHistoryResp(
                 combineHistoryWithImageURL(auctionEndEntities.getContent()),
                 auctionEndEntities.isLast()
         );

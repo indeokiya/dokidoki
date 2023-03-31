@@ -2,16 +2,12 @@ package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
 import com.dokidoki.auction.common.JWTUtil;
-import com.dokidoki.auction.common.error.exception.ErrorCode;
-import com.dokidoki.auction.common.error.exception.InvalidValueException;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
-import com.dokidoki.auction.dto.response.DetailAuctionEndResponse;
-import com.dokidoki.auction.dto.response.DetailAuctionIngResponse;
+import com.dokidoki.auction.dto.response.DetailAuctionEndResp;
+import com.dokidoki.auction.dto.response.DetailAuctionIngResp;
 import com.dokidoki.auction.dto.response.ProductResp;
-import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
-import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import com.dokidoki.auction.service.AuctionService;
 import com.dokidoki.auction.service.InterestService;
 import io.swagger.annotations.ApiParam;
@@ -20,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -35,13 +30,6 @@ public class AuctionController {
     private final InterestService interestService;
     private final AuctionService auctionService;
     private final JWTUtil jwtUtil;
-
-    // 총 거래금액 조회
-    @GetMapping("/total-prices")
-    public ResponseEntity<BaseResponseBody> getTotalPrice() {
-        Long totalPrice = auctionService.getTotalPrice();
-        return ResponseEntity.status(200).body(BaseResponseBody.of("총 거래금액 조회 성공", totalPrice));
-    }
 
     // 카테고리 기준 제품 목록 조회
     @GetMapping("/products")
@@ -111,22 +99,22 @@ public class AuctionController {
         if (memberId == null)
             return ResponseEntity.status(400).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
-        DetailAuctionIngResponse detailAuctionIngResponse = auctionService.readAuctionIng(memberId, auction_id);
-        if (detailAuctionIngResponse == null)
+        DetailAuctionIngResp detailAuctionIngResp = auctionService.readAuctionIng(memberId, auction_id);
+        if (detailAuctionIngResp == null)
             return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("성공", detailAuctionIngResponse));
+                .body(BaseResponseBody.of("성공", detailAuctionIngResp));
     }
 
     @GetMapping("/end/{auction_id}")
     public ResponseEntity<BaseResponseBody> readAuctionEnd(@PathVariable Long auction_id) {
-        DetailAuctionEndResponse detailAuctionEndResponse = auctionService.readAuctionEnd(auction_id);
-        if (detailAuctionEndResponse == null)
+        DetailAuctionEndResp detailAuctionEndResp = auctionService.readAuctionEnd(auction_id);
+        if (detailAuctionEndResp == null)
             return ResponseEntity.status(200).body(BaseResponseBody.of("정보가 없습니다."));
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("성공", detailAuctionEndResponse));
+                .body(BaseResponseBody.of("성공", detailAuctionEndResp));
     }
 
     /*

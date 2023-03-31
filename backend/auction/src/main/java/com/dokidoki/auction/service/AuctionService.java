@@ -12,13 +12,10 @@ import com.dokidoki.auction.kafka.dto.KafkaAuctionUpdateDTO;
 import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -40,13 +37,6 @@ public class AuctionService {
     private final InterestRepository interestRepository;
     private final KafkaAuctionProducer producer;
 
-    // 총 거래금액 조회
-    @Transactional(readOnly = true)
-    public Long getTotalPrice() {
-        Long totalPrice = auctionEndRepository.getTotalPrice();
-        return totalPrice != null ? totalPrice : 0;
-    }
-
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
     public List<ProductResp> getProductList(String keyword) {
@@ -58,8 +48,7 @@ public class AuctionService {
             ProductResp productResp = ProductResp.builder()
                     .product_id(productEntity.getId())
                     .name(productEntity.getCategoryEntity().getCategoryName() + " - " + productEntity.getName())
-                    .imgUrl(productEntity.getImgUrl())
-                    .saleCnt(productEntity.getSaleCnt())
+                    .product_name(productEntity.getName())
                     .build();
             productList.add(productResp);
         }
@@ -67,11 +56,9 @@ public class AuctionService {
         return productList;
     }
 
-    // 제품 등록시 판매 빈도 증가
-
     // 진행중인 경매 상세정보 조회
     @Transactional(readOnly = true)
-    public DetailAuctionIngResponse readAuctionIng(Long memberId, Long auctionId) {
+    public DetailAuctionIngResp readAuctionIng(Long memberId, Long auctionId) {
         // 진행중 경매 정보
         AuctionIngEntity auctionIngEntity = auctionIngRepository.findAuctionIngEntityByIdOrderById(auctionId);
         if (auctionIngEntity == null)
@@ -81,22 +68,22 @@ public class AuctionService {
         List<String> auctionImageUrls = imageService.readAuctionImages(auctionId).getImage_urls();
 
         // 댓글 구하기
-        List<CommentResponse> commentResponses = commentService.readComment(auctionId);
+        List<CommentResp> commentRespons = commentService.readComment(auctionId);
 
         // 찜꽁 경매 여부 구하기
         InterestEntity interestEntity = interestRepository.findByMemberEntity_IdAndAuctionIngEntity_Id(memberId, auctionId);
 
-        return new DetailAuctionIngResponse(
+        return new DetailAuctionIngResp(
                 auctionIngEntity,
                 auctionImageUrls,
-                commentResponses,
+                commentRespons,
                 interestEntity != null
         );
     }
 
     // 완료된 경매 상세정보 조회
     @Transactional(readOnly = true)
-    public DetailAuctionEndResponse readAuctionEnd(Long auction_id) {
+    public DetailAuctionEndResp readAuctionEnd(Long auction_id) {
         // 완료된 경매 정보
         AuctionEndEntity auctionEndEntity = auctionEndRepository
                 .findAuctionEndEntityById(auction_id);
@@ -109,16 +96,16 @@ public class AuctionService {
         List<String> auctionImageUrls = imageService.readAuctionImages(auction_id).getImage_urls();
 
         // 댓글 구하기
-        List<CommentResponse> commentResponses = commentService.readComment(auction_id);
+        List<CommentResp> commentRespons = commentService.readComment(auction_id);
 
         // 입찰 내역 구하기
-        List<LeaderboardHistoryResponse> leaderboardHistoryResponses = leaderboardService.readLeaderboard(auction_id);
+        List<LeaderboardHistoryResp> leaderboardHistoryRespons = leaderboardService.readLeaderboard(auction_id);
 
-        return new DetailAuctionEndResponse(
+        return new DetailAuctionEndResp(
                 auctionEndEntity,
                 auctionImageUrls,
-                commentResponses,
-                leaderboardHistoryResponses
+                commentRespons,
+                leaderboardHistoryRespons
         );
     }
 
@@ -261,6 +248,10 @@ public class AuctionService {
         // 경매중 데이터 삭제
         auctionIngRepository.delete(auctionIngEntity);
         log.info("auctionEndEvent >> delete auction-ing entity");
+
+        // 판매 빈도 증가
+        productRepository.updateSaleCount(auctionEndEntity.getProduct().getId());
+        log.info("auctionEndEvent >> increase product's sale count");
     }
 
     /**

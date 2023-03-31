@@ -1,4 +1,4 @@
-package com.dokidoki.auction.dto.response;
+package com.dokidoki.auction.dto.db;
 
 public interface ImageInterface {
     Long getAuction_id();

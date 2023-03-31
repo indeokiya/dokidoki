@@ -99,4 +99,8 @@ public class NoticeService {
     public Map<Long, NoticeResp> getAllNotice(long memberId) {
         return noticeRepository.getAll(memberId);
     }
+
+    public void setIsRead(long memberId, long noticeId, boolean isRead) {
+        noticeRepository.updateIsRead(memberId, noticeId, isRead);
+    }
 }

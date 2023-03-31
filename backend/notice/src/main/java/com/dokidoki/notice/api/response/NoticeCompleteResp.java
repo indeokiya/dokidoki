@@ -45,12 +45,7 @@ public class NoticeCompleteResp implements NoticeResp {
     }
 
     @Override
-    public void read() {
-        this.isRead = true;
-    }
-
-    @Override
-    public void unRead() {
-        this.isRead = false;
+    public void setIsRead(boolean bool) {
+        this.isRead = bool;
     }
 }

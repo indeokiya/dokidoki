@@ -16,7 +16,5 @@ public class ProductResp {
 
     private String name;  // '카테고리명 - 제품명'
 
-    private String imgUrl;      // 대표 이미지 url
-
-    private Integer saleCnt;     // 판매빈도
+    private String product_name;  // 제품명
 }

@@ -2,7 +2,7 @@ package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
 import com.dokidoki.auction.common.JWTUtil;
-import com.dokidoki.auction.dto.response.PaginationResponse;
+import com.dokidoki.auction.dto.response.PaginationResp;
 import com.dokidoki.auction.service.AuctionListService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +30,12 @@ public class AuctionListController {
     public ResponseEntity<BaseResponseBody> readAuctionEndList(
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         // 데이터 조회
-        PaginationResponse paginationResponse = auctionListService
+        PaginationResp paginationResp = auctionListService
                 .readAuctionEndList(page, size);
 
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of("종료된 경매 목록 조회 성공", paginationResponse));
+                .body(BaseResponseBody.of("종료된 경매 목록 조회 성공", paginationResp));
     }
 
     /*
@@ -50,23 +50,23 @@ public class AuctionListController {
         Long memberId = jwtUtil.getUserId(request);
 
         // 데이터 조회
-        PaginationResponse paginationResponse;
+        PaginationResp paginationResp;
         String msg = "";
 
         // 검색어, 카테고리 모두 비어있다면 전체 검색
         if (keyword.equals("") && category_id == 0) {
-            paginationResponse = auctionListService
+            paginationResp = auctionListService
                     .readAuctionIngList(memberId, page, size);
             msg = "진행중인 경매 목록 조회 성공";
         } else {
-            paginationResponse = auctionListService
+            paginationResp = auctionListService
                     .searchAuctionIngList(memberId, keyword, category_id, PageRequest.of(page, size));
             msg = "진행중인 경매 목록 검색 성공";
         }
 
         return ResponseEntity
                 .status(200)
-                .body(BaseResponseBody.of(msg, paginationResponse));
+                .body(BaseResponseBody.of(msg, paginationResp));
     }
 
     /*
@@ -80,11 +80,11 @@ public class AuctionListController {
             Long memberId = jwtUtil.getUserId(request);
 
             // 데이터 조회
-            PaginationResponse paginationResponse = auctionListService
+            PaginationResp paginationResp = auctionListService
                     .readSimpleAuctionDeadline(memberId, PageRequest.of(page, size));
 
             return ResponseEntity
                     .status(200)
-                    .body(BaseResponseBody.of("마감임박 경매 목록 조회 성공", paginationResponse));
+                    .body(BaseResponseBody.of("마감임박 경매 목록 조회 성공", paginationResp));
     }
 }

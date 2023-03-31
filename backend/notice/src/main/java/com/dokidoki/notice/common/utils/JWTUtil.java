@@ -49,7 +49,7 @@ public class JWTUtil {
         return parseClaims(accessToken).get("user_id", Long.class);
     }
 
-    public static String getAccessToken(Long userId){
+    public static String getAccessToken(Long userId) {
         Date now = new Date();
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-public class PaginationResponse {
+public class PaginationResp {
     private final Object contents;
     private final Boolean is_last;
 }
