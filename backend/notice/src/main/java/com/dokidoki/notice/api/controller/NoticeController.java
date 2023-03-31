@@ -24,6 +24,6 @@ public class NoticeController {
     @GetMapping("/")
     public ResponseEntity<?> getNotices(HttpServletRequest request) {
         long memberId = JWTUtil.getUserId(request);
-        return ResponseEntity.ok(noticeService.getNoticeList(memberId));
+        return ResponseEntity.ok(noticeService.getAllNotice(memberId));
     }
 }
