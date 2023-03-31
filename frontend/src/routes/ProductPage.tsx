@@ -138,28 +138,31 @@ const ProductPage = () => {
             </Grid>
           </Grid>
           <Divider />
-          <Grid container direction="column" justifyContent="flex-start" alignItems="center">
+          <Grid container direction="column" justifyContent="center" alignItems="center">
+
+             {/* 지도 */}
+            <Grid item sx={{width:"100%"}}>
+              <MeetingPlace location={meeting_place} />
+            </Grid>
+
+
               {/* 제품 카테고리 평균 가격 */}
-            <Grid item>
+            <Grid item sx={{width:"100%"}}>
               <ProductGraph />
               <ProductLeaderBoard />
             </Grid>
 
             {/* 제품 설명 */}
-            <Grid item>
+            <Grid item sx={{width:"100%"}}>
               <ProductDescription description={description} />
             </Grid>
 
-            {/* 지도 */}
-            <Grid item>
-              <MeetingPlace location={meeting_place} />
-            </Grid>
-
+           
             {/* 댓글 */}
-            <Grid item>
+            <Grid item sx={{width:"100%"}}>
               <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
             </Grid>
-            <Grid item></Grid>
+            
           </Grid>
         </Box>
       </BackgroundDiv>
@@ -176,4 +179,5 @@ const StyledDiv = styled.div`
 
 const BackgroundDiv = styled.div`
   background-color: #dddddd;
+  padding-top:30px;
 `;

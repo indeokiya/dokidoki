@@ -18,10 +18,6 @@ import { userInfoState } from 'src/store/userInfoState';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router';
 
-// public class AuctionBidReq {
-//   private int currentHighestPrice;
-//   private int currentPriceSize;
-// }
 
 function numberFormat(price: number | null) {
   return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
@@ -29,6 +25,8 @@ function numberFormat(price: number | null) {
 
 //초를 시분 초로 변경해줌
 function formatSeconds(seconds: number): string {
+
+  if (seconds <= 0) return "마감"
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const remainingSeconds = seconds % 60;
@@ -68,18 +66,15 @@ const ProductInfo = ({
   const userInfo = useRecoilValue(userInfoState);
   const [bookmark, setBookmark] = useState(is_my_interest);
 
-  console.log('highest_price >> ', highest_price);
-  console.log('price_size >> ', price_size);
-  console.log('offer_price >> ', offer_price);
 
-  function TimeFormat(start: string, end: string) {
+  function TimeFormat( end: string) {
     // 두 시간 문자열
-    const timeStr1 = end;
-    const timeStr2 = start;
+    
+
 
     // Date 객체로 변환
-    const time1 = new Date(timeStr1);
-    const time2 = new Date(timeStr2);
+    const time1 = new Date(end);
+    const time2 = new Date();
 
     // 두 Date 객체의 차이 계산 (밀리초 단위)
     const timeDiff = time1.getTime() - time2.getTime();
@@ -89,7 +84,7 @@ const ProductInfo = ({
 
     return seconds;
   }
-  const [second, setSecond] = useState(TimeFormat(start_time, end_time));
+  const [second, setSecond] = useState(TimeFormat(end_time));
 
   useEffect(() => {
     setTimeout(() => {
@@ -203,12 +198,12 @@ const ProductInfo = ({
         </Grid>
       </Grid>
       <Stack spacing={2} direction="row" mt={3}>
-        <Button variant="contained" sx={{ width: '50%', height: '50px' }} onClick={bid}>
+        <Button variant="contained" sx={{ width: '50%', height: '40px' }} onClick={bid}>
           <StyledSpan>입찰하기</StyledSpan>
         </Button>
         <Button
           variant="outlined"
-          sx={{ width: '50%', height: '50px' }}
+          sx={{ width: '50%', height: '40px' }}
           onClick={() => {
             changeBookmark();
           }}
@@ -229,7 +224,8 @@ const StyledH1 = styled.h1`
 
 const StyledSpan = styled.span`
   margin-right: 10px;
-  font-size: 20px;
+  font-size: 15px;
+  
 `;
 
 const StyeldDiv = styled.div`

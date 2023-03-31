@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Map, MapMarker, CustomOverlayMap } from 'react-kakao-maps-sdk';
 import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
+import styled from 'styled-components';
 
 // showMap={showMap} location={meeting_place}
 const MeetingPlace: React.FC<{ location: string }> = (props) => {
@@ -27,23 +29,33 @@ const MeetingPlace: React.FC<{ location: string }> = (props) => {
   };
 
   return (
-    <div>
-      <button onClick={handleSearch}>지도보기</button>
+    <StyledDiv>
+      <Button
+        variant="outlined"
+        onClick={handleSearch}
+        sx={{ width: '100%', display: 'block', margin: '0 auto' }}
+      >
+        지도 보기
+      </Button>
       {showMap && (
-        <Map center={mapCenter} style={{ width: '400px', height: '400px' }}
-        draggable={false}
-        zoomable={false}>
+        <Map
+          center={mapCenter}
+          style={{ width: '100%', height: '400px', marginBottom: '3rem' }}
+          draggable={true}
+          zoomable={false}
+        >
           <MapMarker position={markerPosition} />
           <CustomOverlayMap position={markerPosition}>
-            <div style={{  backgroundColor: '#fff', color: '#000' }}>
-              <Badge color="primary" badgeContent={location}/>
-                
+            <div style={{ backgroundColor: '#fff', color: '#000' }}>
+              <Badge color="primary" badgeContent={location} />
             </div>
           </CustomOverlayMap>
         </Map>
       )}
-    </div>
+    </StyledDiv>
   );
 };
 
 export default MeetingPlace;
+
+const StyledDiv = styled.div``;
