@@ -14,15 +14,14 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DisplayName("NoticeService 클래스")
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 class NoticeServiceTest {
 
     @Autowired NoticeService noticeService;
-    @Autowired NoticeRepository noticeRepository;
+    @Autowired
+    NoticeRepository noticeRepository;
     @Autowired AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
     @Autowired AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
 
