@@ -40,7 +40,6 @@ spring:
           - RewritePath=/api/bids/(?<segment>.*), /$\{segment}
 
       # bid auth routing
-      routes:
       - id: bid-server
         uri: http://bid-server
         predicates:
