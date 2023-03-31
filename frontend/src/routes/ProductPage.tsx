@@ -14,6 +14,7 @@ import Paper from '@mui/material/Paper';
 import SockJS from 'sockjs-client'
 import { Client, Message, StompHeaders } from '@stomp/stompjs'
 
+
 import { Box } from '@mui/material';
 
 import { useParams } from 'react-router-dom';
@@ -117,6 +118,8 @@ const ProductPage = () => {
     is_my_interest,
   } = data
 
+  console.log(description);
+
   return (
     <>
       <BackgroundDiv>
@@ -152,11 +155,9 @@ const ProductPage = () => {
           </Grid>
           <Divider />
 
-          <StyledDiv>
-            <ProductDescription 
-              description={description}  
-            />
-          </StyledDiv>
+          
+          <ProductDescription description={description}/>
+          
 
           {/* 제품 카테고리 평균 가격 */}
           <ProductGraph />
