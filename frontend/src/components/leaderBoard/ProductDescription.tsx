@@ -5,18 +5,31 @@ type Props = {
   description: string,
 }
 
-// const marked = require('marked');
+
 
 const ProductDescription = ({ description }: Props) => {
-  const StyledDiv = styled.div`
-    padding: 10px;
-    box-sizing: border-box;
-  `;
+  
   return (
+    <>
     <StyledDiv>
+      <Typography variant="h5" gutterBottom color="primary">
+        제품 상세 설명
+        <hr/>
+      </Typography>
       <div dangerouslySetInnerHTML={{__html: description}}/>
     </StyledDiv>
+    </>
   );
 };
 
 export default ProductDescription;
+
+const StyledDiv = styled.div`
+    width:80%;
+    padding:10%;
+    margin:3rem auto;
+    box-sizing: border-box;
+    border:1px solid #dddddd;
+    border-radius:10px;
+    background-color:#dfdfdfd;
+  `;
