@@ -1,3 +1,6 @@
+server:
+  port: 80
+
 jwt:
   secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
 
