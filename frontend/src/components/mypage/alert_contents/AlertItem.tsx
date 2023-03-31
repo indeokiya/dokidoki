@@ -22,6 +22,51 @@ const PreFixSpan = styled.span`
   //   color: #7fff00;
 `;
 
+
+
+type SuccessAlert = {
+  type: string;
+  productId: number;
+  productName: string;
+  auctionId: number;
+  finalPrice: number;
+  timeStamp: string;
+  read: boolean;
+}
+
+type FailAlert = {
+  type: string;
+  productId: number;
+  productName: string;
+  auctionId: number;
+  finalPrice: number;
+  myFinalPrice: number;
+  timeStamp: string;
+  read: boolean;
+
+}
+
+type CompleteAlert = {
+  type: string;
+  productId: number;
+  productName: string;
+  auctionId: number;
+  finalPrice: number;
+  timeStamp: string;
+  read: boolean;
+
+}
+
+type OutBidAlert = {
+  type: string;
+  productId: number;
+  productName: string;
+  auctionId: number;
+  currentBidPrice: number;
+  timeStamp: string;
+  read: boolean;
+}
+
 type AlertData = {
   type: string; // "PURCHASE_SUCCESS", "PURCHASE_FAIL", "SALE_COMPLETE", "OUTBID"
   productId: number;
@@ -32,6 +77,7 @@ type AlertData = {
   currentBidPrice : number;
   timeStamp : string;
   price: number;
+  read: boolean;
   // type: string;
   // price: number;
   // productId: number;
@@ -43,7 +89,7 @@ type AlertData = {
 const AlertItem: React.FC<{
   data: AlertData;
   key: number;
-  setAlertList: (data: any) => void;
+  setAlertMap: (data: any) => void;
   setAlertCnt: (data: any) => void;
 }> = (props) => {
   const navigate = useNavigate();
@@ -53,13 +99,14 @@ const AlertItem: React.FC<{
   //    props.setAlertList((pre:AlertData[]) => pre.filter((data:AlertData) => (data.id !== id)))
   //   }
 
-  function ComponentHidden(id: number) {
-    props.setAlertList((pre: AlertData[]) =>
-      pre.map((data: AlertData) => {
-        if (data.id === id) {
-          return { ...data, isVisible: false };
+  function ComponentHidden(key: number) {
+    props.setAlertMap((pre: any) =>
+      Object.keys(pre).map(
+        (__key: any) => {
+        if (key === __key) {
+          return { ...pre[key], read: true };
         } else {
-          return data;
+          return pre[key];
         }
       }),
     );
@@ -92,7 +139,7 @@ const AlertItem: React.FC<{
                   navigate(`/auction/product/${props.data.productId}`);
                 }}
               >
-                [{props.data.title}]
+                [{props.data.type}]
               </StyledBlueSpan>
             </Tooltip>
             <span>을 </span>
@@ -102,10 +149,10 @@ const AlertItem: React.FC<{
           <Grid item>
             <Tooltip title="Delete">
               <IconButton
-                onClick={() => {
-                  ComponentHidden(props.data.id); //사라지는 애니메이션 back이랑 연동하는거 아님
-                  props.setAlertCnt((data: any) => data - 1); //카운트 줄어듬
-                }}
+                // onClick={() => {
+                //   ComponentHidden(props.key); //사라지는 애니메이션 back이랑 연동하는거 아님
+                //   props.setAlertCnt((data: any) => data - 1); //카운트 줄어듬
+                // }}
               >
                 <DeleteIcon />
               </IconButton>
