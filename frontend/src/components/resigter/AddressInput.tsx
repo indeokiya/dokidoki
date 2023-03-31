@@ -6,18 +6,19 @@ const AddressInput: React.FC<{
   dataRef: any;
 }> = (props) => {
   const handleComplete = (data: any) => {
+    console.log("addressData >>> ",data)
     let fullAddress = data.address;
     let extraAddress = '';
 
-    if (data.addressType === 'R') {
-      if (data.bname !== '') {
-        extraAddress += data.bname;
-      }
-      if (data.buildingName !== '') {
-        extraAddress += extraAddress !== '' ? `,${data.buildingName}` : data.buildingName;
-      }
-      fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
-    }
+    // if (data.addressType === 'R') {
+    //   if (data.bname !== '') {
+    //     extraAddress += data.bname;
+    //   }
+    //   if (data.buildingName !== '') {
+    //     extraAddress += extraAddress !== '' ? `,${data.buildingName}` : data.buildingName;
+    //   }
+    //   fullAddress += extraAddress !== '' ? ` (${extraAddress})` : '';
+    // }
     
     props.dataRef.current.meeting_place = fullAddress;
     // console.log("fullAddress >> ", props.dataRef.current.meetingPlace);

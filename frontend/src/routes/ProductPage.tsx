@@ -16,12 +16,13 @@ import { Client, Message, StompHeaders } from '@stomp/stompjs'
 
 
 import { Box } from '@mui/material';
-
+import MeetingPlace from '../components/leaderBoard/MeetingPlace'
 import { useParams } from 'react-router-dom';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // const { useAuctionDetail, test } = require("../hooks/auctionDetail");
 import { useAuctionDetail } from '../hooks/auctionDetail'
+import { Leaderboard } from '@mui/icons-material';
 import { CommentType } from 'src/datatype/datatype';
 
 const ProductPage = () => {
@@ -162,7 +163,8 @@ const ProductPage = () => {
           {/* 제품 카테고리 평균 가격 */}
           <ProductGraph />
           <ProductLeaderBoard/>
-
+          <h5>{meeting_place}</h5>
+          <MeetingPlace location={meeting_place}/>
           {/* 댓글 작성과 댓글들  */}
           <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
 
