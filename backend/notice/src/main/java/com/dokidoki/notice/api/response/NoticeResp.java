@@ -4,4 +4,8 @@ public interface NoticeResp {
 
     NoticeType typeIs();
 
+    void read();
+
+    void unRead();
+
 }

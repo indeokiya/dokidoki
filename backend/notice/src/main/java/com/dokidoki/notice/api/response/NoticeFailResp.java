@@ -17,11 +17,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class NoticeFailResp implements NoticeResp {
     private NoticeType type;
+    private long noticeId;
     private long productId;
     private String productName;
     private long auctionId;
     private int finalPrice;
     private int myFinalPrice;
+    private boolean isRead;
+
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
@@ -44,4 +47,15 @@ public class NoticeFailResp implements NoticeResp {
     public NoticeType typeIs() {
         return type;
     }
+
+    @Override
+    public void read() {
+        this.isRead = true;
+    }
+
+    @Override
+    public void unRead() {
+        this.isRead = false;
+    }
+
 }
