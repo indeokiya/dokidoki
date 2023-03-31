@@ -1,4 +1,4 @@
-package com.dokidoki.auction.dto.response;
+package com.dokidoki.auction.dto.db;
 
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 

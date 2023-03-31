@@ -5,6 +5,9 @@ import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.InterestRepository;
+import com.dokidoki.auction.dto.db.AuctionIngMapping;
+import com.dokidoki.auction.dto.db.ImageInterface;
+import com.dokidoki.auction.dto.db.InterestMapping;
 import com.dokidoki.auction.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +36,7 @@ public class AuctionListService {
     종료된 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readAuctionEndList(Integer page, Integer size) {
+    public PaginationResp readAuctionEndList(Integer page, Integer size) {
         // 데이터 조회
         Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
                 .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
@@ -79,7 +82,7 @@ public class AuctionListService {
         }
 
         // Response DTO 생성 및 반환
-        return PaginationResponse.of(
+        return PaginationResp.of(
                 simpleAuctionEndInfos,
                 auctionEndEntities.isLast()
         );
@@ -89,7 +92,7 @@ public class AuctionListService {
     진행중인 전체 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readAuctionIngList(Long memberId, Integer page, Integer size) {
+    public PaginationResp readAuctionIngList(Long memberId, Integer page, Integer size) {
         // 데이터 조회
         Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAll(PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id")));
@@ -100,7 +103,7 @@ public class AuctionListService {
     진행중인 마감임박 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResponse readSimpleAuctionDeadline(Long memberId, Pageable pageable) {
+    public PaginationResp readSimpleAuctionDeadline(Long memberId, Pageable pageable) {
         // 데이터 조회
         Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllSimpleDeadlineList(pageable);
@@ -111,7 +114,7 @@ public class AuctionListService {
     진행중인 경매 목록 검색
      */
     @Transactional(readOnly = true)
-    public PaginationResponse searchAuctionIngList(
+    public PaginationResp searchAuctionIngList(
             Long memberId, String keyword, Long categoryId, Pageable pageable) {
         // 불필요 문자 제거
         keyword = keyword.strip();
@@ -131,7 +134,7 @@ public class AuctionListService {
     /*
     DB에서 조회한 진행중인 경매 목록 데이터에 제품 이미지를 추가하며 DTO로 변환
      */
-    public PaginationResponse convertToDTOWithImages(
+    public PaginationResp convertToDTOWithImages(
             Long memberId,
             Page<AuctionIngEntity> auctionIngEntities) {
         // 관심있는 경매 ID 가져오기
@@ -183,7 +186,7 @@ public class AuctionListService {
         }
 
         // Response DTO 생성 및 반환
-        return PaginationResponse.of(
+        return PaginationResp.of(
                 simpleAuctionIngInfos,
                 auctionIngEntities.isLast()
         );

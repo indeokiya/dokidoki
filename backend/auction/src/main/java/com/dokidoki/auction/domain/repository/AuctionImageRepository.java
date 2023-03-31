@@ -1,7 +1,7 @@
 package com.dokidoki.auction.domain.repository;
 
 import com.dokidoki.auction.domain.entity.AuctionImageEntity;
-import com.dokidoki.auction.dto.response.ImageInterface;
+import com.dokidoki.auction.dto.db.ImageInterface;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

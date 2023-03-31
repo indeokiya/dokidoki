@@ -1,7 +1,7 @@
 package com.dokidoki.auction.domain.repository;
 
 import com.dokidoki.auction.domain.entity.ProductEntity;
-import com.dokidoki.auction.dto.response.MostSaleProductInterface;
+import com.dokidoki.auction.dto.db.MostSaleProductInterface;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

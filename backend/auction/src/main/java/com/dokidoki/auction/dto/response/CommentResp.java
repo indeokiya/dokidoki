@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class CommentResponse {
+public class CommentResp {
     private final Long id;
     private final Long member_id;
     private final String member_profile;
@@ -20,9 +20,9 @@ public class CommentResponse {
     private final String content;
     private final LocalDateTime written_time;
     private final LocalDateTime modified_time;
-    private final List<CommentResponse> sub_comments;
+    private final List<CommentResp> sub_comments;
 
-    public CommentResponse(CommentEntity commentEntity) {
+    public CommentResp(CommentEntity commentEntity) {
         this.id = commentEntity.getId();
         this.member_id = commentEntity.getMemberEntity().getId();
         this.member_profile = commentEntity.getMemberEntity().getPicture();

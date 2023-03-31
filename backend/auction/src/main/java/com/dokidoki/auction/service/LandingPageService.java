@@ -3,7 +3,7 @@ package com.dokidoki.auction.service;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.ProductRepository;
 import com.dokidoki.auction.dto.response.MostSaleProductContent;
-import com.dokidoki.auction.dto.response.MostSaleProductInterface;
+import com.dokidoki.auction.dto.db.MostSaleProductInterface;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

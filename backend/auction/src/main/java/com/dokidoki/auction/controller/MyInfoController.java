@@ -2,8 +2,8 @@ package com.dokidoki.auction.controller;
 
 import com.dokidoki.auction.common.BaseResponseBody;
 import com.dokidoki.auction.common.JWTUtil;
-import com.dokidoki.auction.dto.response.MyHistoryResponse;
-import com.dokidoki.auction.dto.response.PaginationResponse;
+import com.dokidoki.auction.dto.response.MyHistoryResp;
+import com.dokidoki.auction.dto.response.PaginationResp;
 import com.dokidoki.auction.service.MyInfoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -35,9 +35,9 @@ public class MyInfoController {
             return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         // 데이터 조회 및 반환
-        PaginationResponse paginationResponse = myInfoService
+        PaginationResp paginationResp = myInfoService
                 .readAllMySellingAuction(memberId, PageRequest.of(page, size));
-        return ResponseEntity.status(200).body(BaseResponseBody.of("판매중인 경매 목록 조회 성공", paginationResponse));
+        return ResponseEntity.status(200).body(BaseResponseBody.of("판매중인 경매 목록 조회 성공", paginationResp));
     }
 
     /*
@@ -53,9 +53,9 @@ public class MyInfoController {
             return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         // 데이터 조회 및 반환
-        PaginationResponse paginationResponse = myInfoService
+        PaginationResp paginationResp = myInfoService
                 .readAllMyBiddingAuction(memberId, PageRequest.of(page, size));
-        return ResponseEntity.status(200).body(BaseResponseBody.of("입찰중인 경매 목록 조회 성공", paginationResponse));
+        return ResponseEntity.status(200).body(BaseResponseBody.of("입찰중인 경매 목록 조회 성공", paginationResp));
     }
 
     /*
@@ -71,9 +71,9 @@ public class MyInfoController {
             return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         // 데이터 조회 및 반환
-        PaginationResponse paginationResponse = myInfoService
+        PaginationResp paginationResp = myInfoService
                 .readAllMyInterestingAuction(memberId, PageRequest.of(page, size));
-        return ResponseEntity.status(200).body(BaseResponseBody.of("관심있는 경매 목록 조회 성공", paginationResponse));
+        return ResponseEntity.status(200).body(BaseResponseBody.of("관심있는 경매 목록 조회 성공", paginationResp));
     }
 
     /*
@@ -89,8 +89,8 @@ public class MyInfoController {
             return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         // 데이터 조회
-        MyHistoryResponse myHistoryResponse = myInfoService.readAllMyPurchases(memberId, PageRequest.of(page, size));
-        return ResponseEntity.status(200).body(BaseResponseBody.of("구매내역 조회 성공", myHistoryResponse));
+        MyHistoryResp myHistoryResp = myInfoService.readAllMyPurchases(memberId, PageRequest.of(page, size));
+        return ResponseEntity.status(200).body(BaseResponseBody.of("구매내역 조회 성공", myHistoryResp));
     }
 
     /*
@@ -106,8 +106,8 @@ public class MyInfoController {
             return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
         // 데이터 조회
-        MyHistoryResponse myHistoryResponse = myInfoService.readAllMySales(memberId, PageRequest.of(page, size));
-        return ResponseEntity.status(200).body(BaseResponseBody.of("판매내역 조회 성공", myHistoryResponse));
+        MyHistoryResp myHistoryResp = myInfoService.readAllMySales(memberId, PageRequest.of(page, size));
+        return ResponseEntity.status(200).body(BaseResponseBody.of("판매내역 조회 성공", myHistoryResp));
     }
 
     /*
