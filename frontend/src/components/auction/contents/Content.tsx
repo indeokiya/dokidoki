@@ -11,6 +11,7 @@ import Chip from '@mui/material/Chip';
 import { Post } from '../../../datatype/datatype';
 import { useNavigate } from 'react-router-dom';
 import Snackbar, { SnackbarOrigin } from '@mui/material/Snackbar';
+import blankImg from '../../../assets/image/blank_img.png';
 
 function timeFormat(myNum: number) {
   if (myNum <= 0) return '마감';
@@ -32,7 +33,7 @@ function timeFormat(myNum: number) {
 }
 
 function getPercentage(curr: number, offer: number) {
-  return Math.round(((curr - offer) / offer )*100);
+  return Math.round(((curr - offer) / offer) * 100);
 }
 
 // 1000 => '1,000 원' 으로 바꿔주는 함수
@@ -40,11 +41,8 @@ function numberFormat(price: number | null) {
   return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
 }
 
-
-
 //컴포넌트 시작 ================== ================== ================== ================== ==================
 const Content: React.FC<{ auctionData: Post }> = (props) => {
-
   const [openSnack, setOpenSnack] = useState(false);
   const snackHandleClick = () => {
     setOpenSnack(true);
@@ -53,12 +51,11 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
     setOpenSnack(false);
   };
 
-  
   const navigate = useNavigate();
   //부모컴포넌트에서 받아온 게시글 정보
   const { auctionData } = props;
 
-  const auction_end:boolean = (auctionData.final_price !== undefined)
+  const auction_end: boolean = auctionData.final_price !== undefined;
 
   //마우스를 올리면 그림자형성됨
   const [isHovered, setIsHovered] = useState(false);
@@ -77,6 +74,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
     setInterval(() => {
       setAuctionTime((pretime) => pretime - 1); //1초씩 시간 줄이기
     }, 1000 * 1);
+    return () => clearInterval(auctionTime);
   }, []);
 
   return (
@@ -90,9 +88,9 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         boxShadow: isHovered ? '' : 'none',
       }}
       onClick={() => {
-        if(!auction_end){
+        if (!auction_end) {
           navigate('/auction/product/' + auctionData.auction_id);
-        }else{
+        } else {
           snackHandleClick();
         }
       }}
@@ -106,13 +104,17 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
             position: 'absolute',
             fontSize: '12px',
             margin: '5px',
-            opacity: auction_end? (0.5):(1),
+            opacity: auction_end ? 0.5 : 1,
           }}
         />
       )}
 
       {auction_end && (
-        <SoldOut>sold<br/>out</SoldOut>
+        <SoldOut>
+          sold
+          <br />
+          out
+        </SoldOut>
       )}
 
       {/* 북마크 표시,  북마크 안했다면 지워야함  */}
@@ -128,7 +130,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         component="img"
         alt="green iguana"
         height="200"
-        image={auctionData.auction_image_url}
+        image={!auctionData.auction_image_url ? blankImg : auctionData.auction_image_url}
       />
 
       <CardContent sx={{ padding: 3, boxSizing: 'border-box' }}>
@@ -140,7 +142,9 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         <Box my={1}>
           <StyledFlex>
             <StyledSpan style={{ color: '#3A77EE' }}>남은 시간 : </StyledSpan>
-            <StyledSpan style={{ color: '#3A77EE' }}>{auction_end ? "마감":timeFormat(auctionTime) }</StyledSpan>
+            <StyledSpan style={{ color: '#3A77EE' }}>
+              {auction_end ? '마감' : timeFormat(auctionTime)}
+            </StyledSpan>
           </StyledFlex>
           <StyledFlex>
             <StyledSpan>시작 가격 : </StyledSpan>
@@ -154,13 +158,24 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         <StyledFlex>
           <StyledSpan> </StyledSpan>
           <StyledSpan style={{ color: 'red', fontSize: '12px' }}>
-            ( + {getPercentage( auctionData.final_price !== undefined ? auctionData.final_price :auctionData.cur_price , auctionData.offer_price)}%)
+            ( +{' '}
+            {getPercentage(
+              auctionData.final_price !== undefined
+                ? auctionData.final_price
+                : auctionData.cur_price,
+              auctionData.offer_price,
+            )}
+            %)
           </StyledSpan>
         </StyledFlex>
         <StyledFlex>
           <StyledSpan style={{ fontWeight: 'bold' }}>현재 가격 : </StyledSpan>
           <StyledSpan style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-            {numberFormat( auctionData.final_price !== undefined ? auctionData.final_price :auctionData.cur_price  )}
+            {numberFormat(
+              auctionData.final_price !== undefined
+                ? auctionData.final_price
+                : auctionData.cur_price,
+            )}
           </StyledSpan>
         </StyledFlex>
       </CardContent>
@@ -168,14 +183,12 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
       <CardActions>{/* <Button size="small">Share</Button> */}</CardActions>
 
       <Snackbar
-        anchorOrigin={{ vertical: 'bottom',
-        horizontal: 'left', }}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         open={openSnack}
         onClose={snackHandleClose}
         message="판매 완료된 제품입니다."
-        color='red'
+        color="red"
       ></Snackbar>
-      
     </Card>
   );
 };

@@ -3,38 +3,37 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
-import imgSrc from '../../../assets/image/phone1.png';
+import imgSrc from '../../../assets/image/blank_img.png';
 import { Post } from 'src/datatype/datatype';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from 'src/store/userInfoState';
 import Chip from '@mui/material/Chip';
-import { color } from '@mui/system';
+
 
 const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
   const loginUser = useRecoilValue(userInfoState);
   const { auctionData } = props;
 
-  //종료시간 판매시간 
-  const dateFormat = ()=>{
-    return auctionData.year+"."+auctionData.month+"."+auctionData.day;
-  }
- 
+  //종료시간 판매시간
+  const dateFormat = () => {
+    return auctionData.year + '.' + auctionData.month + '.' + auctionData.day;
+  };
+
   //증가한 가격
-  const translatePrice = ()=>{
+  const translatePrice = () => {
     return auctionData.final_price - auctionData.offer_price;
-  }
+  };
 
   function numberFormat(price: number | null) {
     return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
   }
-  
 
   return (
     <React.Fragment>
-      <Paper elevation={3} sx={{minWidth:"660px"}}>
-        <Grid container mx={1} >
+      <Paper elevation={3} sx={{ minWidth: '660px' }}>
+        <Grid container mx={1}>
           <Grid item xs={2} maxHeight={'150px'} alignItems={'center'}>
-            <StyledImg src={imgSrc}></StyledImg>
+            <StyledImg src={!auctionData.auction_image_url?imgSrc : auctionData.auction_image_url}></StyledImg>
           </Grid>
           <Grid item xs={4} py={3}>
             <Chip label={auctionData.category_name} variant="outlined" />
@@ -55,9 +54,9 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
             )}
           </Grid>
           <Grid item xs />
-          <Grid item xs={5} pt={6} pr={5} alignContent={"end"}>
-            <Typography variant="subtitle2" sx={{ textAlign: 'end' ,color:"#ff0000"}}>
-               (+ {translatePrice()})
+          <Grid item xs={5} pt={6} pr={5} alignContent={'end'}>
+            <Typography variant="subtitle2" sx={{ textAlign: 'end', color: '#ff0000' }}>
+              (+ {translatePrice()})
             </Typography>
             <Typography variant="h4" sx={{ textAlign: 'end' }}>
               {numberFormat(auctionData.final_price)}
@@ -71,9 +70,8 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
 
 export default EndContentItem;
 
-
 const StyledImg = styled.img`
-width: 100%;
-height:100%;
-object-fit: cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;

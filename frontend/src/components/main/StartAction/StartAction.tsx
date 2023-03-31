@@ -1,38 +1,13 @@
 import styled from 'styled-components';
 import { Button } from '@mui/material';
 import { Box } from '@mui/system';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
+import { userInfoState } from 'src/store/userInfoState';
 
-const StartAction = () => {
-  const StyledDiv = styled.div`
-    border: 1px solid grey;
-    width: 100%;
-    padding: 10%;
-    box-sizing: border-box;
-  `;
+const StartAuction = () => {
 
-  const StyledSmallP = styled.p`
-    margin: 0;
-    padding: 0;
-    padding-left: 5px;
-    color: #3a77ee;
-  `;
-
-  const StyledLargeP = styled.p`
-    margin: 0;
-    padding: 0;
-    color: #3a77ee;
-    font-wieght: bold;
-    font-size: 50px;
-    text-transform: uppercase;
-    padding-bottom: 5px;
-  `;
-
-  const Describe = styled.p`
-    margin: 0;
-    padding: 0;
-    padding-left: 5px;
-    white-space: pre-wrap;
-  `;
+  const navigate = useNavigate();
 
   return (
     <StyledDiv>
@@ -41,10 +16,46 @@ const StartAction = () => {
       <Describe>삼성의 모든 것을 갖춘 옥션에서 일상을 즐겁게 만들어보세요.</Describe>
       <Describe>당신의 삶을 업그레이드하세요.</Describe>
       <Box sx={{ marginTop: '10px', marginLeft: '5px' }}>
-        <Button variant="contained">경매시작하기</Button>
+        <Button variant="contained" onClick={()=>{
+          navigate("/auction")
+          console.log("fdzz")
+        }}>
+          경매시작하기
+        </Button>
       </Box>
     </StyledDiv>
   );
 };
 
-export default StartAction;
+export default StartAuction;
+
+const StyledDiv = styled.div`
+  border: 1px solid grey;
+  width: 100%;
+  padding: 10%;
+  box-sizing: border-box;
+`;
+
+const StyledSmallP = styled.p`
+  margin: 0;
+  padding: 0;
+  padding-left: 5px;
+  color: #3a77ee;
+`;
+
+const StyledLargeP = styled.p`
+  margin: 0;
+  padding: 0;
+  color: #3a77ee;
+  font-wieght: bold;
+  font-size: 50px;
+  text-transform: uppercase;
+  padding-bottom: 5px;
+`;
+
+const Describe = styled.p`
+  margin: 0;
+  padding: 0;
+  padding-left: 5px;
+  white-space: pre-wrap;
+`;

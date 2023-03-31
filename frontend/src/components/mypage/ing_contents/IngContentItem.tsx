@@ -2,7 +2,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import sampleImg from '../../../assets/image/phone1.png';
+import blackImg from "../../../assets/image/blank_img.png"
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Box from '@mui/material/Box';
@@ -106,7 +106,7 @@ const IngContentItem: React.FC<{ auctionData: Post }> = (props) => {
         component="img"
         alt="green iguana"
         height="200"
-        image={auctionData.auction_image_url}
+        image={auctionData.auction_image_url ? auctionData.auction_image_url : blackImg}
       />
 
       <CardContent sx={{ padding: 3, boxSizing: 'border-box' }}>
