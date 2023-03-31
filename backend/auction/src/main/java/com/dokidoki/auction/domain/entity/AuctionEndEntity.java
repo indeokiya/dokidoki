@@ -51,7 +51,8 @@ public class AuctionEndEntity {
             LocalDateTime endTime,
             String title,
             Integer offerPrice,
-            Integer finalPrice
+            Integer finalPrice,
+            String description
     ) {
         AuctionEndEntity auctionEndEntity = new AuctionEndEntity();
         auctionEndEntity.id = id;
@@ -63,6 +64,7 @@ public class AuctionEndEntity {
         auctionEndEntity.title = title;
         auctionEndEntity.offerPrice = offerPrice;
         auctionEndEntity.finalPrice = finalPrice;
+        auctionEndEntity.description = description;
         return auctionEndEntity;
     }
 }

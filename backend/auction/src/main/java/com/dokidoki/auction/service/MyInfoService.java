@@ -1,5 +1,7 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.domain.entity.AuctionEndEntity;
+import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.dto.response.*;
@@ -18,6 +20,7 @@ public class MyInfoService {
     private final AuctionEndRepository auctionEndRepository;
     private final AuctionIngRepository auctionIngRepository;
     private final AuctionListService auctionListService;
+    private final ImageService imageService;
 
     /*
     판매중인 경매 목록 조회
@@ -25,11 +28,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMySellingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMySellingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -38,11 +41,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMyBiddingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyBiddingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -51,11 +54,11 @@ public class MyInfoService {
     @Transactional(readOnly = true)
     public PaginationResponse readAllMyInterestingAuction(Long memberId, Pageable pageable) {
         // 데이터 조회
-        Page<SimpleAuctionIngInterface> simpleAuctionIngInterfaces = auctionIngRepository
+        Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
                 .findAllMyInterestingAuction(memberId, pageable);
 
         // Response DTO 변환
-        return auctionListService.convertToDTOWithImages(memberId, simpleAuctionIngInterfaces);
+        return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);
     }
 
     /*
@@ -63,19 +66,13 @@ public class MyInfoService {
      */
     @Transactional(readOnly = true)
     public MyHistoryResponse readAllMyPurchases(Long memberId, Pageable pageable) {
-        Page<MyHistoryInfoInterface> myHistoryInfoInterfaces = auctionEndRepository
-                .findAllMyPurchases(memberId, pageable);
-
-        // ResultSet -> DTO
-        List<MyHistoryInfo> myHistoryInfos = new ArrayList<>();
-        for (MyHistoryInfoInterface myHistoryInfoInterface : myHistoryInfoInterfaces) {
-            myHistoryInfos.add(new MyHistoryInfo(myHistoryInfoInterface));
-        }
+        Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
+                .findAllByBuyer_IdOrderByIdDesc(memberId, pageable);
 
         // Response DTO
         return new MyHistoryResponse(
-                myHistoryInfos,
-                myHistoryInfoInterfaces.isLast()
+                combineHistoryWithImageURL(auctionEndEntities.getContent()),
+                auctionEndEntities.isLast()
         );
     }
 
@@ -84,20 +81,46 @@ public class MyInfoService {
      */
     @Transactional(readOnly = true)
     public MyHistoryResponse readAllMySales(Long memberId, Pageable pageable) {
-        Page<MyHistoryInfoInterface> myHistoryInfoInterfaces = auctionEndRepository
-                .findAllMySales(memberId, pageable);
-
-        // ResultSet -> DTO
-        List<MyHistoryInfo> myHistoryInfos = new ArrayList<>();
-        for (MyHistoryInfoInterface myHistoryInfoInterface : myHistoryInfoInterfaces) {
-            myHistoryInfos.add(new MyHistoryInfo(myHistoryInfoInterface));
-        }
+        Page<AuctionEndEntity> auctionEndEntities = auctionEndRepository
+                .findAllBySeller_IdOrderByIdDesc(memberId, pageable);
 
         // Response DTO
         return new MyHistoryResponse(
-                myHistoryInfos,
-                myHistoryInfoInterfaces.isLast()
+                combineHistoryWithImageURL(auctionEndEntities.getContent()),
+                auctionEndEntities.isLast()
         );
+    }
+
+    /*
+    구매내역 또는 판매내역과 해당 내역들의 대표 이미지 URL을 조합하는 메서드
+     */
+    @Transactional(readOnly = true)
+    public List<MyHistoryInfo> combineHistoryWithImageURL(List<AuctionEndEntity> auctionEndEntities) {
+        // 경매 ID 목록
+        List<Long> auctionIdList = new ArrayList<>();
+        for (AuctionEndEntity auctionEndEntity : auctionEndEntities)
+            auctionIdList.add(auctionEndEntity.getId());
+
+        // 각 내역의 대표 사진 조회
+        List<ImageInterface> imageInterfaces = imageService.readAuctionThumbnailImage(auctionIdList);
+
+        // ResultSet -> DTO
+        List<MyHistoryInfo> myHistoryInfos = new ArrayList<>();
+        int imageIdx = 0;
+        for (AuctionEndEntity auctionEndEntity : auctionEndEntities) {
+            // 이미지 정보 가져오기
+            String imageUrl = null;  // 이미지 URL
+            if (imageIdx < imageInterfaces.size()) {
+                Long imageAuctionId = imageInterfaces.get(imageIdx).getAuction_id();
+                // 조회한 경매와 이미지가 동일 제품이라면 imageUrl 설정
+                if (imageAuctionId.equals(auctionEndEntity.getId())) {
+                    imageUrl = imageInterfaces.get(imageIdx).getImage_url();
+                    imageIdx++;  // 다음 이미지로 넘어가기
+                }
+            }
+            myHistoryInfos.add(new MyHistoryInfo(auctionEndEntity, imageUrl));
+        }
+        return myHistoryInfos;
     }
 
     /*

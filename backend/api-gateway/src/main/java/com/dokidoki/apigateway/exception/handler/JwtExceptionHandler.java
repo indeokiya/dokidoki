@@ -28,7 +28,7 @@ public class JwtExceptionHandler implements ErrorWebExceptionHandler {
         ServerHttpResponse res =  exchange.getResponse();
         if(ex instanceof JwtAuthenticationException){
             JwtAuthenticationException e = (JwtAuthenticationException) ex;
-            log.info("catch JwtAuthenticationException " + e.getMsg());
+            //log.info("catch JwtAuthenticationException " + e.getMsg());
 
             return onError(res, e.getMsg(), e.getStatus());
         }

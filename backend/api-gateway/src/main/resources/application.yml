@@ -9,7 +9,9 @@ spring:
       globalcors:
         cors-configurations:
           '[/**]':
-            allowedOrigins: "http://localhost:3000"
+            allowedOrigins:
+              - "http://localhost:3000"
+              - "https://j8a202.p.ssafy.io"
             allow-credentials: true   #추가
             allowedHeaders:
               - x-requested-with
@@ -31,7 +33,7 @@ spring:
           - Path=/api/bids/**
         filters:
           - RewritePath=/api/bids/(?<segment>.*), /$\{segment}
-          #- JwtAuthenticationFilter
+          - JwtAuthenticationFilter
 
       - id: auction-server
         uri: http://auction-server:8082
@@ -39,14 +41,23 @@ spring:
           - Path=/api/auctions/**
         filters:
           - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
-          #- JwtAuthenticationFilter
+          - JwtAuthenticationFilter
 
       - id: notice-server
         uri: http://notice-server:8084
         predicates:
           - Path=/api/notices/**
         filters:
-          - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
+          - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
+          #- JwtAuthenticationFilter
+
+      # 소켓 routing
+      - id: notice-server
+        uri: ws://notice-server:8084
+        predicates:
+          - Path=/api/notices/ws
+        filters:
+          - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
           #- JwtAuthenticationFilter
 
       - id: user-server
@@ -63,4 +74,4 @@ spring:
           - Method=DELETE
         filters:
           - RewritePath=/api/users/(?<segment>.*), /$\{segment}
-          #- JwtAuthenticationFilter
+          - JwtAuthenticationFilter

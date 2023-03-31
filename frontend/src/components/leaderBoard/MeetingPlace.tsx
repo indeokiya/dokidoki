@@ -3,7 +3,7 @@ import { Map, MapMarker } from 'react-kakao-maps-sdk';
 
 
 // showMap={showMap} location={meeting_place}
-const TestContainer:React.FC<{location:string}> = (props) => {
+const MeetingPlace:React.FC<{location:string}> = (props) => {
   let { location} = props;
   // let showMap = true;
   // let location = "사당로 16바길 48"
@@ -41,4 +41,4 @@ const TestContainer:React.FC<{location:string}> = (props) => {
 
 };
 
-export default TestContainer;
+export default MeetingPlace;

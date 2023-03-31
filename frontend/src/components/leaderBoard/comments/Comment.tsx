@@ -4,11 +4,16 @@ import Typography from '@mui/material/Typography';
 import styled from 'styled-components';
 import EastIcon from '@mui/icons-material/East';
 import Button from '@mui/material/Button';
+import CommentInput from './CommentInput';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { commentAuctionIdState, parentIdState } from 'src/store/CommentStates';
+import { auctionAPI } from 'src/api/axios';
 //댓글 하나의 형태 만들기
 //child : 대댓글 인지 여부
 //isWriter : 자신이 작성자 인지 확인 id값을 비교해서 true false로 넘겨준다.
 //isMine : 사진의 댓글이면 삭제가 허용된다. => 이것은 삭제된 댓글입니다 넣을지 고민해야함
 const Comment: React.FC<{
+  commentId: string;
   name: string;
   avatar: string;
   text: string;
@@ -17,21 +22,31 @@ const Comment: React.FC<{
   isMine: boolean;
   written_time: string;
   isColor: boolean;
+  refetch: Function;
 }> = (props) => {
-  const StyledSpan = styled.span`
-    border-radius: 4px;
-    margin: 10px;
-    padding: 8px;
-    box-sizing: border-box;
-    background-color: dodgerBlue;
-    color: white;
-    font-weight: bold;
-  `;
+  // 댓글 PK
+  const { commentId, refetch } = props
 
-  const StyledDiv = styled.div`
-    display: flex;
-    align-items: center;
-  `;
+  // Auction Id
+  const auctionId = useRecoilValue(commentAuctionIdState)
+
+  // 답글 달기를 눌렀을 때 본인의 댓글 ID를 set
+  const [parentId, setParentId] = useRecoilState(parentIdState)
+  const clickReply = () => {
+    setParentId(commentId)
+  }
+
+  // 삭제
+  const deleteComment = () => {
+    const confirm = window.confirm("댓글을 삭제하시겠습니까?")
+    if (confirm === false)
+      return
+    
+    auctionAPI
+      .delete(`${auctionId}/comments/${commentId}`)
+      .then(() => { refetch() })
+      .catch(() => { alert("댓글이 삭제되지 않았습니다.") })
+  }
 
   return (
     <Grid container sx={{ background: props.isColor ? 'whitesmoke' : 'white', padding: '1rem' }}>
@@ -61,11 +76,18 @@ const Comment: React.FC<{
               <Typography variant="subtitle2" align="right">
                 {props.written_time.substr(0, 10)}
               </Typography>
-              {/* 댓글의 주인이라면 삭제버튼을 볼 수 있다. */}
-              {props.isMine && (
-                <Button variant="text" color="error">
+              {/* 답글 버튼 */}
+              {!props.isChild ? <Button variant="text" color="error" onClick={clickReply}>
+                  답글
+              </Button> : null}
+              {/* 댓글의 주인이라면 수정 및 삭제 버튼을 볼 수 있다. */}
+              {props.isMine && (<>
+                {/* <Button variant="text" color="error">
+                  수정
+                </Button> */}
+                <Button variant="text" color="error" onClick={deleteComment}>
                   삭제
-                </Button>
+                </Button></>
               )}
             </StyledDiv>
           </Grid>
@@ -86,8 +108,26 @@ const Comment: React.FC<{
           )}
         </Grid>
       </Grid>
+      {!props.isChild && parentId === commentId
+        ? <CommentInput parentId={commentId} refetch={refetch} />
+        : null}
     </Grid>
   );
 };
 
 export default Comment;
+
+const StyledSpan = styled.span`
+border-radius: 4px;
+margin: 10px;
+padding: 8px;
+box-sizing: border-box;
+background-color: dodgerBlue;
+color: white;
+font-weight: bold;
+`;
+
+const StyledDiv = styled.div`
+display: flex;
+align-items: center;
+`;

@@ -27,11 +27,11 @@ public class AuctionListController {
     메인 페이지 : 종료된 경매 목록 가져오기
      */
     @GetMapping("/end")
-    public ResponseEntity<BaseResponseBody> readSimpleAuctionEnds(
+    public ResponseEntity<BaseResponseBody> readAuctionEndList(
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size) {
         // 데이터 조회
         PaginationResponse paginationResponse = auctionListService
-                .readSimpleAuctionEnd(PageRequest.of(page, size));
+                .readAuctionEndList(page, size);
 
         return ResponseEntity
                 .status(200)
@@ -42,7 +42,7 @@ public class AuctionListController {
     메인 페이지 : 진행중인 경매 목록 가져오기
      */
     @GetMapping("/in-progress")
-    public ResponseEntity<BaseResponseBody> readSimpleAuctionIng(
+    public ResponseEntity<BaseResponseBody> readAuctionList(
             @RequestParam(defaultValue = "") String keyword, @RequestParam(defaultValue = "0") Long category_id,
             @RequestParam(defaultValue = "0") Integer page, @RequestParam(defaultValue = "10") Integer size,
             HttpServletRequest request) {
@@ -56,11 +56,11 @@ public class AuctionListController {
         // 검색어, 카테고리 모두 비어있다면 전체 검색
         if (keyword.equals("") && category_id == 0) {
             paginationResponse = auctionListService
-                    .readSimpleAuctionIng(memberId, PageRequest.of(page, size));
+                    .readAuctionIngList(memberId, page, size);
             msg = "진행중인 경매 목록 조회 성공";
         } else {
             paginationResponse = auctionListService
-                    .searchSimpleAuctionIng(memberId, keyword, category_id, PageRequest.of(page, size));
+                    .searchAuctionIngList(memberId, keyword, category_id, PageRequest.of(page, size));
             msg = "진행중인 경매 목록 검색 성공";
         }
 

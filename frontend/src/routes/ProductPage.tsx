@@ -11,25 +11,85 @@ import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
 import Header from '../components/header/Header';
 import Paper from '@mui/material/Paper';
-import MettingPlace from '../components/leaderBoard/MeetingPlace'
-import { useState } from 'react';
+import SockJS from 'sockjs-client'
+import { Client, Message, StompHeaders } from '@stomp/stompjs'
+
 
 import { Box } from '@mui/material';
-
+import MeetingPlace from '../components/leaderBoard/MeetingPlace'
 import { useParams } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
 
 // const { useAuctionDetail, test } = require("../hooks/auctionDetail");
 import { useAuctionDetail } from '../hooks/auctionDetail'
 import { Leaderboard } from '@mui/icons-material';
-import MeetingPlace from '../components/leaderBoard/MeetingPlace';
+import { CommentType } from 'src/datatype/datatype';
 
 const ProductPage = () => {
-  const [showMap,setShowMap] = useState(false);
-
-  // test();
-
   const { id } = useParams() as {id: string};
+  
+  // let socket = new SockJS("ws");
+  let clientRef = useRef<Client>();
+  const test = useRef<boolean>();
+  
+  useEffect(() => {
+    if (!clientRef.current && !test.current) connect();
+    return () => disconnect();
+  }, []);
 
+
+  const connect = () => { // 연결할 때
+    test.current = true;
+    clientRef.current = new Client({
+      brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
+      connectHeaders: {
+        authorization: "Bearer " + localStorage.getItem('access_token')
+      },
+      onConnect: () => {
+        console.log("socket connected");
+
+        clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
+          console.log(`Received message: ${message.body}`);
+        });
+      },
+    });
+    clientRef.current?.activate(); // 클라이언트 활성화
+  };
+  
+  const disconnect = () => { // 연결이 끊겼을 때 
+    clientRef.current?.deactivate();
+    console.log("socket disconnected");
+  };
+
+  // 소켓 객체 생성
+  // useEffect(() => {
+  //   if (!ws.current) {
+  //     ws.current = new WebSocket(webSocketUrl);
+  //     ws.current.onopen = () => {
+  //       console.log("connected to " + webSocketUrl);
+  //       setSocketConnected(true);
+  //     };
+  //     ws.current.onclose = (error) => {
+  //       console.log("disconnect from " + webSocketUrl);
+  //       console.log(error);
+  //     };
+  //     ws.current.onerror = (error) => {
+  //       console.log("connection error " + webSocketUrl);
+  //       console.log(error);
+  //     };
+  //     ws.current.onmessage = (evt) => {
+  //       const data = JSON.parse(evt.data);
+  //       console.log(data);
+  //       setItems((prevItems) => [...prevItems, data]);
+  //     };
+  //   }
+
+  //   return () => {
+  //     console.log("clean up");
+  //     ws.current.close();
+  //   };
+  // }, []);
+  
   // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
   // data fetching logic
   const { isLoading, isError, error, data} = useAuctionDetail({id});
@@ -58,6 +118,8 @@ const ProductPage = () => {
     start_time,
     is_my_interest,
   } = data
+
+  console.log(description);
 
   return (
     <>
@@ -94,11 +156,9 @@ const ProductPage = () => {
           </Grid>
           <Divider />
 
-          <StyledDiv>
-            <ProductDescription 
-              description={description}  
-            />
-          </StyledDiv>
+          
+          <ProductDescription description={description}/>
+          
 
           {/* 제품 카테고리 평균 가격 */}
           <ProductGraph />
@@ -106,8 +166,7 @@ const ProductPage = () => {
           <h5>{meeting_place}</h5>
           <MeetingPlace location={meeting_place}/>
           {/* 댓글 작성과 댓글들  */}
-          <CommentsList />
-          
+          <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
 
           {/* 모달창 하단에 존재하는 버튼 */}
         </Box>

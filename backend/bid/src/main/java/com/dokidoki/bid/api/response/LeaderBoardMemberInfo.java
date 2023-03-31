@@ -12,6 +12,9 @@ import lombok.*;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 
+/**
+ * DB SortedSet 에 유저 정보로 저장되는 클래스
+ */
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
