@@ -38,6 +38,19 @@ public class KafkaAuctionEndDTO {
                 .build();
         return dto;
     }
+    public static KafkaAuctionEndDTO of(AuctionRealtime auctionRealtime, long buyerId) {
+        KafkaAuctionEndDTO dto = KafkaAuctionEndDTO.builder()
+                .auctionId(auctionRealtime.getAuctionId())
+                .sellerId(auctionRealtime.getSellerId())
+                .buyerId(buyerId)
+                .finalPrice(auctionRealtime.getHighestPrice())
+                .priceSize(auctionRealtime.getPriceSize())
+                .productId(auctionRealtime.getProductId())
+                .productName(auctionRealtime.getProductName())
+                .endTime(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+                .build();
+        return dto;
+    }
 
     public KafkaAuctionEndDTO() {}
 
