@@ -2,16 +2,12 @@ import Grid from '@mui/material/Grid';
 import ProductImages from '../components/leaderBoard/ProductImages';
 import ProductInfo from '../components/leaderBoard/ProductInfo';
 import Divider from '@mui/material/Divider';
-import Container from '@mui/material/Container';
 import styled from 'styled-components';
 import ProductGraph from '../components/leaderBoard/ProductGraph';
 import ProductLeaderBoard from '../components/leaderBoard/ProductLeaderBoard';
 import ProductDescription from '../components/leaderBoard/ProductDescription';
 import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
-import Header from '../components/header/Header';
-import Paper from '@mui/material/Paper';
-import SockJS from 'sockjs-client';
 import { Client, Message, StompHeaders } from '@stomp/stompjs';
 
 import { Box } from '@mui/material';
@@ -21,21 +17,18 @@ import { useEffect, useRef, useState } from 'react';
 
 // const { useAuctionDetail, test } = require("../hooks/auctionDetail");
 import { useAuctionDetail } from '../hooks/auctionDetail';
-import { Leaderboard } from '@mui/icons-material';
-import { CommentType } from 'src/datatype/datatype';
 
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { userInfoState } from 'src/store/userInfoState';
 import { useNavigate } from 'react-router-dom';
 
 const ProductPage = () => {
-  const [loginUser, setLoginUser] = useRecoilState(userInfoState);
+  const loginUser = useRecoilValue(userInfoState);
   const navigate = useNavigate();
   const { id } = useParams() as { id: string };
 
   // let socket = new SockJS("ws");
   let clientRef = useRef<Client>();
-  const test = useRef<boolean>();
 
   useEffect(() => {
     if (!loginUser.is_logged_in) {
@@ -44,13 +37,12 @@ const ProductPage = () => {
       navigate('/login');
     }
 
-    if (!clientRef.current && !test.current) connect();
+    if (!clientRef.current) connect();
     return () => disconnect();
   }, []);
 
   const connect = () => {
     // 연결할 때
-    test.current = true;
     clientRef.current = new Client({
       brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
       connectHeaders: {
@@ -82,7 +74,7 @@ const ProductPage = () => {
     return <h1>error occured while fetching auction_id: {id}</h1>;
   }
   // 이 아래부터는 data가 존재함이 보장됨
-  console.log('total data >> ', data);
+  console.log('fetched auction data >> ', data);
   const {
     auction_image_urls,
     auction_title,
@@ -90,19 +82,17 @@ const ProductPage = () => {
     comments,
     description,
     end_time,
-    highest_price,
-    leaderboard,
+    is_my_interest,
     meeting_place,
     offer_price,
-    price_size,
     product_name,
     seller_id,
     seller_name,
-    start_time,
-    is_my_interest,
+    start_time, /// from auction server
+    highest_price,
+    leader_board,
+    price_size, /// from bid server
   } = data;
-
-  console.log(description);
 
   return (
     <>
@@ -127,6 +117,7 @@ const ProductPage = () => {
               <ProductInfo
                 auction_title={auction_title}
                 auction_id={id}
+                seller_id={seller_id}
                 category={category_name}
                 offer_price={offer_price}
                 price_size={price_size}
@@ -134,6 +125,8 @@ const ProductPage = () => {
                 is_my_interest={is_my_interest}
                 end_time={end_time}
                 start_time={start_time}
+                description={description}
+                meeting_place={meeting_place}
               />
             </Grid>
           </Grid>

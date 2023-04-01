@@ -4,14 +4,7 @@ import {Paper, Grid, Typography, Divider, TextField, debounce} from "@mui/materi
 import styled from "styled-components";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useRef, useState, useCallback } from "react";
-import { AuctionRegisterType } from "../../routes/RegisterPage";
 import { auctionAPI } from "src/api/axios";
-
-
-type AuctionRegisterProps = {
-  data: AuctionRegisterType // 부모컴포넌트에서 import 해온 타입을 재사용 해 줍시다.
-  // onChange(key: string): void
-}
 
 // 제품 Response DTO
 type Product = {
@@ -20,7 +13,7 @@ type Product = {
   product_name: string
 }
 
-const ProductInfoInput = ( {dataRef} : any ) : React.ReactElement => {
+const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const [imageCnt,setImageCnt] = useState(0)
   const editorRef: any = useRef(null);
 
@@ -84,9 +77,11 @@ const ProductInfoInput = ( {dataRef} : any ) : React.ReactElement => {
             <Divider sx={{ margin: "2rem 0px" }} />
           </Grid>
           {/* 이미지 삽입 */}
+          { !update && 
           <Grid item xs={2}>
             <Typography variant="subtitle1">사진 : </Typography>
-          </Grid>
+          </Grid> } 
+          { !update && 
           <Grid item xs={10} mb={1}>
             <label htmlFor="imageInput">
               <ImageInputLabel>
@@ -113,11 +108,11 @@ const ProductInfoInput = ( {dataRef} : any ) : React.ReactElement => {
                 console.log("dataRef.current.files >> ", dataRef.current.files);
               }}
             />
-          </Grid>
+          </Grid> }
 
           {/* 글 제목 */}
           <Grid item xs={2}>
-            <Typography variant="subtitle1">제목 : </Typography>
+            <Typography variant="subtitle1" >제목 : </Typography>
           </Grid>
           <Grid item xs={10} mb={2}>
             <TextField
@@ -131,10 +126,10 @@ const ProductInfoInput = ( {dataRef} : any ) : React.ReactElement => {
           </Grid>
 
           {/* 카테고리 선택 */}
-          <Grid item xs={2}>
+          { !update && <Grid item xs={2}>
             <Typography variant="subtitle1">카테고리 : </Typography>
-          </Grid>
-          <Grid item xs={10} mb={2}>
+          </Grid> }
+          { !update && <Grid item xs={10} mb={2}>
             <TextField
               id="outlined-basic"
               label="category"
@@ -161,7 +156,7 @@ const ProductInfoInput = ( {dataRef} : any ) : React.ReactElement => {
                   ))}
               </Paper>
               : null}
-          </Grid>
+          </Grid> }
 
           {/* 제품 설명 */}
           <Grid item xs={2}>

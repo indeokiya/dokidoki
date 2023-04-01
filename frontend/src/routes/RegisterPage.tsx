@@ -90,12 +90,12 @@ const RegisterPage = () => {
           <Grid container alignItems={'center'} direction="column" gap={4} py={5}>
             {/*상단 입력 박스 */}
             <Grid item xs={6}>
-              <ProductInfoInput dataRef={dataRef} />
+              <ProductInfoInput dataRef={dataRef} update={false}/>
             </Grid>
 
             {/* 하단 입럭 박스 */}
             <Grid item xs={6}>
-              <ActionInfoInput dataRef={dataRef} />
+              <ActionInfoInput dataRef={dataRef} update={false}/>
             </Grid>
 
             {/* 하단 버튼 */}
