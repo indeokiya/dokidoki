@@ -39,7 +39,7 @@ noticeAPI.defaults.timeout = 3000;
 
 // 공통 request 인터셉터
 function addRequestIntercepter(axiosApi : any){
-  console.log("해더 붙지롱")
+  console.log("request interceptor")
   axiosApi.interceptors.request.use(
     (config:any) => {
         // 로컬 스토리지에서 Access Token 가져오기, 없다면 Undefined

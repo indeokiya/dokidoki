@@ -4,14 +4,8 @@ import AddressInput from "./AddressInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import MapIcon from "@mui/icons-material/Map";
 import { NumericFormat } from "react-number-format";
-import { AuctionRegisterType } from "../../routes/RegisterPage";
 
-type AuctionRegisterProps = {
-  data: AuctionRegisterType // 부모컴포넌트에서 import 해온 타입을 재사용 해 줍시다.
-  // onChange(key: string): void
-}
-
-const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
+const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const [addressInputVisible, setAddressInputVisible] = useState(false);
 
   const onChange = (e: any) => {
@@ -30,10 +24,10 @@ const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
             </Typography>
             <Divider sx={{ margin: '2rem 0px' }} />
           </Grid>
-          <Grid item xs={2}>
+          { !update && <Grid item xs={2}>
             <Typography variant="subtitle1">시작 가격 : </Typography>
-          </Grid>
-          <Grid item xs={10} mb={2}>
+          </Grid> }
+          { !update && <Grid item xs={10} mb={2}>
             <NumericFormat
               style={{
                 width: '97%',
@@ -50,7 +44,7 @@ const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
               name="offer_price"
               onChange={onChange}
             />
-          </Grid>
+          </Grid> }
 
           <Grid item xs={2}>
             <Typography variant="subtitle1">겅매 단위 : </Typography>
@@ -71,13 +65,14 @@ const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
               suffix={" 원"}
               name="price_size"
               onChange={onChange}
+              value={update ? dataRef.current.price_size : ""}
             />
           </Grid>
 
-          <Grid item xs={2}>
+          { !update && <Grid item xs={2}>
             <Typography variant="subtitle1">종료 시간 : </Typography>
-          </Grid>
-          <Grid item xs={10} mb={2}>
+          </Grid> }
+          { !update && <Grid item xs={10} mb={2}>
             <TextField
               id="outlined-basic"
               variant="outlined"
@@ -89,7 +84,7 @@ const ActionInfoInput = ( {dataRef} : any ) : React.ReactElement => {
                 dataRef.current[name] = value;
               }}
             />
-          </Grid>
+          </Grid> }
 
           <Grid item xs={2}>
             <Typography variant="subtitle1">거래 장소 : </Typography>

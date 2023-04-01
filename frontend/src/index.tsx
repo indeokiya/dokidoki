@@ -10,6 +10,7 @@ import ProfilePage from './routes/MyPage';
 import LoginPage from './routes/LoginPage';
 import RegisterPage from './routes/RegisterPage';
 import ProductPage from './routes/ProductPage';
+import AuctionUpdatePage from './routes/AuctionUpdatePage';
 import TokenRedirectPage from './routes/TokenRedirectPage';
 import IngContentItemList from './components/mypage/ing_contents/IngContentItemList';
 import EndContentItemList from './components/mypage/end_contents/EndContentItemList';
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
       {
         path: 'auction/product/:id',
         element: <ProductPage />,
+      },
+      {
+        path: 'auction/update/:id',
+        element: <AuctionUpdatePage />
       },
     ],
   },
