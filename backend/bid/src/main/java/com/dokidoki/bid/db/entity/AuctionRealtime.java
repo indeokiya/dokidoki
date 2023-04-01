@@ -17,6 +17,7 @@ public class AuctionRealtime {
     private int highestPrice;
     private int priceSize;
     private long sellerId;
+    private int listenerId;
 
     private long productId;
     private String productName;
@@ -50,6 +51,10 @@ public class AuctionRealtime {
     public int updateHighestPrice() {
         this.highestPrice = this.highestPrice + this.priceSize;
         return this.highestPrice;
+    }
+
+    public void setListenerId(int listenerId) {
+        this.listenerId = listenerId;
     }
 
 }

@@ -110,11 +110,13 @@ class AuctionRealtimeRepositoryTest {
             
             // when & then
             // 바로 확인하면 존재하지만
+            assert(! auctionRealtimeRepository.isExpired(auctionId));
             assert(auctionRealtimeRepository.findById(auctionId).isPresent());
 
             Thread.sleep((ttl + 2) * 1000);
 
-            assert(auctionRealtimeRepository.findById(auctionId).isEmpty());
+//            assert(auctionRealtimeRepository.findById(auctionId).isEmpty());
+            assert(auctionRealtimeRepository.isExpired(auctionId));
 
         }
 

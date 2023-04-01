@@ -15,4 +15,6 @@ public interface AuctionRealtimeRepository {
 
     boolean deleteAll();
 
+    boolean isExpired(long auctionId);
+
 }
