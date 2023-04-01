@@ -2,6 +2,7 @@ package com.dokidoki.bid.api.service;
 
 import com.dokidoki.bid.api.response.LeaderBoardMemberInfo;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
+import com.dokidoki.bid.db.repository.AuctionRealtimeBiddingRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeLeaderBoardRepository;
 import com.dokidoki.bid.kafka.dto.KafkaAuctionEndDTO;
 import com.dokidoki.bid.kafka.service.KafkaBidProducer;
@@ -20,6 +21,7 @@ public class AuctionEndService {
 
     private final RedissonClient redisson;
     private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
+    private final AuctionRealtimeBiddingRepository auctionRealtimeBiddingRepository;
     private final KafkaBidProducer kafkaBidProducer;
 
     public void auctionEnd(AuctionRealtime auctionRealtime, String expireKey) {
@@ -27,8 +29,12 @@ public class AuctionEndService {
         log.info("auctionInfo expired. auctionRealtime: {}", auctionRealtime);
 
         long auctionId = auctionRealtime.getAuctionId();
+        long sellerId = auctionRealtime.getSellerId();
 
-        // 1. 기간이 끝나면 Kafka 에 메시지 써서  (1) 알림 서버 (2) auction 서버 에 알리기
+        // 1. 현재 입찰 진행중인 목록에서 제거
+        auctionRealtimeBiddingRepository.delete(sellerId, auctionId);
+
+        // 2. 기간이 끝나면 Kafka 에 메시지 써서  (1) 알림 서버 (2) auction 서버 에 알리기
         KafkaAuctionEndDTO dto;
         Optional<LeaderBoardMemberInfo> winnerO = auctionRealtimeLeaderBoardRepository.getWinner(auctionRealtime.getAuctionId());
         if (winnerO.isEmpty()) {
@@ -40,7 +46,7 @@ public class AuctionEndService {
 
         kafkaBidProducer.sendAuctionEnd(dto);
 
-        // 2. listener 제거
+        // 3. listener 제거
         int listenerId = auctionRealtime.getListenerId();
         log.info("listener 제거. listenerId: {}", listenerId);
         RBucket bucket = redisson.getBucket(expireKey);
