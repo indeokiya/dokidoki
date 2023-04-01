@@ -1,23 +1,11 @@
-import { useQuery, useQueries, UseQueryResult } from "react-query";
+import { useQueries, UseQueryResult } from "react-query";
 import { bidAPI, auctionAPI } from "../api/axios"
 
 const auctionAxios = auctionAPI;
 const bidAxios = bidAPI;
 
-type AuctionDetail = {
-  data: any
-}
-
-type BidDetail = {
-  data: any
-}
-
 type AuctionDetailResult = UseQueryResult<void, unknown>;
 type BidDetailResult = UseQueryResult<void, unknown>;
-
-// type UseAuctionDetailResult = [AuctionDetailResult, BidDetailResult];
-
-// type AuctionDetailFn = ({ id }: strin) => UseQueryResult;
 
 export const useAuctionDetail = ({ id } : {id: string}) => {
 
@@ -56,8 +44,6 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
 
   if (!isError && !isLoading) {
     const data = {...results[0].data!.data!.data, ...results[1].data!.data!.data};
-    console.log("results[0].data >> ", results[0].data)
-    console.log("results[1] >> ", results[1])
     return {isLoading, isError, error, data}
   } else {
     const data = {};
@@ -81,72 +67,3 @@ const onError = (err: any) => {
 const alterData = {
 
 }
-
-// import { useQueries, UseQueryResult } from "react-query";
-// import { bidAPI, auctionAPI } from "../api/axios"
-
-// const auctionAxios = auctionAPI;
-// const bidAxios = bidAPI;
-
-// type AuctionDetail = {
-//   data: any
-// }
-
-// type BidDetail = {
-//   data: any
-// }
-
-// type AuctionDetailResult = UseQueryResult<void, unknown>;
-// type BidDetailResult = UseQueryResult<void, unknown>;
-
-// type UseAuctionDetailResult = [AuctionDetailResult, BidDetailResult];
-
-// const useAuctionDetail = ({ id }: {id: any}): UseAuctionDetailResult => {
-//   const results = useQueries([
-//       { // auction
-//         queryKey: ["auctionDetailAuction", id], 
-//         queryFn: () => {
-//           auctionAxios
-//             .get(`in-progress/${id}`)
-//             // .then(res => res.data)
-//             // .catch(err => console.error(err))
-//         },
-//         staleTime: 0,
-//       },
-//       { // bid
-//         queryKey: ["auctionDetailBid", id],
-//         queryFn: () => {
-//           bidAxios
-//             .get(`${id}/initial-info`)
-//             // .then(res => res.data)
-//             // .catch(err => console.error(err))
-//         },
-//         staleTime: 0,
-//       },  
-//   ])
-
-//   // console.log("result >> ", results);
-//   // const data = results.map(result => result.data);
-//   console.log("results >> ", results);
-//   const data = results.map(result => result.data);
-
-//   return results;
-// }
-
-// // select로 fetch 해온 데이터 가공
-// const select = (response) => {
-
-//   return response.data.body;
-// }
-
-// const onError = (err) => {
-//   // 에러일 시 더미데이터 반환 (개발용)
-//   err.alterData = alterData;
-//   return err;
-// }
-
-// const alterData = {
-
-// }
-
-// export default useAuctionDetail;

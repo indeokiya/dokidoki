@@ -41,6 +41,7 @@ function formatSeconds(seconds: number): string {
 type Props = {
   auction_title: string;
   auction_id: any;
+  seller_id: string;
   category: string;
   offer_price: number;
   price_size: number;
@@ -48,11 +49,14 @@ type Props = {
   is_my_interest: boolean;
   end_time: string;
   start_time: string;
+  description: string,
+  meeting_place: string,
 };
 
 const ProductInfo = ({
   auction_title,
   auction_id,
+  seller_id,
   category,
   offer_price,
   price_size,
@@ -60,6 +64,8 @@ const ProductInfo = ({
   is_my_interest,
   end_time,
   start_time,
+  description,
+  meeting_place,
 }: Props) => {
   const navigate = useNavigate();
   const dataLeft = ['카테고리', '남은시간', '시작가격', '경매단위'];
@@ -69,9 +75,6 @@ const ProductInfo = ({
 
   function TimeFormat( end: string) {
     // 두 시간 문자열
-    
-
-
     // Date 객체로 변환
     const time1 = new Date(end);
     const time2 = new Date();
@@ -98,6 +101,12 @@ const ProductInfo = ({
     if (!userInfo.is_logged_in) {
       alert('먼저 로그인해주세요.');
       navigate('/login');
+    }
+
+    console.warn("seller >>", seller_id, ", user id >> ", userInfo.user_id)
+    if (seller_id === userInfo.user_id) {
+      alert('내 경매는 입찰할 수 없습니다.')
+      return;
     }
 
     const axios = bidAPI;
@@ -152,10 +161,22 @@ const ProductInfo = ({
     }
   };
 
+  const updateData = {
+    auction_id: auction_id,
+    title: auction_title,
+    description: description,
+    price_size: price_size,
+    meeting_place: meeting_place,
+  }
+
+  const updateAuction = () => {
+    navigate(`/auction/update/${auction_id}`, {state: updateData})
+  }
+
   return (
     <div>
-      {userInfo.is_logged_in && (
-        <StyeldDiv>
+      {userInfo.user_id === seller_id && (
+        <StyeldDiv onClick={updateAuction}>
           <IconButton>
             <EditOutlinedIcon />
           </IconButton>

@@ -21,7 +21,7 @@ services:
   database_redis:
     container_name: database_redis
     image: redis
-    command: ["redis-server", "--appendonly", "yes", "--replica-read-only", "no","--requirepass", "qhBb3Ht7Psvz54PCjlAw"]
+    command: ["redis-server", "--appendonly", "yes", "--replica-read-only", "no","--requirepass", "qhBb3Ht7Psvz54PCjlAw", "--notify-keyspace-events", "KEx"]
     networks:
       - dokidoki_net
     restart: always
