@@ -11,6 +11,7 @@ import com.dokidoki.bid.common.error.exception.BusinessException;
 import com.dokidoki.bid.common.error.exception.ErrorCode;
 import com.dokidoki.bid.common.error.exception.InvalidValueException;
 import com.dokidoki.bid.db.entity.AuctionRealtime;
+import com.dokidoki.bid.db.repository.AuctionRealtimeBiddingRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeLeaderBoardRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeMemberRepository;
 import com.dokidoki.bid.db.repository.AuctionRealtimeRepository;
@@ -24,10 +25,7 @@ import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -39,7 +37,17 @@ public class BiddingService {
     private final AuctionRealtimeRepository auctionRealtimeRepository;
     private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
     private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
+    private final AuctionRealtimeBiddingRepository auctionRealtimeBiddingRepository;
     private final KafkaBidProducer producer;
+
+    /**
+     * 현재 입찰중인 경매 정보 가져오기. Controller 에서 접근하는 메서드.
+     * @param memberId
+     * @return
+     */
+    public Set<Long> auctionBiddingList(long memberId) {
+        return auctionRealtimeBiddingRepository.findById(memberId);
+    }
 
     /**
      * 게시글 등록 시 Redis 에 실시간 정보를 저장하는 메서드.
@@ -85,6 +93,11 @@ public class BiddingService {
         return resp;
     }
 
+    /**
+     * 경매 조기 종료 메서드. Controller 에서 접근하는 메서드.
+     * @param auctionId
+     * @param memberId
+     */
     @RealTimeLock
     public void end(long auctionId, long memberId) {
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
@@ -181,7 +194,10 @@ public class BiddingService {
         // 6-2. 유저별 입찰 최고가 정보 갱신하기
         auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
 
-        // 6-3. 리더보드 갱신
+        // 6-3. 입찰중인 리스트에 추가
+        auctionRealtimeBiddingRepository.save(memberId, auctionId);
+
+        // 6-4. 리더보드 갱신
         // 받은 request 와 memberId로 DB에 저장되는 리더보드 정보 갱신
         LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
         auctionRealtimeLeaderBoardRepository.save(newHighestPrice, memberInfo, auctionId);
