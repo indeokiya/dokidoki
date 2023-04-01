@@ -38,4 +38,14 @@ public class AuctionController {
         return ResponseEntity.ok(resultMap);
     }
 
+    @DeleteMapping("/{auctionId}/close")
+    public ResponseEntity<?> end(@PathVariable long auctionId, HttpServletRequest request) {
+        Map<String, Object> resultMap = new HashMap<>();
+        long memberId = JWTUtil.getUserId(request);
+        biddingService.end(auctionId, memberId);
+        resultMap.put("status_code", 200);
+        resultMap.put("message", "경매종료_성공");
+        return ResponseEntity.ok(resultMap);
+    }
+
 }

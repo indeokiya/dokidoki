@@ -15,7 +15,9 @@ class JWTUtilTest {
 
     @Test
     public void 토큰발급() {
-        System.out.println(JWTUtil.getAccessToken(1250006L));
+
+//        System.out.println(JWTUtil.getAccessToken(1250006L));
+        System.out.println(JWTUtil.getAccessToken(2000L));
     }
 
 }

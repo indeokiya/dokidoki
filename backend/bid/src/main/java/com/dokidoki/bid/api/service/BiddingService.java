@@ -85,6 +85,24 @@ public class BiddingService {
         return resp;
     }
 
+    @RealTimeLock
+    public void end(long auctionId, long memberId) {
+        Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
+        
+        // 1. auctionId에 해당하는 경매가 없는 경우
+        if (auctionRealtimeO.isEmpty()) {
+            throw new InvalidValueException("존재하지 않는 경매입니다. auctionId가 존재하지 않습니다.", ErrorCode.INVALID_INPUT_VALUE);
+        }
+        
+        // 2. 판매자가 아닌데 경매를 끝내려 한 경우
+        if (auctionRealtimeO.get().getSellerId() != memberId) {
+            throw new BusinessException("권한이 없는 사용자입니다. 판매자가 아닙니다.", ErrorCode.IS_NOT_SELLER);
+        }
+        
+        // 3. 경매 종료시키기
+        auctionRealtimeRepository.delete(auctionId);
+
+    }
 
     /**
      * 경매에 입찰하는 메서드. 컨트롤러에서 접근하는 메서드.
@@ -96,40 +114,50 @@ public class BiddingService {
     public void bid(long auctionId, AuctionBidReq req, long memberId) throws InterruptedException {
         log.info("입찰 req: {}", req);
 
-        // 1. 경매 정보가 없는 경우 - 에러 발생시키기 (종료된 경매)
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
 
+        // 1. auctionId가 존재하지 않는 경우 (잘못된 접근)
         if (auctionRealtimeO.isEmpty()) {
+            throw new InvalidValueException("존재하지 않는 경매입니다.", ErrorCode.INVALID_INPUT_VALUE);
+        }
+
+        // 2. 경매 정보가 없는 경우 - 에러 발생시키기 (종료된 경매)
+        if (auctionRealtimeRepository.isExpired(auctionId)) {
             throw new BusinessException("종료된 경매입니다. auctionId가 존재하지 않습니다.", ErrorCode.AUCTION_ALREADY_ENDED);
+        }
+        
+        // 3. 판매자는 본인이 올린 경매에 참여 불가
+        if (memberId == auctionRealtimeO.get().getSellerId()) {
+            throw new BusinessException("판매자는 입찰할 수 없습니다.", ErrorCode.SELLER_CANNOT_BID);
         }
 
         log.info("auctionRealtime: {}", auctionRealtimeO.get());
-        // 2. 실시간 DB 정보와 client 측 정보가 일치하는지 확인하기 (경매 단위, 현재 가격)
+        // 4. 실시간 DB 정보와 client 측 정보가 일치하는지 확인하기 (경매 단위, 현재 가격)
 
-        // 2-1. 경매 단위가 일치하지 않을 경우
+        // 4-1. 경매 단위가 일치하지 않을 경우
         if (auctionRealtimeO.get().getPriceSize() != req.getCurrentPriceSize()) {
             throw new BusinessException("경매 단위가 갱신되었습니다. 다시 시도해주세요", ErrorCode.DIFFERENT_PRICE_SIZE);
         }
 
-        // 2-2. 현재 가격이 일치하지 않을 경우
+        // 4-2. 현재 가격이 일치하지 않을 경우
         if (auctionRealtimeO.get().getHighestPrice() != req.getCurrentHighestPrice()) {
             throw new BusinessException("현재 가격이 갱신되었습니다. 다시 시도해주세요", ErrorCode.DIFFERENT_HIGHEST_PRICE);
         }
 
         long beforeWinnerId = -1;
         
-        // 3. 입찰 강탈 여부를 확인하기 위해, 이전 최고값 입찰자 구해놓기
+        // 5. 입찰 강탈 여부를 확인하기 위해, 이전 최고값 입찰자 구해놓기
         Optional<LeaderBoardMemberInfo> winnerO = auctionRealtimeLeaderBoardRepository.getWinner(auctionId);
         if (winnerO.isPresent()) {
             beforeWinnerId = winnerO.get().getMemberId();
         }
 
-        // 4. 실시간 최고가, 리더보드 갱신하기
+        // 6. 실시간 최고가, 리더보드 갱신하기
         AuctionRealtime auctionRealtime = auctionRealtimeO.get();
 
         LeaderBoardMemberResp resp = updateLeaderBoardAndHighestPrice(auctionRealtime, req, memberId, auctionId);
 
-        // 5. Kafka 에 갱신된 최고 입찰 정보 (DTO) 보내기
+        // 7. Kafka 에 갱신된 최고 입찰 정보 (DTO) 보내기
         KafkaBidDTO kafkaBidDTO = KafkaBidDTO.of(auctionRealtime, req, resp, memberId, beforeWinnerId);
         log.info("sending KafkaBidDTO: {}", kafkaBidDTO);
         producer.sendBid(kafkaBidDTO);
@@ -145,15 +173,15 @@ public class BiddingService {
     @RTransactional
     public LeaderBoardMemberResp updateLeaderBoardAndHighestPrice(AuctionRealtime auctionRealtime, AuctionBidReq req, long memberId, long auctionId) {
 
-        // 3-1. 실시간 최고가 갱신
+        // 6-1. 실시간 최고가 갱신
         int newHighestPrice = auctionRealtime.updateHighestPrice();
 
         auctionRealtimeRepository.save(auctionRealtime);
         
-        // 3-2. 유저별 입찰 최고가 정보 갱신하기
+        // 6-2. 유저별 입찰 최고가 정보 갱신하기
         auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
 
-        // 3-3. 리더보드 갱신
+        // 6-3. 리더보드 갱신
         // 받은 request 와 memberId로 DB에 저장되는 리더보드 정보 갱신
         LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
         auctionRealtimeLeaderBoardRepository.save(newHighestPrice, memberInfo, auctionId);
