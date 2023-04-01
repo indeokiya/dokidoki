@@ -47,6 +47,7 @@ public class BiddingService {
      * @param dto
      */
     public void registerAuctionInfo(KafkaAuctionRegisterDTO dto) {
+        log.info("redis 서버에 새 경매 등록. kafkaDTO: {}", dto);
         AuctionRealtime auctionRealtime = AuctionRealtime.from(dto);
         auctionRealtimeRepository.save(auctionRealtime, dto.getTtl(), TimeUnit.MINUTES);
         // 경매 실패 알림을 위한 경매 id - member id set 이 필요함
@@ -60,6 +61,7 @@ public class BiddingService {
      * @return
      */
     public AuctionInitialInfoResp getInitialInfo(long auctionId) {
+        log.info("경매 상세 페이지에서 상세 정보 조회 요청. auctionId: {}", auctionId);
 
         // 1. 초기 리더보드 정보 가져오기
         List<LeaderBoardMemberResp> initialLeaderBoard = getInitialLeaderBoard(auctionId);
@@ -92,7 +94,7 @@ public class BiddingService {
      */
     @RealTimeLock
     public void bid(long auctionId, AuctionBidReq req, long memberId) throws InterruptedException {
-        log.info("req: {}", req);
+        log.info("입찰 req: {}", req);
 
         // 1. 경매 정보가 없는 경우 - 에러 발생시키기 (종료된 경매)
         Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
