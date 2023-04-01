@@ -26,6 +26,7 @@ class AuctionRealtimeRepositoryTest {
     static long auctionId = 1_000;
     static int highestPrice = 7_000_000;
     static int priceSize = 5_000;
+    static long sellerId = 2_000;
 
 
     @BeforeEach
@@ -39,11 +40,14 @@ class AuctionRealtimeRepositoryTest {
     class CREATE_READ_테스트 {
 
         AuctionRealtime auctionRealtime = AuctionRealtime
-                .builder().auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize).build();
+                .builder().auctionId(auctionId).highestPrice(highestPrice).priceSize(priceSize)
+                .sellerId(sellerId).build();
         AuctionRealtime auctionRealtime1 = AuctionRealtime
-                .builder().auctionId(auctionId + 1).highestPrice(highestPrice).priceSize(priceSize).build();
+                .builder().auctionId(auctionId + 1).highestPrice(highestPrice).priceSize(priceSize)
+                .sellerId(sellerId).build();
         AuctionRealtime auctionRealtime2 = AuctionRealtime
-                .builder().auctionId(auctionId + 2).highestPrice(highestPrice).priceSize(priceSize).build();
+                .builder().auctionId(auctionId + 2).highestPrice(highestPrice).priceSize(priceSize)
+                .sellerId(sellerId).build();
 
         @Test
         @DisplayName("경매가 잘 등록되고")
@@ -116,6 +120,23 @@ class AuctionRealtimeRepositoryTest {
             Thread.sleep((ttl + 2) * 1000);
 
 //            assert(auctionRealtimeRepository.findById(auctionId).isEmpty());
+            assert(auctionRealtimeRepository.isExpired(auctionId));
+
+        }
+
+        @Test
+        @DisplayName("expire 함수를 사용하면 expire가 된다")
+        public void 실시간_경매_expire() throws InterruptedException {
+            // given
+            auctionRealtimeRepository.save(auctionRealtime, 10, TimeUnit.DAYS);
+
+            assert(! auctionRealtimeRepository.isExpired(auctionId));
+
+            // when
+            auctionRealtimeRepository.delete(auctionId);
+
+            Thread.sleep(10 * 1000);
+
             assert(auctionRealtimeRepository.isExpired(auctionId));
 
         }

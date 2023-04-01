@@ -16,13 +16,15 @@ public enum ErrorCode {
 
     // Business
     BUSINESS_EXCEPTION_ERROR(400, "B001", "Business Exception Occurs"),
+    IS_NOT_SELLER(400, "B002", "Is not seller"),
 
 
     // Bid
     DIFFERENT_PRICE_SIZE(400, "BID001", "Different Price Size"),
     DIFFERENT_HIGHEST_PRICE(400, "BID002", "Different Highest Price"),
     FAILURE_GET_REALTIME_LOCK(500, "BID003", "Failure getting realtime lock"),
-    AUCTION_ALREADY_ENDED(400, "BID004", "Already Ended");
+    AUCTION_ALREADY_ENDED(400, "BID004", "Already Ended"),
+    SELLER_CANNOT_BID(400, "BID005", "Seller can not bid");
 
     private final String code;
     private final String message;
