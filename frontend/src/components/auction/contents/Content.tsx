@@ -56,6 +56,14 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
   const { auctionData } = props;
 
   const auction_end: boolean = auctionData.final_price !== undefined;
+  const is_sold_out: boolean = auctionData?.is_sold_out !== undefined ? auctionData.is_sold_out : false
+
+  // 가격
+  const price = numberFormat(
+    auctionData.final_price !== undefined
+      ? auctionData.final_price
+      : auctionData.cur_price,
+  )
 
   //마우스를 올리면 그림자형성됨
   const [isHovered, setIsHovered] = useState(false);
@@ -109,7 +117,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         />
       )}
 
-      {auction_end && (
+      {auction_end && is_sold_out && (
         <SoldOut>
           sold
           <br />
@@ -171,11 +179,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         <StyledFlex>
           <StyledSpan style={{ fontWeight: 'bold' }}>현재 가격 : </StyledSpan>
           <StyledSpan style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-            {numberFormat(
-              auctionData.final_price !== undefined
-                ? auctionData.final_price
-                : auctionData.cur_price,
-            )}
+            {auction_end && price !== "undefined 원" ? price : "미판매 종료"}
           </StyledSpan>
         </StyledFlex>
       </CardContent>
