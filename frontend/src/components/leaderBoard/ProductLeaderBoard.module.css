@@ -1,0 +1,21 @@
+/* CSS 코드 */
+.textContainer {
+    font-size: 24px;
+    font-family: sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: typing 0.5s steps(40, end);
+  }
+  
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  
+  .none{
+
+  }

@@ -19,10 +19,12 @@ import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router';
 import BidButton from './bidButton/BidButton';
 import ProductLeaderBoard from './ProductLeaderBoard';
+import { SocketBidData } from 'src/datatype/datatype';
 
 function numberFormat(price: number | null) {
   return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
 }
+
 
 
 type Props = {
@@ -31,7 +33,7 @@ type Props = {
   seller_id: string;
   category: string;
   offer_price: number;
-  price_size: number;
+  priceSize: number;
   highestPrice: number;
   is_my_interest: boolean;
   end_time: string;
@@ -40,7 +42,9 @@ type Props = {
   meeting_place: string;
   product_name: string;
   seller_name: string;
-  setHighestPrice:(price:number)=>void
+  setHighestPrice: (price: number) => void; //갱신된 입찰가
+
+  leaderBoardData: SocketBidData[]; //리더보드 데이터
 };
 
 const ProductInfo = ({
@@ -49,7 +53,7 @@ const ProductInfo = ({
   seller_id,
   category,
   offer_price,
-  price_size,
+  priceSize,
   highestPrice,
   is_my_interest,
   end_time,
@@ -58,10 +62,14 @@ const ProductInfo = ({
   meeting_place,
   product_name,
   seller_name,
-  setHighestPrice
+  leaderBoardData,
+  setHighestPrice,
 }: Props) => {
   const navigate = useNavigate();
-  
+  console.log('leaderBoardData >>> ', leaderBoardData);
+
+  const loginUser = useRecoilValue(userInfoState);
+
   const dataLeft = ['작성자', '시작가격', '경매단위', '제품명'];
   const userInfo = useRecoilValue(userInfoState);
   const [bookmark, setBookmark] = useState(is_my_interest);
@@ -82,14 +90,15 @@ const ProductInfo = ({
     axios
       .post(`auctions/${auction_id}/bid`, {
         current_highest_price: highestPrice,
-        current_price_size: price_size,
+        current_price_size: priceSize,
         name: userInfo.name,
       })
       .then((res) => {
         // 성공 로직
         console.log('입찰 성공 res >> ', res);
-        alert(`${highestPrice + price_size}원에 입찰에 성공했습니다.`);
-        setHighestPrice(highestPrice+price_size);
+        alert(`${highestPrice + priceSize}원에 입찰에 성공했습니다.`);
+        setHighestPrice(highestPrice + priceSize);
+
       })
       .catch((err) => {
         // 실패 로직
@@ -135,7 +144,7 @@ const ProductInfo = ({
     auction_id: auction_id,
     title: auction_title,
     description: description,
-    price_size: price_size,
+    price_size: priceSize,
     meeting_place: meeting_place,
   };
 
@@ -197,7 +206,7 @@ const ProductInfo = ({
             {numberFormat(offer_price)}
           </Typography>
           <Typography variant="subtitle1" sx={{ fontSize: '0.9rem' }}>
-            {numberFormat(price_size)}
+            {numberFormat(priceSize)}
           </Typography>
           <Typography variant="caption" sx={{ fontSize: '0.9rem' }}>
             {product_name}
@@ -206,8 +215,12 @@ const ProductInfo = ({
         <Grid item xs={12}></Grid>
 
         {/* 리더보드 */}
-        <ProductLeaderBoard highestPrice={highestPrice}></ProductLeaderBoard>
-    
+        <ProductLeaderBoard
+        priceSize={priceSize}
+          highestPrice={highestPrice}
+          offerPrice={offer_price}
+          leaderBoardData={leaderBoardData}
+        ></ProductLeaderBoard>
       </Grid>
       <Stack spacing={2} direction="row" mt={3}>
         <BidButton bid={bid} />

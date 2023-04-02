@@ -71,3 +71,11 @@ export type SocketData={
   },
   price_size:number;
 }
+
+
+export type SocketBidData = {
+  name:string,
+  bid_time:string,
+  bid_price:number
+
+}
