@@ -39,7 +39,7 @@ public class JWTUtil {
         }
     }
 
-    public static Long getUserId(HttpServletRequest request){
+    public static Long getUserId(HttpServletRequest request) {
         String authorizationHeader = request.getHeader("Authorization");
         if (authorizationHeader == null || authorizationHeader.isBlank())
             return null;
