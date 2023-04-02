@@ -1,21 +1,102 @@
-const TestContainer = () =>{
-  let data = false;
+import Grid from '@mui/material/Grid';
+import styled from 'styled-components';
+import Typography from '@mui/material/Typography';
 
-  function login(){
-    localStorage.setItem("access_token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2ODAyMzM0NjEsImV4cCI6MTY4MDIzNzA2MSwidXNlcl9pZCI6M30.5fKOXLEsqb-4_kB9IsBlq3nE6WDZFvW-MOQTpoQq0vA")
-    localStorage.setItem("refresh_token","eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJkb2tpZG9raS5jb20iLCJpYXQiOjE2ODAyMzM0NjEsImV4cCI6MTY4MTUyOTQ2MSwidXNlcl9pZCI6MywibmFtZSI6Iuq5gOuylOyLnSIsImVtYWlsIjoia2JnNzYzNUBuYXZlci5jb20iLCJwaWN0dXJlIjoiaHR0cHM6Ly9kb2tpZG9raS5zMy5hcC1ub3J0aGVhc3QtMi5hbWF6b25hd3MuY29tL3Byb2ZpbGVzLzBlNTAwZTYzLTZmYWUtNDczZi04MjE0LWYwMjcyYTlmMjlkMi13YWxscGFwZXJiZXR0ZXIuY29tXzI1NjB4MTQ0MCUyMCUyODclMjkuanBnIiwicHJvdmlkZXIiOiJLQUtBTyJ9.k4M3l26bPQmy09F8XvwggdNCJnKmgr4TgAvffEvRTaM")
-    localStorage.setItem("user_info",`{"iss":"dokidoki.com","iat":1680233167,"exp":1681529167,"user_id":3,"name":"김범식","email":"kbg7635@naver.com","picture":"https://dokidoki.s3.ap-northeast-2.amazonaws.com/profiles/0e500e63-6fae-473f-8214-f0272a9f29d2-wallpaperbetter.com_2560x1440%20%287%29.jpg","provider":"KAKAO","is_logged_in":true}`)
+const TestContainer = () => {
+  const list = [
+    {
+      time: '12:23:34',
+      name: '김범식',
+      price: 30000000,
+    },
+    {
+      time: '12:23:34',
+      name: '오종석',
+      price: 30000000,
+    },
+    {
+      time: '12:23:34',
+      name: '윤재휘',
+      price: 30000000,
+    },
+    {
+      time: '12:23:34',
+      name: '김범식',
+      price: 30000000,
+    },
+    {
+      time: '12:23:34',
+      name: '오종석',
+      price: 30000000,
+    },
+    {
+      time: '12:23:34',
+      name: '윤재휘',
+      price: 30000000,
+    },
+  ];
 
-  }
-  login()
-
-
-
-return (
-  <div>
-    {data}
-  </div>
-)
-}
+  return (
+    <BackgroundDiv>
+      <Grid container>
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" sx={{ color: '#BBCAFF' }}>
+            ( + 11,000원)
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }}>
+            <span>
+            20,000,000 원
+            </span>
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <InnerDiv>
+            <Grid container>
+              {list &&
+                list.map((data: any, i: number) => {
+                  return (
+                    <Grid item xs={12} key={i} sx={{ marginBottom: '0.5rem' }}>
+                      <Typography variant="caption" sx={{ fontSize: '1rem' }}>
+                        [{data.time}]{' '}
+                      </Typography>
+                      <Typography variant="caption" color="primary" sx={{ fontSize: '1rem' }}>
+                        {data.name}{' '}
+                      </Typography>
+                      <Typography variant="caption">님이 </Typography>
+                      <Typography variant="caption" color="error" sx={{ fontSize: '1rem' }}>
+                        {data.price}
+                      </Typography>
+                      <Typography variant="caption">원에 입찰하셨습니다.</Typography>
+                    </Grid>
+                  );
+                })}
+            </Grid>
+          </InnerDiv>
+        </Grid>
+      </Grid>
+    </BackgroundDiv>
+  );
+};
 
 export default TestContainer;
+const BackgroundDiv = styled.div`
+  width: 400px;
+  padding: 1rem;
+  border-radius: 10px;
+  background-color: #3a77ee;
+  box-sizing: border-box;
+`;
+
+const InnerDiv = styled.div`
+  margin-top: 1rem;
+  padding: 1rem;
+  box-sizing: border-box;
+  background-color: white;
+  width: 100%;
+  height: 300px;
+  border-radius: 10px;
+`;
+
+
