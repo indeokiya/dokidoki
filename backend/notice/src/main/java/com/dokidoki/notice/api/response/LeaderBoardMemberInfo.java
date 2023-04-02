@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 public class LeaderBoardMemberInfo {
     private long memberId;
     private String name;
-    private String email;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
