@@ -1,5 +1,6 @@
 package com.dokidoki.auction.service;
 
+import com.dokidoki.auction.common.HttpUtil;
 import com.dokidoki.auction.domain.entity.AuctionEndEntity;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
@@ -9,11 +10,15 @@ import com.dokidoki.auction.dto.response.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class MyInfoService {
     private final AuctionIngRepository auctionIngRepository;
     private final AuctionListService auctionListService;
     private final ImageService imageService;
+    private final HttpUtil httpUtil;
 
     /*
     판매중인 경매 목록 조회
@@ -40,10 +46,13 @@ public class MyInfoService {
     입찰중인 경매 목록 조회
      */
     @Transactional(readOnly = true)
-    public PaginationResp readAllMyBiddingAuction(Long memberId, Pageable pageable) {
+    public PaginationResp readAllMyBiddingAuction(String accessToken, Long memberId, Pageable pageable) {
+        // Bid Server로부터 입찰중인 경매 ID 리스트 가져오기
+        BiddingResp biddingResp = httpUtil.getAuctionIdList(accessToken);
+
         // 데이터 조회
         Page<AuctionIngEntity> auctionIngEntities = auctionIngRepository
-                .findAllMyBiddingAuction(memberId, pageable);
+                .findAllByIdInOrderByIdDesc(biddingResp.getAuctionIdList(), pageable);
 
         // Response DTO 변환
         return auctionListService.convertToDTOWithImages(memberId, auctionIngEntities);

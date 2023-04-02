@@ -52,9 +52,13 @@ public class MyInfoController {
         if (memberId == null)
             return ResponseEntity.status(403).body(BaseResponseBody.of("토큰이 유효하지 않습니다."));
 
+        // 토큰 파싱
+        String authorizationHeader = request.getHeader("Authorization");
+        String accessToken = authorizationHeader.substring(7);
+
         // 데이터 조회 및 반환
         PaginationResp paginationResp = myInfoService
-                .readAllMyBiddingAuction(memberId, PageRequest.of(page, size));
+                .readAllMyBiddingAuction(accessToken, memberId, PageRequest.of(page, size));
         return ResponseEntity.status(200).body(BaseResponseBody.of("입찰중인 경매 목록 조회 성공", paginationResp));
     }
 
