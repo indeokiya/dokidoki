@@ -16,6 +16,4 @@ const BidButton:React.FC<{bid:()=>void}> = (props) => {
 
 export default BidButton;
 
-const ButtomBackground = styled.div`
-  background-color: black;
-`;
+
