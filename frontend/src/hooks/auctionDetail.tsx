@@ -20,6 +20,7 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
         },
         staleTime: 5*1000,
         retry: 0,
+        refetchOnMount:true,
         refetchOnWindowFocus: false,
       },
       { // bid
@@ -32,6 +33,7 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
         },
         staleTime: 5*1000,
         retry: 0,
+        refetchOnMount:true,
         refetchOnWindowFocus: false,
       },  
   ])

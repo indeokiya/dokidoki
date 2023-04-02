@@ -1,77 +1,97 @@
 import Grid from '@mui/material/Grid';
-import styled from 'styled-components';
+import styled,  { keyframes } from 'styled-components';
 import Typography from '@mui/material/Typography';
+import { SocketBidData } from 'src/datatype/datatype';
+import { useEffect,useState } from 'react';
+import Box from '@mui/material/Box';
+import styles from './ProductLeaderBoard.module.css'
+import HighestPrice from './HighestPrice';
 
-const ProductLeaderBoard:React.FC<{highestPrice:number }> = (props) => {
-const {highestPrice} = props
+const ProductLeaderBoard: React.FC<{
+  highestPrice: number;
+  offerPrice: number;
+  leaderBoardData: SocketBidData[];
+  priceSize:number;
+ 
+
+}> = (props) => {
+  const [animation, setAnimation] = useState(false);
+  const { highestPrice, offerPrice, leaderBoardData,priceSize } = props;
   function numberFormat(price: number | null) {
     return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
   }
 
+  useEffect(()=>{
 
-
-  const list = [
-    {
-      time: '12:23:34',
-      name: '김범식',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '오종석',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '윤재휘',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '김범식',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '오종석',
-      price: 30000000,
-    },
-    
-  ];
+    setAnimation(true)
+    setTimeout(()=>{
+      setAnimation(false)
+    },500)
+  },[leaderBoardData])
 
   return (
     <BackgroundDiv>
       <Grid container>
+
+          {/* 증가한 금액 */}
         <Grid item xs={12}>
           <Typography variant="subtitle1" sx={{ color: '#BBCAFF' }}>
-            (+ {numberFormat(10000)})
+            (+ {numberFormat(highestPrice - offerPrice)})
           </Typography>
         </Grid>
+
+        {/* 최고 경매가 */}
         <Grid item xs={12}>
           <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }}>
-            <span>
-            {numberFormat(highestPrice)}
-            </span>
+            {/* <span>{numberFormat(highestPrice)}</span> */}
+            <HighestPrice increase={priceSize} max={highestPrice} />
+
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <InnerDiv>
             <Grid container>
-              {list &&
-                list.map((data: any, i: number) => {
+              {leaderBoardData &&
+                leaderBoardData.map((data: any, i: number) => {
                   return (
                     <Grid item xs={12} key={i} sx={{ marginBottom: '0.5rem' }}>
-                      <Typography variant="caption" sx={{ fontSize: '1rem' }}>
-                        [{data.time}]{' '}
-                      </Typography>
-                      <Typography variant="caption" color="primary" sx={{ fontSize: '1rem' }}>
-                        {data.name}{' '}
-                      </Typography>
-                      <Typography variant="caption">님이 </Typography>
-                      <Typography variant="caption" color="error" sx={{ fontSize: '1rem' }}>
-                        {data.price}
-                      </Typography>
-                      <Typography variant="caption">원에 입찰하셨습니다.</Typography>
+                      {i === 0 ? (
+                        <Box className={animation ?(styles.textContainer):(styles.none)}>
+                          <Typography variant="caption" sx={{ fontSize: '1.2rem' }}>
+                            [
+                            {data.bid_time.length > 10
+                              ? data.bid_time.substring(11, 19)
+                              : data.bid_time}
+                            ]{' '}
+                          </Typography>
+                          <Typography variant="caption" color="primary" sx={{ fontSize: '1.2rem' }}>
+                            {data.name}
+                          </Typography>
+                          <Typography variant="caption">님이 </Typography>
+                          <Typography variant="caption" color="error" sx={{ fontSize: '1.2rem' }}>
+                            {numberFormat(data.bid_price)}
+                          </Typography>
+                          <Typography variant="caption">원에 입찰하셨습니다.</Typography>
+                        </Box>
+                      ) : (
+                        <>
+                          <Typography variant="caption" sx={{ fontSize: '1rem' }}>
+                            [
+                            {data.bid_time.length > 10
+                              ? data.bid_time.substring(11, 19)
+                              : data.bid_time}
+                            ]{' '}
+                          </Typography>
+                          <Typography variant="caption" color="primary" sx={{ fontSize: '1rem' }}>
+                            {data.name}
+                          </Typography>
+                          <Typography variant="caption">님이 </Typography>
+                          <Typography variant="caption" color="error" sx={{ fontSize: '1rem' }}>
+                            {numberFormat(data.bid_price)}
+                          </Typography>
+                          <Typography variant="caption">원에 입찰하셨습니다.</Typography>
+                        </>
+                      )}
                     </Grid>
                   );
                 })}
@@ -83,7 +103,7 @@ const {highestPrice} = props
   );
 };
 
-export default  ProductLeaderBoard 
+export default ProductLeaderBoard;
 
 const BackgroundDiv = styled.div`
   width: 100%;
@@ -102,5 +122,3 @@ const InnerDiv = styled.div`
   height: 220px;
   border-radius: 10px;
 `;
-
-

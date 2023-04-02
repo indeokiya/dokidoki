@@ -15,8 +15,8 @@
   }
   
   .bidButton:hover {
-    background: #3A77EE;
-    color: #fff;
+    background: white;
+    color: #3A77EE;
     border-radius: 5px;
     box-shadow: 0 0 5px #3A77EE,
                 0 0 25px #3A77EE,
