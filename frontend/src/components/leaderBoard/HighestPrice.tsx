@@ -15,6 +15,7 @@ const HighestPrice: React.FC<{ max: number; increase: number }> = (props) => {
   const [price, setPrice] = useState(max - increase);
 
   useEffect(() => {
+    
     setAnimation(true);
     let now = increase;
     const count = setInterval(() => {
@@ -22,6 +23,7 @@ const HighestPrice: React.FC<{ max: number; increase: number }> = (props) => {
         clearInterval(count);
         setAnimation(false);
       }
+    
 
       const step = Math.ceil(now / 10);
       now -= step;
@@ -34,3 +36,5 @@ const HighestPrice: React.FC<{ max: number; increase: number }> = (props) => {
 };
 
 export default HighestPrice;
+
+// sx={{animationIterationCount:animation? "infinite":"1" }}

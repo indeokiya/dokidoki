@@ -22,8 +22,6 @@ const PreFixSpan = styled.span`
   //   color: #7fff00;
 `;
 
-
-
 type SuccessAlert = {
   type: string;
   product_id: number;
@@ -32,7 +30,7 @@ type SuccessAlert = {
   final_price: number;
   time_stamp: string;
   read: boolean;
-}
+};
 
 type FailAlert = {
   type: string;
@@ -43,8 +41,7 @@ type FailAlert = {
   my_final_price: number;
   time_stamp: string;
   read: boolean;
-
-}
+};
 
 type CompleteAlert = {
   type: string;
@@ -54,8 +51,7 @@ type CompleteAlert = {
   final_price: number;
   time_stamp: string;
   read: boolean;
-
-}
+};
 
 type OutBidAlert = {
   type: string;
@@ -65,23 +61,22 @@ type OutBidAlert = {
   current_bid_price: number;
   time_stamp: string;
   read: boolean;
-}
+};
 
 type AlertData = {
   type: string; // "PURCHASE_SUCCESS", "PURCHASE_FAIL", "SALE_COMPLETE", "OUTBID"
   product_id: number;
-  product_name : string;
-  auction_id : number;
-  final_price : number;
-  my_final_price : number;
-  current_bid_price : number;
-  time_stamp : string;
+  product_name: string;
+  auction_id: number;
+  final_price: number;
+  my_final_price: number;
+  current_bid_price: number;
+  time_stamp: string;
   price: number;
   // title: string;
   // id: number;
   read: boolean;
 };
-
 
 const AlertItem: React.FC<{
   data: AlertData;
@@ -98,8 +93,7 @@ const AlertItem: React.FC<{
 
   function ComponentHidden(key: number) {
     props.setAlertMap((pre: any) =>
-      Object.keys(pre).map(
-        (__key: any) => {
+      Object.keys(pre).map((__key: any) => {
         if (key === __key) {
           return { ...pre[key], read: true };
         } else {
@@ -146,10 +140,10 @@ const AlertItem: React.FC<{
           <Grid item>
             <Tooltip title="Delete">
               <IconButton
-                // onClick={() => {
-                //   ComponentHidden(props.key); //사라지는 애니메이션 back이랑 연동하는거 아님
-                //   props.setAlertCnt((data: any) => data - 1); //카운트 줄어듬
-                // }}
+              // onClick={() => {
+              //   ComponentHidden(props.key); //사라지는 애니메이션 back이랑 연동하는거 아님
+              //   props.setAlertCnt((data: any) => data - 1); //카운트 줄어듬
+              // }}
               >
                 <DeleteIcon />
               </IconButton>

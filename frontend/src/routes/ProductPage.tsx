@@ -4,7 +4,6 @@ import ProductInfo from '../components/leaderBoard/ProductInfo';
 import Divider from '@mui/material/Divider';
 import styled from 'styled-components';
 import ProductGraph from '../components/leaderBoard/ProductGraph';
-import ProductLeaderBoard from '../components/leaderBoard/ProductLeaderBoard';
 import ProductDescription from '../components/leaderBoard/ProductDescription';
 import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';

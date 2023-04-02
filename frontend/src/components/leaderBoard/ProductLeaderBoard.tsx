@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid';
-import styled,  { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import { SocketBidData } from 'src/datatype/datatype';
 import { useEffect,useState } from 'react';

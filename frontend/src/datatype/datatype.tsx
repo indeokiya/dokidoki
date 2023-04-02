@@ -1,7 +1,6 @@
 
 //경매가 진행중인 물건
 
-import { InternalNumberFormatBase } from "react-number-format/types/types";
 
 //경매 완료된 물건이랑 겹치지 않게 기본값을 설정해 주었다. 
 export type Post = {
