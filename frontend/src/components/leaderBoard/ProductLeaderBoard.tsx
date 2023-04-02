@@ -2,7 +2,14 @@ import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 
-const ProductLeaderBoard = () => {
+const ProductLeaderBoard:React.FC<{highestPrice:number }> = (props) => {
+const {highestPrice} = props
+  function numberFormat(price: number | null) {
+    return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+  }
+
+
+
   const list = [
     {
       time: '12:23:34',
@@ -37,13 +44,13 @@ const ProductLeaderBoard = () => {
       <Grid container>
         <Grid item xs={12}>
           <Typography variant="subtitle1" sx={{ color: '#BBCAFF' }}>
-            ( + 11,000원)
+            (+ {numberFormat(10000)})
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }}>
             <span>
-            20,000,000 원
+            {numberFormat(highestPrice)}
             </span>
           </Typography>
         </Grid>

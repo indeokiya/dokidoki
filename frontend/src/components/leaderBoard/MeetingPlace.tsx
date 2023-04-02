@@ -32,7 +32,7 @@ const MeetingPlace: React.FC<{ location: string }> = (props) => {
         onClick={handleSearch}
         sx={{ width: '100%', display: 'block', margin: '0 auto' }}
       >
-        지도 보기
+        거래 희망지역 확인하기
       </Button>
       {showMap && (
         <Map

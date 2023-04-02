@@ -15,7 +15,6 @@ import MeetingPlace from '../components/leaderBoard/MeetingPlace';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
-
 import { useAuctionDetail } from '../hooks/auctionDetail';
 
 import { useRecoilValue } from 'recoil';
@@ -26,6 +25,8 @@ const ProductPage = () => {
   const loginUser = useRecoilValue(userInfoState);
   const navigate = useNavigate();
   const { id } = useParams() as { id: string };
+
+  const [highestPrice, setHighestPrice]  = useState(0);
 
   // let socket = new SockJS("ws");
   let clientRef = useRef<Client>();
@@ -41,6 +42,8 @@ const ProductPage = () => {
     return () => disconnect();
   }, []);
 
+
+  //소캣 연결 함수
   const connect = () => {
     // 연결할 때
     clientRef.current = new Client({
@@ -52,7 +55,8 @@ const ProductPage = () => {
         console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
-          console.log(`Received message: ${message.body}`);
+          console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
+          setHighestPrice(JSON.parse(message.body).bid_info.bid_price) //가격 갱신되면 최고가 갱신됨
         });
       },
     });
@@ -65,6 +69,8 @@ const ProductPage = () => {
     console.log('socket disconnected');
   };
 
+  
+
   // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
   // data fetching logic
   const { isLoading, isError, error, data } = useAuctionDetail({ id });
@@ -72,6 +78,8 @@ const ProductPage = () => {
   if (isError) {
     console.error('error occured >> ', error.message);
     return <h1>error occured while fetching auction_id: {id}</h1>;
+  }else{
+    if(highestPrice === 0) setHighestPrice(data.highest_price); //에러가 없다면 초기값 최고가 갱신
   }
   // 이 아래부터는 data가 존재함이 보장됨
   console.log('fetched auction data >> ', data);
@@ -90,12 +98,11 @@ const ProductPage = () => {
     seller_name,
     start_time, /// from auction server
     highest_price,
-    leader_board,
+    leader_board, //레디스에 담겨있음
     price_size, /// from bid server
   } = data;
-
-
-
+  
+  
 
   return (
     <>
@@ -104,7 +111,7 @@ const ProductPage = () => {
           sx={{
             border: '1px solid white',
             backgroundColor: 'white',
-            width: '80%',
+            width: '1000px',
             margin: '0 auto',
             padding: '50px',
             borderRadius: '10px',
@@ -112,21 +119,22 @@ const ProductPage = () => {
           }}
         >
           <ScrollTop />
-          <Grid container spacing={3}>
+          <Grid container spacing={3} sx={{marginBottom:"5%"}}>
             <Grid item xs={6}>
               {/* 제품 이미지 */}
-              <ProductImages images={auction_image_urls} end_time={end_time}/>
+              <ProductImages images={auction_image_urls} end_time={end_time} />
             </Grid>
             <Grid item xs={6}>
               {/* 제품 정보 */}
               <ProductInfo
+              setHighestPrice={setHighestPrice}
                 auction_title={auction_title}
                 auction_id={id}
                 seller_id={seller_id}
                 category={category_name}
                 offer_price={offer_price}
                 price_size={price_size}
-                highest_price={highest_price}
+                highestPrice={highestPrice}
                 is_my_interest={is_my_interest}
                 end_time={end_time}
                 start_time={start_time}
@@ -141,12 +149,8 @@ const ProductPage = () => {
           <Grid container direction="column" justifyContent="center" alignItems="center">
             {/* 제품 카테고리 평균 가격 */}
 
-            <Grid item xs={12} sx={{ width: '100%', marginBottom:"10px" }}>
+            <Grid item xs={12} sx={{ width: '100%', marginBottom: '10px' }}>
               <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  {/* <ProductLeaderBoard /> */}
-                </Grid>
-
                 <Grid item xs={6}>
                   <ProductGraph />
                 </Grid>
@@ -175,10 +179,7 @@ const ProductPage = () => {
 
 export default ProductPage;
 
-
-
 const BackgroundDiv = styled.div`
-  
   background-color: #dddddd;
   padding-top: 30px;
 `;
