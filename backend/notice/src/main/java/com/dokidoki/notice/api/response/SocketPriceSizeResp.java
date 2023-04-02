@@ -1,6 +1,8 @@
 package com.dokidoki.notice.api.response;
 
 import com.dokidoki.notice.kafka.dto.KafkaAuctionUpdateDTO;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Getter
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SocketPriceSizeResp {
     private String type;
     private int priceSize;
