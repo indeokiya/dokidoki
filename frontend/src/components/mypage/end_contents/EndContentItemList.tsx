@@ -42,6 +42,7 @@ const salesHistory = (page: number, size: number) => {
     });
 };
 
+
 const EndContentItemList = () => {
   const [posts, setPosts] = useState<Post[]>();
 
@@ -95,6 +96,7 @@ const EndContentItemList = () => {
   }
   console.log('data >>', data);
   console.log('posts >> ', posts);
+
 
   return (
     <div id="scroll">
