@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 
 const Timer: React.FC<{ end_time: string; type?: string }> = (props) => {
   const { end_time, type = undefined } = props;
-  const type_list=['h1','h2','h3','h4','h5','h6','subtitle1','subtitle2','body1','body2','caption']
+ 
 
   const [index, setIndex] = useState(0);
 
@@ -36,9 +36,8 @@ const Timer: React.FC<{ end_time: string; type?: string }> = (props) => {
     const minutesStr = minutes.toString().padStart(2, '0');
     const secondsStr = remainingSeconds.toString().padStart(2, '0');
 
-    return `${hoursStr}:${minutesStr}:${secondsStr}`;
+    return `${hoursStr} : ${minutesStr} : ${secondsStr}`;
   }
-
 
   useEffect(() => {
     setTimeout(() => {
@@ -50,8 +49,10 @@ const Timer: React.FC<{ end_time: string; type?: string }> = (props) => {
 
   return (
     <>
-    
-      <Typography variant="h4" color="primary">
+      <Typography variant="caption" color="primary">
+        남은 시간
+      </Typography>
+      <Typography variant="h4" color="primary" >
         {formatSeconds(second)}
       </Typography>
     </>

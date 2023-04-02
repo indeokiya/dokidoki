@@ -164,7 +164,7 @@ const ProductInfo = ({
   };
 
   return (
-    <div>
+    <StyledBox>
       {userInfo.user_id === seller_id && (
         <StyeldDiv onClick={updateAuction}>
           <IconButton>
@@ -186,7 +186,7 @@ const ProductInfo = ({
           })}
         </Grid>
         <Grid xs={1} />
-        <Grid item xs={6} mt={4} mb={4}>
+        <Grid item xs={9} mt={4} mb={4} height={"122px"}>
           <Typography variant="subtitle1"sx={{fontSize:"0.9rem"}}>{seller_name}</Typography>
           <Typography variant="subtitle1"sx={{fontSize:"0.9rem"}} color="error">{numberFormat(offer_price)}</Typography>
           <Typography variant="subtitle1"sx={{fontSize:"0.9rem"}}>{numberFormat(price_size)}</Typography>
@@ -221,7 +221,7 @@ const ProductInfo = ({
           )}
         </IconButton>
       </Stack>
-    </div>
+    </StyledBox>
   );
 };
 
@@ -231,6 +231,10 @@ const StyledH1 = styled.h1`
   margin-top: 5px;
   margin-bottom: 0px;
 `;
+
+const StyledBox = styled.div`
+  margin-bottom:30px;
+`
 
 const StyeldDiv = styled.div`
   text-align: right;
