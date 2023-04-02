@@ -25,7 +25,6 @@ import java.util.Set;
 public class NoticeService {
 
     private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
-    private final AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
     private final NoticeRepository noticeRepository;
     private final WebSocketController webSocketController;
     private final PayloadUtil payloadUtil;
@@ -37,14 +36,13 @@ public class NoticeService {
     public void auctionSuccess(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         NoticeSuccessResp resp = NoticeSuccessResp.of(dto);
+        long buyerId = dto.getBuyerId();
 
-        Optional<LeaderBoardMemberInfo> winnerO = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId());
-        if (winnerO.isEmpty()) {
+        if (buyerId == -1) {
             return;
         }
-        long memberId = winnerO.get().getMemberId();
-        noticeRepository.save(memberId, resp);
-        webSocketController.sendAlert(memberId, payloadUtil.getStringValue(resp));
+        noticeRepository.save(buyerId, resp);
+        webSocketController.sendAlert(buyerId, payloadUtil.getStringValue(resp));
     }
 
     /**
@@ -54,16 +52,12 @@ public class NoticeService {
     public void auctionFail(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         long auctionId = dto.getAuctionId();
-        long winnerId = -1;
-        Optional<LeaderBoardMemberInfo> winnerO = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId());
-        if (winnerO.isPresent()) {
-            winnerId = winnerO.get().getMemberId();
-        }
+        long buyerId = dto.getBuyerId();
         Set<Map.Entry<Long, Integer>> entries = auctionRealtimeMemberRepository.getAll(auctionId);
         for(Map.Entry<Long, Integer> entry: entries) {
             long memberId = entry.getKey().longValue();
             int myFinalPrice = entry.getValue();
-            if ( memberId == winnerId) {
+            if ( memberId == buyerId) {
                 continue;
             }
             NoticeFailResp resp = NoticeFailResp.of(dto, myFinalPrice);
