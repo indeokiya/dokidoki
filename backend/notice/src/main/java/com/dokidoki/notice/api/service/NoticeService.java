@@ -49,6 +49,7 @@ public class NoticeService {
      * 경매 실패한 모두에게 알림 발송
      * @param dto
      */
+    // TODO - 여기서 에러 날거임.. TypedJsonJacksonCodec 사용법 알아보기
     public void auctionFail(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         long auctionId = dto.getAuctionId();
@@ -91,8 +92,8 @@ public class NoticeService {
             return;
         }
         NoticeOutBidResp resp = NoticeOutBidResp.of(dto);
-        noticeRepository.save(memberId, resp);
-        webSocketController.sendAlert(memberId, payloadUtil.getStringValue(resp));
+        noticeRepository.save(beforeWinnerId, resp);
+        webSocketController.sendAlert(beforeWinnerId, payloadUtil.getStringValue(resp));
     }
 
     /**
