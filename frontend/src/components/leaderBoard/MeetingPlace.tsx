@@ -4,11 +4,8 @@ import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import styled from 'styled-components';
 
-// showMap={showMap} location={meeting_place}
 const MeetingPlace: React.FC<{ location: string }> = (props) => {
   let { location } = props;
-  // let showMap = true;
-  // let location = "사당로 16바길 48"
   let [showMap, setShowMap] = useState(false);
 
   const [mapCenter, setMapCenter] = useState({ lat: 37.5665, lng: 126.978 });
@@ -58,4 +55,7 @@ const MeetingPlace: React.FC<{ location: string }> = (props) => {
 
 export default MeetingPlace;
 
-const StyledDiv = styled.div``;
+const StyledDiv = styled.div`
+
+  margin-bottom: 10%;
+`;

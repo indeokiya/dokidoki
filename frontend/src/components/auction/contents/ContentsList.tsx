@@ -75,7 +75,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
         //조건에 따른 api 분기
         if (category < 9) {
           return getInProgress(category, keyword, pageParam, size); // 여기서 분기할 수 있을 것 같음
-        } else if(category ==9){
+        } else if(category === 9){
           return getDeadline(pageParam, size);
         }else{
           return getEndList(pageParam,size);

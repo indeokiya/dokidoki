@@ -15,7 +15,7 @@ import MeetingPlace from '../components/leaderBoard/MeetingPlace';
 import { useParams } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 
-// const { useAuctionDetail, test } = require("../hooks/auctionDetail");
+
 import { useAuctionDetail } from '../hooks/auctionDetail';
 
 import { useRecoilValue } from 'recoil';
@@ -94,6 +94,9 @@ const ProductPage = () => {
     price_size, /// from bid server
   } = data;
 
+
+
+
   return (
     <>
       <BackgroundDiv>
@@ -103,16 +106,18 @@ const ProductPage = () => {
             backgroundColor: 'white',
             width: '80%',
             margin: '0 auto',
+            padding: '50px',
+            borderRadius: '10px',
+            boxShadow: '1px 1px 10px grey',
           }}
         >
           <ScrollTop />
           <Grid container spacing={3}>
-            <Grid item xs={2} />
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               {/* 제품 이미지 */}
-              <ProductImages images={auction_image_urls} />
+              <ProductImages images={auction_image_urls} end_time={end_time}/>
             </Grid>
-            <Grid item xs={4}>
+            <Grid item xs={6}>
               {/* 제품 정보 */}
               <ProductInfo
                 auction_title={auction_title}
@@ -127,25 +132,34 @@ const ProductPage = () => {
                 start_time={start_time}
                 description={description}
                 meeting_place={meeting_place}
+                product_name={product_name}
+                seller_name={seller_name}
               />
             </Grid>
           </Grid>
           <Divider />
           <Grid container direction="column" justifyContent="center" alignItems="center">
-            {/* 지도 */}
-            <Grid item sx={{ width: '100%' }}>
-              <MeetingPlace location={meeting_place} />
-            </Grid>
-
             {/* 제품 카테고리 평균 가격 */}
-            <Grid item sx={{ width: '100%' }}>
-              <ProductGraph />
-              <ProductLeaderBoard />
+
+            <Grid item xs={12} sx={{ width: '100%', marginBottom:"10px" }}>
+              <Grid container spacing={2}>
+                <Grid item xs={6}>
+                  {/* <ProductLeaderBoard /> */}
+                </Grid>
+
+                <Grid item xs={6}>
+                  <ProductGraph />
+                </Grid>
+              </Grid>
             </Grid>
 
             {/* 제품 설명 */}
             <Grid item sx={{ width: '100%' }}>
               <ProductDescription description={description} />
+            </Grid>
+            {/* 지도 */}
+            <Grid item sx={{ width: '100%' }}>
+              <MeetingPlace location={meeting_place} />
             </Grid>
 
             {/* 댓글 */}
@@ -161,12 +175,10 @@ const ProductPage = () => {
 
 export default ProductPage;
 
-const StyledDiv = styled.div`
-  padding: 30px;
-  box-sizing: border-box;
-`;
+
 
 const BackgroundDiv = styled.div`
+  
   background-color: #dddddd;
   padding-top: 30px;
 `;

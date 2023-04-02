@@ -8,7 +8,6 @@ import { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 
@@ -17,26 +16,14 @@ import { userInfoState } from 'src/store/userInfoState';
 
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router';
-
+import BidButton from './bidButton/BidButton';
+import ProductLeaderBoard from './ProductLeaderBoard';
 
 function numberFormat(price: number | null) {
   return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
 }
 
-//초를 시분 초로 변경해줌
-function formatSeconds(seconds: number): string {
 
-  if (seconds <= 0) return "마감"
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const remainingSeconds = seconds % 60;
-
-  const hoursStr = hours.toString().padStart(2, '0');
-  const minutesStr = minutes.toString().padStart(2, '0');
-  const secondsStr = remainingSeconds.toString().padStart(2, '0');
-
-  return `${hoursStr}:${minutesStr}:${secondsStr}`;
-}
 
 type Props = {
   auction_title: string;
@@ -49,8 +36,10 @@ type Props = {
   is_my_interest: boolean;
   end_time: string;
   start_time: string;
-  description: string,
-  meeting_place: string,
+  description: string;
+  meeting_place: string;
+  product_name: string;
+  seller_name: string;
 };
 
 const ProductInfo = ({
@@ -66,14 +55,15 @@ const ProductInfo = ({
   start_time,
   description,
   meeting_place,
+  product_name,
+  seller_name,
 }: Props) => {
   const navigate = useNavigate();
-  const dataLeft = ['카테고리', '남은시간', '시작가격', '경매단위'];
+  const dataLeft = ['작성자', '시작가격', '경매단위', '제품명'];
   const userInfo = useRecoilValue(userInfoState);
   const [bookmark, setBookmark] = useState(is_my_interest);
 
-
-  function TimeFormat( end: string) {
+  function TimeFormat(end: string) {
     // 두 시간 문자열
     // Date 객체로 변환
     const time1 = new Date(end);
@@ -103,9 +93,9 @@ const ProductInfo = ({
       navigate('/login');
     }
 
-    console.warn("seller >>", seller_id, ", user id >> ", userInfo.user_id)
+    console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
     if (seller_id === userInfo.user_id) {
-      alert('내 경매는 입찰할 수 없습니다.')
+      alert('내 경매는 입찰할 수 없습니다.');
       return;
     }
 
@@ -167,11 +157,11 @@ const ProductInfo = ({
     description: description,
     price_size: price_size,
     meeting_place: meeting_place,
-  }
+  };
 
   const updateAuction = () => {
-    navigate(`/auction/update/${auction_id}`, {state: updateData})
-  }
+    navigate(`/auction/update/${auction_id}`, { state: updateData });
+  };
 
   return (
     <div>
@@ -182,31 +172,29 @@ const ProductInfo = ({
           </IconButton>
         </StyeldDiv>
       )}
+      <Chip label={category} sx={{ color: 'bluegray' }} variant="outlined" />
       <StyledH1>{auction_title}</StyledH1>
 
-      <Divider />
       <Grid container>
-        <Grid item xs={6} mt={4} mb={4}>
+        <Grid item xs={2} mt={4} mb={4}>
           {dataLeft.map((data, i) => {
             return (
-              <Typography variant="subtitle1" key={i} mb="1px">
-                {data}
+              <Typography variant="subtitle1" key={i} mb="1px" textAlign={'end'} sx={{fontSize:"0.9rem"}}>
+                {data} :
               </Typography>
             );
           })}
         </Grid>
+        <Grid xs={1} />
         <Grid item xs={6} mt={4} mb={4}>
-          <Chip label={category} variant="outlined" />
-          <Typography variant="subtitle1" sx={{ color: '#3A77EE' }}>
-            {formatSeconds(second)}
-          </Typography>
-          <Typography variant="subtitle1">{numberFormat(offer_price)}</Typography>
-          <Typography variant="subtitle1">{numberFormat(price_size)}</Typography>
+          <Typography variant="subtitle1"sx={{fontSize:"0.9rem"}}>{seller_name}</Typography>
+          <Typography variant="subtitle1"sx={{fontSize:"0.9rem"}} color="error">{numberFormat(offer_price)}</Typography>
+          <Typography variant="subtitle1"sx={{fontSize:"0.9rem"}}>{numberFormat(price_size)}</Typography>
+          <Typography variant="caption"sx={{fontSize:"0.9rem"}}>{product_name}</Typography>
         </Grid>
-        <Grid item xs={12}>
-          <Divider />
-        </Grid>
-        <Grid item xs={6} mt={2}>
+        <Grid item xs={12}></Grid>
+        <ProductLeaderBoard></ProductLeaderBoard>
+        {/* <Grid item xs={6} mt={2}>
           <Typography variant="h6" fontWeight={'bold'}>
             현재 가격 :{' '}
           </Typography>
@@ -216,22 +204,22 @@ const ProductInfo = ({
             {numberFormat(highest_price)}
           </Typography>
           <Typography color="red"> (+{numberFormat(highest_price - offer_price)})</Typography>
-        </Grid>
+        </Grid> */}
       </Grid>
       <Stack spacing={2} direction="row" mt={3}>
-        <Button variant="contained" sx={{ width: '50%', height: '40px' }} onClick={bid}>
-          <StyledSpan>입찰하기</StyledSpan>
-        </Button>
-        <Button
-          variant="outlined"
-          sx={{ width: '50%', height: '40px' }}
+        <BidButton bid={bid} />
+        <IconButton
+          sx={{ width: '10%', height: '40px' }}
           onClick={() => {
             changeBookmark();
           }}
         >
-          <StyledSpan>찜하기 </StyledSpan>
-          {bookmark ? <TurnedInIcon fontSize="large" /> : <TurnedInNotIcon fontSize="large" />}
-        </Button>
+          {bookmark ? (
+            <TurnedInIcon fontSize="large" color="primary" />
+          ) : (
+            <TurnedInNotIcon fontSize="large" color="primary" />
+          )}
+        </IconButton>
       </Stack>
     </div>
   );
@@ -241,12 +229,7 @@ export default ProductInfo;
 
 const StyledH1 = styled.h1`
   margin-top: 5px;
-`;
-
-const StyledSpan = styled.span`
-  margin-right: 10px;
-  font-size: 15px;
-  
+  margin-bottom: 0px;
 `;
 
 const StyeldDiv = styled.div`

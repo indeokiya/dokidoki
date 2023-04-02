@@ -5,7 +5,7 @@ const BidButton:React.FC<{bid:()=>void}> = (props) => {
     const {bid} = props
   return (
     <Button className={styles.bidButton} onClick={bid}>
-      Submit
+      입찰하기
       <span></span>
       <span></span>
       <span></span>

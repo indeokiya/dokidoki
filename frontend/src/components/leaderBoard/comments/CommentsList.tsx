@@ -7,7 +7,7 @@ import { useReadCommentsQuery } from 'src/hooks/comment';
 import { useState, useEffect } from "react";
 import { useSetRecoilState } from 'recoil';
 import { commentAuctionIdState } from 'src/store/CommentStates';
-
+import Box from '@mui/material/Box';
 
 const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], seller_id: number }> = (props) => {
   const { auction_id, comments, seller_id } = props
@@ -47,7 +47,7 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
         <CommentInput parentId={null} refetch={refetch} />
         {commentList.map((data) => {
           return (
-            <>
+            <Box sx={{border:"1px solid #dddddd" ,marginBottom:"2rem", }}>
               <Comment
                 key={data.id}
                 name={data.member_name}
@@ -80,11 +80,8 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
                       ></Comment>
                     </>
                   );
-                })}
-              <br />
-              <br />
-           
-            </>
+                })}        
+            </Box>
           );
         })}
       </StyledDiv>
@@ -95,6 +92,7 @@ const CommentsList: React.FC<{ auction_id: string, comments: CommentType[], sell
 export default CommentsList;
 
 const StyledDiv = styled.div`
-padding: 0 12rem;
+
 box-sizing: border-box;
+padding-bottom:100px
 `;
