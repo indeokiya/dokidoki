@@ -10,6 +10,7 @@ import org.redisson.client.protocol.ScoredEntry;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
@@ -31,11 +32,15 @@ public class AuctionRealtimeLeaderBoardRepository {
         return sb.toString();
     }
 
-    public LeaderBoardMemberInfo getWinner(long auctionId) {
+    public Optional<LeaderBoardMemberInfo> getWinner(long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         LeaderBoardMemberInfo last = scoredSortedSet.last();
         log.info("score: {}", scoredSortedSet.getScore(last));
-        return last;
+        if (last == null) {
+            return Optional.empty();
+        } else {
+            return  Optional.of(last);
+        }
     }
 
     public Collection<ScoredEntry<LeaderBoardMemberInfo>> getAll(long auctionId) {
