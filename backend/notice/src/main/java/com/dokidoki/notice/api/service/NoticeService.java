@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -36,7 +37,12 @@ public class NoticeService {
     public void auctionSuccess(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         NoticeSuccessResp resp = NoticeSuccessResp.of(dto);
-        long memberId = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId()).getMemberId();
+
+        Optional<LeaderBoardMemberInfo> winnerO = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId());
+        if (winnerO.isEmpty()) {
+            return;
+        }
+        long memberId = winnerO.get().getMemberId();
         noticeRepository.save(memberId, resp);
         webSocketController.sendAlert(memberId, payloadUtil.getStringValue(resp));
     }
@@ -48,7 +54,11 @@ public class NoticeService {
     public void auctionFail(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         long auctionId = dto.getAuctionId();
-        long winnerId = auctionRealtimeLeaderBoardRepository.getWinner(auctionId).getMemberId();
+        long winnerId = -1;
+        Optional<LeaderBoardMemberInfo> winnerO = auctionRealtimeLeaderBoardRepository.getWinner(dto.getAuctionId());
+        if (winnerO.isPresent()) {
+            winnerId = winnerO.get().getMemberId();
+        }
         Set<Map.Entry<Long, Integer>> entries = auctionRealtimeMemberRepository.getAll(auctionId);
         for(Map.Entry<Long, Integer> entry: entries) {
             long memberId = entry.getKey().longValue();
