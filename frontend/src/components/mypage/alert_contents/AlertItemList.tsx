@@ -1,64 +1,82 @@
 import AlertItem from './AlertItem';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { noticeAPI } from 'src/api/axios';
+import AlertItemSuccess from './AlertItemSuccess';
+import AlertItemOutBid from './AlertItemOutBid';
+import AlertItemFail from './AlertItemFail';
+import AlertItemComplete from './AlertItemComplete';
+
 
 type AlertData = {
   type: string; // "PURCHASE_SUCCESS", "PURCHASE_FAIL", "SALE_COMPLETE", "OUTBID"
-  productId: number;
-  productName : string;
-  auctionId : number;
-  finalPrice : number;
-  myFinalPrice : number;
-  currentBidPrice : number;
-  timeStamp : string;
+  product_id: number;
+  product_name : string;
+  auction_id : number;
+  final_price : number;
+  my_final_price : number;
+  current_bid_price : number;
+  time_stamp : string;
   price: number;
   // title: string;
   // id: number;
-  isVisible:boolean;
+  read: boolean;
 };
 
 const AlertItemList = () => {
-  // const [alertList, setAlertList] = useState([
-  //   { id: 1, type: '구매 성공', productId: 1, price: 123123, title: '휴대폰', isVisible: true },
-  //   { id: 2, type: '구매 실패', productId: 2, price: 123123, title: '컴퓨터', isVisible: true },
-  //   { id: 3, type: '판매 성공', productId: 3, price: 123123, title: '노트북', isVisible: true },
-  //   { id: 4, type: '입찰 강탈', productId: 4, price: 123123, title: '세탁기', isVisible: true },
-  //   { id: 5, type: '구매 성공', productId: 5, price: 123123, title: '에어컨', isVisible: true },
-  //   { id: 6, type: '구매 성공', productId: 6, price: 123123, title: '휴대폰', isVisible: true },
-  // ]);
-  // 알림 내역
-  let alertDatas:any = {}
-
-  // 알림 내역 가져오기
-  noticeAPI
-  .get("/")
-  .then( ({ data }) => {
-    console.log('알림 내역 >> ', data)
-    alertDatas = data
-  })
-  .catch((err) => {
-    console.log(err)
-  })
-
-  const renderAlerts = (): JSX.Element[] => {
-    const alerts = Object.keys(alertDatas).map(
-      (key: any) => {
-        return <AlertItem key={key} data={alertDatas[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}></AlertItem>;
-      }
-    );
-    return alerts;
-  };
-
   const [alertMap, setAlertMap] = useState<any>({})
+  const [alertCnt , setAlertCnt] = useState(0)
 
-  const [alertCnt , setAlertCnt] = useState(Object.keys(alertDatas).length)
+  useEffect(() => {
+    noticeAPI.get("/")
+    .then(({ data }) => {
+      console.log('알림 내역 >> ', data)
+      setAlertCnt(countAlert(data))
+      setAlertMap(data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+}, [])
+
+const countAlert = (data:any) => {
+  var cnt = 0
+  Object.keys(data).map((key: string) => {
+    if (! data[key].read) {
+      cnt += 1;
+    }
+  })
+  return cnt;
+}
   
-  return (
-    <div>
-      알람 개수 : {Object.keys(alertDatas).length}
-      {renderAlerts()}
-    </div>
-  );
+const renderAlerts = (): JSX.Element[] => {
+  return Object.keys(alertMap).map((key: string) => {
+    if (!alertMap[key]) {
+      return <span/>;
+    }
+
+    if (alertMap[key].type === "PURCHASE_SUCCESS") {
+      return <AlertItemSuccess key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+
+    } else if (alertMap[key].type === "PURCHASE_FAIL") {
+      return <AlertItemFail key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+
+    } else if (alertMap[key].type === "SALE_COMPLETE") {
+      return <AlertItemComplete key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+
+    } else if (alertMap[key].type === "OUTBID") {
+      return <AlertItemOutBid key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+    }
+
+    return <AlertItem key={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt} />;
+  })
+}
+
+return (
+  <div>
+    알람 개수: {alertCnt}
+    {renderAlerts()}
+  </div>
+)
 };
 
 export default AlertItemList;
