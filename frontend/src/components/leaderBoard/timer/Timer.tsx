@@ -3,19 +3,7 @@ import Typography from '@mui/material/Typography';
 
 const Timer: React.FC<{ end_time: string; type?: string }> = (props) => {
   const { end_time, type = undefined } = props;
-  const type_list = [
-    'h1',
-    'h2',
-    'h3',
-    'h4',
-    'h5',
-    'h6',
-    'subtitle1',
-    'subtitle2',
-    'body1',
-    'body2',
-    'caption',
-  ];
+ 
 
   const [index, setIndex] = useState(0);
 
