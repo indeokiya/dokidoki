@@ -1,5 +1,8 @@
 
 //경매가 진행중인 물건
+
+import { InternalNumberFormatBase } from "react-number-format/types/types";
+
 //경매 완료된 물건이랑 겹치지 않게 기본값을 설정해 주었다. 
 export type Post = {
     auction_id: number;
@@ -55,3 +58,16 @@ export type CommentType = {
   modified_time: string,
   sub_comments: CommentType[]
 };
+
+
+
+// 소캣으로오는 입찰정보
+export type SocketData={
+  type:string,
+  bid_info:{
+    name:string,
+    bid_time:number[],
+    bid_price:number
+  },
+  price_size:number;
+}

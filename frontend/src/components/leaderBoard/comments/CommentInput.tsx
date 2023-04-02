@@ -12,6 +12,8 @@ import { commentAuctionIdState } from 'src/store/CommentStates';
 const CommentInput: React.FC<{parentId: string | null, refetch: Function}> = (props) => {
   const { parentId, refetch } = props
 
+  const [arrowColor,setArrowColor] = useState(false);
+
   // Auction Id
   const auctionIdState = useRecoilValue(commentAuctionIdState)
   
@@ -50,9 +52,11 @@ const CommentInput: React.FC<{parentId: string | null, refetch: Function}> = (pr
         onChange={(e) => { setContent(e.target.value) }}
         placeholder="댓글을 작성하세요"
         onKeyDown={handleKeyDown}
+        onFocus={()=>{setArrowColor(true)}}
+        onBlur = {()=>{setArrowColor(false)}}
         endAdornment={
           <InputAdornment onClick={createComment} position="start">
-            <SendIcon />
+            <SendIcon color={arrowColor?"primary":"disabled"} />
           </InputAdornment>
         }
       />

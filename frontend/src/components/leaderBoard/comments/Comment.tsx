@@ -8,6 +8,7 @@ import CommentInput from './CommentInput';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { commentAuctionIdState, parentIdState } from 'src/store/CommentStates';
 import { auctionAPI } from 'src/api/axios';
+import { useState } from 'react';
 //댓글 하나의 형태 만들기
 //child : 대댓글 인지 여부
 //isWriter : 자신이 작성자 인지 확인 id값을 비교해서 true false로 넘겨준다.
@@ -29,6 +30,7 @@ const Comment: React.FC<{
 
   // Auction Id
   const auctionId = useRecoilValue(commentAuctionIdState);
+  const [commnetInputOpen, setCommentInputOpen] = useState(false);
 
   // 답글 달기를 눌렀을 때 본인의 댓글 ID를 set
   const [parentId, setParentId] = useRecoilState(parentIdState);
@@ -52,41 +54,47 @@ const Comment: React.FC<{
   };
 
   return (
-    <Grid container sx={{ background: props.isColor ? 'whitesmoke' : 'white', padding: '1rem' , }}>
+    <Grid container sx={{ background: props.isColor ? 'whitesmoke' : 'white', padding: '1rem' }}>
       {/* 대댓글인지 표시 */}
       {props.isChild && (
-        <Grid item xs={2} alignItems={"end"}>
+        <Grid item xs={1} alignItems={'end'}>
           <SubdirectoryArrowRightIcon />
         </Grid>
       )}
 
       {/* 작성시간 */}
-      <Grid item xs={ isChild ? 10 : 12}>
+      <Grid item xs={isChild ? 11 : 12}>
         <Grid container>
           <Grid item xs={12}>
             <StyledDiv>
               <StyledFlex>
+                {/* 아바타 표시 */}
+                <Avatar alt="Remy Sharp" src={props.avatar} />
 
-              {/* 아바타 표시 */}
-              <Avatar alt="Remy Sharp" src={props.avatar} />
-
-              {/* 글작성자 인지아닌지 표시 */}
-              {props.isWriter ? (
-                <StyledSpan>{props.name}</StyledSpan>
+                {/* 글작성자 인지아닌지 표시 */}
+                {props.isWriter ? (
+                  <StyledSpan>{props.name}</StyledSpan>
                 ) : (
                   <Typography variant="body1" mx="1rem">
-                  {props.name}
+                    {props.name}
+                  </Typography>
+                )}
+                <Typography variant="subtitle2" align="right">
+                  {props.written_time.substr(0, 10)}
                 </Typography>
-              )}
-              <Typography variant="subtitle2" align="right">
-                {props.written_time.substr(0, 10)}
-              </Typography>
               </StyledFlex>
 
               <div>
                 {/* 답글 버튼 */}
                 {!props.isChild ? (
-                  <Button variant="text" color="success" onClick={clickReply}>
+                  <Button
+                    variant="text"
+                    color="success"
+                    onClick={() => {
+                      clickReply();
+                      setCommentInputOpen(true);
+                    }}
+                  >
                     답글
                   </Button>
                 ) : null}
@@ -103,23 +111,27 @@ const Comment: React.FC<{
           </Grid>
 
           {/* 댓글이 삭제되면 삭제되었다고 표시됨 이것은 대댓글이 달려있을 때를 위함임   */}
-          {props.text.length !== 0 ? (
-            <Grid item xs={12}>
-              <Typography variant="body1" my={1}>
-                {props.text}
-              </Typography>
-            </Grid>
-          ) : (
-            <Grid item xs={12}>
-              <Typography variant="body1" color="GrayText">
-                삭제된 댓글입니다.
-              </Typography>
-            </Grid>
-          )}
+
+          <Grid item xs={12}>
+            <Typography variant="body1" my={1}>
+              {props.text}
+            </Typography>
+          </Grid>
         </Grid>
       </Grid>
-      {!props.isChild && parentId === commentId ? (
-        <CommentInput parentId={commentId} refetch={refetch}/>
+      {!props.isChild && parentId === commentId && commnetInputOpen ? (
+        <>
+          <CommentInput parentId={commentId} refetch={refetch} />
+          <Button
+            variant="text"
+            color="error"
+            onClick={() => {
+              setCommentInputOpen(false);
+            }}
+          >
+            창 닫기
+          </Button>
+        </>
       ) : null}
     </Grid>
   );
@@ -127,9 +139,9 @@ const Comment: React.FC<{
 
 export default Comment;
 const StyledFlex = styled.div`
-  display:flex;
+  display: flex;
   align-items: center;
-`
+`;
 
 const StyledSpan = styled.span`
   border-radius: 4px;
@@ -143,6 +155,6 @@ const StyledSpan = styled.span`
 
 const StyledDiv = styled.div`
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
 `;
