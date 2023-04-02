@@ -13,11 +13,14 @@
   
   .zoomInOut {
     animation-name: zoomInOut;
-    animation-duration: 1s;
+    animation-duration: 0.7s;
     animation-timing-function: ease-in-out;
     animation-iteration-count: infinite;
   }
 
   .none{
-
+    /* animation-name: zoomInOut;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out; */
+    /* animation-iteration-count: ; */
   }
