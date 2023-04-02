@@ -1,8 +1,6 @@
 package com.dokidoki.auction.domain.entity;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -41,13 +39,14 @@ public class CommentEntity {
     @Column(name = "parent_id")
     private Long parentId;
 
-    public static CommentEntity createComment(Long id, Long auction_id, MemberEntity memberEntity, String content, Long parent_id) {
-        CommentEntity newCommentEntity = new CommentEntity();
-        newCommentEntity.id = id;
-        newCommentEntity.auctionId = auction_id;
-        newCommentEntity.memberEntity = memberEntity;
-        newCommentEntity.content = content;
-        newCommentEntity.parentId = parent_id;
-        return newCommentEntity;
+    @Builder
+    public CommentEntity(
+            Long id, Long auctionId, MemberEntity memberEntity, String content, Long parentId, LocalDateTime writtenTime) {
+        this.id = id;
+        this.auctionId = auctionId;
+        this.memberEntity = memberEntity;
+        this.content = content;
+        this.parentId = parentId;
+        this.writtenTime = writtenTime;
     }
 }

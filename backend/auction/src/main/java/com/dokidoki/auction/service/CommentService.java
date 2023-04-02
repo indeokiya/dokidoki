@@ -91,13 +91,12 @@ public class CommentService {
                 return 5;
         }
 
-        CommentEntity newCommentEntity = CommentEntity.createComment(
-                null,  // INSERT의 경우 Auto Increment를 위해 null 설정
-                auctionId,
-                memberEntity,
-                comment,
-                parentId
-        );
+        CommentEntity newCommentEntity = CommentEntity.builder()
+                .auctionId(auctionId)
+                .memberEntity(memberEntity)
+                .content(comment)
+                .parentId(parentId)
+                .build();
         commentRepository.save(newCommentEntity);
         return 0;
     }
@@ -125,13 +124,15 @@ public class CommentService {
 
         // 업데이트
         // 1. 기존 정보에 새로운 댓글로 교체한 객체 생성
-        CommentEntity newCommentEntity = CommentEntity.createComment(
-                commentEntity.getId(),  // Update를 위해 PK도 기존대로 설정
-                commentEntity.getAuctionId(),
-                commentEntity.getMemberEntity(),
-                newComment,
-                commentEntity.getParentId()
-        );
+        CommentEntity newCommentEntity = CommentEntity.builder()
+                .id(commentEntity.getId())  // Update를 위해 PK도 기존대로 설정
+                .auctionId(commentEntity.getAuctionId())
+                .memberEntity(commentEntity.getMemberEntity())
+                .content(newComment)
+                .parentId(commentEntity.getParentId())
+                .writtenTime(commentEntity.getWrittenTime())
+                .build();
+
         // 2. 저장
         commentRepository.save(newCommentEntity);
 
@@ -153,10 +154,35 @@ public class CommentService {
         if (!memberId.equals(commentEntity.getMemberEntity().getId()))
             return 6;
 
-        // 댓글 삭제
-        commentRepository.delete(commentEntity);
-        // 대댓글 모두 삭제
-        commentRepository.deleteCommentsByParentId(commentEntity.getId());
+        // 댓글 삭제 (하위 댓글이 있을 수 있으므로 member와 content만 삭제)
+        CommentEntity deletedCommentEntity = CommentEntity.builder()
+                .id(commentEntity.getId())
+                .auctionId(commentEntity.getAuctionId())
+                .memberEntity(null)
+                .content("")
+                .parentId(commentEntity.getParentId())
+                .writtenTime(commentEntity.getWrittenTime())
+                .build();
+        commentRepository.save(deletedCommentEntity);
+
+        // 댓글 더미(댓글 + 대댓글)를 가져온 뒤 가장 최근 댓글부터 DB에서 삭제 처리 (더이상 하위 댓글이 없는 댓글은 삭제해도 되므로)
+        Long parentId = commentEntity.getParentId() == null
+                ? commentId
+                : commentEntity.getParentId();
+        List<CommentEntity> commentEntities = commentRepository
+                .findAllByIdIsOrParentIdIsOrderByIdDesc(parentId, parentId);
+
+        // 삭제할 댓글의 ID 리스트 구하기
+        List<Long> idToRemove = new ArrayList<>();
+        for (CommentEntity comment : commentEntities) {
+            if (comment.getMemberEntity() != null)  // 유효한 댓글이 나타나면 더이상 DB에서 지우면 안 되므로 반복 종료
+                break;
+            idToRemove.add(comment.getId());
+        }
+
+        // 삭제
+        commentRepository.deleteAllByIdInBatch(idToRemove);
+
         return 0;
     }
 
