@@ -179,7 +179,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         <StyledFlex>
           <StyledSpan style={{ fontWeight: 'bold' }}>{auction_end ? "낙찰가 : " : "현재 가격 : "}</StyledSpan>
           <StyledSpan style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-            {auction_end && price !== "undefined 원" ? price : "미판매 종료"}
+            {!auction_end || price !== "undefined 원" ? price : "미판매 종료"}
           </StyledSpan>
         </StyledFlex>
       </CardContent>
