@@ -221,8 +221,10 @@ public class AuctionService {
             return;
         }
         log.info("auctionEndEvent >> find buyer entity");
-        // 구매자가 없을 수 있으므로 예외처리 X
-        MemberEntity buyer = memberRepository.findById(buyerId).orElse(null);
+        // 구매자가 없을 수 있으므로 buyerId가 주어졌을 경우에만 사용자 검색
+        MemberEntity buyer = buyerId != null
+                ? memberRepository.findById(buyerId).orElse(null)
+                : null;
 
         // 경매완료 데이터 삽입
         LocalDateTime endTime = LocalDateTime.now();
