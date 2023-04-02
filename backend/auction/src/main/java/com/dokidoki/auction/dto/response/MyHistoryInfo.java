@@ -27,7 +27,9 @@ public class MyHistoryInfo {
     public MyHistoryInfo(AuctionEndEntity auctionEndEntity, String auctionImageUrl) {
         this.auction_id = auctionEndEntity.getId();
         this.auction_title = auctionEndEntity.getTitle();
-        this.buyer_name = auctionEndEntity.getBuyer().getName();
+        this.buyer_name = auctionEndEntity.getBuyer() != null
+                ? auctionEndEntity.getBuyer().getName()
+                : "";
         this.seller_name = auctionEndEntity.getSeller().getName();
         this.offer_price = auctionEndEntity.getOfferPrice();
         this.final_price = auctionEndEntity.getFinalPrice();
