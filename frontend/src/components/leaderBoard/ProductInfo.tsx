@@ -18,6 +18,8 @@ import { useNavigate } from 'react-router';
 import BidButton from './bidButton/BidButton';
 import ProductLeaderBoard from './ProductLeaderBoard';
 import { SocketBidData } from 'src/datatype/datatype';
+import Button from '@mui/material/Button';
+import CloseButton from './closeButton/CloseButton';
 
 function numberFormat(price: number | null) {
   return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
@@ -111,7 +113,47 @@ const ProductInfo = ({
       });
   };
 
-  //찜함수
+  const close = () => {
+    if (!userInfo.is_logged_in) {
+      alert('먼저 로그인해주세요.');
+      navigate('/login');
+    }
+    console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
+    if (seller_id !== userInfo.user_id) {
+      alert('종료할 수 없습니다. 내 경매가 아닙니다.');
+      return;
+    }
+
+    if (!window.confirm("정말로 경매를 종료하시겠습니까?")) {
+      return;
+    }
+    const axios = bidAPI;
+    axios
+      .delete(`auctions/${auction_id}/close`)
+      .then((res) => {
+        // 성공 로직
+        console.log('입찰 성공 res >> ', res);
+        alert(`${highestPrice + priceSize}원에 입찰에 성공했습니다.`);
+        setHighestPrice(highestPrice + priceSize);
+
+      })
+      .catch((err) => {
+        // 실패 로직
+        console.log(err);
+        const error_message = err.response.data.message;
+        if (error_message === 'Different Highest Price') {
+          alert('현재 최고가격이 갱신되어 입찰에 실패했습니다.');
+        } else if (error_message === 'Different Price Size') {
+          alert('경매 단위가 수정되었습니다. 다시 시도하세요.');
+        } else if (error_message === 'Already Ended') {
+          alert('이미 종료된 경매입니다.');
+        } else {
+          alert('알 수 없는 이유로 입찰에 실패했습니다.');
+        }
+      });
+  };
+
+  //찜 함수
   const changeBookmark = () => {
     if (bookmark) {
       // 찜을 해놓은 경우
@@ -218,10 +260,12 @@ const ProductInfo = ({
         ></ProductLeaderBoard>
       </Grid>
       <Stack spacing={2} direction="row" mt={3}>
-        {seller_id === loginUser.name ? (
-          <Button variant="text" color="success"></Button>
-        ) : (
-          <BidButton bid={bid} />
+        {(seller_id === userInfo.user_id) &&(
+          <CloseButton close={close}/>
+        )
+        }
+        {(seller_id !== userInfo.user_id) && (
+        <BidButton bid={bid} />
         )}
       </Stack>
     </StyledBox>
