@@ -39,4 +39,19 @@ public class LandingPageService {
 
         return mostSaleProductContents;
     }
+
+    // 최근 N일 이내 가장 많이 거래된 제품 조회하기, 최대 5개
+    @Transactional(readOnly = true)
+    public List<MostSaleProductContent> readMostSaleProductsWithinNDays(Integer days) {
+        // DB 조회
+        List<MostSaleProductInterface> mostSaleProductInterfaces = productRepository
+                .findMostSaleProductsWithinNDays(days);
+
+        // DTO 생성
+        List<MostSaleProductContent> mostSaleProductContents = new ArrayList<>();
+        for (MostSaleProductInterface mostSaleProductInterface : mostSaleProductInterfaces)
+            mostSaleProductContents.add(new MostSaleProductContent(mostSaleProductInterface));
+
+        return mostSaleProductContents;
+    }
 }

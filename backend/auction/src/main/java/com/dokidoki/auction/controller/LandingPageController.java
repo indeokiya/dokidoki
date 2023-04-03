@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -26,10 +27,19 @@ public class LandingPageController {
 
     // 가장 많이 거래된 제품 조회하기, 최대 5개
     @GetMapping("/most-sale-products")
-    public ResponseEntity<BaseResponseBody> readMostSaleProducts() {
-        List<MostSaleProductContent> mostSaleProductContents = landingPageService.readMostSaleProducts();
+    public ResponseEntity<BaseResponseBody> readMostSaleProducts(
+            @RequestParam(defaultValue = "0") Integer days) {
+        String message;
+        List<MostSaleProductContent> mostSaleProductContents;
+        if (days == 0) {
+            message = "가장 많이 거래된 제품 조회 성공";
+            mostSaleProductContents = landingPageService.readMostSaleProducts();
+        } else {
+            message = days + "일 이내 가장 많이 거래된 제품 조회 성공";
+            mostSaleProductContents = landingPageService.readMostSaleProductsWithinNDays(days);
+        }
         return ResponseEntity.status(200).body(
-                BaseResponseBody.of("가장 많이 거래된 제품 조회 성공", mostSaleProductContents)
+                BaseResponseBody.of(message, mostSaleProductContents)
         );
     }
 }
