@@ -21,7 +21,7 @@ public class KafkaAuctionConsumer {
     public void auctionEndListener(
             @Payload KafkaAuctionEndDTO auction,
             @Headers MessageHeaders headers) {
-        System.out.println("Received auction end message : " + auction);
+        //System.out.println("Received auction end message : " + auction);
         log.info("Received auction end message: [{}]", auction);
         headers.keySet().forEach(key -> {
             log.info("header | key: [{}] value: [{}]", key, headers.get(key));
@@ -38,7 +38,7 @@ public class KafkaAuctionConsumer {
     public void bidListener(
             @Payload KafkaBidDTO bid,
             @Headers MessageHeaders headers) {
-        System.out.println("Received bid message : " + bid);
+        //System.out.println("Received bid message : " + bid);
         log.info("Received bid message: [{}]", bid);
         headers.keySet().forEach(key -> {
             log.info("header | key: [{}] value: [{}]", key, headers.get(key));

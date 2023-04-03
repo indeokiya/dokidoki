@@ -37,6 +37,10 @@ public class AuctionService {
     private final InterestRepository interestRepository;
     private final KafkaAuctionProducer producer;
 
+    private final TreasuryRepository treasuryRepository;
+
+    private final int COMMISION_PERCENT = 5;
+
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
     public List<ProductResp> getProductList(String keyword) {
@@ -216,15 +220,106 @@ public class AuctionService {
     public void auctionEndEvent(Long auctionId, Long buyerId) {
         log.info("auctionEndEvent >> start method");
         AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
+
         if (auctionIngEntity == null) {
             log.error("auctionEndEvent >> 존재하지 않는 경매입니다.");
             return;
         }
         log.info("auctionEndEvent >> find buyer entity");
+
         // 구매자가 없을 수 있으므로 buyerId가 주어졌을 경우에만 사용자 검색
         MemberEntity buyer = buyerId != null
                 ? memberRepository.findById(buyerId).orElse(null)
                 : null;
+
+        // 구매자가 존재한다면
+        if(buyer != null){
+            // 경매 종료시 최고가
+            Long finalPrice = auctionIngEntity.getHighestPrice();
+
+            Long commision = finalPrice * COMMISION_PERCENT / 100; // 수수료
+
+
+            // 돈을 지불할 능력이 없으면
+            if(buyer.getPoint() < finalPrice){
+                // 징벌
+
+                // 수수료도 낼 돈이 없으면
+                if(buyer.getPoint() < commision){
+                    MemberEntity updatedBuyer = MemberEntity.builder()
+                            .point(buyer.getPoint())
+                            .id(buyer.getId())
+                            .picture(buyer.getPicture())
+                            .name(buyer.getName())
+                            .sub(buyer.getSub())
+                            .providerType(buyer.getProviderType())
+                            .email(buyer.getEmail())
+                            .EndTimeOfSuspension(LocalDateTime.now().plusMonths(1)) // 한달 정지
+                            .build();
+                    memberRepository.save(updatedBuyer);
+                }else{ // 수수료 지불
+                    MemberEntity updatedBuyer = MemberEntity.builder()
+                            .point(buyer.getPoint() - commision)  // 돈 감소
+                            .id(buyer.getId())
+                            .picture(buyer.getPicture())
+                            .name(buyer.getName())
+                            .sub(buyer.getSub())
+                            .providerType(buyer.getProviderType())
+                            .email(buyer.getEmail())
+                            .EndTimeOfSuspension(buyer.getEndTimeOfSuspension())
+                            .build();
+
+                    TreasuryEntity treasury = treasuryRepository.findById((long)1)
+                            .orElseGet(()->TreasuryEntity.builder().money((long)0).build());
+
+                    // 국고에 돈 저장
+                    treasuryRepository.save(
+                            TreasuryEntity.builder().money(treasury.getMoney() + commision).build()
+                    );
+
+                    memberRepository.save(updatedBuyer);
+                }
+                return;
+            }else{
+                MemberEntity seller =  auctionIngEntity.getSeller();
+
+                Long sellerGetMoney = finalPrice - commision; // 수수료 제외 지급 금액
+
+                MemberEntity updatedSeller  = MemberEntity.builder()
+                        .point((seller.getPoint() + sellerGetMoney))  // 수수료 제외 돈 추가
+                        .id(seller.getId())
+                        .picture(seller.getPicture())
+                        .name(seller.getName())
+                        .sub(seller.getSub())
+                        .providerType(seller.getProviderType())
+                        .email(seller.getEmail())
+                        .build();
+
+                MemberEntity updatedBuyer = MemberEntity.builder()
+                        .point(buyer.getPoint() - finalPrice)  // 돈 감소
+                        .id(buyer.getId())
+                        .picture(buyer.getPicture())
+                        .name(buyer.getName())
+                        .sub(buyer.getSub())
+                        .providerType(buyer.getProviderType())
+                        .email(buyer.getEmail())
+                        .build();
+
+                TreasuryEntity treasury = treasuryRepository.findById((long)1)
+                        .orElseGet(()->TreasuryEntity.builder().money((long)0).build());
+
+                // 국고에 돈 저장
+                treasuryRepository.save(
+                        TreasuryEntity.builder().money(treasury.getMoney() + commision).build()
+                );
+
+                List<MemberEntity> memberEntityList = new ArrayList<>();
+                memberEntityList.add(updatedBuyer);
+                memberEntityList.add(updatedSeller);
+
+                memberRepository.saveAll(memberEntityList);
+            }
+        }
 
         // 경매완료 데이터 삽입
         LocalDateTime endTime = LocalDateTime.now();

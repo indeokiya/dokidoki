@@ -1,4 +1,4 @@
-package com.dokidoki.userserver.entity;
+package com.dokidoki.auction.domain.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
