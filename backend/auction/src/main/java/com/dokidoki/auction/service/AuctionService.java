@@ -182,7 +182,7 @@ public class AuctionService {
         2. 경매 종료 시 '경매중' 테이블에서 '경매 종료' 테이블로 옮기기 위한 메서드
      */
     @Transactional
-    public void updateHighestPrice(Long auctionId, Integer highestPrice) {
+    public void updateHighestPrice(Long auctionId, Long highestPrice) {
         log.info("updateHighestPrice >> start method");
         AuctionIngEntity auctionIngEntity = auctionIngRepository.findById(auctionId).orElse(null);
         if (auctionIngEntity == null) {

@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LeaderboardHistoryReq {
     private Long member_id;
-    private Integer bid_price;
+    private Long bid_price;
     private LocalDateTime bid_time;
 }

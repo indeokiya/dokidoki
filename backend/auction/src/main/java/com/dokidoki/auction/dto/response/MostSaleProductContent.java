@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 public class MostSaleProductContent {
     private final String product_name;
-    private final Integer sale_cnt;
+    private final Long sale_cnt;
 
     public MostSaleProductContent(MostSaleProductInterface mostSaleProductInterface) {
         this.product_name = mostSaleProductInterface.getName();
