@@ -1,6 +1,8 @@
 package com.dokidoki.db.entity;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -21,6 +23,7 @@ public class ProductEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private CategoryEntity category;
 
     @Column(name = "category_id" , insertable = false, updatable = false)
@@ -28,15 +31,9 @@ public class ProductEntity {
 
     private String name;        // 제품명
 
-    @Column(name = "img_url")
+    @Column(name = "img_url",columnDefinition = "MEDIUMTEXT")
     private String imgUrl;      // 이미지 url
 
     @Column(name = "sale_cnt")
-    private Integer saleCnt;        // 판매 빈도
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<AuctionIngEntity> auctionIngEntities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
-    private List<AuctionEndEntity> auctionEndEntities = new ArrayList<>();
+    private Long saleCnt;        // 판매 빈도
 }

@@ -17,7 +17,7 @@ public class AuctionImageEntity {
     @Column(name = "auction_id")
     private Long auctionId;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "MEDIUMTEXT")
     private String imageUrl;
 
     public static AuctionImageEntity createAuctionImage(Long auctionId, String imageUrl) {

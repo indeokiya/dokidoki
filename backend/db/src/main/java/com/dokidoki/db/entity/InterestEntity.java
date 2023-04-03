@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -20,6 +22,7 @@ public class InterestEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = MemberEntity.class)
     @JoinColumn(name = "member_id")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private MemberEntity member;
 
     @Column(name = "member_id", insertable = false, updatable = false)

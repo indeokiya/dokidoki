@@ -19,8 +19,8 @@ public class AuctionImageEntity {
     private Long id;
 
     @Column(name = "auction_id")
-    private Long sellerId;
+    private Long auctionId;
 
-    @Column(name = "image_url")
+    @Column(name = "image_url", columnDefinition = "MEDIUMTEXT")
     private String imageUrl;
 }
