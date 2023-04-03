@@ -1,5 +1,13 @@
 server:
   port: 80
+  tomcat:
+    accesslog:
+      enabled: true
+      suffix: .log
+      prefix: access_log
+      file-date-format: .yyyy-MM-dd
+      pattern: '%{yyyy-MM-dd HH:mm:ss}t %s %r'
+    basedir: ./
 
 spring:
   mvc:
