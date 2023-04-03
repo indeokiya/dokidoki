@@ -111,8 +111,13 @@ public class BiddingService {
         if (!auctionRealtimeO.get().getSellerId().equals(memberId)) {
             throw new BusinessException("권한이 없는 사용자입니다. 판매자가 아닙니다.", ErrorCode.IS_NOT_SELLER);
         }
+
+        // 3. 이미 종료된 경매인 경우
+        if (auctionRealtimeRepository.isExpired(auctionId)) {
+            throw new BusinessException("이미 종료된 경매입니다.", ErrorCode.AUCTION_ALREADY_ENDED);
+        }
         
-        // 3. 경매 종료시키기
+        // 4. 경매 종료시키기
         auctionRealtimeRepository.delete(auctionId);
 
     }
