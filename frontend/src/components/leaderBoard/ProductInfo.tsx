@@ -126,6 +126,10 @@ const ProductInfo = ({
       alert('종료할 수 없습니다. 내 경매가 아닙니다.');
       return;
     }
+
+    if (!window.confirm("정말로 경매를 종료하시겠습니까?")) {
+      return;
+    }
     const axios = bidAPI;
     axios
       .delete(`auctions/${auction_id}/close`)
@@ -152,7 +156,7 @@ const ProductInfo = ({
       });
   };
 
-  //찜함수
+  //찜 함수
   const changeBookmark = () => {
     if (bookmark) {
       // 찜을 해놓은 경우
