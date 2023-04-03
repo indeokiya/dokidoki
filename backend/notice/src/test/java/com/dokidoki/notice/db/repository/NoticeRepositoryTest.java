@@ -23,8 +23,8 @@ class NoticeRepositoryTest {
     static long auctionId = 1;
     static long memberId = 30;
     static long productId = 2;
-    static int finalPrice = 500;
-    static int myFinalPrice = 400;
+    static long finalPrice = 500;
+    static long myFinalPrice = 400;
     static String productName = "갤럭시 노트 23";
 
     NoticeFailResp resp = NoticeFailResp.builder()
@@ -48,7 +48,7 @@ class NoticeRepositoryTest {
         noticeRepository.save(memberId, resp);
         System.out.println(noticeRepository.getAll(memberId));
 
-        noticeRepository.updateIsRead(memberId, 0, true);
+        noticeRepository.updateRead(memberId, 0L, true);
         System.out.println(noticeRepository.getAll(memberId));
 
     }

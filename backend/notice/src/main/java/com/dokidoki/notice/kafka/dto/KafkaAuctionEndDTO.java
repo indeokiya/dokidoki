@@ -13,19 +13,19 @@ import java.time.ZoneId;
 @Setter
 @ToString
 public class KafkaAuctionEndDTO {
-    private long auctionId;
-    private long sellerId;
-    private long buyerId;
-    private int finalPrice;
-    private int priceSize;
-    private long productId;
+    private Long auctionId;
+    private Long sellerId;
+    private Long buyerId;
+    private Long finalPrice;
+    private Long priceSize;
+    private Long productId;
     private String productName;
     private LocalDateTime endTime; // 끝나는 시점에 생성
 
     public KafkaAuctionEndDTO() {}
 
     @Builder
-    public KafkaAuctionEndDTO(long auctionId, long sellerId, long buyerId, int finalPrice, int priceSize, long productId, String productName, LocalDateTime endTime) {
+    public KafkaAuctionEndDTO(Long auctionId, Long sellerId, Long buyerId, Long finalPrice, Long priceSize, Long productId, String productName, LocalDateTime endTime) {
         this.auctionId = auctionId;
         this.sellerId = sellerId;
         this.buyerId = buyerId;
