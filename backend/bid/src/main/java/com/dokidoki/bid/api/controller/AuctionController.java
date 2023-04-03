@@ -20,7 +20,7 @@ public class AuctionController {
     private final BiddingService biddingService;
 
     @GetMapping("/{auctionId}/initial-info")
-    public ResponseEntity<?> getInitialInfo(@PathVariable long auctionId) {
+    public ResponseEntity<?> getInitialInfo(@PathVariable Long auctionId) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("status_code", 200);
         resultMap.put("message", "성공");
@@ -29,9 +29,9 @@ public class AuctionController {
     }
 
     @PostMapping("/{auctionId}/bid")
-    public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() long auctionId, HttpServletRequest request) throws InterruptedException {
+    public ResponseEntity<?> bid(@RequestBody AuctionBidReq req, @PathVariable() Long auctionId, HttpServletRequest request) throws InterruptedException {
         Map<String, Object> resultMap = new HashMap<>();
-        long memberId = JWTUtil.getUserId(request);
+        Long memberId = JWTUtil.getUserId(request);
         biddingService.bid(auctionId, req, memberId);
         resultMap.put("status_code", 200);
         resultMap.put("message", "성공");
@@ -39,9 +39,9 @@ public class AuctionController {
     }
 
     @DeleteMapping("/{auctionId}/close")
-    public ResponseEntity<?> end(@PathVariable long auctionId, HttpServletRequest request) {
+    public ResponseEntity<?> end(@PathVariable Long auctionId, HttpServletRequest request) {
         Map<String, Object> resultMap = new HashMap<>();
-        long memberId = JWTUtil.getUserId(request);
+        Long memberId = JWTUtil.getUserId(request);
         biddingService.end(auctionId, memberId);
         resultMap.put("status_code", 200);
         resultMap.put("message", "경매종료_성공");

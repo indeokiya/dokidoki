@@ -13,13 +13,13 @@ import org.redisson.api.annotation.RId;
 @NoArgsConstructor
 public class AuctionRealtime {
 
-    private long auctionId;
-    private int highestPrice;
-    private int priceSize;
-    private long sellerId;
+    private Long auctionId;
+    private Long highestPrice;
+    private Long priceSize;
+    private Long sellerId;
     private int listenerId;
 
-    private long productId;
+    private Long productId;
     private String productName;
 
     public static AuctionRealtime from(KafkaAuctionRegisterDTO dto) {
@@ -35,7 +35,7 @@ public class AuctionRealtime {
     }
 
     @Builder
-    public AuctionRealtime(long auctionId, int highestPrice, int priceSize, long sellerId, long productId, String productName) {
+    public AuctionRealtime(Long auctionId, Long highestPrice, Long priceSize, Long sellerId, Long productId, String productName) {
         this.auctionId = auctionId;
         this.highestPrice = highestPrice;
         this.priceSize = priceSize;
@@ -44,11 +44,11 @@ public class AuctionRealtime {
         this.productName = productName;
     }
 
-    public void updatePriceSize(int priceSize) {
+    public void updatePriceSize(Long priceSize) {
         this.priceSize = priceSize;
     }
 
-    public int updateHighestPrice() {
+    public Long updateHighestPrice() {
         this.highestPrice = this.highestPrice + this.priceSize;
         return this.highestPrice;
     }

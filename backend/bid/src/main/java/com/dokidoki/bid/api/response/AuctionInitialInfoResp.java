@@ -13,7 +13,7 @@ import java.util.List;
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class AuctionInitialInfoResp {
-    private int highestPrice;
-    private int priceSize;
+    private Long highestPrice;
+    private Long priceSize;
     private List<LeaderBoardMemberResp> leaderBoard;
 }

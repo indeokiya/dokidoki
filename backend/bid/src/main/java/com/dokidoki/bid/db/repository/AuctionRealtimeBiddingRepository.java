@@ -20,13 +20,13 @@ public class AuctionRealtimeBiddingRepository {
     private final RedissonClient redisson;
     private final String keyPrefix = RealTimeConstants.auctionBiddingKey;
 
-    private String getKey(long memberId) {
+    private String getKey(Long memberId) {
         StringBuilder sb = new StringBuilder();
         sb.append(keyPrefix).append(":").append(memberId);
         return sb.toString();
     }
 
-    public Set<Long> findById(long memberId) {
+    public Set<Long> findById(Long memberId) {
         RSet<Long> rSet = redisson.getSet(getKey(memberId));
         Set<Long> set = rSet.readAll();
         if (set == null) {
@@ -36,13 +36,13 @@ public class AuctionRealtimeBiddingRepository {
     }
 
     @RTransactional
-    public void save(long memberId, long auctionId) {
+    public void save(Long memberId, Long auctionId) {
         RSet<Long> rSet = redisson.getSet(getKey(memberId));
         rSet.add(auctionId);
     }
 
     @RTransactional
-    public void delete(long memberId, long auctionId) {
+    public void delete(Long memberId, Long auctionId) {
         RSet<Long> rSet = redisson.getSet(getKey(memberId));
         rSet.remove(auctionId);
     }

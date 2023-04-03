@@ -11,8 +11,8 @@ import lombok.ToString;
 @ToString
 public class KafkaAuctionUpdateDTO {
 
-    private long auctionId;
-    private int priceSize;              // 경매 단위
+    private Long auctionId;
+    private Long priceSize;              // 경매 단위
 
     public KafkaAuctionUpdateDTO() {}
 
@@ -25,7 +25,7 @@ public class KafkaAuctionUpdateDTO {
     }
 
     @Builder
-    public KafkaAuctionUpdateDTO(long auctionId, int priceSize) {
+    public KafkaAuctionUpdateDTO(Long auctionId, Long priceSize) {
         this.auctionId = auctionId;
         this.priceSize = priceSize;
     }
