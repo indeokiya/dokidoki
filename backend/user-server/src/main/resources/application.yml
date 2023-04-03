@@ -54,8 +54,8 @@ jwt:
   issuer: dokidoki.com
   secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
   # unit is ms. 15 * 24 * 60 * 60 * 1000 = 15days 1296000000
-  # 60 * 60 * 1000 = 3600000
-  access_expiration: 3600000
+  # 3 * 60 * 60 * 1000 = 3 hours 10800000
+  access_expiration: 10800000
   refresh_expiration: 1296000000
 
 front:
