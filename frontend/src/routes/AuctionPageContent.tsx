@@ -24,7 +24,7 @@ const AuctionPageContent = () => {
 
   return (
     <>
-      <Container>
+      <Container >
         <Tooltip title="글 작성하기" placement="top">
           <StyledIcon
             onClick={() => {

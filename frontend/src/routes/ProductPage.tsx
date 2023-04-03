@@ -74,6 +74,7 @@ const ProductPage = () => {
               bid_price: bid_price,
             };
             console.log("소켓에서 데이터 받아온 뒤 상황 >> ",leaderBoardData)
+            console.log("소캣에서 넘어온 데이터로 만드는 newData : ",newData)
             setLeaderBoardData(pre =>[newData, ...pre].slice(0,5));
             
           } else {

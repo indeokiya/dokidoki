@@ -133,12 +133,12 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
       <Grid container>
       {hasNextPage ? (
         isFetchingNextPage ? (
-          <Grid item textAlign={"center"}><CircularProgress/></Grid> //로딩중일 때 타겟 숨기기
+          <Grid item xs={12} alignItems={"center"}  textAlign={"center"}><CircularProgress/></Grid> //로딩중일 때 타겟 숨기기
         ) : (
           <Target ref={ref}></Target>
         )
       ) : (
-        <Grid item textAlign={"center"}> 
+        <Grid item xs={12} alignItems={"center"} textAlign={"center"}> 
            <Typography variant="button" display="block" gutterBottom color={'primary'}>
         마지막 게시글 입니다.
       </Typography>
