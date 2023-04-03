@@ -49,7 +49,7 @@ const countAlert = (data:any) => {
 }
   
 const renderAlerts = (): JSX.Element[] => {
-  return Object.keys(alertMap).map((key: string) => {
+  return Object.keys(alertMap).reverse().map((key: string) => {
     if (!alertMap[key]) {
       return <span/>;
     }

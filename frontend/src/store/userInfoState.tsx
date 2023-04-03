@@ -42,3 +42,10 @@ export const userInfoState = atom({
     }
   })
 
+
+  export const myAlertMenuState = atom({
+    key:"myAlertMenuState",
+    default:{
+      menu:"전체"
+    }
+  })

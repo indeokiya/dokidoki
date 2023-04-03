@@ -96,13 +96,8 @@ const MypageNavigator: React.FC<{
     );
   };
 
-
-  
-
-
   const { ...other } = props;
 
-  
 
   return (
     <Drawer variant="permanent" {...other}>
