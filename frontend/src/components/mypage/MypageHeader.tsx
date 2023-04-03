@@ -33,11 +33,11 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
             indicatorColor="secondary"
             aria-label="secondary tabs example"
           >
-            <Tab value="전체" label="전체"/>
-            <Tab value="구매 성공" label="구매 성공" />
-            <Tab value="구매 실패" label="구매 실패" />
-            <Tab value="판매 성공" label="판매 성공" />
-            <Tab value="경쟁 입찰" label="경쟁 입찰" />
+            <Tab value="TOTAL" label="전체"/>
+            <Tab value="PURCHASE_SUCCESS" label="구매 성공" />
+            <Tab value="PURCHASE_FAIL" label="구매 실패" />
+            <Tab value="SALE_COMPLETE" label="판매 성공" />
+            <Tab value="OUTBID" label="경쟁 입찰" />
           </Tabs>
         )}
             </Grid>
