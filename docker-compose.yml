@@ -58,7 +58,7 @@ services:
       context: ./backend/auction
       dockerfile: dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
     volumes:
@@ -73,7 +73,7 @@ services:
       context: ./backend/user-server
       dockerfile: dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
     restart: always
