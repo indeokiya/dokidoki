@@ -27,6 +27,7 @@ export const userInfoState = atom({
       picture: "",
       provider: "",
       user_id: "",
+      point: 0,
     },
     effects: [localStorageEffect('user_info')],
   });

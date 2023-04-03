@@ -1,4 +1,4 @@
-import { Grid, Button, Avatar, Badge, Menu, MenuItem } from '@mui/material';
+import { Grid, Button, Avatar, Badge, Menu, MenuItem, Paper } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -28,6 +28,9 @@ const AfterLoginMenu = () => {
     setAnchorEl(null);
   }
 
+  // 정수 포맷팅
+  const showPoint = (point: number) => point.toString().split( /(?=(?:\d{3})+(?:\.|$))/g ).join( "," )
+
   return (
     <Grid container alignItems={'center'} spacing={1}>
       <Grid item>
@@ -36,7 +39,11 @@ const AfterLoginMenu = () => {
         </Link>
       </Grid>
       <Grid item>
-        <p>{userInfo.name}님 환영합니다.</p>
+        <p>
+          <span>{userInfo.name}</span>님
+          <span style={{ margin: "0 12px", color: "gray" }}>|</span>
+          <span>{showPoint(userInfo.point)}</span> P
+        </p>
       </Grid>
       <Grid item>
         <Button
