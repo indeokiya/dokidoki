@@ -85,6 +85,7 @@ const StyledTimer = styled.div`
   padding: 5px;
   box-sizing:border-box;
   margin-bottom:20px;
+  object-fit: cover;
 `;
 
 const StyledBigImg = styled.img`

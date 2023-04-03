@@ -45,7 +45,7 @@ const ProductPage = () => {
 
     if (!clientRef.current) connect();
     return () => disconnect();
-  }, []);
+  }, [reset]);
 
   //소캣 연결 함수
   const connect = () => {
@@ -105,7 +105,7 @@ const ProductPage = () => {
 
   if(reset){
     console.log("여기 들어옴?")
-    setHighestPrice(data.highest_price); //에러가 없다면 초기값 최고가 갱신
+    setHighestPrice(pre => data.highest_price); //에러가 없다면 초기값 최고가 갱신
     setLeaderBoardData(data.leader_board.slice(0,5)); // 리더보드 초기값 갱신
     setPriceSize(data.price_size);
     SetReset(false);

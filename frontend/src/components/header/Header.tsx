@@ -29,7 +29,7 @@ export default Header;
 const HeaderBox = styled.div`
 padding-right: 1rem;
 padding-left: 1rem;
-border-bottom: 1px solid grey;
+border-bottom: 1px solid #dddddd;
 `;
 const LogoImg = styled.img`
 height: 30px;

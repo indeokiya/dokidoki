@@ -30,10 +30,10 @@ const AfterLoginMenu = () => {
 
   return (
     <Grid container alignItems={'center'} spacing={1}>
-      <Grid item>
-        <Link to="/auction">
-          <Button sx={{ textDecoration: 'none' }}> Auction </Button>
-        </Link>
+      <Grid item>   
+          <Button sx={{ textDecoration: 'none' }} onClick={()=>{
+            navigate("/auction")
+          }}> Auction </Button>
       </Grid>
       <Grid item>
         <p>{userInfo.name}님 환영합니다.</p>
