@@ -44,8 +44,8 @@ class BiddingServiceTest {
     static long sellerId = 20_000;
     static long[] memberIds = {30_000, 30_001};
     final static long auctionId = 70_000;
-    final static int highestPrice = 7_000_000;
-    final static int priceSize = 10_000;
+    final static long highestPrice = 7_000_000;
+    final static long priceSize = 10_000;
     final static String[] names = {"사용자0", "사용자1"};
     final static String[] emails = {"user0@gmail.com", "user1@gmail.com"};
 
@@ -57,8 +57,8 @@ class BiddingServiceTest {
         // 경매 등록
         KafkaAuctionRegisterDTO dto = KafkaAuctionRegisterDTO.builder()
                 .auctionId(auctionId).offerPrice(highestPrice).priceSize(priceSize)
-                .ttl(20).sellerId(sellerId)
-                .productName("싸트북").productId(1).build();
+                .ttl(20L).sellerId(sellerId)
+                .productName("싸트북").productId(1L).build();
         biddingService.registerAuctionInfo(dto);
 
         System.out.println("sellerId: "+ sellerId);
@@ -225,7 +225,7 @@ class BiddingServiceTest {
         @BeforeEach
         public void 준비() {
             req = AuctionUpdatePriceSizeReq.builder()
-                    .priceSize(5_000).build();
+                    .priceSize(5_000L).build();
         }
 
 

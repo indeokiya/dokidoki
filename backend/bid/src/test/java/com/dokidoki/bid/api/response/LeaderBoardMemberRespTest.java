@@ -35,8 +35,8 @@ class LeaderBoardMemberRespTest {
 
     @Test
     public void 생성_null값이_들어갈_때() {
-        LeaderBoardMemberResp nullNameResp = LeaderBoardMemberResp.of(nullNameInfo, 1000);
-        LeaderBoardMemberResp nullEmailResp = LeaderBoardMemberResp.of(nullEmailInfo, 1000);
+        LeaderBoardMemberResp nullNameResp = LeaderBoardMemberResp.of(nullNameInfo, 1000L);
+        LeaderBoardMemberResp nullEmailResp = LeaderBoardMemberResp.of(nullEmailInfo, 1000L);
         System.out.println(nullNameResp);
         System.out.println(nullEmailResp);
 
@@ -45,8 +45,8 @@ class LeaderBoardMemberRespTest {
 
     @Test
     public void 생성_빈문자열이_들어갈_때() {
-        LeaderBoardMemberResp emptyNameResp = LeaderBoardMemberResp.of(emptyNameInfo, 1000);
-        LeaderBoardMemberResp emptyEmailResp = LeaderBoardMemberResp.of(emptyEmailInfo, 1000);
+        LeaderBoardMemberResp emptyNameResp = LeaderBoardMemberResp.of(emptyNameInfo, 1000L);
+        LeaderBoardMemberResp emptyEmailResp = LeaderBoardMemberResp.of(emptyEmailInfo, 1000L);
         System.out.println(emptyEmailResp);
         System.out.println(emptyNameResp);
     }
