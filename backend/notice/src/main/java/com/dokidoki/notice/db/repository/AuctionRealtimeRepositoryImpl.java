@@ -24,14 +24,12 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     private String expireKeyPrefix = RealTimeConstants.expireKey;
     private RedissonClient redisson;
     private RMap<Long, AuctionRealtime> map;
-    private TypedJsonJacksonCodec codec = new TypedJsonJacksonCodec(Long.class, AuctionRealtime.class);
-    private TypedJsonJacksonCodec bucketCodec = new TypedJsonJacksonCodec(Long.class);
 
     @Autowired
     public void setAuctionRealtimeRepositoryImpl(RedissonClient redisson) {
         this.redisson = redisson;
         this.keyPrefix = RealTimeConstants.mapKey;
-        this.map = redisson.getMap(keyPrefix, codec);
+        this.map = redisson.getMap(keyPrefix);
     }
 
     private String getExpireKey(Long auctionId) {
@@ -52,7 +50,7 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
 
     @Override
     public boolean isExpired(Long auctionId) {
-        RBucket bucket = redisson.getBucket(getExpireKey(auctionId), bucketCodec);
+        RBucket bucket = redisson.getBucket(getExpireKey(auctionId));
         if (bucket.get() == null) {
             return true;
         } else {
@@ -62,7 +60,7 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
 
     @Override
     public void delete(Long auctionId) {
-        RBucket bucket = redisson.getBucket(getExpireKey(auctionId), bucketCodec);
+        RBucket bucket = redisson.getBucket(getExpireKey(auctionId));
         bucket.delete();
         AuctionRealtime auctionRealtime = findById(auctionId).get();
     }

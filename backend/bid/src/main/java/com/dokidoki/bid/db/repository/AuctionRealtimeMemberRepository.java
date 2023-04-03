@@ -18,7 +18,6 @@ public class AuctionRealtimeMemberRepository {
 
     private final RedissonClient redisson;
     private final String keyPrefix = RealTimeConstants.memberPriceKey;
-    private TypedJsonJacksonCodec codec = new TypedJsonJacksonCodec(Long.class, Long.class);
 
     private String getKey(Long auctionId) {
         StringBuilder sb = new StringBuilder();
@@ -27,7 +26,7 @@ public class AuctionRealtimeMemberRepository {
     }
 
     public Long findById(Long auctionId, Long memberId) {
-        RMap<Long, Long> map = redisson.getMap(getKey(auctionId), codec);
+        RMap<Long, Long> map = redisson.getMap(getKey(auctionId));
         Long myBidPrice = map.get(memberId);
         if (myBidPrice == null) {
             throw new InvalidValueException("조회할 수 없는 값입니다.");
@@ -37,7 +36,7 @@ public class AuctionRealtimeMemberRepository {
 
     @RTransactional
     public void save(Long auctionId, Long memberId, Long bidPrice) {
-        RMap<Long, Long> map = redisson.getMap(getKey(auctionId), codec);
+        RMap<Long, Long> map = redisson.getMap(getKey(auctionId));
         map.put(memberId, bidPrice);
     }
 
