@@ -1,9 +1,12 @@
 import { Grid, Button, Avatar, Badge, Menu, MenuItem } from '@mui/material';
+import { BadgeProps } from '@mui/material';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { userInfoState } from 'src/store/userInfoState';
+import { useEffect } from 'react';
 import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { noticeAPI } from 'src/api/axios';
 
 const AfterLoginMenu = () => {
   const navigate = useNavigate();
@@ -27,6 +30,37 @@ const AfterLoginMenu = () => {
     alert("성공적으로 로그아웃 되었습니다.");
     setAnchorEl(null);
   }
+  const [alertCnt , setAlertCnt] = useState(0)
+  const [alertMap, setAlertMap] = useState<any>({})
+  const [badgeKey, setBadgeKey] = useState(0)
+
+  const countAlert = (data:any) => {
+    var cnt = 0
+    Object.keys(data).map((key: string) => {
+      if (! data[key].read) {
+        cnt += 1;
+      }
+    })
+    return cnt;
+  }
+
+  useEffect(()=> {
+    noticeAPI.get("/")
+    .then(({ data }) => {
+      console.log('알림 내역 >> ', data)
+      setAlertMap(data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+
+  }, [])
+  
+  useEffect(() => {
+    setAlertCnt(countAlert(alertMap))
+    setBadgeKey((prev) => prev + 1)
+    console.log(alertCnt)
+  }, [alertMap, alertCnt])
 
   return (
     <Grid container alignItems={'center'} spacing={1}>
@@ -47,9 +81,12 @@ const AfterLoginMenu = () => {
           onClick={handleClick}
         >
           <StyledBadge
-            overlap="circular"
+            key={badgeKey}
+            // overlap="circular"
+            badgeContent={alertCnt}
+            max={9}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-            variant="dot"
+            // variant="dot"
           >
             <Avatar alt="Remy Sharp" src={userInfo.picture} />
           </StyledBadge>
@@ -80,11 +117,11 @@ const AfterLoginMenu = () => {
 
 export default AfterLoginMenu;
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
   '& .MuiBadge-badge': {
     backgroundColor: '#44b700',
-    color: '#44b700',
-    boxShadow: `0 0 0 2px `,
+    color: '#fff',
+    // boxShadow: `0 0 0 2px `,
     '&::after': {
       position: 'absolute',
       top: 0,
@@ -93,7 +130,7 @@ const StyledBadge = styled(Badge)(({ theme }) => ({
       height: '100%',
       borderRadius: '50%',
       animation: 'ripple 1.2s infinite ease-in-out',
-      border: '1px solid currentColor',
+      border: '1px solid #4bb700',
       content: '""',
     },
   },
