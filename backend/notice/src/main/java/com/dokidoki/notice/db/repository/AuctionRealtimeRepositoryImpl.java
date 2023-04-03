@@ -6,35 +6,42 @@ import com.dokidoki.notice.common.codes.RealTimeConstants;
 import com.dokidoki.notice.db.entity.AuctionRealtime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RMapCache;
+import org.redisson.api.RBucket;
+import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
-import org.redisson.api.map.event.EntryEvent;
-import org.redisson.api.map.event.EntryExpiredListener;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
 public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository {
 
-    private NoticeService alertService;
-    private String key = RealTimeConstants.mapKey;
-    private RMapCache<Long, AuctionRealtime> map;
+    private String keyPrefix = RealTimeConstants.mapKey;
+    private String expireKeyPrefix = RealTimeConstants.expireKey;
+    private RedissonClient redisson;
+    private RMap<Long, AuctionRealtime> map;
+    private TypedJsonJacksonCodec codec = new TypedJsonJacksonCodec(Long.class, AuctionRealtime.class);
+    private TypedJsonJacksonCodec bucketCodec = new TypedJsonJacksonCodec(Long.class);
 
     @Autowired
-    public void setAuctionRealtimeRepositoryImpl(RedissonClient redisson, NoticeService alertService) {
-        this.key = RealTimeConstants.mapKey;
-        this.alertService = alertService;
-        this.map = redisson.getMapCache(key);
+    public void setAuctionRealtimeRepositoryImpl(RedissonClient redisson) {
+        this.redisson = redisson;
+        this.keyPrefix = RealTimeConstants.mapKey;
+        this.map = redisson.getMap(keyPrefix, codec);
+    }
 
+    private String getExpireKey(Long auctionId) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(expireKeyPrefix).append(":").append(auctionId);
+        return sb.toString();
     }
 
     @Override
-    public Optional<AuctionRealtime> findById(long auctionId) {
+    public Optional<AuctionRealtime> findById(Long auctionId) {
         AuctionRealtime auctionRealtime = map.get(auctionId);
         if (auctionRealtime == null) {
             return Optional.empty();
@@ -44,15 +51,20 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     }
 
     @Override
-    @RTransactional
-    public void save(AuctionRealtime auctionRealtime) {
-        map.put(auctionRealtime.getAuctionId(), auctionRealtime);
+    public boolean isExpired(Long auctionId) {
+        RBucket bucket = redisson.getBucket(getExpireKey(auctionId), bucketCodec);
+        if (bucket.get() == null) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     @Override
-    @RTransactional
-    public void save(AuctionRealtime auctionRealtime, long ttl, TimeUnit timeUnit) {
-        map.put(auctionRealtime.getAuctionId(), auctionRealtime, ttl, timeUnit);
+    public void delete(Long auctionId) {
+        RBucket bucket = redisson.getBucket(getExpireKey(auctionId), bucketCodec);
+        bucket.delete();
+        AuctionRealtime auctionRealtime = findById(auctionId).get();
     }
 
     @Override
@@ -61,6 +73,8 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
         return map.delete();
     }
 
-
-
+    /**
+     * Bucket 으로 저장해둔 key 가 expire 되었는지를 확인하는 listener
+     * @return
+     */
 }

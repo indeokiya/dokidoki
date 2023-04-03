@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -20,6 +21,7 @@ public class AuctionRealtimeMemberRepository {
 
     private final RedissonClient redisson;
     private final String keyPrefix = RealTimeConstants.memberPriceKey;
+    private TypedJsonJacksonCodec codec = new TypedJsonJacksonCodec(Long.class, Long.class);
 
     private String getKey(long auctionId) {
         StringBuilder sb = new StringBuilder();
@@ -28,12 +30,12 @@ public class AuctionRealtimeMemberRepository {
     }
 
     public Set<Map.Entry<Long, Integer>> getAll(long auctionId) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId), codec);
         return map.entrySet();
     }
 
     public int findById(long auctionId, long memberId) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId), codec);
         Integer myBidPrice = map.get(memberId);
         if (myBidPrice == null) {
             throw new InvalidValueException("조회할 수 없는 값입니다.");
@@ -43,13 +45,13 @@ public class AuctionRealtimeMemberRepository {
 
     @RTransactional
     public void save(long auctionId, long memberId, int bidPrice) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId), codec);
         map.put(memberId, bidPrice);
     }
 
     @RTransactional
     public boolean deleteAll(long auctionId) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId), codec);
         return map.delete();
     }
 

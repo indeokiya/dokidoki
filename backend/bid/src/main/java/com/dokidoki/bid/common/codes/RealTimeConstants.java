@@ -6,5 +6,5 @@ public class RealTimeConstants {
     public static final String memberPriceKey = "realtime-member-price";
     public static final String leaderboardKey = "realtime-leaderboard";
     public static final String expireKey = "realtime-expire";
-    public static final int leaderboardLimit = 5;
+    public static final int leaderboardLimit = 200;
 }
