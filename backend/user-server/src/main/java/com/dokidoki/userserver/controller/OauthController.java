@@ -33,6 +33,8 @@ public class OauthController {
 
     private final JwtProvider jwtProvider;
 
+    private final Long DEFAULT_POINT = (long)1000000;
+
     @Value("${front.redirect_uri}")
     private String FRONT_REDIRECT_URI;
 
@@ -77,6 +79,7 @@ public class OauthController {
                                 .picture(info.getPicture())
                                 .name(info.getName())
                                 .providerType(ProviderType.GOOGLE)
+                                .point(DEFAULT_POINT)
                                 .build());
         }
         // 토큰 생성
@@ -101,6 +104,7 @@ public class OauthController {
                             .picture(info.getPicture())
                             .name(info.getNickname())
                             .providerType(ProviderType.KAKAO)
+                            .point(DEFAULT_POINT)
                             .build());
         }
         // 토큰 생성
