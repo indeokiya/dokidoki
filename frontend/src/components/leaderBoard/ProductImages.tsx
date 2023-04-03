@@ -21,7 +21,7 @@ const ProductImages = ({ images, end_time }: Props) => {
         container
         spacing={1}
         sx={{
-          height: '720px',
+          height: '738px',
           border: '1px solid #dddddd',
           borderRadius: '10px',
           padding: '10px',
@@ -85,6 +85,7 @@ const StyledTimer = styled.div`
   padding: 5px;
   box-sizing:border-box;
   margin-bottom:20px;
+  object-fit: cover;
 `;
 
 const StyledBigImg = styled.img`

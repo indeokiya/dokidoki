@@ -45,7 +45,7 @@ const ProductPage = () => {
 
     if (!clientRef.current) connect();
     return () => disconnect();
-  }, []);
+  }, [reset]);
 
   //소캣 연결 함수
   const connect = () => {
@@ -74,6 +74,7 @@ const ProductPage = () => {
               bid_price: bid_price,
             };
             console.log("소켓에서 데이터 받아온 뒤 상황 >> ",leaderBoardData)
+            console.log("소캣에서 넘어온 데이터로 만드는 newData : ",newData)
             setLeaderBoardData(pre =>[newData, ...pre].slice(0,5));
             
           } else {
@@ -105,7 +106,7 @@ const ProductPage = () => {
 
   if(reset){
     console.log("여기 들어옴?")
-    setHighestPrice(data.highest_price); //에러가 없다면 초기값 최고가 갱신
+    setHighestPrice(pre => data.highest_price); //에러가 없다면 초기값 최고가 갱신
     setLeaderBoardData(data.leader_board.slice(0,5)); // 리더보드 초기값 갱신
     setPriceSize(data.price_size);
     SetReset(false);

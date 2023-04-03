@@ -114,23 +114,21 @@ const IngContentItemList = () => {
             )}
         </Grid>
 
-      {/* 무한 스크롤을 위한 타겟 엘리먼트 */}
+      {/* 무한 스크롤 타겟 */}
       <Grid container>
-        {hasNextPage ? (
-          isFetchingNextPage ? (
-            <Grid item textAlign={'center'}>
-              <CircularProgress />
-            </Grid> //로딩중일 때 타겟 숨기기
-          ) : (
-            <Target ref={ref}></Target>
-          )
+      {hasNextPage ? (
+        isFetchingNextPage ? (
+          <Grid item xs={12} alignItems={"center"}  textAlign={"center"}><CircularProgress/></Grid> //로딩중일 때 타겟 숨기기
         ) : (
-          <Grid item textAlign={'center'}>
-            <Typography variant="button" display="block" gutterBottom color={'primary'}>
-              마지막 게시글 입니다.
-            </Typography>
-          </Grid> //마지막 페이지라면 더이상 불러올 데이터가 없음을 표시
-        )}
+          <Target ref={ref}></Target>
+        )
+      ) : (
+        <Grid item xs={12} alignItems={"center"} textAlign={"center"}> 
+           <Typography variant="button" display="block" gutterBottom color={'primary'}>
+        마지막 게시글 입니다.
+      </Typography>
+        </Grid> //마지막 페이지라면 더이상 불러올 데이터가 없음을 표시
+      )}
       </Grid>
     </div>
   );

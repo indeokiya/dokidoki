@@ -18,10 +18,11 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
             // .then(res => console.log("fetched >> ", res))
             // .catch(err => console.error(err))
         },
-        staleTime: 5*1000,
+        staleTime: 0,
+        cacheTime:0,
         retry: 0,
         refetchOnMount:true,
-        refetchOnWindowFocus: false,
+        refetchOnWindowFocus:false,
       },
       { // bid
         queryKey: ["auctionDetailBid", id],
@@ -31,7 +32,8 @@ export const useAuctionDetail = ({ id } : {id: string}) => {
             // .then(res => console.log("fetched >> ", res))
             // .catch(err => console.error(err))
         },
-        staleTime: 5*1000,
+        staleTime: 0,
+        cacheTime:0,
         retry: 0,
         refetchOnMount:true,
         refetchOnWindowFocus: false,

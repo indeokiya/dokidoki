@@ -3,8 +3,12 @@ import InfoCard from './InfoCard';
 import trafficImg from '../../../assets/icon/traffic.png';
 import realtimeImg from '../../../assets/icon/realtime.png';
 import separationImg from '../../../assets/icon/separation.png';
+import styled, { keyframes } from 'styled-components';
+import { useInView } from 'react-intersection-observer';
 
 const FunctionInfoCards = () => {
+  const [ref, inView] = useInView({ threshold: 0.5, triggerOnce: true });
+  console.log("inview >>> ",inView)
   const cardList = [
     {
       icon: trafficImg,
@@ -24,16 +28,107 @@ const FunctionInfoCards = () => {
   ];
 
   return (
-    <Grid container spacing={3}>
-      {cardList.map((data, i) => {
-        return (
-          <Grid item xs={4}>
-            <InfoCard primary={i === 1 ? true : false} key={i} info={data} />
-          </Grid>
-        );
-      })}
+    <Grid container spacing={3} ref={ref} sx={{position:"relative"}}>
+      <Grid item xs={4}>
+        <OneCard start={inView ? 'start' : 'end'}>
+          <InfoCard primary={false} info={cardList[0]} />
+        </OneCard>
+      </Grid>
+      <Grid item xs={4}>
+        <TwoCard start={inView ? 'start' : 'end'}>
+          <InfoCard primary={true} info={cardList[1]} />
+        </TwoCard>
+      </Grid>
+      <Grid item xs={4}>
+        <ThreeCard start={inView ? 'start' : 'end'}>
+          <InfoCard primary={false} info={cardList[2]} />
+        </ThreeCard>
+      </Grid>
     </Grid>
   );
 };
 
 export default FunctionInfoCards;
+
+type StyledDivProps = {
+  start?: string;
+};
+
+const oneAnimation = keyframes`
+0%{
+  opacity : 0;
+  transform : scale(0.8);
+}
+20%{
+  opacity : 1;
+  transform : scale(1);
+}
+100%{
+  opacity : 1;
+  transform : scale(1);
+}
+`;
+
+const twoAnimation = keyframes`
+  0%{
+    opacity : 0;
+    transform : scale(0.8);
+  }
+  20%{
+    opacity : 0;
+    transform : scale(0.8);
+  }
+  80%{
+    opacity : 1;
+    transform : scale(1);
+  }
+  100%{
+    opacity : 1;
+    transform : scale(1);
+  }
+`;
+
+const threeAnimation = keyframes`
+  0%{
+    opacity : 0;
+    transform : scale(0.8);
+  }
+  60%{
+    opacity : 0;
+    transform : scale(0.8);
+  }
+  100%{
+    opacity : 1;
+    transform : scale(1);
+  }
+`;
+
+const OneCard = styled.div<StyledDivProps>`
+opacity:0;
+transition:1s;
+animation-duration: 1s;
+animation-name: ${(props) => (props.start === 'start' ? oneAnimation : '')};
+animation-iteration-count: 1;
+animation-timing-function: ease;
+animation-fill-mode: forwards;
+`;
+
+const TwoCard = styled.div<StyledDivProps>`
+opacity:0;
+transition:1s;
+animation-duration: 1s;
+animation-name: ${(props) => (props.start === 'start' ? twoAnimation : '')};
+animation-iteration-count: 1;
+animation-timing-function: ease;
+animation-fill-mode: forwards;
+`;
+
+const ThreeCard = styled.div<StyledDivProps>`
+opacity:0;
+transition:1s;
+animation-duration: 1s;
+animation-name: ${(props) => (props.start === 'start' ? threeAnimation : '')};
+animation-iteration-count: 1;
+animation-timing-function: ease;
+animation-fill-mode: forwards;
+`;

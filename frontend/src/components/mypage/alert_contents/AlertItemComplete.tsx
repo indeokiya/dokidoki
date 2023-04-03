@@ -23,30 +23,6 @@ const PreFixSpan = styled.span`
   //   color: #7fff00;
 `;
 
-
-
-type SuccessAlert = {
-  type: string;
-  product_id: number;
-  product_name: string;
-  auction_id: number;
-  final_price: number;
-  time_stamp: string;
-  read: boolean;
-}
-
-type FailAlert = {
-  type: string;
-  product_id: number;
-  product_name: string;
-  auction_id: number;
-  final_price: number;
-  my_final_price: number;
-  time_stamp: string;
-  read: boolean;
-
-}
-
 type CompleteAlert = {
   type: string;
   product_id: number;
@@ -56,16 +32,6 @@ type CompleteAlert = {
   time_stamp: string;
   read: boolean;
 
-}
-
-type OutBidAlert = {
-  type: string;
-  product_id: number;
-  product_name: string;
-  auction_id: number;
-  current_bid_price: number;
-  time_stamp: string;
-  read: boolean;
 }
 
 type AlertData = {

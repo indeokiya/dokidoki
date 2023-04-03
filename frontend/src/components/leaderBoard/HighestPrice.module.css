@@ -3,7 +3,7 @@
       transform: scale(1) translateX(0);
     }
     50% {
-      transform: scale(1.1) translateX(15px);
+      transform: scale(1.1) translateX(20px);
     }
     100% {
       transform: scale(1) translateX(0);

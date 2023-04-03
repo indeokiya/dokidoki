@@ -5,6 +5,8 @@ import AlertItemSuccess from './AlertItemSuccess';
 import AlertItemOutBid from './AlertItemOutBid';
 import AlertItemFail from './AlertItemFail';
 import AlertItemComplete from './AlertItemComplete';
+import { myAlertMenuState } from 'src/store/userInfoState';
+import { useRecoilState } from 'recoil';
 
 
 type AlertData = {
@@ -23,6 +25,7 @@ type AlertData = {
 };
 
 const AlertItemList = () => {
+  const [tabValue, setTabValue] = useRecoilState(myAlertMenuState);
   const [alertMap, setAlertMap] = useState<any>({})
   const [alertCnt , setAlertCnt] = useState(0)
 
@@ -30,26 +33,40 @@ const AlertItemList = () => {
     noticeAPI.get("/")
     .then(({ data }) => {
       console.log('알림 내역 >> ', data)
-      setAlertCnt(countAlert(data))
+      setAlertCnt(countAlert(data, tabValue.menu))
       setAlertMap(data)
     })
     .catch((err) => {
       console.log(err)
     })
+    console.log(tabValue)
 }, [])
 
-const countAlert = (data:any) => {
+  useEffect(() => {
+    setAlertCnt(countAlert(alertMap, tabValue.menu))
+  }, [alertMap, tabValue])
+
+const countAlert = (data:any, alertType:string) => {
   var cnt = 0
-  Object.keys(data).map((key: string) => {
-    if (! data[key].read) {
-      cnt += 1;
-    }
-  })
+  if (alertType === "TOTAL") {
+    Object.keys(data).map((key: string) => {
+      if (! data[key].read) {
+        cnt += 1;
+      }
+    })
+  }
+  else {
+    Object.keys(data).map((key: string) => {
+      if (! data[key].read && data[key].type === alertType) {
+        cnt += 1;
+      }
+    })
+  }
   return cnt;
 }
   
-const renderAlerts = (): JSX.Element[] => {
-  return Object.keys(alertMap).map((key: string) => {
+const renderAllAlerts = (): JSX.Element[] => {
+  return Object.keys(alertMap).reverse().map((key: string) => {
     if (!alertMap[key]) {
       return <span/>;
     }
@@ -71,10 +88,40 @@ const renderAlerts = (): JSX.Element[] => {
   })
 }
 
+const renderTypedAlerts = (alertType:string): JSX.Element[] => {
+  console.log(alertType)
+  return Object.keys(alertMap).reverse().map((key:string) => {
+    if (!alertMap[key]) {
+      return <span/>;
+    }
+    if (alertMap[key].type === alertType && alertType === "PURCHASE_SUCCESS") {
+      return <AlertItemSuccess key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+    }
+    if (alertMap[key].type === alertType && alertType === "PURCHASE_FAIL") {
+      return <AlertItemFail key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+    }
+    if (alertMap[key].type === alertType && alertType === "SALE_COMPLETE") {
+      return <AlertItemComplete key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+    }
+    if (alertMap[key].type === alertType && alertType === "OUTBID") {
+      return <AlertItemOutBid key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+    }
+    return <span/>;
+  })
+}
+
+const renderAlerts = (menu:string): JSX.Element[] => {
+  if (menu === "TOTAL") {
+    return renderAllAlerts();
+  } else {
+    return renderTypedAlerts(menu);
+  }  
+}
+
 return (
   <div>
     알람 개수: {alertCnt}
-    {renderAlerts()}
+    {renderAlerts(tabValue.menu)}
   </div>
 )
 };
