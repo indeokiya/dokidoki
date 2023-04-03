@@ -9,7 +9,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import Tooltip from '@mui/material/Tooltip';
-
+import Button from '@mui/material/Button';
 import { bidAPI, auctionAPI } from '../../api/axios';
 import { userInfoState } from 'src/store/userInfoState';
 
@@ -22,8 +22,6 @@ import { SocketBidData } from 'src/datatype/datatype';
 function numberFormat(price: number | null) {
   return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
 }
-
-
 
 type Props = {
   auction_title: string;
@@ -96,7 +94,6 @@ const ProductInfo = ({
         console.log('입찰 성공 res >> ', res);
         alert(`${highestPrice + priceSize}원에 입찰에 성공했습니다.`);
         setHighestPrice(highestPrice + priceSize);
-
       })
       .catch((err) => {
         // 실패 로직
@@ -214,14 +211,18 @@ const ProductInfo = ({
 
         {/* 리더보드 */}
         <ProductLeaderBoard
-        priceSize={priceSize}
+          priceSize={priceSize}
           highestPrice={highestPrice}
           offerPrice={offer_price}
           leaderBoardData={leaderBoardData}
         ></ProductLeaderBoard>
       </Grid>
       <Stack spacing={2} direction="row" mt={3}>
-        <BidButton bid={bid} />
+        {seller_id === loginUser.name ? (
+          <Button variant="text" color="success"></Button>
+        ) : (
+          <BidButton bid={bid} />
+        )}
       </Stack>
     </StyledBox>
   );
