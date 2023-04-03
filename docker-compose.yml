@@ -89,7 +89,9 @@ services:
       - /var/log/springboot/notice:/var/log/springboot/notice
     restart: always
     networks:
-      - dokidoki_net
+      dokidoki_net:
+        ipv4_address: 172.20.128.7
+
   
 networks:
   dokidoki_net:
