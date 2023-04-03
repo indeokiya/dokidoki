@@ -1,102 +1,86 @@
-import Grid from '@mui/material/Grid';
-import styled from 'styled-components';
-import Typography from '@mui/material/Typography';
+ 
+ import styled from 'styled-components';
+ import Grid from '@mui/material/Grid';
+ import ScrollTop from 'src/components/util/ScrollTop';
+ import { Box } from '@mui/material';
+ import Divider from '@mui/material/Divider';
+ import Skeleton from '@mui/material/Skeleton';
 
-const TestContainer = () => {
-  const list = [
-    {
-      time: '12:23:34',
-      name: '김범식',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '오종석',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '윤재휘',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '김범식',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '오종석',
-      price: 30000000,
-    },
-    {
-      time: '12:23:34',
-      name: '윤재휘',
-      price: 30000000,
-    },
-  ];
 
-  return (
-    <BackgroundDiv>
-      <Grid container>
-        <Grid item xs={12}>
-          <Typography variant="subtitle1" sx={{ color: '#BBCAFF' }}>
-            ( + 11,000원)
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }}>
-            <span>
-            20,000,000 원
-            </span>
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <InnerDiv>
-            <Grid container>
-              {list &&
-                list.map((data: any, i: number) => {
-                  return (
-                    <Grid item xs={12} key={i} sx={{ marginBottom: '0.5rem' }}>
-                      <Typography variant="caption" sx={{ fontSize: '1rem' }}>
-                        [{data.time}]{' '}
-                      </Typography>
-                      <Typography variant="caption" color="primary" sx={{ fontSize: '1rem' }}>
-                        {data.name}{' '}
-                      </Typography>
-                      <Typography variant="caption">님이 </Typography>
-                      <Typography variant="caption" color="error" sx={{ fontSize: '1rem' }}>
-                        {data.price}
-                      </Typography>
-                      <Typography variant="caption">원에 입찰하셨습니다.</Typography>
-                    </Grid>
-                  );
-                })}
+
+ const TestContainer=()=>{
+
+
+    return(
+        <>
+              <BackgroundDiv>
+        <Box
+          sx={{
+            border: '1px solid white',
+            backgroundColor: 'white',
+            width: '1000px',
+            margin: '0 auto',
+            padding: '50px',
+            borderRadius: '10px',
+            boxShadow: '1px 1px 10px grey',
+          }}
+        >
+          <ScrollTop />
+          <Grid container spacing={3} sx={{ marginBottom: '5%' }}>
+            <Grid item xs={6}>
+              {/* 제품 이미지 */}
+              <Skeleton variant="rectangular" width={"100%"} height={600} />
             </Grid>
-          </InnerDiv>
-        </Grid>
-      </Grid>
-    </BackgroundDiv>
-  );
-};
+            <Grid item xs={6}>
+              {/* 제품 정보 */}
+              <br/>
+              <Skeleton variant="text" sx={{ fontSize: '2rem' }} />
+              <Skeleton variant="text" sx={{ fontSize: '15rem' }} />
+              <Skeleton variant="rectangular" width={"100%"} height={200} />
+              <Skeleton variant="rectangular" width={"100%"} sx={{marginTop:"5px"}} height={60} />
+            </Grid>
+          </Grid>
+          <Divider />
+          <Grid container direction="column" justifyContent="center" alignItems="center">
+            {/* 제품 카테고리 평균 가격 */}
+
+            <Grid item xs={12} sx={{ width: '100%', marginBottom: '10px' }}>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                <Skeleton variant="rectangular" width={"100%"} height={200} />
+                </Grid>
+              </Grid>
+            </Grid>
+
+            {/* 제품 설명 */}
+            <Grid item sx={{ width: '100%' }}>
+            <Skeleton variant="rectangular" width={"100%"} height={200} />
+            </Grid>
+            {/* 지도 */}
+            <Grid item sx={{ width: '100%' }}>
+            <Skeleton variant="rectangular" width={"100%"} height={200} />
+            </Grid>
+
+            {/* 댓글 */}
+            <Grid item sx={{ width: '100%' }}>
+            <Skeleton variant="rectangular" width={"100%"} height={200} sx={{marginTop:"15px"}}  />
+            <Skeleton variant="rectangular" width={"100%"} height={200} sx={{marginTop:"15px"}}  />
+            <Skeleton variant="rectangular" width={"100%"} height={200} sx={{marginTop:"15px"}}  />
+            <Skeleton variant="rectangular" width={"100%"} height={200} sx={{marginTop:"15px"}}  />
+
+            </Grid>
+          </Grid>
+        </Box>
+      </BackgroundDiv>
+        </>
+    )
+  
+}
 
 export default TestContainer;
+
 const BackgroundDiv = styled.div`
-  width: 400px;
-  padding: 1rem;
-  border-radius: 10px;
-  background-color: #3a77ee;
-  box-sizing: border-box;
+  background-color: #dddddd;
+  padding-top: 30px;
+  padding-bottom: 100px;
 `;
-
-const InnerDiv = styled.div`
-  margin-top: 1rem;
-  padding: 1rem;
-  box-sizing: border-box;
-  background-color: white;
-  width: 100%;
-  height: 300px;
-  border-radius: 10px;
-`;
-
-

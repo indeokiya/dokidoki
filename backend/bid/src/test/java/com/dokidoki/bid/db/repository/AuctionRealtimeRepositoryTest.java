@@ -24,8 +24,8 @@ class AuctionRealtimeRepositoryTest {
     @Autowired RedissonClient redisson;
 
     static long auctionId = 1_000;
-    static int highestPrice = 7_000_000;
-    static int priceSize = 5_000;
+    static long highestPrice = 7_000_000;
+    static long priceSize = 5_000;
     static long sellerId = 2_000;
 
 
@@ -73,8 +73,8 @@ class AuctionRealtimeRepositoryTest {
 
             // when
             AuctionRealtime updateAuctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
-            int highestPrice = updateAuctionRealtime.getHighestPrice();
-            int priceSize = updateAuctionRealtime.getPriceSize();
+            long highestPrice = updateAuctionRealtime.getHighestPrice();
+            long priceSize = updateAuctionRealtime.getPriceSize();
 
             updateAuctionRealtime.updateHighestPrice();
             auctionRealtimeRepository.save(updateAuctionRealtime);
@@ -91,7 +91,7 @@ class AuctionRealtimeRepositoryTest {
 
             // given
             auctionRealtimeRepository.save(auctionRealtime);
-            int cPriceSize = 10_000;
+            long cPriceSize = 10_000;
 
             // when
             AuctionRealtime updateAuctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
@@ -109,7 +109,7 @@ class AuctionRealtimeRepositoryTest {
         @DisplayName("TTL 을 설정하면 그 이후 삭제되고")
         public void 실시간_경매_TTL() throws InterruptedException {
             // given
-            int ttl = 3;
+            long ttl = 3;
             auctionRealtimeRepository.save(auctionRealtime, ttl, TimeUnit.SECONDS);
             
             // when & then
@@ -128,14 +128,14 @@ class AuctionRealtimeRepositoryTest {
         @DisplayName("expire 함수를 사용하면 expire가 된다")
         public void 실시간_경매_expire() throws InterruptedException {
             // given
-            auctionRealtimeRepository.save(auctionRealtime, 10, TimeUnit.DAYS);
+            auctionRealtimeRepository.save(auctionRealtime, 3L, TimeUnit.DAYS);
 
             assert(! auctionRealtimeRepository.isExpired(auctionId));
 
             // when
             auctionRealtimeRepository.delete(auctionId);
 
-            Thread.sleep(10 * 1000);
+            Thread.sleep(3 * 1000);
 
             assert(auctionRealtimeRepository.isExpired(auctionId));
 

@@ -10,18 +10,18 @@ import java.time.LocalDateTime;
 @Builder
 public class KafkaBidDTO {
 
-    private long beforeWinnerId;
-    private long memberId;
-    private long auctionId;
+    private Long beforeWinnerId;
+    private Long memberId;
+    private Long auctionId;
     private String name;
-    private int highestPrice;
+    private Long highestPrice;
     private String productName;
-    private long productId;
+    private Long productId;
     private LocalDateTime bidTime;
 
     public KafkaBidDTO() {}
 
-    public KafkaBidDTO(long beforeWinnerId, long memberId, long auctionId, String name, int highestPrice, String productName, long productId, LocalDateTime bidTime) {
+    public KafkaBidDTO(Long beforeWinnerId, Long memberId, Long auctionId, String name, Long highestPrice, String productName, Long productId, LocalDateTime bidTime) {
         this.beforeWinnerId = beforeWinnerId;
         this.memberId = memberId;
         this.auctionId = auctionId;
@@ -31,4 +31,5 @@ public class KafkaBidDTO {
         this.productId = productId;
         this.bidTime = bidTime;
     }
+
 }

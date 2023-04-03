@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.function.RouterFunctionDsl;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -38,7 +37,7 @@ public class NoticeController {
         resultMap.put("message", "읽음_표시_성공");
         long memberId = JWTUtil.getUserId(request);
         log.info("읽음 처리. memberId: {}", memberId);
-        noticeService.setIsRead(memberId, noticeId, true);
+        noticeService.setRead(memberId, noticeId, true);
         return ResponseEntity.ok(resultMap);
     }
 
@@ -49,7 +48,7 @@ public class NoticeController {
         resultMap.put("message", "읽음_취소_성공");
         long memberId = JWTUtil.getUserId(request);
         log.info("읽음 취소 처리. memberId: {}", memberId);
-        noticeService.setIsRead(memberId, noticeId, false);
+        noticeService.setRead(memberId, noticeId, false);
         return ResponseEntity.ok(resultMap);
     }
 }

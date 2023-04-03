@@ -25,9 +25,9 @@ public class LeaderBoardMemberResp {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime bidTime;
-    private int bidPrice;
+    private Long bidPrice;
 
-    public static LeaderBoardMemberResp of(LeaderBoardMemberInfo info, int bidPrice) {
+    public static LeaderBoardMemberResp of(LeaderBoardMemberInfo info, Long bidPrice) {
         // 개인정보 가리기
         String name = info.getName();
         String modifiedName;

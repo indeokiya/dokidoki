@@ -24,7 +24,7 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @RestController
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RequestMapping("")
 public class AuctionController {
     private final InterestService interestService;

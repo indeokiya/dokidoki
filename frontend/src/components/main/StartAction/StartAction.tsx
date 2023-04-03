@@ -30,6 +30,7 @@ const StartAuction = () => {
 export default StartAuction;
 
 const StyledDiv = styled.div`
+height:600px;
   border: 1px solid grey;
   width: 100%;
   padding: 10%;
@@ -37,8 +38,10 @@ const StyledDiv = styled.div`
 `;
 
 const StyledSmallP = styled.p`
-  margin: 0;
+  margin-top: 10%;
+  margin-bottom:0px;
   padding: 0;
+  
   padding-left: 5px;
   color: #3a77ee;
 `;

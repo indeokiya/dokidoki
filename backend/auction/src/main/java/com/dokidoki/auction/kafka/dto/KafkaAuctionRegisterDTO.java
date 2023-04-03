@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class KafkaAuctionRegisterDTO {
-    private long auctionId;
-    private int offerPrice;             // 시작 가격(호가)
-    private int priceSize;              // 경매 단위
-    private long ttl;
-    private long sellerId;
-    private long productId;
+    private Long auctionId;
+    private Long offerPrice;             // 시작 가격(호가)
+    private Long priceSize;              // 경매 단위
+    private Long ttl;
+    private Long sellerId;
+    private Long productId;
     private String productName;
 
     public KafkaAuctionRegisterDTO() {}
-    public KafkaAuctionRegisterDTO(AuctionRegisterReq auction, long auctionId, long ttl, long sellerId, long productId, String productName) {
+    public KafkaAuctionRegisterDTO(AuctionRegisterReq auction, Long auctionId, Long ttl, Long sellerId, Long productId, String productName) {
         this.ttl = ttl;
         this.offerPrice = auction.getOffer_price();
         this.priceSize = auction.getPrice_size();

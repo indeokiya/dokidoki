@@ -19,9 +19,9 @@ public class AuctionRegisterReq {
 
     private String description;
 
-    private Integer offer_price;
+    private Long offer_price;
 
-    private Integer price_size;
+    private Long price_size;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private LocalDateTime end_at;

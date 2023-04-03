@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SocketPriceSizeResp {
     private String type;
-    private int priceSize;
+    private Long priceSize;
     public static SocketPriceSizeResp from(KafkaAuctionUpdateDTO dto) {
         SocketPriceSizeResp resp = SocketPriceSizeResp.builder()
                 .type("price_size")

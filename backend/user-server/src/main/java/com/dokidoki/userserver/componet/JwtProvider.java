@@ -57,6 +57,7 @@ public class JwtProvider {
                 .claim("email",user.getEmail())
                 .claim("picture",user.getPicture())
                 .claim("provider",user.getProviderType())
+                .claim("point", user.getPoint())
                 .signWith(SECRET_KEY, SignatureAlgorithm.HS256)
                 .compact();
     }

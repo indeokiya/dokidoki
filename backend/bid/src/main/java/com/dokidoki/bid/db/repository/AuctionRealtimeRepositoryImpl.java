@@ -8,10 +8,10 @@ import com.dokidoki.bid.db.entity.AuctionRealtime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.*;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.Duration;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository {
 
-    private String keyPrefix = RealTimeConstants.mapKey;
+    private String key = RealTimeConstants.mapKey;
     private String expireKeyPrefix = RealTimeConstants.expireKey;
     private RedissonClient redisson;
     private RMap<Long, AuctionRealtime> map;
@@ -29,19 +29,19 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     @Autowired
     public void setAuctionRealtimeRepositoryImpl(RedissonClient redisson, AuctionEndService auctionEndService) {
         this.redisson = redisson;
-        this.keyPrefix = RealTimeConstants.mapKey;
-        this.map = redisson.getMap(keyPrefix);
+        this.key = RealTimeConstants.mapKey;
+        this.map = redisson.getMap(key);
         this.auctionEndService = auctionEndService;
     }
 
-    private String getExpireKey(long auctionId) {
+    private String getExpireKey(Long auctionId) {
         StringBuilder sb = new StringBuilder();
         sb.append(expireKeyPrefix).append(":").append(auctionId);
         return sb.toString();
     }
 
     @Override
-    public Optional<AuctionRealtime> findById(long auctionId) {
+    public Optional<AuctionRealtime> findById(Long auctionId) {
         AuctionRealtime auctionRealtime = map.get(auctionId);
         if (auctionRealtime == null) {
             return Optional.empty();
@@ -51,7 +51,7 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     }
 
     @Override
-    public boolean isExpired(long auctionId) {
+    public boolean isExpired(Long auctionId) {
         RBucket bucket = redisson.getBucket(getExpireKey(auctionId));
         if (bucket.get() == null) {
             return true;
@@ -61,7 +61,7 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
     }
 
     @Override
-    public void delete(long auctionId) {
+    public void delete(Long auctionId) {
         RBucket bucket = redisson.getBucket(getExpireKey(auctionId));
         bucket.delete();
         AuctionRealtime auctionRealtime = findById(auctionId).get();
@@ -76,8 +76,8 @@ public class AuctionRealtimeRepositoryImpl implements AuctionRealtimeRepository 
 
     @Override
     @RTransactional
-    public void save(AuctionRealtime auctionRealtime, long ttl, TimeUnit timeUnit) {
-        long auctionId = auctionRealtime.getAuctionId();
+    public void save(AuctionRealtime auctionRealtime, Long ttl, TimeUnit timeUnit) {
+        Long auctionId = auctionRealtime.getAuctionId();
         RBucket<Long> bucket = redisson.getBucket(getExpireKey(auctionId));
         int listenerId = bucket.addListener(getExpiredObjectListener());
         bucket.set(auctionId, ttl, timeUnit);

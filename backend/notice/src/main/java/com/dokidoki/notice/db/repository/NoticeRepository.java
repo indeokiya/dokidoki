@@ -6,11 +6,11 @@ import java.util.Map;
 
 public interface NoticeRepository {
 
-    public void save(long memberId, NoticeResp resp);
+    public void save(Long memberId, NoticeResp resp);
 
-    public Map<Long, NoticeResp> getAll(long memberId);
+    public Map<Long, NoticeResp> getAll(Long memberId);
 
-    public void deleteAll(long memberId);
+    public void deleteAll(Long memberId);
 
-    public void updateIsRead(long memberId, long noticeId, boolean isRead);
+    public void updateRead(Long memberId, Long noticeId, boolean isRead);
 }

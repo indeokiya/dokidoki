@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RestController
 @Slf4j
@@ -32,6 +33,8 @@ public class OauthController {
     private final UserService userService;
 
     private final JwtProvider jwtProvider;
+
+    private final Long DEFAULT_POINT = (long)0x7fffffff;
 
     @Value("${front.redirect_uri}")
     private String FRONT_REDIRECT_URI;
@@ -77,11 +80,18 @@ public class OauthController {
                                 .picture(info.getPicture())
                                 .name(info.getName())
                                 .providerType(ProviderType.GOOGLE)
+                                .point(DEFAULT_POINT)
                                 .build());
         }
-        // 토큰 생성
-        String accessToken = jwtProvider.getAccessToken(user.getId());
-        String refreshToken = jwtProvider.getRefreshToken(user);
+
+        String accessToken = null;
+        String refreshToken = null;
+        // 정지 받은 적 없거나 정지 기한이 지났으면 토큰 발급
+        if(user.getEndTimeOfSuspension() == null || user.getEndTimeOfSuspension().compareTo(LocalDateTime.now()) < 0) {
+            // 토큰 생성
+            accessToken = jwtProvider.getAccessToken(user.getId());
+            refreshToken = jwtProvider.getRefreshToken(user);
+        }
 
         response.sendRedirect(getFrontRedirectUrl(accessToken, refreshToken));
     }
@@ -101,6 +111,7 @@ public class OauthController {
                             .picture(info.getPicture())
                             .name(info.getNickname())
                             .providerType(ProviderType.KAKAO)
+                            .point(DEFAULT_POINT)
                             .build());
         }
         // 토큰 생성

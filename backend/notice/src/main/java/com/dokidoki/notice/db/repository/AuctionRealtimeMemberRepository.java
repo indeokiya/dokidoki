@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
+import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -21,18 +22,18 @@ public class AuctionRealtimeMemberRepository {
     private final RedissonClient redisson;
     private final String keyPrefix = RealTimeConstants.memberPriceKey;
 
-    private String getKey(long auctionId) {
+    private String getKey(Long auctionId) {
         StringBuilder sb = new StringBuilder();
         sb.append(keyPrefix).append(":").append(auctionId);
         return sb.toString();
     }
 
-    public Set<Map.Entry<Long, Integer>> getAll(long auctionId) {
+    public Set<Map.Entry<Long, Integer>> getAll(Long auctionId) {
         RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
         return map.entrySet();
     }
 
-    public int findById(long auctionId, long memberId) {
+    public int findById(Long auctionId, Long memberId) {
         RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
         Integer myBidPrice = map.get(memberId);
         if (myBidPrice == null) {
@@ -42,13 +43,13 @@ public class AuctionRealtimeMemberRepository {
     }
 
     @RTransactional
-    public void save(long auctionId, long memberId, int bidPrice) {
+    public void save(Long auctionId, Long memberId, int bidPrice) {
         RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
         map.put(memberId, bidPrice);
     }
 
     @RTransactional
-    public boolean deleteAll(long auctionId) {
+    public boolean deleteAll(Long auctionId) {
         RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
         return map.delete();
     }

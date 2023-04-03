@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "member")
@@ -22,8 +23,12 @@ public class UserEntity extends BaseEntity{
     private String name;
     private String picture;
     private String email;
+    private Long point;
 
     @Column(name = "provider")
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
+
+    @Column(name = "end_time_of_suspension")
+    private LocalDateTime EndTimeOfSuspension;
 }

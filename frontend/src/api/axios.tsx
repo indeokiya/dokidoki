@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 import { Logout, RedirectLogin} from 'src/hooks/logout';
 
 const auctionAPI = axios.create({
@@ -99,6 +99,7 @@ function addResponseIntercepter(axiosApi : any){
           localStorage.setItem("access_token", access_token);
           localStorage.setItem("refresh_token", refresh_token);
           
+          window.location.href = window.location.origin;
           // refresh token이 유효한 경우 토큰 재발급
           return Promise.resolve("토큰 재발급 받았음. 다시 시도해 주세요");
         }).catch((err)=>{
@@ -116,8 +117,8 @@ function addResponseIntercepter(axiosApi : any){
         return Promise.resolve("이상한 토큰 쓰지 마세요 ㅡㅡ.");
       }else if(message === "로그인이 필요한 서비스입니다."){
         // 토큰이 비어 있는 경우
-        alert(message);
-        RedirectLogin();
+        //alert(message);
+        //RedirectLogin();
         return Promise.reject(new Error("로그인하라고 아 ㅋㅋ"));
       }
     }

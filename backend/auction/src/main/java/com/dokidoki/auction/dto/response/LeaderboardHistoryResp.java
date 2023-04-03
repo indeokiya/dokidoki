@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class LeaderboardHistoryResp {
     private final Long member_id;
     private final String member_name;
-    private final Integer bid_price;
+    private final Long bid_price;
     private final LocalDateTime bid_time;
 
     public LeaderboardHistoryResp(LeaderboardEntity leaderboard) {

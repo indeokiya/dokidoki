@@ -28,8 +28,8 @@ public class AuctionEndService {
 
         log.info("auctionInfo expired. auctionRealtime: {}", auctionRealtime);
 
-        long auctionId = auctionRealtime.getAuctionId();
-        long sellerId = auctionRealtime.getSellerId();
+        Long auctionId = auctionRealtime.getAuctionId();
+        Long sellerId = auctionRealtime.getSellerId();
 
         // 1. 현재 입찰 진행중인 목록에서 제거
         auctionRealtimeBiddingRepository.delete(sellerId, auctionId);

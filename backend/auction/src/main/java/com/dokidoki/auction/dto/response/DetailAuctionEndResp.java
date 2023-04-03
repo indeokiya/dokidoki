@@ -18,8 +18,8 @@ public class DetailAuctionEndResp {
     private final String product_name;
     private final String category_name;
     private final String description;
-    private final Integer offer_price;
-    private final Integer final_price;
+    private final Long offer_price;
+    private final Long final_price;
     private final String seller_name;
     private final String buyer_name;
 

@@ -16,7 +16,7 @@ public class DetailAuctionIngResp {
     private final String meeting_place;
     private final String description;
 
-    private final Integer offer_price;
+    private final Long offer_price;
 
     private final Long seller_id;
     private final String seller_name;

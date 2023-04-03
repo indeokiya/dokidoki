@@ -37,10 +37,10 @@ public class AuctionIngEntity {
     private String description;         // 제품설명
 
     @Column(name = "offer_price")
-    private Integer offerPrice;             // 시작 가격(호가)
+    private Long offerPrice;             // 시작 가격(호가)
 
     @Column(name = "price_size")
-    private Integer priceSize;              // 경매 단위
+    private Long priceSize;              // 경매 단위
 
     @CreatedDate
     @Column(name = "start_time")
@@ -53,7 +53,7 @@ public class AuctionIngEntity {
     private String meetingPlace;        // 거래장소
 
     @Column(name = "highest_price")
-    private Integer highestPrice;           // 현재 최고가
+    private Long highestPrice;           // 현재 최고가
 
     public void update(AuctionUpdateReq auctionUpdateReq) {
         this.title = auctionUpdateReq.getTitle();

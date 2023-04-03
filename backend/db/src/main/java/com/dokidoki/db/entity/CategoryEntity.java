@@ -19,7 +19,4 @@ public class CategoryEntity {
 
     @Column(name = "category_name", nullable = false)
     private String categoryName;
-
-    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
-    private List<ProductEntity> productEntities = new ArrayList<>();
 }
