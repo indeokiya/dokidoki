@@ -5,6 +5,8 @@ import AlertItemSuccess from './AlertItemSuccess';
 import AlertItemOutBid from './AlertItemOutBid';
 import AlertItemFail from './AlertItemFail';
 import AlertItemComplete from './AlertItemComplete';
+import { myAlertMenuState } from 'src/store/userInfoState';
+import { useRecoilState } from 'recoil';
 
 
 type AlertData = {
@@ -21,21 +23,69 @@ type AlertData = {
   // id: number;
   read: boolean;
 };
+const tmpData = {
+  0: {
+    "type":"PURCHASE_SUCCESS",
+    "product_id":30000,
+    "product_name":"갤럭시노트",
+    "auction_id":40000,
+    "final_price":2000,
+    "my_final_price":1000,
+    "current_bid_price":1500,
+    "price":3000,
+    "read":false,
+  },
+  1: {
+    "type":"PURCHASE_FAIL",
+    "product_id":30000,
+    "product_name":"갤럭시노트",
+    "auction_id":40000,
+    "final_price":2000,
+    "my_final_price":1000,
+    "current_bid_price":1500,
+    "price":3000,
+    "read":false,
+  },
+  2: {
+    "type":"SALE_COMPLETE",
+    "product_id":30000,
+    "product_name":"갤럭시노트",
+    "auction_id":40000,
+    "final_price":2000,
+    "my_final_price":1000,
+    "current_bid_price":1500,
+    "price":3000,
+    "read":false,
+  },
+  3: {
+    "type":"OUTBID",
+    "product_id":30000,
+    "product_name":"갤럭시노트",
+    "auction_id":40000,
+    "final_price":2000,
+    "my_final_price":1000,
+    "current_bid_price":1500,
+    "price":3000,
+    "read":false,
+  },
+}
+
 
 const AlertItemList = () => {
-  const [alertMap, setAlertMap] = useState<any>({})
+  const [tabValue, setTabValue] = useRecoilState(myAlertMenuState);
+  const [alertMap, setAlertMap] = useState<any>(tmpData)
   const [alertCnt , setAlertCnt] = useState(0)
 
   useEffect(() => {
-    noticeAPI.get("/")
-    .then(({ data }) => {
-      console.log('알림 내역 >> ', data)
-      setAlertCnt(countAlert(data))
-      setAlertMap(data)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+    // noticeAPI.get("/")
+    // .then(({ data }) => {
+    //   console.log('알림 내역 >> ', data)
+    //   setAlertCnt(countAlert(data))
+    //   setAlertMap(data)
+    // })
+    // .catch((err) => {
+    //   console.log(err)
+    // })
 }, [])
 
 const countAlert = (data:any) => {
@@ -48,7 +98,7 @@ const countAlert = (data:any) => {
   return cnt;
 }
   
-const renderAlerts = (): JSX.Element[] => {
+const renderAllAlerts = (): JSX.Element[] => {
   return Object.keys(alertMap).reverse().map((key: string) => {
     if (!alertMap[key]) {
       return <span/>;
@@ -69,6 +119,34 @@ const renderAlerts = (): JSX.Element[] => {
 
     return <AlertItem key={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt} />;
   })
+}
+
+const renderTypedAlerts = (alertType:string): JSX.Element[] => {
+  return Object.keys(alertMap).reverse().map((key:string) => {
+    if (!alertMap[key]) {
+      return <span/>;
+    }
+    if (alertMap[key].type === alertType) {
+      return <AlertItemSuccess key={key} id={key} data={alertMap[key]} setAlertMap={setAlertMap} setAlertCnt={setAlertCnt}/>
+    }
+    return <span/>;
+  })
+}
+
+const renderAlerts = (): JSX.Element[] => {
+  if (tabValue.menu === "전체") {
+    return renderAllAlerts();
+  } else if (tabValue.menu === "구매 성공") { 
+    return renderTypedAlerts("PURCHASE_SUCCESS");
+  } else if (tabValue.menu === "구매 실패") { 
+    return renderTypedAlerts("PURCHASE_FAIL");
+  } else if (tabValue.menu === "판매 성공") { 
+    return renderTypedAlerts("SALE_COMPLETE");
+  } else if (tabValue.menu === "경쟁 입찰") { 
+    return renderTypedAlerts("OUTBID");
+  } else {
+    return renderAllAlerts();
+  }
 }
 
 return (

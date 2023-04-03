@@ -10,10 +10,8 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
   const [tabValue, setTabValue] = useRecoilState(myAlertMenuState);
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    // setTabValue(newValue);
+    setTabValue({menu: newValue});
   };
-
-
 
   return (
     <React.Fragment>
@@ -29,15 +27,15 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
             <Grid item xs={12}>
         {props.selectedMenu === '알림 내역' && (
           <Tabs
-            value={tabValue}
+            value={tabValue.menu}
             onChange={handleChange}
             textColor="inherit"
             indicatorColor="secondary"
             aria-label="secondary tabs example"
           >
             <Tab value="전체" label="전체"/>
-            <Tab value="입찰 성공" label="입찰 성공" />
-            <Tab value="입찰 실패" label="입찰 실패" />
+            <Tab value="구매 성공" label="구매 성공" />
+            <Tab value="구매 실패" label="구매 실패" />
             <Tab value="판매 성공" label="판매 성공" />
             <Tab value="경쟁 입찰" label="경쟁 입찰" />
           </Tabs>

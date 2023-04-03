@@ -31,19 +31,24 @@ export const userInfoState = atom({
     effects: [localStorageEffect('user_info')],
   });
 
-
-
+  interface MyPageMenuState {
+    menu: string;
+  }
 
   //마이페이지 메뉴항목
-  export const myPageMenuState = atom({
+  export const myPageMenuState = atom<MyPageMenuState>({
     key:"myPageMenuState",
     default:{
       menu:"입찰 중"
     }
   })
 
+  interface MyAlertMenuState {
+    menu: string;
+  }
 
-  export const myAlertMenuState = atom({
+
+  export const myAlertMenuState = atom<MyAlertMenuState>({
     key:"myAlertMenuState",
     default:{
       menu:"전체"
