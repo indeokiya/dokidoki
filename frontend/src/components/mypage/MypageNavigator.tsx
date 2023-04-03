@@ -84,6 +84,7 @@ const MypageNavigator: React.FC<{
   };
 
   const activeHandler = (_id: string) => {
+    setMenu((prevState) => ({...prevState, menu: _id}))
     props.setSelectedMenu(_id);
     setCategories((pre) =>
       pre.map((child) => {
@@ -96,13 +97,8 @@ const MypageNavigator: React.FC<{
     );
   };
 
-
-  
-
-
   const { ...other } = props;
 
-  
 
   return (
     <Drawer variant="permanent" {...other}>
