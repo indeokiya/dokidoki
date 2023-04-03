@@ -117,8 +117,8 @@ function addResponseIntercepter(axiosApi : any){
         return Promise.resolve("이상한 토큰 쓰지 마세요 ㅡㅡ.");
       }else if(message === "로그인이 필요한 서비스입니다."){
         // 토큰이 비어 있는 경우
-        alert(message);
-        RedirectLogin();
+        //alert(message);
+        //RedirectLogin();
         return Promise.reject(new Error("로그인하라고 아 ㅋㅋ"));
       }
     }
