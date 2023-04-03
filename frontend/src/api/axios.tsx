@@ -99,6 +99,7 @@ function addResponseIntercepter(axiosApi : any){
           localStorage.setItem("access_token", access_token);
           localStorage.setItem("refresh_token", refresh_token);
           
+          window.location.href = window.location.origin;
           // refresh token이 유효한 경우 토큰 재발급
           return Promise.resolve("토큰 재발급 받았음. 다시 시도해 주세요");
         }).catch((err)=>{
