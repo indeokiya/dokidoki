@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,4 +32,7 @@ public class MemberEntity extends BaseEntity{
     @Column(name = "provider")
     @Enumerated(EnumType.STRING)
     private ProviderType providerType;
+
+    @Column(name = "end_time_of_suspension")
+    private LocalDateTime EndTimeOfSuspension;
 }
