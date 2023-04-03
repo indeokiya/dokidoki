@@ -23,12 +23,12 @@ public class LeaderboardEntity {
     private MemberEntity memberEntity;
 
     @Column(name = "bid_price")
-    private Integer bidPrice;
+    private Long bidPrice;
 
     @Column(name = "bid_time")
     private LocalDateTime bidTime;
 
-    public static LeaderboardEntity createLeaderboard(Long auctionId, MemberEntity memberEntity, Integer bidPrice, LocalDateTime bidTime) {
+    public static LeaderboardEntity createLeaderboard(Long auctionId, MemberEntity memberEntity, Long bidPrice, LocalDateTime bidTime) {
         LeaderboardEntity leaderboardEntity = new LeaderboardEntity();
         leaderboardEntity.auctionId = auctionId;
         leaderboardEntity.memberEntity = memberEntity;

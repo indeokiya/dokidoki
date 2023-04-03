@@ -20,9 +20,9 @@ public class SimpleAuctionIngInfo {
     private final String category_name;
     private final String meeting_place;
 
-    private final Integer offer_price;
-    private final Integer cur_price;
-    private final Integer price_size;
+    private final Long offer_price;
+    private final Long cur_price;
+    private final Long price_size;
 
     private final LocalDateTime start_time;
     private final LocalDateTime end_time;
@@ -49,7 +49,7 @@ public class SimpleAuctionIngInfo {
         this.price_size = auctionIngEntity.getPriceSize();  // 경매 단위
 
         // 최고가
-        Integer cur_price = auctionIngEntity.getHighestPrice();
+        Long cur_price = auctionIngEntity.getHighestPrice();
         if (cur_price == null)
             cur_price = this.offer_price;
         this.cur_price = cur_price;

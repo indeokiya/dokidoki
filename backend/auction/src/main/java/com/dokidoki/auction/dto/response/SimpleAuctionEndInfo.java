@@ -15,8 +15,8 @@ public class SimpleAuctionEndInfo {
     private final String product_name;
     private final String category_name;
 
-    private final Integer offer_price;
-    private final Integer final_price;
+    private final Long offer_price;
+    private final Long final_price;
 
     private final LocalDateTime start_time;
     private final LocalDateTime end_time;

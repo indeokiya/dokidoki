@@ -14,8 +14,8 @@ public class MyHistoryInfo {
     private final String buyer_name;
     private final String seller_name;
 
-    private final Integer offer_price;
-    private final Integer final_price;
+    private final Long offer_price;
+    private final Long final_price;
 
     private final String category_name;
     private final String product_name;
