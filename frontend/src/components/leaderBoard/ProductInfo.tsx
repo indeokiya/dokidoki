@@ -9,7 +9,6 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import TurnedInIcon from '@mui/icons-material/TurnedIn';
 import TurnedInNotIcon from '@mui/icons-material/TurnedInNot';
 import Tooltip from '@mui/material/Tooltip';
-import Button from '@mui/material/Button';
 import { bidAPI, auctionAPI } from '../../api/axios';
 import { userInfoState } from 'src/store/userInfoState';
 
