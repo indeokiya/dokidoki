@@ -22,6 +22,7 @@ public class UserEntity extends BaseEntity{
     private String name;
     private String picture;
     private String email;
+    private Long point;
 
     @Column(name = "provider")
     @Enumerated(EnumType.STRING)
