@@ -4,7 +4,6 @@ import com.dokidoki.notice.api.response.LeaderBoardMemberInfo;
 import com.dokidoki.notice.common.codes.RealTimeConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.common.quota.ClientQuotaAlteration;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.protocol.ScoredEntry;
@@ -22,7 +21,6 @@ public class AuctionRealtimeLeaderBoardRepository {
     private final RedissonClient redisson;
     private final String keyPrefix = RealTimeConstants.leaderboardKey;
     private int limit = RealTimeConstants.leaderboardLimit;
-    private TypedJsonJacksonCodec codec = new TypedJsonJacksonCodec(LeaderBoardMemberInfo.class);
 
     /**
      * auctionId로 Redis 에 leaderboard 를 저장할 키를 생성하는 메서드
@@ -37,7 +35,7 @@ public class AuctionRealtimeLeaderBoardRepository {
 
 
     public Optional<LeaderBoardMemberInfo> getWinner(Long auctionId) {
-        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId), codec);
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         LeaderBoardMemberInfo last = scoredSortedSet.last();
         log.info("score: {}", scoredSortedSet.getScore(last));
         if (last == null) {
@@ -48,22 +46,22 @@ public class AuctionRealtimeLeaderBoardRepository {
     }
 
     public Collection<ScoredEntry<LeaderBoardMemberInfo>> getAll(Long auctionId) {
-        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId), codec);
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         return scoredSortedSet.entryRangeReversed(0, -1);
     }
 
     public void save(Long bidPrice, LeaderBoardMemberInfo memberInfo, Long auctionId) {
-        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId), codec);
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         scoredSortedSet.add(bidPrice, memberInfo);
     }
 
     public void removeOutOfRange(Long auctionId) {
-        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId), codec);
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         scoredSortedSet.removeRangeByRank(-limit -1, -limit -1);
     }
 
     public void deleteAll(Long auctionId) {
-        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId), codec);
+        RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         scoredSortedSet.delete();
     }
 
