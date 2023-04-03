@@ -65,13 +65,13 @@ spring:
           - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
           - JwtAuthenticationFilter
 
-      # notice routing
-      - id: notice-server
-        uri: http://notice-server
-        predicates:
-          - Path=/api/notices/**
-        filters:
-          - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
+      # # notice routing
+      # - id: notice-server
+      #   uri: http://notice-server
+      #   predicates:
+      #     - Path=/api/notices/**
+      #   filters:
+      #     - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
 
       # socket routing
       - id: notice-server
