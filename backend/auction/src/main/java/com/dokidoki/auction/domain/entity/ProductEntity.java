@@ -23,7 +23,7 @@ public class ProductEntity {
 
     private String name;        // 제품명
 
-    @Column(name = "img_url")
+    @Column(name = "img_url", columnDefinition = "MEDIUMTEXT")
     private String imgUrl;      // 이미지 url
 
     @Column(name = "sale_cnt")

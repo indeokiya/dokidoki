@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -23,6 +25,7 @@ public class AuctionEndEntity {
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = MemberEntity.class)
     @JoinColumn(name = "seller_id")
+    @OnDelete(action= OnDeleteAction.CASCADE)
     private MemberEntity seller;
 
     @Column(name = "seller_id", insertable = false, updatable = false)
@@ -50,11 +53,12 @@ public class AuctionEndEntity {
 
     private String title;               // 제목
 
+    @Column(columnDefinition = "MEDIUMTEXT")
     private String description;         // 제품설명
 
     @Column(name = "offer_price")
-    private Integer offerPrice;         // 시작가
+    private Long offerPrice;         // 시작가
 
     @Column(name = "final_price")
-    private Integer finalPrice;         // 낙찰금액
+    private Long finalPrice;         // 낙찰금액
 }
