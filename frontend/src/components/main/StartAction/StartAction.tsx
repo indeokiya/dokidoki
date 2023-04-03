@@ -69,9 +69,10 @@ const topAnimation = keyframes`
 
 
 const StyledBottomImg = styled.img`
+max-height:730;
   z-index: 10;
-  right: 5%;
-  bottom: -10%;
+  right: 3%;
+  top: 0%;
   width: 60%;
   position: absolute;
   animation-duration: 1s;
@@ -80,9 +81,10 @@ const StyledBottomImg = styled.img`
   
 `;
 const StyledTopImg = styled.img`
+max-height:600;
   z-index: 11;
-  right: 10%;
-  bottom: -5%;
+  right: 7%;
+  top: 5%;
   width: 55%;
   position: absolute;
   animation-duration: 1s;
@@ -93,7 +95,7 @@ const StyledDiv = styled.div`
   position: absolute;
   width: 100%;
   box-sizing: border-box;
-  margin-left:3%;
+  margin-left:1%;
 `;
 
 const StyledSmallP = styled.p`

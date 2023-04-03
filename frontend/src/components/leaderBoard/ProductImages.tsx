@@ -21,7 +21,7 @@ const ProductImages = ({ images, end_time }: Props) => {
         container
         spacing={1}
         sx={{
-          height: '720px',
+          height: '738px',
           border: '1px solid #dddddd',
           borderRadius: '10px',
           padding: '10px',

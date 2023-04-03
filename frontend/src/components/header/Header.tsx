@@ -3,20 +3,25 @@ import AfterLoginMenu from './AfterloginMenu';
 import BeforeLoginMenu from './BeforeLoginMenu';
 import styled from 'styled-components';
 import LogoImgSrc from '../../assets/image/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { userInfoState } from 'src/store/userInfoState';
 
 const Header = () => {
-  const userInfo = useRecoilValue(userInfoState)
+  const userInfo = useRecoilValue(userInfoState);
+  const navigate = useNavigate();
 
   return (
     <HeaderBox>
       <Grid container alignItems={'center'}>
         <Grid item xs>
-          <Link to="/">
-            <LogoImg src={LogoImgSrc}></LogoImg>
-          </Link>
+          <StyledLogo
+            onClick={() => {
+              navigate('/');
+            }}
+          >
+            DOKIDOKI
+          </StyledLogo>
         </Grid>
         <Grid item>{userInfo.is_logged_in ? <AfterLoginMenu /> : <BeforeLoginMenu />}</Grid>
       </Grid>
@@ -27,11 +32,17 @@ const Header = () => {
 export default Header;
 
 const HeaderBox = styled.div`
-padding-right: 1rem;
-padding-left: 1rem;
-border-bottom: 1px solid #dddddd;
+  padding: 1rem;
+  border-bottom: 1px solid whitesmoke;
 `;
-const LogoImg = styled.img`
-height: 30px;
-margin: 15px;
+
+
+const StyledLogo = styled.span`
+  cursor: pointer;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 40px;
+  background-image: linear-gradient(135deg, #e570e7 0%, #79f1fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 `;
