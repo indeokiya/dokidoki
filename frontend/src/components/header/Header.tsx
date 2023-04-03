@@ -1,7 +1,6 @@
 import { Grid } from '@mui/material';
 import AfterLoginMenu from './AfterloginMenu';
 import BeforeLoginMenu from './BeforeLoginMenu';
-import { useState } from 'react';
 import styled from 'styled-components';
 import LogoImgSrc from '../../assets/image/logo.png';
 import { Link } from 'react-router-dom';
@@ -34,5 +33,5 @@ border-bottom: 1px solid grey;
 `;
 const LogoImg = styled.img`
 height: 30px;
-margin: 5px;
+margin: 15px;
 `;

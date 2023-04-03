@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+
 import { Logout, RedirectLogin} from 'src/hooks/logout';
 
 const auctionAPI = axios.create({

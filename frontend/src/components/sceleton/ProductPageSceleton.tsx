@@ -8,7 +8,7 @@
 
 
 
- const TestContainer=()=>{
+ const ProductPageSceleton=()=>{
 
 
     return(
@@ -77,7 +77,7 @@
   
 }
 
-export default TestContainer;
+export default ProductPageSceleton;
 
 const BackgroundDiv = styled.div`
   background-color: #dddddd;
