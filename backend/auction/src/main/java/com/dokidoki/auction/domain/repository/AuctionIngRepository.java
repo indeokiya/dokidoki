@@ -44,7 +44,6 @@ public interface AuctionIngRepository extends JpaRepository<AuctionIngEntity, Lo
     Page<AuctionIngEntity> findAllMySellingAuction(@Param("member_id") Long memberId, Pageable pageable);
 
     // 특정 사용자가 입찰중인 경매 목록 조회
-
     Page<AuctionIngEntity> findAllByIdInOrderByIdDesc(Long[] auctionIdList, Pageable pageable);
 
     // 특정 사용자가 관심 갖는 경매 목록 조회
