@@ -108,7 +108,7 @@ public class BiddingService {
         }
         
         // 2. 판매자가 아닌데 경매를 끝내려 한 경우
-        if (auctionRealtimeO.get().getSellerId() != memberId) {
+        if (!auctionRealtimeO.get().getSellerId().equals(memberId)) {
             throw new BusinessException("권한이 없는 사용자입니다. 판매자가 아닙니다.", ErrorCode.IS_NOT_SELLER);
         }
         
@@ -140,7 +140,7 @@ public class BiddingService {
         }
         
         // 3. 판매자는 본인이 올린 경매에 참여 불가
-        if (memberId == auctionRealtimeO.get().getSellerId()) {
+        if (memberId.equals(auctionRealtimeO.get().getSellerId())) {
             throw new BusinessException("판매자는 입찰할 수 없습니다.", ErrorCode.SELLER_CANNOT_BID);
         }
 
@@ -148,12 +148,12 @@ public class BiddingService {
         // 4. 실시간 DB 정보와 client 측 정보가 일치하는지 확인하기 (경매 단위, 현재 가격)
 
         // 4-1. 경매 단위가 일치하지 않을 경우
-        if (auctionRealtimeO.get().getPriceSize() != req.getCurrentPriceSize()) {
+        if (!auctionRealtimeO.get().getPriceSize().equals(req.getCurrentPriceSize())) {
             throw new BusinessException("경매 단위가 갱신되었습니다. 다시 시도해주세요", ErrorCode.DIFFERENT_PRICE_SIZE);
         }
 
         // 4-2. 현재 가격이 일치하지 않을 경우
-        if (auctionRealtimeO.get().getHighestPrice() != req.getCurrentHighestPrice()) {
+        if (!auctionRealtimeO.get().getHighestPrice().equals(req.getCurrentHighestPrice())) {
             throw new BusinessException("현재 가격이 갱신되었습니다. 다시 시도해주세요", ErrorCode.DIFFERENT_HIGHEST_PRICE);
         }
 

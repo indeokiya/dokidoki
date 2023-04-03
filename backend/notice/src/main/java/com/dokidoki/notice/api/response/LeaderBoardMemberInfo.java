@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LeaderBoardMemberInfo {
-    private long memberId;
+    private Long memberId;
     private String name;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)

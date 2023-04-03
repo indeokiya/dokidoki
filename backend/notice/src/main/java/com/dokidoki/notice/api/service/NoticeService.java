@@ -36,7 +36,7 @@ public class NoticeService {
     public void auctionSuccess(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         NoticeSuccessResp resp = NoticeSuccessResp.of(dto);
-        long buyerId = dto.getBuyerId();
+        Long buyerId = dto.getBuyerId();
 
         if (buyerId == -1) {
             return;
@@ -52,13 +52,13 @@ public class NoticeService {
     // TODO - 여기서 에러 날거임.. TypedJsonJacksonCodec 사용법 알아보기
     public void auctionFail(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
-        long auctionId = dto.getAuctionId();
-        long buyerId = dto.getBuyerId();
+        Long auctionId = dto.getAuctionId();
+        Long buyerId = dto.getBuyerId();
         Set<Map.Entry<Long, Integer>> entries = auctionRealtimeMemberRepository.getAll(auctionId);
         for(Map.Entry<Long, Integer> entry: entries) {
-            long memberId = entry.getKey().longValue();
-            int myFinalPrice = entry.getValue();
-            if ( memberId == buyerId) {
+            Long memberId = entry.getKey().longValue();
+            Long myFinalPrice = entry.getValue().longValue();
+            if ( memberId.equals(buyerId)) {
                 continue;
             }
             NoticeFailResp resp = NoticeFailResp.of(dto, myFinalPrice);
@@ -73,7 +73,7 @@ public class NoticeService {
      */
     public void auctionComplete(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
-        long sellerId = dto.getSellerId();
+        Long sellerId = dto.getSellerId();
         NoticeCompleteResp resp = NoticeCompleteResp.of(dto);
         noticeRepository.save(sellerId, resp);
         webSocketController.sendAlert(sellerId, payloadUtil.getStringValue(resp));
@@ -86,9 +86,9 @@ public class NoticeService {
      */
     public void auctionOutBid(KafkaBidDTO dto) {
         log.info("received kafkaBidDTO: {}", dto);
-        long memberId = dto.getMemberId();
-        long beforeWinnerId = dto.getBeforeWinnerId();
-        if (beforeWinnerId == -1 || memberId == beforeWinnerId) {
+        Long memberId = dto.getMemberId();
+        Long beforeWinnerId = dto.getBeforeWinnerId();
+        if (beforeWinnerId.equals(-1L) || memberId.equals(beforeWinnerId)) {
             return;
         }
         NoticeOutBidResp resp = NoticeOutBidResp.of(dto);
@@ -101,11 +101,11 @@ public class NoticeService {
      * @param memberId
      * @return
      */
-    public Map<Long, NoticeResp> getAllNotice(long memberId) {
+    public Map<Long, NoticeResp> getAllNotice(Long memberId) {
         return noticeRepository.getAll(memberId);
     }
 
-    public void setIsRead(long memberId, long noticeId, boolean isRead) {
-        noticeRepository.updateIsRead(memberId, noticeId, isRead);
+    public void setRead(Long memberId, Long noticeId, boolean isRead) {
+        noticeRepository.updateRead(memberId, noticeId, isRead);
     }
 }

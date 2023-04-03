@@ -20,14 +20,14 @@ public class AuctionSocketService {
 
     public void auctionBid(KafkaBidDTO dto) {
         log.info("received KafkaBidDTO: {}", dto);
-        long auctionId = dto.getAuctionId();
+        Long auctionId = dto.getAuctionId();
         SocketBidInfoResp resp = SocketBidInfoResp.from(dto);
         webSocketController.sendAuctionInfo(auctionId, payloadUtil.getStringValue(resp));
     }
 
     public void auctionUpdate(KafkaAuctionUpdateDTO dto) {
         log.info("received KafkaAuctionUpdateDTO: {}", dto);
-        long auctionId = dto.getAuctionId();
+        Long auctionId = dto.getAuctionId();
         SocketPriceSizeResp resp = SocketPriceSizeResp.from(dto);
         webSocketController.sendAuctionInfo(auctionId, payloadUtil.getStringValue(resp));
     }

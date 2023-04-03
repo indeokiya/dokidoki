@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RScoredSortedSet;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.protocol.ScoredEntry;
-import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.stereotype.Component;
 
 import java.util.Collection;

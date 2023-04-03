@@ -24,7 +24,7 @@ public class NoticeRepositoryImpl implements NoticeRepository {
     private final RedissonClient redisson;
     private final String keyPrefix = NoticeConstants.mapKey;
 
-    private String getKey(long memberId) {
+    private String getKey(Long memberId) {
         StringBuilder sb = new StringBuilder();
         sb.append(keyPrefix).append(":").append(memberId);
         return sb.toString();
@@ -33,34 +33,34 @@ public class NoticeRepositoryImpl implements NoticeRepository {
 
     @Override
     @RTransactional
-    public void save(long memberId, NoticeResp resp) {
+    public void save(Long memberId, NoticeResp resp) {
         RMap<Long, NoticeResp> noticeMap = redisson.getMap(getKey(memberId));
         long id = noticeMap.size();
         noticeMap.put(id, resp);
     }
 
     @Override
-    public Map<Long, NoticeResp> getAll(long memberId) {
+    public Map<Long, NoticeResp> getAll(Long memberId) {
         RMap<Long, NoticeResp> noticeMap = redisson.getMap(getKey(memberId));
         return noticeMap.readAllMap();
     }
 
     @Override
     @RTransactional
-    public void deleteAll(long memberId) {
+    public void deleteAll(Long memberId) {
         RMap<Long, NoticeResp> noticeMap = redisson.getMap(getKey(memberId));
         noticeMap.delete();
     }
 
     @Override
     @RTransactional
-    public void updateIsRead(long memberId, long noticeId, boolean isRead) {
+    public void updateRead(Long memberId, Long noticeId, boolean isRead) {
         RMap<Long, NoticeResp> noticeMap = redisson.getMap(getKey(memberId));
         NoticeResp noticeResp = noticeMap.get(noticeId);
         if (noticeResp == null) {
             throw new InvalidValueException("noticeId가 존재하지 않습니다.", ErrorCode.INVALID_INPUT_VALUE);
         }
-        noticeResp.setIsRead(isRead);
+        noticeResp.setRead(isRead);
         noticeMap.put(noticeId, noticeResp);
     }
 }

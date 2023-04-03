@@ -21,10 +21,10 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class NoticeSuccessResp implements NoticeResp {
     private NoticeType type;
-    private long productId;
+    private Long productId;
     private String productName;
-    private long auctionId;
-    private int finalPrice;
+    private Long auctionId;
+    private Long finalPrice;
     private boolean isRead;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
@@ -49,7 +49,7 @@ public class NoticeSuccessResp implements NoticeResp {
     }
 
     @Override
-    public void setIsRead(boolean bool) {
+    public void setRead(boolean bool) {
         this.isRead = bool;
     }
 
