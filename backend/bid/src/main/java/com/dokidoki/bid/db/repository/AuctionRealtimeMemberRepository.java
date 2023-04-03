@@ -18,24 +18,24 @@ public class AuctionRealtimeMemberRepository {
     private final RedissonClient redisson;
     private final String keyPrefix = RealTimeConstants.memberPriceKey;
 
-    private String getKey(long auctionId) {
+    private String getKey(Long auctionId) {
         StringBuilder sb = new StringBuilder();
         sb.append(keyPrefix).append(":").append(auctionId);
         return sb.toString();
     }
 
-    public int findById(long auctionId, long memberId) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
-        Integer myBidPrice = map.get(memberId);
+    public Long findById(Long auctionId, Long memberId) {
+        RMap<Long, Long> map = redisson.getMap(getKey(auctionId));
+        Long myBidPrice = map.get(memberId);
         if (myBidPrice == null) {
             throw new InvalidValueException("조회할 수 없는 값입니다.");
         }
-        return myBidPrice.intValue();
+        return myBidPrice;
     }
 
     @RTransactional
-    public void save(long auctionId, long memberId, int bidPrice) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+    public void save(Long auctionId, Long memberId, Long bidPrice) {
+        RMap<Long, Long> map = redisson.getMap(getKey(auctionId));
         map.put(memberId, bidPrice);
     }
 

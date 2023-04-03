@@ -7,16 +7,16 @@ import java.util.concurrent.TimeUnit;
 
 public interface AuctionRealtimeRepository {
 
-    Optional<AuctionRealtime> findById(long auctionId);
+    Optional<AuctionRealtime> findById(Long auctionId);
 
     void save(AuctionRealtime auctionRealtime);
 
-    void save(AuctionRealtime auctionRealtime, long ttl, TimeUnit timeUnit);
+    void save(AuctionRealtime auctionRealtime, Long ttl, TimeUnit timeUnit);
 
     boolean deleteAll();
 
-    boolean isExpired(long auctionId);
+    boolean isExpired(Long auctionId);
 
-    void delete(long auctionId);
+    void delete(Long auctionId);
 
 }

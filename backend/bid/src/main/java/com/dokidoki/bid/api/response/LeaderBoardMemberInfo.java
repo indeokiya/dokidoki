@@ -22,14 +22,14 @@ import java.time.ZoneId;
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class LeaderBoardMemberInfo {
-    private long memberId;
+    private Long memberId;
     private String name;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime bidTime;
 
-    public static LeaderBoardMemberInfo of(AuctionBidReq req, long memberId) {
+    public static LeaderBoardMemberInfo of(AuctionBidReq req, Long memberId) {
         return LeaderBoardMemberInfo.builder()
                 .memberId(memberId)
                 .name(req.getName())

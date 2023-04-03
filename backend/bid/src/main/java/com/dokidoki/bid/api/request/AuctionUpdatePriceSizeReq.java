@@ -11,5 +11,5 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 public class AuctionUpdatePriceSizeReq {
-    private int priceSize;
+    private Long priceSize;
 }

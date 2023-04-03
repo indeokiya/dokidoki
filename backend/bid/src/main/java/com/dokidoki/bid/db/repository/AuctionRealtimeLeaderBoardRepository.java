@@ -27,13 +27,13 @@ public class AuctionRealtimeLeaderBoardRepository {
      * @param auctionId 경매 ID
      * @return Redis 에 leaderboard 를 저장할 키
      */
-    private String getKey(long auctionId) {
+    private String getKey(Long auctionId) {
         StringBuilder sb = new StringBuilder();
         sb.append(keyPrefix).append(":").append(auctionId);
         return sb.toString();
     }
 
-    public Optional<LeaderBoardMemberInfo> getWinner(long auctionId) {
+    public Optional<LeaderBoardMemberInfo> getWinner(Long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         LeaderBoardMemberInfo last = scoredSortedSet.last();
         log.info("score: {}", scoredSortedSet.getScore(last));
@@ -44,22 +44,22 @@ public class AuctionRealtimeLeaderBoardRepository {
         }
     }
 
-    public Collection<ScoredEntry<LeaderBoardMemberInfo>> getAll(long auctionId) {
+    public Collection<ScoredEntry<LeaderBoardMemberInfo>> getAll(Long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         return scoredSortedSet.entryRangeReversed(0, -1);
     }
 
-    public void save(int bidPrice, LeaderBoardMemberInfo memberInfo, long auctionId) {
+    public void save(Long bidPrice, LeaderBoardMemberInfo memberInfo, Long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         scoredSortedSet.add(bidPrice, memberInfo);
     }
 
-    public void removeOutOfRange(long auctionId) {
+    public void removeOutOfRange(Long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         scoredSortedSet.removeRangeByRank(-limit -1, -limit -1);
     }
 
-    public void deleteAll(long auctionId) {
+    public void deleteAll(Long auctionId) {
         RScoredSortedSet<LeaderBoardMemberInfo> scoredSortedSet = redisson.getScoredSortedSet(getKey(auctionId));
         scoredSortedSet.delete();
     }
