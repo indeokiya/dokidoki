@@ -8,6 +8,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import IngSceleton from 'src/components/sceleton/IngSceleton';
+import ErrorImg from '../../../assets/image/error_page.png'
 
 //get 함수로 전체 경매 불러오기
 const getInProgress = (category_id: number, keyword: string, page: number, size: number) => {
@@ -101,8 +102,8 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
     }
   }, [inView]);
 
-  // if (isLoading) return <h1>isLoading...</h1>;
-  if (isError) return <h1>error</h1>;
+  if (isError) return <StylecError src={ErrorImg}></StylecError>;
+
   // data is not undefined
   if ( !isLoading){
     console.log(data)
@@ -155,4 +156,6 @@ const Target = styled.div`
 margin-top:50px;
 `
 
-
+const StylecError = styled.img`
+  width:100%
+`

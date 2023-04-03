@@ -2,7 +2,7 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import styled from 'styled-components';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Chip from '@mui/material/Chip';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
@@ -203,8 +203,8 @@ const ProductInfo = ({
           <Typography variant="subtitle1" sx={{ fontSize: '0.9rem' }} color="error">
             {numberFormat(offer_price)}
           </Typography>
-          <Typography variant="subtitle1" sx={{ fontSize: '0.9rem' }}>
-            {numberFormat(priceSize)}
+          <Typography variant="subtitle1" sx={{ fontSize: '0.9rem' }} color="primary">
+            + {numberFormat(priceSize)}
           </Typography>
           <Typography variant="caption" sx={{ fontSize: '0.9rem' }}>
             {product_name}

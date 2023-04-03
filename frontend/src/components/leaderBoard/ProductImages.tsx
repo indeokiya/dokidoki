@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
 import blank_img from '../../assets/image/blank_img.png';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Timer from './timer/Timer';
 import IconButton from '@mui/material/IconButton';
 

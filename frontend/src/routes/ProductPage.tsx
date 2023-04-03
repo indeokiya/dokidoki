@@ -20,6 +20,8 @@ import { useRecoilValue } from 'recoil';
 import { userInfoState } from 'src/store/userInfoState';
 import { useNavigate } from 'react-router-dom';
 import { SocketBidData } from 'src/datatype/datatype';
+import ProductPageSceleton from 'src/components/sceleton/ProductPageSceleton';
+import errorImg from "../assets/image/error_page.png"
 
 const ProductPage = () => {
   const [reset, SetReset] = useState(true);
@@ -93,10 +95,10 @@ const ProductPage = () => {
   // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
   // data fetching logic
   const { isLoading, isError, error, data } = useAuctionDetail({ id });
-  if (isLoading) return <h1>isLoading..</h1>;
+  if (isLoading) return <ProductPageSceleton/>;
   if (isError) {
     console.error('error occured >> ', error.message);
-    return <h1>error occured while fetching auction_id: {id}</h1>;
+    return <StyledImg src={errorImg}></StyledImg>;
   } 
      
 
@@ -104,7 +106,7 @@ const ProductPage = () => {
   if(reset){
     console.log("여기 들어옴?")
     setHighestPrice(data.highest_price); //에러가 없다면 초기값 최고가 갱신
-    setLeaderBoardData(data.leader_board); // 리더보드 초기값 갱신
+    setLeaderBoardData(data.leader_board.slice(0,5)); // 리더보드 초기값 갱신
     setPriceSize(data.price_size);
     SetReset(false);
   }
@@ -210,4 +212,11 @@ export default ProductPage;
 const BackgroundDiv = styled.div`
   background-color: #dddddd;
   padding-top: 30px;
+  padding-bottom: 100px;
 `;
+
+const StyledImg = styled.img`
+
+  width:100%;
+  
+`
