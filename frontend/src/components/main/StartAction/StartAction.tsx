@@ -6,7 +6,6 @@ import { useRecoilState } from 'recoil';
 import { userInfoState } from 'src/store/userInfoState';
 
 const StartAuction = () => {
-
   const navigate = useNavigate();
 
   return (
@@ -16,12 +15,13 @@ const StartAuction = () => {
       <Describe>삼성의 모든 것을 갖춘 옥션에서 일상을 즐겁게 만들어보세요.</Describe>
       <Describe>당신의 삶을 업그레이드하세요.</Describe>
       <Box sx={{ marginTop: '10px', marginLeft: '5px' }}>
-        <Button variant="contained" onClick={()=>{
-          navigate("/auction")
-          console.log("fdzz")
-        }}>
+        <StyledButton
+          onClick={() => {
+            navigate('/auction');
+          }}
+        >
           경매시작하기
-        </Button>
+        </StyledButton>
       </Box>
     </StyledDiv>
   );
@@ -30,26 +30,25 @@ const StartAuction = () => {
 export default StartAuction;
 
 const StyledDiv = styled.div`
-height:600px;
-  border: 1px solid grey;
+  height: 600px;
+  background-color: #3a77ee;
   width: 100%;
   padding: 10%;
   box-sizing: border-box;
 `;
 
 const StyledSmallP = styled.p`
+  color: white;
   margin-top: 10%;
-  margin-bottom:0px;
+  margin-bottom: 0px;
   padding: 0;
-  
   padding-left: 5px;
-  color: #3a77ee;
 `;
 
 const StyledLargeP = styled.p`
   margin: 0;
   padding: 0;
-  color: #3a77ee;
+  color: white;
   font-wieght: bold;
   font-size: 50px;
   text-transform: uppercase;
@@ -60,5 +59,19 @@ const Describe = styled.p`
   margin: 0;
   padding: 0;
   padding-left: 5px;
+  color: white;
   white-space: pre-wrap;
+`;
+
+const StyledButton = styled.button`
+font-size:15px;
+  background-color: white;
+  padding: 15px;
+  border-radius: 5px;
+  border: 1px solid white;
+  color:#3a77ee;
+  transition:0.2s;
+  &:hover {
+    box-shadow: 1px 1px 15px white;
+  }
 `;
