@@ -1,11 +1,9 @@
 package com.dokidoki.userserver.controller;
 
 import com.dokidoki.userserver.componet.JwtProvider;
-import com.dokidoki.userserver.dto.request.ProfileImageRequest;
+
 import com.dokidoki.userserver.dto.response.CommonResponse;
-import com.dokidoki.userserver.dto.response.JWTRes;
-import com.dokidoki.userserver.entity.UserEntity;
-import com.dokidoki.userserver.exception.CustomException;
+
 import com.dokidoki.userserver.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +14,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @RestController
 @Slf4j
