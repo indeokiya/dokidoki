@@ -1,6 +1,8 @@
 package com.dokidoki.auction.domain.entity;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
@@ -23,5 +25,6 @@ public class InterestEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auction_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private AuctionIngEntity auctionIngEntity;
 }
