@@ -42,14 +42,16 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
             {/*내가 판매자일 때와 내가 구매자일 때를 나눈다. */}
             {loginUser.name === auctionData.seller_name && (
               <>
-                <Typography variant="overline">판매자 : {auctionData.buyer_name}</Typography>
-                <Typography variant="subtitle1">구매날짜 : {dateFormat()}</Typography>
+                {/* 내가 판매자라면 구매자가 누군지 보여줘야 함 */}
+                <Typography variant="overline">구매자 : {auctionData.buyer_name}</Typography>
+                <Typography variant="subtitle1">판매날짜 : {dateFormat()}</Typography>
               </>
             )}
             {loginUser.name === auctionData.buyer_name && (
               <>
-                <Typography variant="overline">구매자 : {auctionData.seller_name}</Typography>
-                <Typography variant="subtitle1">판매날짜 : {dateFormat()}</Typography>
+                {/* 내가 구매자라면 판매자가 누군지 보여줘야 함 */}
+                <Typography variant="overline">판매자 : {auctionData.seller_name}</Typography>
+                <Typography variant="subtitle1">구매날짜 : {dateFormat()}</Typography>
               </>
             )}
           </Grid>

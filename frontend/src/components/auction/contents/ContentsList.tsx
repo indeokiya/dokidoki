@@ -85,7 +85,8 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
       {
         getNextPageParam: (lastPage, allPages) => {
           //is_last:true이면 false리턴해서 hasNextpage 변수를 false로 변경해줌 => 무한스크롤 정지
-          if (lastPage.is_last) {
+          // is_last가 없거나 true일 경우 그만 가져오기 (is_last가 false일 경우)
+          if (lastPage?.is_last !== false) {
             return false;
           } else {
             return allPages.length;

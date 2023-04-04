@@ -31,7 +31,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class BiddingService {
 
     private final AuctionRealtimeRepository auctionRealtimeRepository;
@@ -39,15 +38,6 @@ public class BiddingService {
     private final AuctionRealtimeMemberRepository auctionRealtimeMemberRepository;
     private final AuctionRealtimeBiddingRepository auctionRealtimeBiddingRepository;
     private final KafkaBidProducer producer;
-
-    /**
-     * 현재 입찰중인 경매 정보 가져오기. Controller 에서 접근하는 메서드.
-     * @param memberId
-     * @return
-     */
-    public Set<Long> auctionBiddingList(Long memberId) {
-        return auctionRealtimeBiddingRepository.findById(memberId);
-    }
 
     /**
      * 게시글 등록 시 Redis 에 실시간 정보를 저장하는 메서드.
@@ -61,37 +51,7 @@ public class BiddingService {
         // 경매 실패 알림을 위한 경매 id - member id set 이 필요함
     }
 
-    /**
-     * 경매 초기 정보 실시간 정보를 가져오는 메서드. 컨트롤러에서 접근하는 메서드
-     * 실시간 정보가 없을 때에는 리더보드 정보만을 제공하고,
-     * 실시간 정보가 있을 때에는 highestPrice 와 priceSize 도 함께 보내준다.
-     * @param auctionId
-     * @return
-     */
-    public AuctionInitialInfoResp getInitialInfo(Long auctionId) {
-        log.info("경매 상세 페이지에서 상세 정보 조회 요청. auctionId: {}", auctionId);
 
-        // 1. 초기 리더보드 정보 가져오기
-        List<LeaderBoardMemberResp> initialLeaderBoard = getInitialLeaderBoard(auctionId);
-
-        Optional<AuctionRealtime> auctionRealtimeO = auctionRealtimeRepository.findById(auctionId);
-        
-        // 2. 경매 정보가 없는 경우, 리더보드 정보만 보내기
-        if (auctionRealtimeO.isEmpty()) {
-            AuctionInitialInfoResp resp = AuctionInitialInfoResp.builder()
-                    .leaderBoard(initialLeaderBoard)
-                    .build();
-            return resp;
-        }
-        
-        // 3. 경매 정보가 있는 경우, 현재 최고가와 경매 단위도 같이 보내기
-        AuctionInitialInfoResp resp = AuctionInitialInfoResp.builder()
-                .highestPrice(auctionRealtimeO.get().getHighestPrice())
-                .priceSize(auctionRealtimeO.get().getPriceSize())
-                .leaderBoard(initialLeaderBoard)
-                .build();
-        return resp;
-    }
 
     /**
      * 경매 조기 종료 메서드. Controller 에서 접근하는 메서드.
@@ -111,8 +71,13 @@ public class BiddingService {
         if (!auctionRealtimeO.get().getSellerId().equals(memberId)) {
             throw new BusinessException("권한이 없는 사용자입니다. 판매자가 아닙니다.", ErrorCode.IS_NOT_SELLER);
         }
+
+        // 3. 이미 종료된 경매인 경우
+        if (auctionRealtimeRepository.isExpired(auctionId)) {
+            throw new BusinessException("이미 종료된 경매입니다.", ErrorCode.AUCTION_ALREADY_ENDED);
+        }
         
-        // 3. 경매 종료시키기
+        // 4. 경매 종료시키기
         auctionRealtimeRepository.delete(auctionId);
 
     }
@@ -192,14 +157,15 @@ public class BiddingService {
         auctionRealtimeRepository.save(auctionRealtime);
         
         // 6-2. 유저별 입찰 최고가 정보 갱신하기
-        auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
+        Long[] infos = auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
+        Long bidNum = infos[1];
 
         // 6-3. 입찰중인 리스트에 추가
         auctionRealtimeBiddingRepository.save(memberId, auctionId);
 
         // 6-4. 리더보드 갱신
         // 받은 request 와 memberId로 DB에 저장되는 리더보드 정보 갱신
-        LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
+        LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId, bidNum);
         auctionRealtimeLeaderBoardRepository.save(newHighestPrice, memberInfo, auctionId);
         // limit 을 넘어가는 리더보드 정보는 지우기
         auctionRealtimeLeaderBoardRepository.removeOutOfRange(auctionId);
@@ -210,26 +176,6 @@ public class BiddingService {
         return resp;
     }
 
-    /**
-     * Redis 의 SortedSet 에 저장된 leaderboard 정보를 바탕으로
-     * client 에게 보내줄 리더보드 정보를 가공하는 메서드.
-     * @param auctionId 경매 ID
-     * @return client 에게 보내줄 리더보드 정보
-     */
-    public List<LeaderBoardMemberResp> getInitialLeaderBoard(Long auctionId) {
-        List<LeaderBoardMemberResp> list = new ArrayList<>();
-
-        Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderBoardMemberInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
-
-        for (ScoredEntry<LeaderBoardMemberInfo> info: leaderBoardMemberInfos) {
-            Long bidPrice = info.getScore().longValue();
-            LeaderBoardMemberResp resp = LeaderBoardMemberResp.of(info.getValue(), bidPrice);
-            list.add(resp);
-        }
-        log.info("initialLeaderBoard: {}", list);
-
-        return list;
-    }
 
     /**
      * 경매 단위를 수정하는 메서드. Kafka 의 Consumer 가 사용

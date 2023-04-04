@@ -23,4 +23,6 @@ public class LeaderBoardMemberInfo {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime bidTime;
+    private Long bidNum;
+
 }

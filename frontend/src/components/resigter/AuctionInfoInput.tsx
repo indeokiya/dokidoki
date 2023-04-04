@@ -47,7 +47,7 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
           </Grid> }
 
           <Grid item xs={2}>
-            <Typography variant="subtitle1">겅매 단위 : </Typography>
+            <Typography variant="subtitle1">경매 단위 : </Typography>
           </Grid>
           <Grid item xs={10} mb={2}>
             <NumericFormat

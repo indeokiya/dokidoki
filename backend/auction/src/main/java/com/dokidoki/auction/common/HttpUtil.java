@@ -1,6 +1,7 @@
 package com.dokidoki.auction.common;
 
 import com.dokidoki.auction.dto.response.BiddingResp;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -14,17 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
+@RequiredArgsConstructor
 public class HttpUtil {
-    private HttpComponentsClientHttpRequestFactory factory;
-    private RestTemplate restTemplate;
-
-    @Autowired
-    public HttpUtil() {
-        factory = new HttpComponentsClientHttpRequestFactory();
-        factory.setConnectionRequestTimeout(3000);
-        factory.setReadTimeout(3000);
-        restTemplate = new RestTemplate(factory);
-    }
+    private final RestTemplate restTemplate;
 
     public BiddingResp getAuctionIdList(String accessToken) {
         HttpHeaders headers = new HttpHeaders();

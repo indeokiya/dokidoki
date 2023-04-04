@@ -27,6 +27,9 @@ public class InterestEntity {
 
     @Column(name = "member_id", insertable = false, updatable = false)
     private Long memberId;
-    @Column(name = "auction_id")
-    private Long auctionId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "auction_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private AuctionIngEntity auctionIngEntity;
 }
