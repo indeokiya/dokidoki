@@ -28,11 +28,13 @@ public class LeaderBoardMemberInfo {
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime bidTime;
+    private Long bidNum;
 
-    public static LeaderBoardMemberInfo of(AuctionBidReq req, Long memberId) {
+    public static LeaderBoardMemberInfo of(AuctionBidReq req, Long memberId, Long bidNum) {
         return LeaderBoardMemberInfo.builder()
                 .memberId(memberId)
                 .name(req.getName())
+                .bidNum(bidNum)
                 .bidTime(LocalDateTime.now(ZoneId.of("Asia/Seoul"))).build();
     }
 }

@@ -26,6 +26,7 @@ public class LeaderBoardMemberResp {
     @JsonDeserialize(using = LocalDateTimeDeserializer.class)
     private LocalDateTime bidTime;
     private Long bidPrice;
+    private Long bidNum;
 
     public static LeaderBoardMemberResp of(LeaderBoardMemberInfo info, Long bidPrice) {
         // 개인정보 가리기
@@ -35,12 +36,12 @@ public class LeaderBoardMemberResp {
             modifiedName = name;
         } else {
             modifiedName = name.substring(0, 1) + "*" + name.substring(2);
-
         }
 
         return LeaderBoardMemberResp.builder()
                 .name(modifiedName)
                 .bidTime(info.getBidTime())
+                .bidNum(info.getBidNum())
                 .bidPrice(bidPrice).build();
     }
 

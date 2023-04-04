@@ -91,13 +91,16 @@ public class OauthController {
             // 토큰 생성
             accessToken = jwtProvider.getAccessToken(user.getId());
             refreshToken = jwtProvider.getRefreshToken(user);
+        }else{
+            // 아니면 정지 해제 시점을 보내 줌
+            accessToken = user.getEndTimeOfSuspension().toString();
         }
 
         response.sendRedirect(getFrontRedirectUrl(accessToken, refreshToken));
     }
 
     @GetMapping("/kakao/redirect")
-    public void redirectKakao(@RequestParam String code, HttpServletResponse response) throws IOException {
+    public void redirectKakao(@RequestParam String code,HttpServletResponse response) throws IOException {
         KakaoUserInfo info = oauthService.getUserInfoKakao(code);
 
         // 회원이 존재하면 반환, 아니면 가입 후 반환
@@ -114,9 +117,18 @@ public class OauthController {
                             .point(DEFAULT_POINT)
                             .build());
         }
-        // 토큰 생성
-        String accessToken = jwtProvider.getAccessToken(user.getId());
-        String refreshToken = jwtProvider.getRefreshToken(user);
+
+        String accessToken = null;
+        String refreshToken = null;
+        // 정지 받은 적 없거나 정지 기한이 지났으면 토큰 발급
+        if(user.getEndTimeOfSuspension() == null || user.getEndTimeOfSuspension().compareTo(LocalDateTime.now()) < 0) {
+            // 토큰 생성
+            accessToken = jwtProvider.getAccessToken(user.getId());
+            refreshToken = jwtProvider.getRefreshToken(user);
+        }else{
+            // 아니면 정지 해제 시점을 보내 줌
+            accessToken = user.getEndTimeOfSuspension().toString();
+        }
 
         response.sendRedirect(getFrontRedirectUrl(accessToken, refreshToken));
     }

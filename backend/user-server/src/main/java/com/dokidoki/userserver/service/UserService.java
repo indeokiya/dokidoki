@@ -4,12 +4,16 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.dokidoki.userserver.dto.request.ProfileImageRequest;
+import com.dokidoki.userserver.dto.response.SuperRichRes;
 import com.dokidoki.userserver.entity.UserEntity;
 import com.dokidoki.userserver.enumtype.ProviderType;
 import com.dokidoki.userserver.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -118,6 +122,44 @@ public class UserService {
             System.out.println(e.getMessage());
             return null;
         }
+    }
+
+    public List<SuperRichRes> getSuperRichList(Integer page, Integer size){
+        Page<UserEntity> userEntities = userRepository.findAll(
+                PageRequest.of(page,size, Sort.by(Sort.Direction.DESC, "point"))
+        );
+
+        List<SuperRichRes> superRichRes = new ArrayList<>();
+
+        userEntities.forEach(
+                (user)->{
+                    superRichRes.add(
+                            SuperRichRes.builder()
+                                    .point(user.getPoint())
+                                    .encryptName(encryptedUserName(user.getName())) // 유저 이름을 암호화 해서 넣는다
+                                    .build()
+                    );
+                }
+        );
+        return superRichRes;
+    }
+
+    // 유저 이름 암호화
+    private String encryptedUserName(String name){
+        // 이름이 세글자 이상일 때 암호화한다.
+        if(name ==null || name.length() <3) return name;
+
+        int nameLen = name.length();
+        // 가운데 2/3 지점을 *로 암호화한다.
+        // 가운데 지점이 제일 길게
+        int  middleLength = nameLen/3 + nameLen%3;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(name.substring(0,nameLen/3));
+        for(int i = 0; i<middleLength; i++) sb.append('*');
+        sb.append(name.substring(nameLen/3 + middleLength));
+
+        return sb.toString();
     }
 
     private String putS3(File uploadFile, String fileName) {

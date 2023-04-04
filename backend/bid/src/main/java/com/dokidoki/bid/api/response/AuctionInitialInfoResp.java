@@ -16,4 +16,5 @@ public class AuctionInitialInfoResp {
     private Long highestPrice;
     private Long priceSize;
     private List<LeaderBoardMemberResp> leaderBoard;
+    private List<MemberChartResp> memberChart;
 }

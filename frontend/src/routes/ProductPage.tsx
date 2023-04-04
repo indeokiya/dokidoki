@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { SocketBidData } from 'src/datatype/datatype';
 import ProductPageSceleton from 'src/components/sceleton/ProductPageSceleton';
 import errorImg from "../assets/image/error_page.png"
+import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
 
 const ProductPage = () => {
   const [reset, SetReset] = useState(true);
@@ -45,7 +46,7 @@ const ProductPage = () => {
 
     if (!clientRef.current) connect();
     return () => disconnect();
-  }, [reset]);
+  }, []);
 
   //소캣 연결 함수
   const connect = () => {
@@ -59,7 +60,7 @@ const ProductPage = () => {
         console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
-          console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
+          // console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
           let sData = JSON.parse(message.body);
 
           //소켓으로 경매정보가 넘어왔을 때
@@ -73,7 +74,6 @@ const ProductPage = () => {
               }:${bid_time[5] > 9 ? bid_time[5] : '0' + bid_time[5]}`,
               bid_price: bid_price,
             };
-            console.log("소켓에서 데이터 받아온 뒤 상황 >> ",leaderBoardData)
             console.log("소캣에서 넘어온 데이터로 만드는 newData : ",newData)
             setLeaderBoardData(pre =>[newData, ...pre].slice(0,5));
             
@@ -105,11 +105,10 @@ const ProductPage = () => {
 
 
   if(reset){
-    console.log("여기 들어옴?")
     setHighestPrice(pre => data.highest_price); //에러가 없다면 초기값 최고가 갱신
     setLeaderBoardData(data.leader_board.slice(0,5)); // 리더보드 초기값 갱신
-    setPriceSize(data.price_size);
-    SetReset(false);
+    setPriceSize(data.price_size); //경매단위 초기화 
+    SetReset(false)
   }
 
 
@@ -157,6 +156,7 @@ const ProductPage = () => {
             </Grid>
             <Grid item xs={6}>
               {/* 제품 정보 */}
+              <SnackbarProvider maxSnack={5}>
               <ProductInfo
                 setHighestPrice={setHighestPrice}
                 auction_title={auction_title}
@@ -174,7 +174,8 @@ const ProductPage = () => {
                 product_name={product_name}
                 seller_name={seller_name}
                 leaderBoardData={leaderBoardData}
-              />
+                />
+                </SnackbarProvider>
             </Grid>
           </Grid>
           <Divider />
@@ -186,16 +187,16 @@ const ProductPage = () => {
             </Grid>
 
             {/* 제품 설명 */}
-            <Grid item sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <ProductDescription description={description} />
             </Grid>
             {/* 지도 */}
-            <Grid item sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <MeetingPlace location={meeting_place} />
             </Grid>
 
             {/* 댓글 */}
-            <Grid item sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
             </Grid>
           </Grid>

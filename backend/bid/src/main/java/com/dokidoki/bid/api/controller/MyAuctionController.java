@@ -1,5 +1,6 @@
 package com.dokidoki.bid.api.controller;
 
+import com.dokidoki.bid.api.service.AuctionInfoService;
 import com.dokidoki.bid.api.service.BiddingService;
 import com.dokidoki.bid.common.utils.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -13,12 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 @RequiredArgsConstructor
 public class MyAuctionController {
 
-    private final BiddingService biddingService;
+    private final AuctionInfoService auctionInfoService;
 
     @GetMapping("my-infos/bids")
     public ResponseEntity<?> getAuctionBidding(HttpServletRequest request) {
         long memberId = JWTUtil.getUserId(request);
-        return ResponseEntity.ok(biddingService.auctionBiddingList(memberId));
+        return ResponseEntity.ok(auctionInfoService.auctionBiddingList(memberId));
     }
 
 }

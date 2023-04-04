@@ -42,4 +42,12 @@ public class LandingPageController {
                 BaseResponseBody.of(message, mostSaleProductContents)
         );
     }
+
+    // 수수료로 얻은 총 수익금 조회
+    @GetMapping("/total-treasury")
+    public ResponseEntity<BaseResponseBody> readTotalTreasury() {
+        return ResponseEntity.status(200).body(
+                BaseResponseBody.of("국고 조회 성공", landingPageService.readTotalTreasury())
+        );
+    }
 }
