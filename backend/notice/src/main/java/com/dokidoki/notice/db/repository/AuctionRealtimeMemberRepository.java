@@ -41,6 +41,14 @@ public class AuctionRealtimeMemberRepository {
         }
         return infos[0];
     }
+    public Long findMyBidNumById(Long auctionId, Long memberId) {
+        RMap<Long, Long[]> map = redisson.getMap(getKey(auctionId));
+        Long[] infos = map.get(memberId);
+        if (infos == null) {
+            throw new InvalidValueException("조회할 수 없는 값입니다.");
+        }
+        return infos[1];
+    }
 
     @RTransactional
     public void save(Long auctionId, Long memberId, Long bidPrice) {
