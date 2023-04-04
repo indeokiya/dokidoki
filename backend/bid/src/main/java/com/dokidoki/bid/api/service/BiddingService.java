@@ -197,14 +197,15 @@ public class BiddingService {
         auctionRealtimeRepository.save(auctionRealtime);
         
         // 6-2. 유저별 입찰 최고가 정보 갱신하기
-        auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
+        Long[] infos = auctionRealtimeMemberRepository.save(auctionId, memberId, newHighestPrice);
+        Long bidNum = infos[1];
 
         // 6-3. 입찰중인 리스트에 추가
         auctionRealtimeBiddingRepository.save(memberId, auctionId);
 
         // 6-4. 리더보드 갱신
         // 받은 request 와 memberId로 DB에 저장되는 리더보드 정보 갱신
-        LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId);
+        LeaderBoardMemberInfo memberInfo = LeaderBoardMemberInfo.of(req, memberId, bidNum);
         auctionRealtimeLeaderBoardRepository.save(newHighestPrice, memberInfo, auctionId);
         // limit 을 넘어가는 리더보드 정보는 지우기
         auctionRealtimeLeaderBoardRepository.removeOutOfRange(auctionId);

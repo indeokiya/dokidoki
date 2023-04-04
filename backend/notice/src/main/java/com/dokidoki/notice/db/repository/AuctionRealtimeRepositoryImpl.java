@@ -1,6 +1,5 @@
 package com.dokidoki.notice.db.repository;
 
-import com.dokidoki.notice.api.service.NoticeService;
 import com.dokidoki.notice.common.annotation.RTransactional;
 import com.dokidoki.notice.common.codes.RealTimeConstants;
 import com.dokidoki.notice.db.entity.AuctionRealtime;
@@ -9,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBucket;
 import org.redisson.api.RMap;
 import org.redisson.api.RedissonClient;
-import org.redisson.codec.TypedJsonJacksonCodec;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
