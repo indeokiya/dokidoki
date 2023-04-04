@@ -182,11 +182,7 @@ const ProductPage = () => {
             {/* 제품 카테고리 평균 가격 */}
 
             <Grid item xs={12} sx={{ width: '100%', marginBottom: '10px' }}>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
                   <MemberChart initial_datas={member_chart}/>
-                </Grid>
-              </Grid>
             </Grid>
 
             {/* 제품 설명 */}
