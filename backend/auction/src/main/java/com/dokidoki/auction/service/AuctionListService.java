@@ -2,6 +2,7 @@ package com.dokidoki.auction.service;
 
 import com.dokidoki.auction.domain.entity.AuctionEndEntity;
 import com.dokidoki.auction.domain.entity.AuctionIngEntity;
+import com.dokidoki.auction.domain.entity.MemberEntity;
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.AuctionIngRepository;
 import com.dokidoki.auction.domain.repository.InterestRepository;
@@ -141,14 +142,22 @@ public class AuctionListService {
         List<InterestMapping> interestMappings = interestRepository.findAllByMemberEntity_Id(memberId);
         Set<Long> interestsOfUser = new HashSet<>();
         interestMappings.forEach(interestMapping -> {
-            interestsOfUser.add(interestMapping.getAuctionIngEntity().getId());
+            // NULL 예외처리
+            AuctionIngEntity auctionIngEntity = interestMapping.getAuctionIngEntity();
+            if (auctionIngEntity != null) {
+                interestsOfUser.add(interestMapping.getAuctionIngEntity().getId());
+            }
         });
 
         // 판매중인 경매 ID 가져오기
         List<AuctionIngMapping> auctionIngMappings = auctionIngRepository.findAuctionIngEntityBySeller_Id(memberId);
         Set<Long> salesOfUser = new HashSet<>();
         auctionIngMappings.forEach(auctionIngMapping -> {
-            salesOfUser.add(auctionIngMapping.getSeller().getId());
+            // NULL 예외처리
+            MemberEntity seller = auctionIngMapping.getSeller();
+            if (seller != null) {
+                salesOfUser.add(seller.getId());
+            }
         });
 
         // 각 경매의 대표 이미지 가져오기
