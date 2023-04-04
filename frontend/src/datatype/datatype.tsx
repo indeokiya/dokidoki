@@ -78,3 +78,9 @@ export type SocketBidData = {
   bid_price:number
 
 }
+
+// 랜딩페이지 - 제품, 대부호 등 순위
+export type RankData = {
+  label: string,
+  value: number
+}
