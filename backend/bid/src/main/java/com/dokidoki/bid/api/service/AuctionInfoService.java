@@ -114,7 +114,7 @@ public class AuctionInfoService {
             String name = memberInfo.getName();
 
             resList.get(bidNum).updateName(name);
-            BidInfo bidInfo = BidInfo.builder().bidTime(bidTime).bidPrice(bidPrice).build();
+            BidInfo bidInfo = BidInfo.from(bidPrice, bidTime);
             resList.get(bidNum).getBidInfos().add(bidInfo);
         }
 

@@ -1,4 +1,4 @@
-import styled, {keyframes} from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { Box } from '@mui/system';
 import { Navigate, useNavigate } from 'react-router-dom';
 import topImg from '../../../assets/image/main_product.png';
@@ -8,7 +8,7 @@ const StartAuction = () => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ position: 'relative', height: '400px', padding: '10%', backgroundColor: '#3A77EE' }}>
+    <Box sx={{ position: 'relative', height: '55vh', padding: '10%', minWidth:"1500px", backgroundColor: '#3A77EE' }}>
       <StyledDiv>
         <StyledSmallP>samsung for</StyledSmallP>
         <StyledLargeP>samsung</StyledLargeP>
@@ -46,7 +46,7 @@ const bottomAnimation = keyframes`
     opacity:1;
     transform : translateY(0px)
   }
-`
+`;
 
 const topAnimation = keyframes`
 0%{
@@ -61,11 +61,10 @@ const topAnimation = keyframes`
     opacity:1;
     transform : translateY(0px)
   }
-`
-
+`;
 
 const StyledBottomImg = styled.img`
-max-height:730;
+  max-height: 730;
   z-index: 10;
   right: 3%;
   top: 0%;
@@ -74,10 +73,9 @@ max-height:730;
   animation-duration: 1s;
   animation-name: ${bottomAnimation};
   animation-iteration-count: 1;
-  
 `;
 const StyledTopImg = styled.img`
-max-height:600;
+  max-height: 600;
   z-index: 11;
   right: 7%;
   top: 5%;
@@ -91,7 +89,7 @@ const StyledDiv = styled.div`
   position: absolute;
   width: 100%;
   box-sizing: border-box;
-  margin-left:1%;
+  margin-left: 1%;
 `;
 
 const StyledSmallP = styled.p`

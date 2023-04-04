@@ -1,10 +1,10 @@
 import Button from '@mui/material/Button';
-import kakaoLoginImgSrc from '../assets/icon/login/kakao_login.png';
-import googleLoginImgSrc from '../assets/icon/login/google_login.png';
-import styled from 'styled-components';
+import kakaoLoginImgSrc from '../assets/login/kakao_login.png';
+import googleLoginImgSrc from '../assets/login/google_login.png';
+import styled, { keyframes } from 'styled-components';
 import Typography from '@mui/material/Typography';
-import loginBackgroundImgSrc from '../assets/icon/login/login_background.png';
 import { userAPI } from '../api/axios';
+import Box from '@mui/material/Box';
 
 const LoginPage = () => {
   const kakaoLoginHandler = () => {
@@ -20,33 +20,60 @@ const LoginPage = () => {
   };
 
   return (
-    <>
-      <OutterDiv>
-        <InnerDivTop>
-          <h3>WELCOME </h3>
-          <Typography variant="h3">SSAFY</Typography>
-        </InnerDivTop>
-        <InnerDivBottom>
-          <Button>
-            <img
-              src={kakaoLoginImgSrc}
-              alt="카카오 로그인"
-              width="250px"
-              onClick={kakaoLoginHandler}
-            />
-          </Button>
-          <br />
+    <Box
+      sx={{
+        padding: '10%',
+        margin: '0 auto',
+        height: '100vh',
+      }}
+    >
+      <Box
+        sx={{
+          display: 'flex',
+          width: '600px',
+          margin: '0 auto',
+          borderRadius: '10px',
+          boxShadow: '1px 1px 15px #dddddd',
+          overflow: 'hidden',
+        }}
+      >
+        <LoginDiv>
+          <Typography variant="subtitle2" mt={8} color="white">
+            WELCOME TO
+          </Typography>
+
+          <Typography variant="h3" color="white">
+            DOKIDOKI
+          </Typography>
+
+          <Typography variant="caption" color="white">
+            Enjoy the site easily
+            <br /> with social login
+          </Typography>
+        </LoginDiv>
+        <LoginForm>
+          <Typography variant="h6" mt={10} color="#a3aae1" textAlign={'center'} mb={3}>
+            LogIn
+          </Typography>
           <Button>
             <img
               src={googleLoginImgSrc}
               alt="구글 로그인"
-              width="255px"
+              width="100%"
               onClick={googleLoginHandler}
             />
           </Button>
-        </InnerDivBottom>
-      </OutterDiv>
-    </>
+          <Button>
+            <img
+              src={kakaoLoginImgSrc}
+              alt="카카오 로그인"
+              width="100%"
+              onClick={kakaoLoginHandler}
+            />
+          </Button>
+        </LoginForm>
+      </Box>
+    </Box>
   );
 };
 
@@ -54,28 +81,32 @@ export default LoginPage;
 
 // /oauth2/login/{provider}
 
-const OutterDiv = styled.div`
-  border-radius: 10px;
-  margin: 50px auto;
-  width: 400px;
-  color: white;
-  background-image: url(${loginBackgroundImgSrc});
-  border: 1px solid silver;
-  // box-shadow: 1px 1px 10px grey;
-`;
-
-const InnerDivTop = styled.div`
-  width: 100%;
-  padding: 100px 18%;
+const LoginForm = styled.div`
+  width: 300px;
+  height: 400px;
+  padding: 5%;
   box-sizing: border-box;
-  color: white;
-`;
-
-const InnerDivBottom = styled.div`
-  border-radius: 0 0 10px 10px;
-  text-align: center;
   background-color: white;
-  width: 100%;
-  box-sizing: border-box;
-  padding: 40px 30px;
 `;
+
+const gradient = keyframes`
+0% {
+  background-position: 0% 50%;
+}
+50% {
+  background-position: 100% 50%;
+}
+100% {
+  background-position: 0% 50%;
+}`;
+
+const LoginDiv = styled.div`
+  padding: 5%;
+  width: 400px;
+  height: 400px;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #e570e7 0%, #79f1fc 100%);
+  background-size: 400% 400%;
+  animation: ${gradient} 5s ease infinite;
+`;
+
