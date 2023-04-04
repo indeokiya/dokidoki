@@ -74,9 +74,9 @@ const AfterLoginMenu = () => {
       </Grid>
       <Grid item>
         <p>
-          <span>{userInfo.name}</span>님
-          <span style={{ margin: "0 12px", color: "gray" }}>|</span>
-          <span>{showPoint(userInfo.point)}</span> P
+          <b>{userInfo.name}</b>님
+          <span style={{ margin: "0 8px", color: "gray" }}>|</span>
+          포인트 <StyledPoint>{showPoint(userInfo.point)}</StyledPoint>
         </p>
       </Grid>
       <Grid item>
@@ -107,6 +107,19 @@ const AfterLoginMenu = () => {
             'aria-labelledby': 'basic-button',
           }}
         >
+          <MenuItem
+            onClick={() => {
+              handleClose();
+              navigate('/mypage/alert-history');
+            }}
+          >
+            <span style={{marginRight: "8px"}}>Alert</span>
+            <StyledDropdownBadge
+              key={badgeKey}
+              badgeContent={alertCnt}
+              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+            />
+          </MenuItem>
           <MenuItem
             onClick={() => {
               handleClose();
@@ -152,3 +165,17 @@ const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
     },
   },
 }));
+
+const StyledDropdownBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    backgroundColor: 'red',
+    color: 'red',
+    scale: "0.5"
+  },
+}));
+
+const StyledPoint = styled.span`
+  color: #3A77EE;
+  font-family: WorkSans;
+  font-weight: bold;
+`;
