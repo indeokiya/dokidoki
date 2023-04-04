@@ -17,6 +17,7 @@ import EndContentItemList from './components/mypage/end_contents/EndContentItemL
 import AlertItemList from './components/mypage/alert_contents/AlertItemList';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
+import GlobalFont from './styles/GlobalFont';
 
 const queryClient = new QueryClient();
 
@@ -97,6 +98,7 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
   // <React.StrictMode>
   <RecoilRoot>
+    <GlobalFont />
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router}></RouterProvider>,
     </QueryClientProvider>
