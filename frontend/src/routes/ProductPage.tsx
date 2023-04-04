@@ -152,9 +152,14 @@ const ProductPage = () => {
   if (isError) {
     console.error('error occured >> ', error.message);
     return <StyledImg src={errorImg}></StyledImg>;
-  } 
-     
-
+  }
+  // 이미 종료된 경매라면 경매 상세정보가 넘어오지 않으므로,
+  // 정보를 확인했을 때 존재하지 않는다면 이전 페이지로 이동시키기
+  if (data?.seller_name === undefined) {
+    alert("잘못된 접근입니다.")
+    navigate(-1)
+    return null
+  }
 
   if(reset){
     setHighestPrice(pre => data.highest_price); //에러가 없다면 초기값 최고가 갱신
