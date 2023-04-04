@@ -245,7 +245,7 @@ public class AuctionService {
                 // 징벌
 
                 // 수수료도 낼 돈이 없으면
-                if(buyer.getPoint() < commision){
+                if (buyer.getPoint() < commision){
                     MemberEntity updatedBuyer = MemberEntity.builder()
                             .point(buyer.getPoint())
                             .id(buyer.getId())
@@ -269,13 +269,13 @@ public class AuctionService {
                             .EndTimeOfSuspension(buyer.getEndTimeOfSuspension())
                             .build();
 
-                    TreasuryEntity treasury = treasuryRepository.findById((long)1)
-                            .orElseGet(()->TreasuryEntity.builder().money((long)0).build());
+                    TreasuryEntity treasury = TreasuryEntity.builder()
+                            .member(auctionIngEntity.getSeller())
+                            .money(commision)
+                            .build();
 
                     // 국고에 돈 저장
-                    treasuryRepository.save(
-                            TreasuryEntity.builder().money(treasury.getMoney() + commision).build()
-                    );
+                    treasuryRepository.save(treasury);
 
                     memberRepository.save(updatedBuyer);
                 }
@@ -305,13 +305,13 @@ public class AuctionService {
                         .email(buyer.getEmail())
                         .build();
 
-                TreasuryEntity treasury = treasuryRepository.findById((long)1)
-                        .orElseGet(()->TreasuryEntity.builder().money((long)0).build());
+                TreasuryEntity treasury = TreasuryEntity.builder()
+                        .member(seller)
+                        .money(commision)
+                        .build();
 
                 // 국고에 돈 저장
-                treasuryRepository.save(
-                        TreasuryEntity.builder().money(treasury.getMoney() + commision).build()
-                );
+                treasuryRepository.save(treasury);
 
                 List<MemberEntity> memberEntityList = new ArrayList<>();
                 memberEntityList.add(updatedBuyer);
