@@ -14,7 +14,7 @@ const RankLabel = ({
     <StyledRankLabel style={{ width: widthSize }} bias={bias}>
       {rankData !== undefined
         ? rankData.map((rank, index) => (
-          <StyledLabel key={index} bias={bias}>
+          <StyledLabel key={index} bias={bias} title={rank.label}>
             {rank.label}
           </StyledLabel>
         )) : null}
@@ -43,9 +43,15 @@ const StyledLabel = styled.div<{
 
   padding: 12px 36px;
 
-  display: flex;
+  ${({ bias }) => bias === "left"
+    ? "text-align: right;"
+    : "text-align: left;"}
   align-items: center;
   ${({ bias }) => bias === "left"
     ? "justify-content: right;"
     : "justify-content: left;"}
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `;
