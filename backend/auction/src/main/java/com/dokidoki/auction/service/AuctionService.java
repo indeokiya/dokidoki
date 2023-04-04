@@ -47,7 +47,7 @@ public class AuctionService {
 
     private final int COMMISION_PERCENT = 5;
 
-    private final String SOCKER_SERVER_URI = "https://j8a202.p.ssafy.io/api/bids/points/realtime";
+    private final String SOCKER_SERVER_URI = "https://j8a202.p.ssafy.io/api/notices/points/realtime";
 
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
