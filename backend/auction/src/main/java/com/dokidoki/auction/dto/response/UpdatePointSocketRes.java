@@ -12,4 +12,6 @@ import lombok.NoArgsConstructor;
 public class UpdatePointSocketRes {
     private Long user_id;
     private Long point;
+
+    private String message;
 }
