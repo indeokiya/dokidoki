@@ -158,24 +158,15 @@ const ProductInfo = ({
       .delete(`auctions/${auction_id}/close`)
       .then((res) => {
         // 성공 로직
-        console.log('입찰 성공 res >> ', res);
-        alert(`${highestPrice + priceSize}원에 입찰에 성공했습니다.`);
-        setHighestPrice(highestPrice + priceSize);
-
+        console.log('경매 종료 성공 res >> ', res);
+        alert(`경매를 종료했습니다.`);
+        navigate("/auction")
       })
       .catch((err) => {
         // 실패 로직
         console.log(err);
-        const error_message = err.response.data.message;
-        if (error_message === 'Different Highest Price') {
-          alert('현재 최고가격이 갱신되어 입찰에 실패했습니다.');
-        } else if (error_message === 'Different Price Size') {
-          alert('경매 단위가 수정되었습니다. 다시 시도하세요.');
-        } else if (error_message === 'Already Ended') {
-          alert('이미 종료된 경매입니다.');
-        } else {
-          alert('알 수 없는 이유로 입찰에 실패했습니다.');
-        }
+        const error_message = err?.response?.data?.message;
+        alert(error_message)
       });
   };
 
