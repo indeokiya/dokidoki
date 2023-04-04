@@ -4,13 +4,14 @@ import styled from 'styled-components';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { userInfoState } from 'src/store/userInfoState';
-import { useEffect } from 'react';
-import { useRecoilValue, useResetRecoilState } from 'recoil';
+import { useEffect, useRef } from 'react';
+import { useRecoilState, useRecoilValue, useResetRecoilState } from 'recoil';
 import { noticeAPI } from 'src/api/axios';
+import { Client, Message, StompHeaders } from '@stomp/stompjs';
 
 const AfterLoginMenu = () => {
   const navigate = useNavigate();
-  const userInfo = useRecoilValue(userInfoState);
+  const [userInfo, setUserInfoState] = useRecoilState(userInfoState);
   const resetUserInfo = useResetRecoilState(userInfoState);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -53,6 +54,7 @@ const AfterLoginMenu = () => {
     .catch((err) => {
       console.log(err)
     })
+    
 
   }, [])
   
@@ -61,6 +63,37 @@ const AfterLoginMenu = () => {
     setBadgeKey((prev) => prev + 1)
     console.log(alertCnt)
   }, [alertMap, alertCnt])
+
+  let clientRef = useRef<Client>();
+
+  useEffect(() => {
+    if (!clientRef.current) connect();
+    return () => disconnect();
+  }, []);
+
+   //소캣 연결 함수
+   const connect = () => {
+    // 연결할 때
+    clientRef.current = new Client({
+      brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
+      onConnect: () => {
+        console.log('header socket connected');
+
+        clientRef.current?.subscribe(`/topic/points/${userInfo.user_id}/realtime`, (message: Message) => {
+          console.log(`Received message: ${message.body}`);
+          setUserInfoState({ ...userInfo, point: JSON.parse(message.body).updated_point});
+        });
+      },
+    });
+    clientRef.current?.activate(); // 클라이언트 활성화
+  };
+
+  const disconnect = () => {
+    // 연결이 끊겼을 때
+    clientRef.current?.deactivate();
+    console.log('header socket disconnected');
+  };
+
 
   // 정수 포맷팅
   const showPoint = (point: number) => point.toString().split( /(?=(?:\d{3})+(?:\.|$))/g ).join( "," )
