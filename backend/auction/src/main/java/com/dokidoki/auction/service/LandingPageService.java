@@ -2,6 +2,7 @@ package com.dokidoki.auction.service;
 
 import com.dokidoki.auction.domain.repository.AuctionEndRepository;
 import com.dokidoki.auction.domain.repository.ProductRepository;
+import com.dokidoki.auction.domain.repository.TreasuryRepository;
 import com.dokidoki.auction.dto.response.MostSaleProductContent;
 import com.dokidoki.auction.dto.db.MostSaleProductInterface;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import java.util.List;
 public class LandingPageService {
     private final AuctionEndRepository auctionEndRepository;
     private final ProductRepository productRepository;
+    private final TreasuryRepository treasuryRepository;
 
     // 총 거래금액 조회
     @Transactional(readOnly = true)
@@ -53,5 +55,12 @@ public class LandingPageService {
             mostSaleProductContents.add(new MostSaleProductContent(mostSaleProductInterface));
 
         return mostSaleProductContents;
+    }
+
+    // 수수료로 얻은 총 수익금 조회
+    @Transactional(readOnly = true)
+    public Long readTotalTreasury() {
+        // DB 조회 및 반환
+        return treasuryRepository.getTotalTreasury();
     }
 }
