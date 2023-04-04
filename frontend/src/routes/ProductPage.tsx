@@ -45,7 +45,7 @@ const ProductPage = () => {
 
     if (!clientRef.current) connect();
     return () => disconnect();
-  }, [reset]);
+  }, []);
 
   //소캣 연결 함수
   const connect = () => {
@@ -73,7 +73,6 @@ const ProductPage = () => {
               }:${bid_time[5] > 9 ? bid_time[5] : '0' + bid_time[5]}`,
               bid_price: bid_price,
             };
-            console.log("소켓에서 데이터 받아온 뒤 상황 >> ",leaderBoardData)
             console.log("소캣에서 넘어온 데이터로 만드는 newData : ",newData)
             setLeaderBoardData(pre =>[newData, ...pre].slice(0,5));
             
@@ -108,8 +107,8 @@ const ProductPage = () => {
     console.log("여기 들어옴?")
     setHighestPrice(pre => data.highest_price); //에러가 없다면 초기값 최고가 갱신
     setLeaderBoardData(data.leader_board.slice(0,5)); // 리더보드 초기값 갱신
-    setPriceSize(data.price_size);
-    SetReset(false);
+    setPriceSize(data.price_size); //경매단위 초기화 
+    SetReset(false)
   }
 
 
@@ -189,16 +188,16 @@ const ProductPage = () => {
             </Grid>
 
             {/* 제품 설명 */}
-            <Grid item sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <ProductDescription description={description} />
             </Grid>
             {/* 지도 */}
-            <Grid item sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <MeetingPlace location={meeting_place} />
             </Grid>
 
             {/* 댓글 */}
-            <Grid item sx={{ width: '100%' }}>
+            <Grid item xs={12} sx={{ width: '100%' }}>
               <CommentsList auction_id={id} comments={comments} seller_id={seller_id} />
             </Grid>
           </Grid>
