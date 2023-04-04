@@ -13,6 +13,14 @@ import java.time.LocalDateTime;
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class BidInfo {
-    private Long bidPrice;
-    private LocalDateTime bidTime;
+    private Long y;
+    private LocalDateTime x;
+
+    public static BidInfo from(Long bidPrice, LocalDateTime bidTime) {
+        BidInfo bidInfo = BidInfo.builder()
+                .y(bidPrice)
+                .x(bidTime)
+                .build();
+        return bidInfo;
+    }
 }
