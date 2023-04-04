@@ -13,9 +13,13 @@ import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -39,7 +43,11 @@ public class AuctionService {
 
     private final TreasuryRepository treasuryRepository;
 
+    private final RestTemplate restTemplate;
+
     private final int COMMISION_PERCENT = 5;
+
+    private final String SOCKER_SERVER_URI = "https://j8a202.p.ssafy.io/api/bids/points/realtime";
 
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
@@ -277,7 +285,18 @@ public class AuctionService {
                     // 국고에 돈 저장
                     treasuryRepository.save(treasury);
 
+                    // 수수료 지불하고 남은 돈 저장
                     memberRepository.save(updatedBuyer);
+
+                    // 소켓 요청
+                    List<UpdatePointSocketRes> updatePointSocketResList = new ArrayList<>();
+                    updatePointSocketResList.add(
+                            UpdatePointSocketRes.builder()
+                                    .point(updatedBuyer.getPoint())
+                                    .user_id(updatedBuyer.getId())
+                                    .build()
+                    );
+                    sendPointUpdateRequest(updatePointSocketResList);
                 }
                 return;
             }else{
@@ -318,6 +337,18 @@ public class AuctionService {
                 memberEntityList.add(updatedSeller);
 
                 memberRepository.saveAll(memberEntityList);
+
+                // 소켓 요청
+                List<UpdatePointSocketRes> updatePointSocketResList = new ArrayList<>();
+                updatePointSocketResList.add(
+                        UpdatePointSocketRes.builder().point(updatedBuyer.getPoint())
+                                .user_id(updatedBuyer.getId()).build()
+                );
+                updatePointSocketResList.add(
+                        UpdatePointSocketRes.builder().point(updatedSeller.getPoint())
+                                .user_id(updatedSeller.getId()).build()
+                );
+                sendPointUpdateRequest(updatePointSocketResList);
             }
         }
 
@@ -365,5 +396,14 @@ public class AuctionService {
             throw new InvalidValueException("진행중인 경매가 존재하지 않습니다.");
 
         return auction;
+    }
+
+    // Point update 소켓 요청
+    private void sendPointUpdateRequest(List<UpdatePointSocketRes> updatePointSocketResList){
+        URI uri = UriComponentsBuilder.fromUriString(SOCKER_SERVER_URI).build().toUri();
+
+        HttpEntity<List<UpdatePointSocketRes>> httpEntity = new HttpEntity<>(updatePointSocketResList);
+
+        restTemplate.postForEntity(uri, httpEntity, Void.class);
     }
 }
