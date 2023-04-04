@@ -34,6 +34,8 @@ export default Header;
 const HeaderBox = styled.div`
   padding: 1rem;
   border-bottom: 1px solid whitesmoke;
+  padding-right:1.5rem;
+  padding-left:1.5rem;
 `;
 
 

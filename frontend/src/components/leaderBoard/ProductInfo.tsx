@@ -71,15 +71,10 @@ const ProductInfo = ({
   const userInfo = useRecoilValue(userInfoState);
   const [bookmark, setBookmark] = useState(is_my_interest);
 
-  const [bidActive, setBidActive] = useState(false);
+
   const bid = () => {
 
-    //bid 버튼 활성화쓰로틀링
-    setBidActive(true);
-    setTimeout(()=>{
-      setBidActive(false);
-    },1100)
-
+   
     if (!userInfo.is_logged_in) {
       alert('먼저 로그인해주세요.');
       navigate('/login');
@@ -87,7 +82,7 @@ const ProductInfo = ({
 
     console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
     if (seller_id === userInfo.user_id) {
-      enqueueSnackbar(`${highestPrice + priceSize}원에 입찰에 성공했습니다.`, {variant: 'success'});
+      enqueueSnackbar(`내 경매는 입찰할 수 없습니다.`, {variant: 'info'});
       alert('내 경매는 입찰할 수 없습니다.');
       return;
     }
@@ -102,7 +97,7 @@ const ProductInfo = ({
       .then((res) => {
         // 성공 로직
         // console.log('입찰 성공 res >> ', res);
-        enqueueSnackbar(`${highestPrice + priceSize}원에 입찰에 성공했습니다.`, {variant: 'info', anchorOrigin:{
+        enqueueSnackbar(`${numberFormat(highestPrice + priceSize)}에 입찰에 성공했습니다.`, {variant: 'info', anchorOrigin:{
           horizontal:"center",
             vertical:"top"
         }});
@@ -211,8 +206,8 @@ const ProductInfo = ({
       {/* {userInfo.user_id === seller_id && ( */}
       <StyeldDiv>
         <Tooltip title="수정">
-          <IconButton onClick={updateAuction}>
-            <EditOutlinedIcon sx={{ display: userInfo.user_id === seller_id ? '' : 'none' }} />
+          <IconButton onClick={updateAuction}  sx={{ display: userInfo.user_id === seller_id ? '' : 'none' }} >
+            <EditOutlinedIcon/>
           </IconButton>
         </Tooltip>
         <Tooltip title="찜하기">
@@ -282,7 +277,7 @@ const ProductInfo = ({
           <CloseButton close={close}/>
         )}
         {(seller_id !== userInfo.user_id) && (
-        <BidButton active={bidActive} bid={bid} />
+        <BidButton bid={bid} />
         )}
       </Stack>
     </StyledBox>

@@ -100,7 +100,7 @@ root.render(
   <RecoilRoot>
     <GlobalFont />
     <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router}></RouterProvider>,
+      <RouterProvider router={router} ></RouterProvider>,
     </QueryClientProvider>
   </RecoilRoot>,
 

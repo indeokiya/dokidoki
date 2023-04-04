@@ -28,18 +28,18 @@ const FunctionInfoCards = () => {
   ];
 
   return (
-    <Grid container spacing={3} ref={ref} sx={{position:"relative"}}>
-      <Grid item xs={4}>
+    <Grid container ref={ref} sx={{position:"relative"}}  justifyContent="space-around">
+      <Grid item xs={12} md={4}>
         <OneCard start={inView ? 'start' : 'end'}>
           <InfoCard primary={false} info={cardList[0]} />
         </OneCard>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <TwoCard start={inView ? 'start' : 'end'}>
           <InfoCard primary={true} info={cardList[1]} />
         </TwoCard>
       </Grid>
-      <Grid item xs={4}>
+      <Grid item xs={12} md={4}>
         <ThreeCard start={inView ? 'start' : 'end'}>
           <InfoCard primary={false} info={cardList[2]} />
         </ThreeCard>
