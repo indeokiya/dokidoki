@@ -1,6 +1,8 @@
 package com.dokidoki.notice.api.controller;
 
 import com.dokidoki.notice.api.request.UpdatePointSocketReq;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -15,6 +17,7 @@ import java.util.List;
 public class WebSocketController {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final ObjectMapper objectMapper;
 
     public void sendAlert(long memberId, String payload) {
         simpMessagingTemplate.convertAndSend("/topic/notice/"+memberId, payload);
@@ -30,8 +33,13 @@ public class WebSocketController {
         log.info("point update socket send");
         updatePointSocketReqs.forEach(
                 (req)->{
-                    simpMessagingTemplate.convertAndSend("/topic/points/"+req.getUser_id()+"/realtime",
-                            "{ \"updated_point\": "+ req.getPoint() +"}");
+                    log.info("소켓 요청 발사! : " + req.toString());
+                    try {
+                        simpMessagingTemplate.convertAndSend("/topic/points/"+req.getUser_id()+"/realtime",
+                                objectMapper.writeValueAsString(req));
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
                 }
         );
     }
