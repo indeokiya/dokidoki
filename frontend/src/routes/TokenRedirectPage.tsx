@@ -22,6 +22,12 @@ const TokenRedirectPage = () => {
         const access_token = searchParams.get('access_token');
         const refresh_token = searchParams.get('refresh_token');
         
+        if(refresh_token === "null"){
+            alert("이용 정지 당한 사용자입니다.\n정지 해제 날짜 : " + access_token);
+            navigate('/',{replace:true});
+            return;
+        }
+
         if(access_token) localStorage.setItem('access_token', access_token);
         else console.log('엑세스 토큰 안들어감');
         

@@ -84,7 +84,7 @@ public class OauthController {
                                 .build());
         }
 
-        String accessToken = null;
+        String accessToken = user.getEndTimeOfSuspension().toString();
         String refreshToken = null;
         // 정지 받은 적 없거나 정지 기한이 지났으면 토큰 발급
         if(user.getEndTimeOfSuspension() == null || user.getEndTimeOfSuspension().compareTo(LocalDateTime.now()) < 0) {
