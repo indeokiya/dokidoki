@@ -99,9 +99,11 @@ public class AuctionInfoService {
         List<MemberChartResp> resList = new ArrayList<>();
         Collection<ScoredEntry<LeaderBoardMemberInfo>> biddingInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
         int listSize = auctionRealtimeMemberRepository.getAll(auctionId).size();
-
+        log.info("listSize: {}", listSize);
         for (int i = 0; i < listSize; i++) {
-            resList.add(new MemberChartResp());
+            MemberChartResp memberChartResp = MemberChartResp.builder()
+                            .bidInfos(new ArrayList<>()).build();
+            resList.add(memberChartResp);
         }
 
         for (ScoredEntry<LeaderBoardMemberInfo> info: biddingInfos) {
