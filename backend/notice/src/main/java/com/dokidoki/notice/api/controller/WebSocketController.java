@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -26,6 +27,7 @@ public class WebSocketController {
     }
 
     public void sendUpdatedPointInfo(List<UpdatePointSocketReq> updatePointSocketReqs) {
+        log.info("point update socket send");
         updatePointSocketReqs.forEach(
                 (req)->{
                     simpMessagingTemplate.convertAndSend("/topic/points/"+req.getUser_id()+"/realtime",
