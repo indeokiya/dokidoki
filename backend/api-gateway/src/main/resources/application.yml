@@ -52,7 +52,7 @@ spring:
       - id: auction-server
         uri: http://auction-server
         predicates:
-          - Path=/api/auctions/auction-lists/whole/**, /api/auctions/lists/**, /api/auctions/total-prices, /api/auctions/total-treasury, /api/auctions/products/** , /api/auctions/{auction_id}/leaderboards/**
+          - Path=/api/auctions/auction-lists/whole/**, /api/auctions/lists/**, /api/auctions/total-prices, /api/auctions/total-treasury, /api/auctions/products/** , /api/auctions/{auction_id}/leaderboards/**, /api/auctions/most-sale-products
         filters:
           - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
 
@@ -85,7 +85,7 @@ spring:
       - id: user-server
         uri: http://user-server
         predicates:
-          - Path=/api/users/oauth2/**, /api/user/tokens/refresh
+          - Path=/api/users/oauth2/**, /api/user/tokens/refresh, /api/users/points/super-rich
         filters:
           - RewritePath=/api/users/(?<segment>.*), /$\{segment}
 
