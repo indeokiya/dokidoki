@@ -47,7 +47,8 @@ services:
       context: ./backend/bid
       dockerfile: dockerfile
     volumes:
-      - /var/log/springboot/bid:/var/log/springboot/bid
+      - /var/log/springboot/bid:/var/log/springboot/system/bid
+      - /logs:/var/log/springboot/access/bid
     restart: always
     networks:
       - dokidoki_net
@@ -62,7 +63,8 @@ services:
       SPRING_DATASOURCE_USERNAME: dokidoki
       SPRING_DATASOURCE_PASSWORD: dokidoki202
     volumes:
-      - /var/log/springboot/auction:/var/log/springboot/auction
+      - /var/log/springboot/auction:/var/log/springboot/system/auction
+      - /logs:/var/log/springboot/access/auction
     restart: always
     networks:
       - dokidoki_net
@@ -72,6 +74,9 @@ services:
     build:
       context: ./backend/user-server
       dockerfile: dockerfile
+    volumes:
+      - /var/log/springboot/user:/var/log/springboot/system/user
+      - /logs:/var/log/springboot/access/user
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
       SPRING_DATASOURCE_USERNAME: dokidoki
@@ -86,7 +91,8 @@ services:
       context: ./backend/notice
       dockerfile: dockerfile
     volumes:
-      - /var/log/springboot/notice:/var/log/springboot/notice
+      - /var/log/springboot/notice:/var/log/springboot/system/notice
+      - /logs:/var/log/springboot/access/notice
     restart: always
     networks:
       dokidoki_net:
