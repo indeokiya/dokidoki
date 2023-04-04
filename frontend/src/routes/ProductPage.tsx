@@ -60,7 +60,7 @@ const ProductPage = () => {
         console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
-          console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
+          // console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
           let sData = JSON.parse(message.body);
 
           //소켓으로 경매정보가 넘어왔을 때
@@ -105,7 +105,6 @@ const ProductPage = () => {
 
 
   if(reset){
-    console.log("여기 들어옴?")
     setHighestPrice(pre => data.highest_price); //에러가 없다면 초기값 최고가 갱신
     setLeaderBoardData(data.leader_board.slice(0,5)); // 리더보드 초기값 갱신
     setPriceSize(data.price_size); //경매단위 초기화 
