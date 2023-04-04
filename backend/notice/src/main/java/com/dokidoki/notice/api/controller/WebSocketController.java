@@ -1,9 +1,12 @@
 package com.dokidoki.notice.api.controller;
 
+import com.dokidoki.notice.api.request.UpdatePointSocketReq;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,6 +24,17 @@ public class WebSocketController {
         // 최종적으로 client 가 구독해 놓고 데이터를 받아야 하는 링크가 destination 에 들어감
         simpMessagingTemplate.convertAndSend("/topic/auctions/"+auctionId+"/realtime", payload);
     }
+
+    public void sendUpdatedPointInfo(List<UpdatePointSocketReq> updatePointSocketReqs) {
+        updatePointSocketReqs.forEach(
+                (req)->{
+                    simpMessagingTemplate.convertAndSend("/topic/points/"+req.getUser_id()+"/realtime",
+                            "{ \"updated_point\": "+ req.getPoint() +"}");
+                }
+        );
+    }
+
+
 
 //    @Scheduled(cron = "*/10 * * * * *")
 //    public void test() {
