@@ -37,6 +37,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class BiddingServiceTest {
 
     @Autowired BiddingService biddingService;
+    @Autowired AuctionInfoService auctionInfoService;
     @Autowired AuctionRealtimeRepository auctionRealtimeRepository;
     @Autowired AuctionRealtimeLeaderBoardRepository auctionRealtimeLeaderBoardRepository;
     @Autowired RedissonClient redisson;
@@ -71,7 +72,7 @@ class BiddingServiceTest {
     public void 경매_초기화_등록_정보_확인() {
         AuctionRealtime auctionRealtime = auctionRealtimeRepository.findById(auctionId).get();
         System.out.println(auctionRealtime);
-        System.out.println(biddingService.getInitialLeaderBoard(auctionId));
+        System.out.println(auctionInfoService.getInitialLeaderBoard(auctionId));
 
     }
 
@@ -156,7 +157,7 @@ class BiddingServiceTest {
                 assertEquals(highestPrice + priceSize, auctionRealtime.getHighestPrice());
 
                 // 랭킹 갱신 확인
-                AuctionInitialInfoResp initialInfo = biddingService.getInitialInfo(auctionId);
+                AuctionInitialInfoResp initialInfo = auctionInfoService.getInitialInfo(auctionId);
                 List<LeaderBoardMemberResp> leaderBoard = initialInfo.getLeaderBoard();
                 System.out.println(leaderBoard);
                 assertEquals(1, leaderBoard.size());
@@ -179,7 +180,7 @@ class BiddingServiceTest {
                 biddingService.bid(auctionId, reqs[0], memberIds[0]);
                 biddingService.bid(auctionId, reqs[1], memberIds[1]);
 
-                System.out.println(biddingService.getInitialInfo(auctionId).getLeaderBoard());
+                System.out.println(auctionInfoService.getInitialInfo(auctionId).getLeaderBoard());
 
                 // 랭킹 갱신 확인
                 Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderBoardMemberInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
@@ -207,7 +208,7 @@ class BiddingServiceTest {
                 }
                 Collection<ScoredEntry<LeaderBoardMemberInfo>> leaderboardInfos = auctionRealtimeLeaderBoardRepository.getAll(auctionId);
                 System.out.println(auctionRealtimeLeaderBoardRepository.getWinner(auctionId));
-                System.out.println(biddingService.getInitialInfo(auctionId));
+                System.out.println(auctionInfoService.getInitialInfo(auctionId));
                 assertEquals(limit, leaderboardInfos.size());
                 System.out.println(limit);
                 System.out.println(leaderboardInfos.size());

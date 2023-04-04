@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Builder
 @AllArgsConstructor
@@ -12,9 +12,7 @@ import java.util.List;
 @Getter
 @ToString
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class AuctionInitialInfoResp {
-    private Long highestPrice;
-    private Long priceSize;
-    private List<LeaderBoardMemberResp> leaderBoard;
-    private List<MemberChartResp> memberChart;
+public class BidInfo {
+    private Long bidPrice;
+    private LocalDateTime bidTime;
 }

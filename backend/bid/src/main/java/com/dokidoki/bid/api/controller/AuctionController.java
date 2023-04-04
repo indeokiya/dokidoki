@@ -2,6 +2,7 @@ package com.dokidoki.bid.api.controller;
 
 import com.dokidoki.bid.api.request.AuctionBidReq;
 import com.dokidoki.bid.api.request.AuctionUpdatePriceSizeReq;
+import com.dokidoki.bid.api.service.AuctionInfoService;
 import com.dokidoki.bid.api.service.BiddingService;
 import com.dokidoki.bid.common.utils.JWTUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +19,14 @@ import java.util.Map;
 public class AuctionController {
 
     private final BiddingService biddingService;
+    private final AuctionInfoService auctionInfoService;
 
     @GetMapping("/{auctionId}/initial-info")
     public ResponseEntity<?> getInitialInfo(@PathVariable Long auctionId) {
         Map<String, Object> resultMap = new HashMap<>();
         resultMap.put("status_code", 200);
         resultMap.put("message", "성공");
-        resultMap.put("data", biddingService.getInitialInfo(auctionId));
+        resultMap.put("data", auctionInfoService.getInitialInfo(auctionId));
         return ResponseEntity.ok(resultMap);
     }
 

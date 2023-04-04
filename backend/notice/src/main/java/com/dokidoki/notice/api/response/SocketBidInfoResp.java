@@ -20,10 +20,11 @@ public class SocketBidInfoResp{
         this.bidInfo = bidInfo;
     }
 
-    public static SocketBidInfoResp from(KafkaBidDTO dto) {
+    public static SocketBidInfoResp from(KafkaBidDTO dto, Long myBidNum) {
         LeaderBoardMemberResp memberResp = LeaderBoardMemberResp.builder()
                 .name(dto.getName())
                 .bidPrice(dto.getHighestPrice())
+                .bidNum(myBidNum)
                 .bidTime(dto.getBidTime()).build();
 
         SocketBidInfoResp resp = SocketBidInfoResp.builder()
