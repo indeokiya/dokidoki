@@ -30,8 +30,9 @@ public class WebSocketController {
         log.info("point update socket send");
         updatePointSocketReqs.forEach(
                 (req)->{
+                    log.info("소켓 요청 발사! : " + req.toString());
                     simpMessagingTemplate.convertAndSend("/topic/points/"+req.getUser_id()+"/realtime",
-                            "{ \"updated_point\": "+ req.getPoint() +"}");
+                            "{ \"updated_point\": "+ req.getPoint() + ", " + "\"message\": " + req.getMessage() + "}");
                 }
         );
     }

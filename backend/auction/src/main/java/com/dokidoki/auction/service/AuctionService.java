@@ -254,6 +254,7 @@ public class AuctionService {
 
                 // 수수료도 낼 돈이 없으면
                 if (buyer.getPoint() < commision){
+                    log.info("한달 정지");
                     MemberEntity updatedBuyer = MemberEntity.builder()
                             .point(buyer.getPoint())
                             .id(buyer.getId())
@@ -266,6 +267,7 @@ public class AuctionService {
                             .build();
                     memberRepository.save(updatedBuyer);
                 }else{ // 수수료 지불
+                    log.info("돈 없는 놈");
                     MemberEntity updatedBuyer = MemberEntity.builder()
                             .point(buyer.getPoint() - commision)  // 돈 감소
                             .id(buyer.getId())
@@ -294,12 +296,15 @@ public class AuctionService {
                             UpdatePointSocketRes.builder()
                                     .point(updatedBuyer.getPoint())
                                     .user_id(updatedBuyer.getId())
+                                    .message("돈을 낼 능력이 없어 수수료가 차감됩니다.")
                                     .build()
                     );
                     sendPointUpdateRequest(updatePointSocketResList);
                 }
                 return;
             }else{
+
+                log.info("합리적인 거래 우하하");
                 MemberEntity seller =  auctionIngEntity.getSeller();
 
                 Long sellerGetMoney = finalPrice - commision; // 수수료 제외 지급 금액
@@ -341,12 +346,18 @@ public class AuctionService {
                 // 소켓 요청
                 List<UpdatePointSocketRes> updatePointSocketResList = new ArrayList<>();
                 updatePointSocketResList.add(
-                        UpdatePointSocketRes.builder().point(updatedBuyer.getPoint())
-                                .user_id(updatedBuyer.getId()).build()
+                        UpdatePointSocketRes.builder()
+                                .point(updatedBuyer.getPoint())
+                                .user_id(updatedBuyer.getId())
+                                .message("현명한 소비였습니다! :)")
+                                .build()
                 );
                 updatePointSocketResList.add(
-                        UpdatePointSocketRes.builder().point(updatedSeller.getPoint())
-                                .user_id(updatedSeller.getId()).build()
+                        UpdatePointSocketRes.builder()
+                                .point(updatedSeller.getPoint())
+                                .user_id(updatedSeller.getId())
+                                .message("합리적인 판매였습니다! :)")
+                                .build()
                 );
                 sendPointUpdateRequest(updatePointSocketResList);
             }
