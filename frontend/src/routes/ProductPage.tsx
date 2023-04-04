@@ -3,7 +3,7 @@ import ProductImages from '../components/leaderBoard/ProductImages';
 import ProductInfo from '../components/leaderBoard/ProductInfo';
 import Divider from '@mui/material/Divider';
 import styled from 'styled-components';
-import ProductGraph from '../components/leaderBoard/ProductGraph';
+import MemberChart from 'src/components/leaderBoard/realtimeChart/MemberChart';
 import ProductDescription from '../components/leaderBoard/ProductDescription';
 import CommentsList from '../components/leaderBoard/comments/CommentsList';
 import ScrollTop from '../components/util/ScrollTop';
@@ -132,6 +132,7 @@ const ProductPage = () => {
     highest_price,
     leader_board, //레디스에 담겨있음
     price_size, /// from bid server
+    member_chart,
   } = data;
 
   return (
@@ -181,11 +182,7 @@ const ProductPage = () => {
             {/* 제품 카테고리 평균 가격 */}
 
             <Grid item xs={12} sx={{ width: '100%', marginBottom: '10px' }}>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <ProductGraph />
-                </Grid>
-              </Grid>
+                  <MemberChart initial_datas={member_chart}/>
             </Grid>
 
             {/* 제품 설명 */}
