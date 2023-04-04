@@ -49,15 +49,14 @@ public class NoticeService {
      * 경매 실패한 모두에게 알림 발송
      * @param dto
      */
-    // TODO - 여기서 에러 날거임.. TypedJsonJacksonCodec 사용법 알아보기
     public void auctionFail(KafkaAuctionEndDTO dto) {
         log.info("received kafkaAuctionEndDTO: {}", dto);
         Long auctionId = dto.getAuctionId();
         Long buyerId = dto.getBuyerId();
-        Set<Map.Entry<Long, Integer>> entries = auctionRealtimeMemberRepository.getAll(auctionId);
-        for(Map.Entry<Long, Integer> entry: entries) {
+        Set<Map.Entry<Long, Long[]>> entries = auctionRealtimeMemberRepository.getAll(auctionId);
+        for(Map.Entry<Long, Long[]> entry: entries) {
             Long memberId = entry.getKey().longValue();
-            Long myFinalPrice = entry.getValue().longValue();
+            Long myFinalPrice = entry.getValue()[0].longValue();
             if ( memberId.equals(buyerId)) {
                 continue;
             }

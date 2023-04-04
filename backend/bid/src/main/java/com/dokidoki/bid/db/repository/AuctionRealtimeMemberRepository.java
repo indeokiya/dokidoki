@@ -15,6 +15,10 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class AuctionRealtimeMemberRepository {
+    /**
+     * RMap : auctionId 당 하나씩 배정
+     * Map 에는 memberId를 key 로 , 그 memberId가 입찰한 최고가와 auctionId 에서의 식별자를 제공
+     */
 
     private final RedissonClient redisson;
     private final String keyPrefix = RealTimeConstants.memberPriceKey;
@@ -25,23 +29,27 @@ public class AuctionRealtimeMemberRepository {
         return sb.toString();
     }
 
-    public Long findById(Long auctionId, Long memberId) {
-        RMap<Long, Long> map = redisson.getMap(getKey(auctionId));
-        Long myBidPrice = map.get(memberId);
-        if (myBidPrice == null) {
+    public Long findMyBidPriceById(Long auctionId, Long memberId) {
+        RMap<Long, Long[]> map = redisson.getMap(getKey(auctionId));
+        Long[] infos = map.get(memberId);
+        if (infos == null) {
             throw new InvalidValueException("조회할 수 없는 값입니다.");
         }
-        return myBidPrice;
+        return infos[0];
     }
 
     @RTransactional
-    public void save(Long auctionId, Long memberId, Long bidPrice) {
-        RMap<Long, Long> map = redisson.getMap(getKey(auctionId));
-        map.put(memberId, bidPrice);
+    public Long[] save(Long auctionId, Long memberId, Long bidPrice) {
+        RMap<Long, Long[]> map = redisson.getMap(getKey(auctionId));
+        Long[] infos = new Long[2];
+        if (map.containsKey(memberId)) {
+            infos = map.get(memberId);
+        } else {
+            infos[1] = (long) map.size();
+        }
+        infos[0] = bidPrice;
+        map.put(memberId, infos);
+
+        return infos;
     }
-
-
-
-
-
 }

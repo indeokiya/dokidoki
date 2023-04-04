@@ -28,29 +28,36 @@ public class AuctionRealtimeMemberRepository {
         return sb.toString();
     }
 
-    public Set<Map.Entry<Long, Integer>> getAll(Long auctionId) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+    public Set<Map.Entry<Long, Long[]>> getAll(Long auctionId) {
+        RMap<Long, Long[]> map = redisson.getMap(getKey(auctionId));
         return map.entrySet();
     }
 
-    public int findById(Long auctionId, Long memberId) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
-        Integer myBidPrice = map.get(memberId);
-        if (myBidPrice == null) {
+    public Long findMyBidPriceById(Long auctionId, Long memberId) {
+        RMap<Long, Long[]> map = redisson.getMap(getKey(auctionId));
+        Long[] infos = map.get(memberId);
+        if (infos == null) {
             throw new InvalidValueException("조회할 수 없는 값입니다.");
         }
-        return myBidPrice;
+        return infos[0];
     }
 
     @RTransactional
-    public void save(Long auctionId, Long memberId, int bidPrice) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
-        map.put(memberId, bidPrice);
+    public void save(Long auctionId, Long memberId, Long bidPrice) {
+        RMap<Long, Long[]> map = redisson.getMap(getKey(auctionId));
+        Long[] infos = new Long[2];
+        if (map.containsKey(memberId)) {
+            infos = map.get(memberId);
+        } else {
+            infos[1] = (long) map.size();
+        }
+        infos[0] = bidPrice;
+        map.put(memberId, infos);
     }
 
     @RTransactional
     public boolean deleteAll(Long auctionId) {
-        RMap<Long, Integer> map = redisson.getMap(getKey(auctionId));
+        RMap<Long, Long[]> map = redisson.getMap(getKey(auctionId));
         return map.delete();
     }
 
