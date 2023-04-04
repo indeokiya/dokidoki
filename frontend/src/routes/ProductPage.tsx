@@ -60,7 +60,7 @@ const ProductPage = () => {
         console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
-          // console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
+          console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
           let sData = JSON.parse(message.body);
 
           //소켓으로 경매정보가 넘어왔을 때
