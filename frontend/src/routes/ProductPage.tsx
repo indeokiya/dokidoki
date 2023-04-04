@@ -32,15 +32,22 @@ const ProductPage = () => {
   const { id } = useParams() as { id: string };
   const [leaderBoardData, setLeaderBoardData] = useState<SocketBidData[]>([]);
 
-  const [memberChart, setMemberChart] = useState<any[]>([]);
+  const [memberChart, setMemberChart] = useState<any[]>([
+    {
+      name: "",
+      bid_infos: []
+    }
+  ]);
 
   const updateMemberChart = (data: { name: string; bid_time: number[]; bid_price: number; bid_num: number; }) => {
     const {name, bid_time, bid_price, bid_num} = data;
 
-    console.log(bid_time[0], bid_time[1]-1, bid_time[2], bid_time[3], bid_time[4], bid_time[5], bid_time[6])
+    // array로 넘어오는 날짜 데이터를 ISOString으로 변환
     let dateTime = new Date(bid_time[0], bid_time[1]-1, bid_time[2], bid_time[3], bid_time[4], bid_time[5], bid_time[6]/1e+6).toISOString()
     console.log(name, bid_time, bid_price, bid_num)
+
     setMemberChart(prevMemberChart => {
+      // bid_num이 새로운 사용자라면? (이건 정상 작동하는거 같은데)
       if (prevMemberChart.length === bid_num) {
         const newMember = {
           name: name,
@@ -53,7 +60,9 @@ const ProductPage = () => {
           ]
         }
         return [...prevMemberChart, newMember];
-      } else {
+      }
+      // bid_num이 기존 사용자라면? (왜 bid_num으로 처리했는데 이상한데에 들어가냐?)
+      else {
         let old_bid_infos = prevMemberChart[bid_num].bid_infos
         prevMemberChart[bid_num].bid_infos = [{x: dateTime, y: bid_price}, ...old_bid_infos]
         return [...prevMemberChart]
@@ -158,6 +167,7 @@ const ProductPage = () => {
 
   // 이 아래부터는 data가 존재함이 보장됨
   console.log('fetched auction data >> ', data);
+  
   const {
     auction_image_urls,
     auction_title,
