@@ -122,7 +122,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
         <Grid container spacing={2} paddingLeft={2} maxWidth="100%">
           {data.pages.map((data) =>
             data.contents.map((data: any, i: number) => (
-              <Grid key={i} item xs={4} mb={4}>
+              <Grid key={i} item xs={12} sm={6} md={4} mb={4}>
                 <Content auctionData={data} />
               </Grid>
             )),

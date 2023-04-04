@@ -36,7 +36,7 @@ const SideBar:React.FC<{setCategory:(data:number)=>void}> = (props) => {
     text-align: start;
   `;
   return (
-    <div style={{ position: 'absolute' }}>
+    <div style={{ position: 'absolute' ,width:"170px"}}>
       <Box
         sx={{
           width: '200',

@@ -8,7 +8,7 @@ const StartAuction = () => {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ position: 'relative', height: '55vh', padding: '10%', minWidth:"1500px", backgroundColor: '#3A77EE' }}>
+    <Box sx={{ position: 'relative', height: '55vh', padding: '10%', minWidth:"1200px", backgroundColor: '#3A77EE' }}>
       <StyledDiv>
         <StyledSmallP>samsung for</StyledSmallP>
         <StyledLargeP>samsung</StyledLargeP>

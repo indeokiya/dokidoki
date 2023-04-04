@@ -35,11 +35,13 @@ const ProductImages = ({ images, end_time }: Props) => {
           sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
           height={'550px'}
         >
-          {images.length === 0 ? (
-            <StyledBigImg src={blank_img} />
-          ) : (
-            <StyledBigImg src={images[index]} />
-          )}
+          <ImgBox>
+            {images.length === 0 ? (
+              <StyledBigImg src={blank_img} />
+            ) : (
+              <StyledBigImg src={images[index]} />
+            )}
+          </ImgBox>
         </Grid>
         <Grid item xs={12}>
           <Grid container justifyContent="center" alignItems="center">
@@ -55,9 +57,9 @@ const ProductImages = ({ images, end_time }: Props) => {
                 >
                   <IconButton>
                     {i === index ? (
-                      <RadioButtonCheckedIcon color="primary" fontSize="small"/>
+                      <RadioButtonCheckedIcon color="primary" fontSize="small" />
                     ) : (
-                      <RadioButtonUncheckedIcon fontSize="small"/>
+                      <RadioButtonUncheckedIcon fontSize="small" />
                     )}
                   </IconButton>
                 </Grid>
@@ -76,6 +78,15 @@ const ProductImages = ({ images, end_time }: Props) => {
 };
 
 export default ProductImages;
+const ImgBox = styled.div`
+position:relative;
+  width: 100%;
+  height: 100%;
+  padding: 5% 0;
+  box-sizing: border-box;
+  text-align: center;
+
+`;
 
 const StyledTimer = styled.div`
   text-align: center;
@@ -83,14 +94,13 @@ const StyledTimer = styled.div`
   font-size: 2rem;
   line-height: 25px;
   padding: 5px;
-  box-sizing:border-box;
-  margin-bottom:20px;
+  box-sizing: border-box;
+  margin-bottom: 20px;
   object-fit: cover;
 `;
 
 const StyledBigImg = styled.img`
-  width: 100%;
-  max-height: 400px;x
+width:100%;
+height:100%;
+object-fit:cover;
 `;
-
- 
