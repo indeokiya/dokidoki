@@ -14,7 +14,9 @@ const MemberChart = ({
 }: Props) => {
 
 // initial_datas의 bid_infos 마지막 가격을 기준으로 sort.
-initial_datas.sort((a, b) => b.bid_infos[0].y - a.bid_infos[0].y)
+if (initial_datas) {
+    initial_datas.sort((a, b) => b.bid_infos[0].y - a.bid_infos[0].y)
+}
 console.log("initial_data >>", initial_datas)
 
 const timeFormat = 'YYYY-MM-DDTHH:mm:ss'
