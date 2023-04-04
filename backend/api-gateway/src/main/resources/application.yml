@@ -52,7 +52,7 @@ spring:
       - id: auction-server
         uri: http://auction-server
         predicates:
-          - Path=/api/auctions/auction-lists/whole/**, /api/auctions/lists/**, /api/auctions/total-prices, /api/auctions/products/** , /api/auctions/{auction_id}/leaderboards/**
+          - Path=/api/auctions/auction-lists/whole/**, /api/auctions/lists/**, /api/auctions/total-prices, /api/auctions/total-treasury, /api/auctions/products/** , /api/auctions/{auction_id}/leaderboards/**
         filters:
           - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
 
