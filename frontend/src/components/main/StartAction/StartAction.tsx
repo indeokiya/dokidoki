@@ -1,10 +1,6 @@
 import styled, {keyframes} from 'styled-components';
-import { Button } from '@mui/material';
 import { Box } from '@mui/system';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
-import { userInfoState } from 'src/store/userInfoState';
-import { relative } from 'path';
 import topImg from '../../../assets/image/main_product.png';
 import bottomImg from '../../../assets/image/main_product_bottom.png';
 
