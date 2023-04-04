@@ -48,7 +48,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'auction/product/:id',
-        element: <ProductPage />,
+        element:<ProductPage />
       },
       {
         path: 'auction/update/:id',
