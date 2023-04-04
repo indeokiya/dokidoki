@@ -13,7 +13,7 @@ const SuperRichRank = () => {
   return (
     <Box sx={{
       position: 'relative',
-      padding: '3% 10%',
+      padding: '5% 10%',
       backgroundColor: '#3A77EE'
     }}>
       {/* 순위 제목 */}
