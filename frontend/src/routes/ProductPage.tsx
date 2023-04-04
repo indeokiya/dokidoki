@@ -12,7 +12,7 @@ import { Client, Message, StompHeaders } from '@stomp/stompjs';
 import { Box } from '@mui/material';
 import MeetingPlace from '../components/leaderBoard/MeetingPlace';
 import { useParams } from 'react-router-dom';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useReducer } from 'react';
 
 import { useAuctionDetail } from '../hooks/auctionDetail';
 
@@ -23,6 +23,7 @@ import { SocketBidData } from 'src/datatype/datatype';
 import ProductPageSceleton from 'src/components/sceleton/ProductPageSceleton';
 import errorImg from "../assets/image/error_page.png"
 import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
+import { State } from 'react-daum-postcode';
 
 const ProductPage = () => {
   const [reset, SetReset] = useState(true);
@@ -30,6 +31,35 @@ const ProductPage = () => {
   const navigate = useNavigate();
   const { id } = useParams() as { id: string };
   const [leaderBoardData, setLeaderBoardData] = useState<SocketBidData[]>([]);
+
+  const [memberChart, setMemberChart] = useState<any[]>([]);
+
+  const updateMemberChart = (data: { name: string; bid_time: number[]; bid_price: number; bid_num: number; }) => {
+    const {name, bid_time, bid_price, bid_num} = data;
+
+    console.log(bid_time[0], bid_time[1]-1, bid_time[2], bid_time[3], bid_time[4], bid_time[5], bid_time[6])
+    let dateTime = new Date(bid_time[0], bid_time[1]-1, bid_time[2], bid_time[3], bid_time[4], bid_time[5], bid_time[6]/1e+6).toISOString()
+    console.log(name, bid_time, bid_price, bid_num)
+    setMemberChart(prevMemberChart => {
+      if (prevMemberChart.length === bid_num) {
+        const newMember = {
+          name: name,
+          bid_infos: [
+            {
+              x:dateTime,
+              y:bid_price
+            }
+
+          ]
+        }
+        return [...prevMemberChart, newMember];
+      } else {
+        let old_bid_infos = prevMemberChart[bid_num].bid_infos
+        prevMemberChart[bid_num].bid_infos = [{x: dateTime, y: bid_price}, ...old_bid_infos]
+        return [...prevMemberChart]
+      }
+    });
+  }
 
   const [highestPrice, setHighestPrice] = useState(0);
   const [priceSize, setPriceSize] = useState(0);
@@ -48,6 +78,10 @@ const ProductPage = () => {
     return () => disconnect();
   }, []);
 
+  useEffect(() => {
+    console.log("수정된 memberChart >>", memberChart)
+  }, [memberChart])
+
   //소캣 연결 함수
   const connect = () => {
     // 연결할 때
@@ -60,13 +94,13 @@ const ProductPage = () => {
         console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
-          console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
+          // console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
           let sData = JSON.parse(message.body);
 
           //소켓으로 경매정보가 넘어왔을 때
           if (sData.type === 'bid') {
             setHighestPrice(JSON.parse(message.body).bid_info.bid_price); //가격 갱신되면 최고가 갱신됨
-            let { name, bid_time, bid_price } = sData.bid_info;
+            let { name, bid_time, bid_price, bid_num } = sData.bid_info;
             let newData = {
               name: name.substring(0,1)+"*"+name.substring(2,name.length),
               bid_time: `${bid_time[3] > 9 ? bid_time[3] : '0' + bid_time[3]}:${
@@ -76,6 +110,15 @@ const ProductPage = () => {
             };
             console.log("소캣에서 넘어온 데이터로 만드는 newData : ",newData)
             setLeaderBoardData(pre =>[newData, ...pre].slice(0,5));
+            let chartData = {
+              name: newData.name,
+              bid_time: bid_time,
+              bid_price: bid_price,
+              bid_num: bid_num,
+            }
+            console.log("새로 만든 chartData >>",chartData)
+            updateMemberChart(chartData)
+            
             
           } else {
             //경매단위 갱신
@@ -107,7 +150,8 @@ const ProductPage = () => {
   if(reset){
     setHighestPrice(pre => data.highest_price); //에러가 없다면 초기값 최고가 갱신
     setLeaderBoardData(data.leader_board.slice(0,5)); // 리더보드 초기값 갱신
-    setPriceSize(data.price_size); //경매단위 초기화 
+    setPriceSize(data.price_size); //경매단위 초기화
+    setMemberChart(data.member_chart);
     SetReset(false)
   }
 
@@ -183,7 +227,7 @@ const ProductPage = () => {
             {/* 제품 카테고리 평균 가격 */}
 
             <Grid item xs={12} sx={{ width: '100%', marginBottom: '10px' }}>
-                  <MemberChart initial_datas={member_chart}/>
+                  <MemberChart initial_datas={memberChart}/>
             </Grid>
 
             {/* 제품 설명 */}
