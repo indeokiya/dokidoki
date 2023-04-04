@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
-import { useSuperRich } from "src/hooks/superRich";
 import RankLabel from "./RankLabel";
 import RankBar from "./RankBar";
 import { Title } from "./Title";
 import Smartphone from "src/assets/image/smartphone.png";
+import { useMostSaleProductsAllQuery } from "src/hooks/mostSaleProducts";
 
 
-const SuperRichRank = () => {
-  const { data } = useSuperRich()
-  const bias = "right"
+const MostSaleProductsRank = () => {
+  const { data } = useMostSaleProductsAllQuery()
+  const bias = "left"
 
   return (
     <Box sx={{
@@ -17,7 +17,7 @@ const SuperRichRank = () => {
       backgroundColor: '#3A77EE'
     }}>
       {/* 순위 제목 */}
-      <Title title="! ! ! 경매를 열어 알부자가 되어보세요 ! ! !" />
+      <Title title="! ! ! 역대 가장 많이 거래된 제품 ! ! !" />
 
       {/* 컴포넌트 가운데 정렬 용도의 div */}
       <div style={{
@@ -31,16 +31,16 @@ const SuperRichRank = () => {
           display: "flex",
           justifyContent: "center"
         }}>
-          {/* 이미지 */}
-          <img src={Smartphone} style={{ width: "30%", maxWidth: "400px", maxHeight: "400px" }} />
-          {/* 지닌 포인트에 따른 Bar 그룹 */}
+          {/* 각 제품명 Label 그룹 */}
+          <RankLabel bias={bias} widthSize="30%" rankData={data} />
+          {/* 거래 횟수에 따른 Bar 그룹 */}
           <RankBar bias={bias} widthSize="50%" rankData={data} />
-          {/* 각 사용자 이름 Label 그룹 */}
-          <RankLabel bias={bias} widthSize="20%" rankData={data} />
+          {/* 이미지 */}
+          <img src={Smartphone} style={{ width: "20%", maxWidth: "400px", maxHeight: "400px" }} />
         </div>
       </div>
     </Box>
   );
 }
 
-export default SuperRichRank;
+export default MostSaleProductsRank;
