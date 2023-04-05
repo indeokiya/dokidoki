@@ -19,6 +19,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import GlobalFont from './styles/GlobalFont';
 
+
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
