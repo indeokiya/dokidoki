@@ -5,6 +5,7 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
+import { useRecentPopularInfo } from 'src/hooks/recentPopularInfo';
 const TestContainer = () => {
   const member = [
     {
@@ -33,98 +34,24 @@ const TestContainer = () => {
     },
   ];
 
-  return (
-    <>
-      <Grid
-        container
-        width={'100%'}
-        sx={{ border: '1px solid black', backgroundColor: '#3A77EE', padding: '1rem' }}
-        gap={2}
-      >
-        <Grid item xs={12} textAlign="center">
-          <Typography variant="h5" color="white">
-            DOKIDOKI
-          </Typography>
-        </Grid>
-        <Grid item xs={12} textAlign="center">
-          <Stack
-            direction="row"
-            spacing={3}
-            divider={<Divider orientation="vertical" color="white" flexItem />}
-            justifyContent="center"
-          >
-            {member.map((data, i) => {
-              let linkActive = data.name !== '신민혜';
-              return (
-                <Tooltip
-                  key={i}
-                  title={data.name + '의 깃허브로 이동' + (linkActive ? '' : ' 못함.. ')}
-                >
-                  <StyledLink
-                    href={linkActive ? data.link : ''}
-                    target="_blank"
-                    style={
-                      linkActive
-                        ? { textDecoration: 'none' }
-                        : {
-                            textDecoration: 'line-through',
-                            pointerEvents: 'none',
-                            color: '#9cbbf6',
-                          }
-                    }
-                  >
-                    {data.name}
-                  </StyledLink>
-                </Tooltip>
-              );
-            })}
-          </Stack>
-        </Grid>
 
-        <Grid item xs={12} justifyContent="center" textAlign={'center'}>
-          <Typography variant="subtitle1" color="#9cbbf6">
-            2023. COPYRIGHT <span>©</span> SSAFY. All rights reserved.
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <Stack
-            direction="row"
-            spacing={2}
-            justifyContent="center"
-            textAlign="center"
-            alignItems="center"
-          >
-            <Tooltip title="깃허브">
-              <Avatar
-                src="https://static-00.iconduck.com/assets.00/gitlab-logo-illustration-512x471-9t1zrpas.png"
-                onClick={() => {
-                  window.open('https://lab.ssafy.com/s08-bigdata-dist-sub2/S08P22A202');
-                }}
-              />
-            </Tooltip>
-            <Tooltip title="싸피">
-              <Avatar
-                src="https://www.ssafy.com/swp_m/images/common/logo3.png"
-                onClick={() => {
-                  window.open('https://edu.ssafy.com/comm/login/SecurityLoginForm.do');
-                }}
-              />
-            </Tooltip>
-            <Tooltip title="지라">
-              <Avatar
-                src="https://logos-world.net/wp-content/uploads/2021/02/Jira-Emblem.png"
-                onClick={() => {
-                  window.open(
-                    'https://ssafy.atlassian.net/jira/software/c/projects/S08P22A202/boards/1750',
-                  );
-                }}
-              />
-            </Tooltip>
-          </Stack>
-        </Grid>
-      </Grid>
-    </>
-  );
+
+  const { isLoading, isError, data } = useRecentPopularInfo();
+  if (isLoading) return <h1>isLoading...</h1>
+  if (isError) return <h1>error occured!</h1>
+
+  // 최근 30초간 가장 많이 클릭된 auction, 가장 많은 입찰 요청(실패 포함)이 이루어진 auction 배열. 최소 0개~5개
+  const clickArr: any[] = data.click;
+  const bidArr: any[] = data.bid;
+
+  console.log("clickArr >> ", clickArr);
+  console.log("bidArr >> ", bidArr);
+
+  return (
+
+    <></>
+  )
+
 };
 
 export default TestContainer;
