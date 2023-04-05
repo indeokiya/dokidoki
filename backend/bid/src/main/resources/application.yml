@@ -39,9 +39,9 @@ spring:
       topic: auction.end
     bidConfig:
       topic: bid
-#    producer:
-      # producer bootstrap servers가 따로 존재하면 설정
-      # bootstrap-servers: 3.34.97.97:9092
+    streamConfig:
+      topic: stream-result
+
 jwt:
   issuer: dokidoki.com
   secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
