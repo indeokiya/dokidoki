@@ -15,11 +15,11 @@ const SideBar:React.FC<{setCategory:(data:number)=>void}> = (props) => {
     '스마트폰',
     '태블릿',
     '웨어러블기기',
+    'TV&오디오',
+    '노트북/PC',
     'BESPOKE',
     '주방가전',
     '생활가전',
-    'TV&오디오',
-    '노트북/PC',
     '마감임박',
     '경매완료',
   ];

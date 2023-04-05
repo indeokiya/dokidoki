@@ -7,6 +7,8 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { myPageMenuState } from 'src/store/userInfoState';
+import { useLocation } from 'react-router';
+
 
  
 
@@ -158,11 +160,16 @@ const drawerWidth = 256;
 export default function Paperbase() {
   const [menu,setMenu] = useRecoilState(myPageMenuState);
   const [selectedMenu, setSelectedMenu] = useState(menu.menu);
+  const param = useLocation();
 
 
   //전역 변수로 메뉴 넣어줌 
   useEffect(()=>{
+    
     setMenu({menu : selectedMenu});
+    if(param.pathname.split("/")[2] === "alert-history"){
+      setMenu({menu:"알림 내역"})
+    }
   },[selectedMenu])
   
 

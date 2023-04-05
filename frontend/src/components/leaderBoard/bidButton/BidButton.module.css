@@ -21,6 +21,7 @@
   }
   
   .bidButton:hover {
+    cursor:pointer;
     background-color: white;
     color: #3A77EE;
     border-radius: 5px;
