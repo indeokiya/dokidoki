@@ -46,11 +46,6 @@ public class KafkaAuctionConsumer {
         auctionService.updateHighestPrice(bid.getAuctionId(), bid.getHighestPrice());
     }
 
-    @KafkaListener(topics = "${spring.kafka.streamConfig.topicName}", containerFactory = "streamKafkaListenerContainerFactory")
-    public void streamListener(@Payload String message) {
-        log.info("Received stream message: [{}]", message);
 
-        // implement here
-    }
 
 }

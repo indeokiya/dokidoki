@@ -47,4 +47,11 @@ public class KafkaBidConsumer {
 
         biddingService.updatePriceSize(dto);
     }
+
+    @KafkaListener(topics = "${spring.kafka.streamConfig.topic}", containerFactory = "streamKafkaListenerContainerFactory")
+    public void streamListener(@Payload String message) {
+        log.info("Received stream message: [{}]", message);
+
+        // implement here
+    }
 }
