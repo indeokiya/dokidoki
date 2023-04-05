@@ -15,10 +15,15 @@ const MemberChart = ({
 }: Props) => {
  
 // initial_datas의 bid_infos 마지막 가격을 기준으로 sort.
+let display_datas = []
+
 if (initial_datas) {
-    initial_datas.sort((a, b) => b.bid_infos[0].y - a.bid_infos[0].y)
+    display_datas = [...initial_datas]
+    display_datas.sort((a, b) => b.bid_infos[0].y - a.bid_infos[0].y)
 }
-console.log("initial_data >>", initial_datas)
+
+console.log("initial_datas >> ", initial_datas)
+console.log("display_datas >>", display_datas)
 
 const timeFormat = 'YYYY-MM-DDTHH:mm:ss'
 
@@ -31,8 +36,8 @@ const backgroundColor = ['#FFAFA1', '#EBD386', '#AEFF9E'];
 
 const updateData = () => {
     const newDatasets = [];
-    for (let i = 0; i < initial_datas.length; i++) {
-        let init_data = initial_datas[i];
+    for (let i = 0; i < display_datas.length; i++) {
+        let init_data = display_datas[i];
         let dataset = {
             label: init_data.name,
             data: init_data.bid_infos,
