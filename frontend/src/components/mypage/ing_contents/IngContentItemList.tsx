@@ -108,7 +108,7 @@ const IngContentItemList = () => {
             data.pages &&
             data.pages.map((data) =>
               data?.contents?.map((data: any, i: number) => (
-                <Grid key={i} item xs={4} mb={4}>
+                <Grid key={i} item xs={12} md={6} lg={4} mb={4}>
                   <IngContentItem auctionData={data} />
                 </Grid>
               )),
