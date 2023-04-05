@@ -3,11 +3,13 @@ import styled from 'styled-components';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
-import { useState, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import ProductInfoInput from '../components/resigter/ProductInfoInput';
 import ActionInfoInput from '../components/resigter/AuctionInfoInput';
 import { auctionAPI } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { isCategoryErrorState, isEndAtErrorState, isFilesErrorState, isOfferPriceErrorState, isPriceSizeErrorState, isTitleErrorState } from 'src/store/RegisterAuctionStates';
 
 //경매 등록 타입
 export type AuctionRegisterType = {
@@ -26,7 +28,7 @@ const RegisterPage = () => {
   const navigate = useNavigate();
 
   const dataRef = useRef({
-    product_id: 1,
+    product_id: -1,
     title: '',
     description: '',
     offer_price: -1,
@@ -36,6 +38,22 @@ const RegisterPage = () => {
     files: [],
   });
 
+  // Error 체크용 전역 State
+  const setIsTitleError = useSetRecoilState(isTitleErrorState)
+  const setIsCategoryError = useSetRecoilState(isCategoryErrorState)
+  const setIsOfferPriceError = useSetRecoilState(isOfferPriceErrorState)
+  const setIsPriceSizeError = useSetRecoilState(isPriceSizeErrorState)
+  const setIsEndAtError = useSetRecoilState(isEndAtErrorState)
+  const setIsFilesError = useSetRecoilState(isFilesErrorState)
+  useEffect(() => {
+    setIsTitleError(false)
+    setIsCategoryError(false)
+    setIsOfferPriceError(false)
+    setIsPriceSizeError(false)
+    setIsEndAtError(false)
+    setIsFilesError(false)
+  }, [])
+
   let userName = 'defaultName';
   let localStorageInfo = window.localStorage.getItem('user-info');
   if (localStorageInfo) {
@@ -43,7 +61,41 @@ const RegisterPage = () => {
   }
 
   const register = () => {
-    console.log('서버에 보낼 데이터 >> ', dataRef.current);
+    if (dataRef.current.title.length === 0) {
+      setIsTitleError(true)
+      alert("제목을 입력해주세요.")
+      return
+    } else if (dataRef.current.product_id < 1
+      || 1072 < dataRef.current.product_id) {
+      setIsCategoryError(true)
+      alert("카테고리 검색 후 선택해주세요.")
+      return
+    } else if (Number.isNaN(dataRef.current.offer_price)
+      || dataRef.current.offer_price < 0) {
+      setIsOfferPriceError(true)
+      alert("시작가를 0 이상 입력해주세요.")
+      return
+    } else if (Number.isNaN(dataRef.current.price_size)
+      || dataRef.current.price_size <= 0) {
+      setIsPriceSizeError(true)
+      alert("경매 단위를 1 이상 입력해주세요.")
+      return
+    } else if (dataRef.current.end_at.length === 0) {
+      setIsEndAtError(true)
+      alert("종료 시간을 입력해주세요.")
+      return
+    }
+    for (let idx = 0; idx < dataRef.current.files.length; idx++) {
+      const file: File = dataRef.current.files[idx]
+      console.log(file)
+      if (!file.type.startsWith("image/")) {
+        setIsFilesError(true)
+        alert("이미지 파일만 업로드 가능합니다.")
+        return
+      }
+    }
+
+    // console.log('서버에 보낼 데이터 >> ', dataRef.current);
     const formData = new FormData();
     formData.set('product_id', String(dataRef.current.product_id));
     formData.set('title', dataRef.current.title);
