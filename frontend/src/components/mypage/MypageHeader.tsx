@@ -49,13 +49,13 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
             {props.selectedMenu === '판매 내역' || props.selectedMenu === '구매 내역'
               ? <Grid item >
                   <Typography
-                    variant='h6'
+                    variant='subtitle2'
                     style={{ display: "inline-block" }}
                   >
-                    {props.selectedMenu === '판매 내역' ? "총 판매금" : "총 구매금"}
+                    {props.selectedMenu === '판매 내역' ? "총 판매금" : "총 구매금"} : 
                   </Typography>
                   <Typography
-                    variant='h5'
+                    variant='h6'
                     color={"inherit"}
                     sx={{ marginTop: "30px", marginLeft: "20px", display: "inline-block", fontFamily: "WorkSans" }}
                   >

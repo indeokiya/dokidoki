@@ -28,7 +28,7 @@ const FunctionInfoCards = () => {
   ];
 
   return (
-    <Grid container ref={ref} sx={{position:"relative"}}  justifyContent="space-around">
+    <Grid container ref={ref} sx={{position:"relative"}}  justifyContent="space-around" my={10}>
       <Grid item xs={12} md={4}>
         <OneCard start={inView ? 'start' : 'end'}>
           <InfoCard primary={false} info={cardList[0]} />

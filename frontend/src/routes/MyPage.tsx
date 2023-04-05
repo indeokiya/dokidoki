@@ -9,9 +9,6 @@ import { useRecoilState, useSetRecoilState } from 'recoil';
 import { myPageMenuState } from 'src/store/userInfoState';
 import { useLocation } from 'react-router';
 
-
- 
-
 let theme = createTheme({
   palette: {
     primary: {
@@ -158,29 +155,39 @@ theme = {
 const drawerWidth = 256;
 
 export default function Paperbase() {
-  const [menu,setMenu] = useRecoilState(myPageMenuState);
+  const [menu, setMenu] = useRecoilState(myPageMenuState);
   const [selectedMenu, setSelectedMenu] = useState(menu.menu);
   const param = useLocation();
 
-
-  //전역 변수로 메뉴 넣어줌 
-  useEffect(()=>{
-    
-    setMenu({menu : selectedMenu});
-    if(param.pathname.split("/")[2] === "alert-history"){
-      setMenu({menu:"알림 내역"})
+  //전역 변수로 메뉴 넣어줌
+  useEffect(() => {
+    // setMenu({ menu: selectedMenu });
+    console.log(" 지금 페이지의 url paht >>> ",param.pathname)
+    if (param.pathname.split('/')[2] === "auction-item") {
+      setMenu({ menu: '입찰 중' });
     }
-  },[selectedMenu])
-  
-
-
+    if (param.pathname.split('/')[2] === 'auction-history') {
+      setMenu({ menu: '구매 내역' });
+    }
+    if (param.pathname.split('/')[2] === 'sale-item') {
+      setMenu({ menu: '판매 중' });
+    }
+    if (param.pathname.split('/')[2] === 'sale-history') {
+      setMenu({ menu: '판매 내역' });
+    }
+    if (param.pathname.split('/')[2] === 'bookmark-list') {
+      setMenu({ menu: '관심 내역' });
+    }
+    if (param.pathname.split('/')[2] === 'aler-history') {
+      setMenu({ menu: '알림 내역' });
+    }
+  }, [param.pathname]);
 
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
         <Box component="nav" sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}>
-
           {/* 왼쪽 네이게이션 바 */}
           <MypageNavigator
             PaperProps={{ style: { width: drawerWidth } }}
@@ -189,15 +196,12 @@ export default function Paperbase() {
           />
         </Box>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-
           {/* 상단 해더 */}
           <MypageHeader selectedMenu={selectedMenu} />
           <Box component="main" sx={{ flex: 1, py: 6, px: 4, bgcolor: '#eaeff1' }}>
-        
-            <Outlet/>
+            <Outlet />
           </Box>
-          <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
-          </Box>
+          <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}></Box>
         </Box>
       </Box>
     </ThemeProvider>

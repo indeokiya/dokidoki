@@ -5,10 +5,10 @@ export const Title: React.FC<{ title: string }> = ({ title }) => {
     <p style={{
       width: "100%",
       color: "#ECF4FF",
-      fontSize: "3rem",
+      fontSize: "2rem",
       fontWeight: "bold",
       textAlign: "center",
-      margin: "2% 0"
+      margin: "2% 0%"
     }}>
       {title}
     </p>
