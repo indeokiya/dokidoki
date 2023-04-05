@@ -7,23 +7,19 @@ import Grid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import { noticeAPI } from 'src/api/axios';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 const StyledBlueSpan = styled.span`
-  font-weight: bold;
   color: #3a77ee;
   cursor: pointer;
 `;
 
 const StyledRedSpan = styled.span`
-  font-weight: bold;
-  color: #ff0000;
+  color: #ff3333;
 `;
-const PreFixSpan = styled.span`
-  //   font-weight: bold;
-  //   color: #7fff00;
-`;
-
-
+function numberFormat(price: number | null) {
+  return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+}
 type OutBidAlert = {
   type: string;
   product_id: number;
@@ -75,12 +71,17 @@ const AlertItemOutBid: React.FC<{
 
   function visibleStyle(x: boolean) {
     if (x) {
-      return { opacity: 1, mb: 4, padding: '20px', height: '70px' };
+      return {
+        opacity: 1,
+        mb: 4,
+        padding: '20px',
+        paddingLeft: '0px',
+        height:"130px"
+      };
     } else {
       return {
         opacity: 0,
         height: 0,
-        transition: '0.2s',
       };
     }
   }
@@ -96,12 +97,25 @@ const AlertItemOutBid: React.FC<{
   return (
     <Paper
       elevation={3}
-      sx={{ width: '90%', boxSizing: 'border-box', ...visibleStyle(!props.data.read) }}
+      sx={{ width: '90%', boxSizing: 'border-box',transition:"0.55s",borderLeft: '15px solid #ff9800', ...visibleStyle(!props.data.read) }}
     >
       <Typography variant="subtitle1">
         <Grid container>
+        <Grid
+            item
+            xs={2}
+            sx={{
+              color: '#ff9800',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <ErrorOutlineOutlinedIcon fontSize="large" />
+          </Grid>
           <Grid item xs>
-            <PreFixSpan>[경쟁 입찰] </PreFixSpan>
+          <span style={{ color: '#ff9800', fontSize: '20px', fontWeight:"bold"}}>경쟁 입찰 </span>{' '}
+          <br/>
             <Tooltip title="누르면 제품 페이지로 이동">
               <StyledBlueSpan
                 onClick={() => {
@@ -111,10 +125,16 @@ const AlertItemOutBid: React.FC<{
                 [{props.data.product_name}]
               </StyledBlueSpan>
             </Tooltip>
-            <span>에 다른 입찰자가 나타났습니다. </span>
-            <StyledRedSpan>현재 최고 가격: [{props.data.current_bid_price} 원]</StyledRedSpan>
+            <br/>
+            <span style={{ color: 'gray' }}>현재 최고 가격 : </span>
+            <StyledRedSpan>{numberFormat(props.data.current_bid_price)}</StyledRedSpan>
           </Grid>
-          <Grid item>
+          <Grid item
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
             <Tooltip title="Delete">
               <IconButton
                 onClick={() => {

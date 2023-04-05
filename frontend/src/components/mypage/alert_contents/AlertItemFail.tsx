@@ -7,21 +7,22 @@ import Grid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import { noticeAPI } from 'src/api/axios';
+import BlockOutlinedIcon from '@mui/icons-material/BlockOutlined';
+
+function numberFormat(price: number | null) {
+  return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+}
+
 
 const StyledBlueSpan = styled.span`
-  font-weight: bold;
   color: #3a77ee;
   cursor: pointer;
 `;
 
 const StyledRedSpan = styled.span`
-  font-weight: bold;
-  color: #ff0000;
+  color: #ff3333;
 `;
-const PreFixSpan = styled.span`
-  //   font-weight: bold;
-  //   color: #7fff00;
-`;
+
 
 type FailAlert = {
   type: string;
@@ -76,12 +77,17 @@ const AlertItemFail: React.FC<{
 
   function visibleStyle(x: boolean) {
     if (x) {
-      return { opacity: 1, mb: 4, padding: '20px', height: '70px' };
+      return {
+        opacity: 1,
+        mb: 4,
+        padding: '20px',
+        paddingLeft: '0px',
+        height:"155px"
+      };
     } else {
       return {
         opacity: 0,
         height: 0,
-        transition: '0.2s',
       };
     }
   }
@@ -97,12 +103,25 @@ const AlertItemFail: React.FC<{
   return (
     <Paper
       elevation={3}
-      sx={{ width: '90%', boxSizing: 'border-box', ...visibleStyle(!props.data.read) }}
+      sx={{ width: '90%', boxSizing: 'border-box',transition:"1s",borderLeft: '15px solid #ff3333', ...visibleStyle(!props.data.read) }}
     >
       <Typography variant="subtitle1">
         <Grid container>
+           <Grid
+            item
+            xs={2}
+            sx={{
+              color: '#ff3333',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <BlockOutlinedIcon fontSize="large" />
+          </Grid>
           <Grid item xs>
-            <PreFixSpan>[구매 실패] </PreFixSpan>
+          <span style={{ color: '#ff3333', fontSize: '20px', fontWeight:"bold"}}>구매 실패 </span>{' '}
+          <br/>
             <Tooltip title="누르면 제품 페이지로 이동">
               <StyledBlueSpan
                 onClick={() => {
@@ -112,18 +131,22 @@ const AlertItemFail: React.FC<{
                 [{props.data.product_name}]
               </StyledBlueSpan>
             </Tooltip>
-            <span>을 </span>
-            <StyledRedSpan>[{props.data.my_final_price}]</StyledRedSpan>
-            <span>에 구매하는 데에 실패하셨습니다. </span>
-            <StyledRedSpan>최종 낙찰 가격: [{props.data.final_price} 원]</StyledRedSpan>
+            <br/>
+            <span style={{ color: 'gray' }}>내 입찰 가격 : </span>
+            <StyledRedSpan>{numberFormat(props.data.my_final_price)}</StyledRedSpan>
+            <br/>
+            <span style={{ color: 'gray' }}>최종 낙찰 가격 : </span>
+            <StyledRedSpan>{numberFormat(props.data.final_price)}</StyledRedSpan>
           </Grid>
-          <Grid item>
+          <Grid item
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
             <Tooltip title="Delete">
               <IconButton
-                onClick={() => {
-                  ComponentHidden(props.id); //사라지는 애니메이션 back이랑 연동하는거 아님
-                  props.setAlertCnt((data: any) => data - 1); //카운트 줄어듬
-                }}
+               
               >
                 <DeleteIcon />
               </IconButton>

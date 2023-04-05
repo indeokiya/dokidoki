@@ -27,9 +27,9 @@ const AuctionPageContent = () => {
   return (
     <>
       <Container>
-        {!inView && 
         <Tooltip title="위로 가기" placement="top">
           <StyledUpIcon
+          style ={inView ? {pointerEvents:"none", opacity:0}:{opacity:1}}
             onClick={() => {
               window.scrollTo(0, 0);
             }}
@@ -37,7 +37,6 @@ const AuctionPageContent = () => {
             <ArrowUpwardIcon></ArrowUpwardIcon>
           </StyledUpIcon>
         </Tooltip>
-          }
         <Tooltip title="글 작성하기" placement="top">
           <StyledIcon
           style={{justifyContent:"center", alignContent:"center", alignItems:"center"}}

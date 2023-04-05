@@ -203,7 +203,6 @@ const ProductInfo = ({
 
   return (
     <StyledBox>
-      {/* {userInfo.user_id === seller_id && ( */}
       <StyeldDiv>
         <Tooltip title="수정">
           <IconButton onClick={updateAuction}  sx={{ display: userInfo.user_id === seller_id ? '' : 'none' }} >

@@ -7,21 +7,20 @@ import Grid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import { noticeAPI } from 'src/api/axios';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
 
 const StyledBlueSpan = styled.span`
-  font-weight: bold;
   color: #3a77ee;
   cursor: pointer;
 `;
 
 const StyledRedSpan = styled.span`
-  font-weight: bold;
-  color: #ff0000;
+  color: #ff3333;
 `;
-const PreFixSpan = styled.span`
-  //   font-weight: bold;
-  //   color: #7fff00;
-`;
+
+function numberFormat(price: number | null) {
+  return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+}
 
 type CompleteAlert = {
   type: string;
@@ -31,24 +30,22 @@ type CompleteAlert = {
   final_price: number;
   time_stamp: string;
   read: boolean;
-
-}
+};
 
 type AlertData = {
   type: string; // "PURCHASE_SUCCESS", "PURCHASE_FAIL", "SALE_COMPLETE", "OUTBID"
   product_id: number;
-  product_name : string;
-  auction_id : number;
-  final_price : number;
-  my_final_price : number;
-  current_bid_price : number;
-  time_stamp : string;
+  product_name: string;
+  auction_id: number;
+  final_price: number;
+  my_final_price: number;
+  current_bid_price: number;
+  time_stamp: string;
   price: number;
   // title: string;
   // id: number;
   read: boolean;
 };
-
 
 const AlertItemComplete: React.FC<{
   data: AlertData;
@@ -59,49 +56,61 @@ const AlertItemComplete: React.FC<{
 }> = (props) => {
   const navigate = useNavigate();
 
-  // 안쓰는
-  //   function deletHelder(id: number) {
-  //    props.setAlertList((pre:AlertData[]) => pre.filter((data:AlertData) => (data.id !== id)))
-  //   }
-
   function ComponentHidden(key: any) {
     props.setAlertMap((pre: any) => {
-      const updateAlertMap = {...pre};
+      const updateAlertMap = { ...pre };
       updateAlertMap[key].read = true;
-      Read(key)
+      Read(key);
       return updateAlertMap;
     });
   }
 
   function visibleStyle(x: boolean) {
     if (x) {
-      return { opacity: 1, mb: 4, padding: '20px', height: '70px' };
+      return {
+        opacity: 1,
+        mb: 4,
+        padding: '20px',
+        paddingLeft: '0px',
+        height:"130px"
+      };
     } else {
       return {
         opacity: 0,
         height: 0,
-        transition: '0.2s',
       };
     }
   }
 
   function Read(key: string) {
-    noticeAPI.put(
-      `/${key}/read`
-    ).then((res)=> {
-      console.log(res)
-    })
+    noticeAPI.put(`/${key}/read`).then((res) => {
+      console.log(res);
+    });
   }
 
   return (
     <Paper
       elevation={3}
-      sx={{ width: '90%', boxSizing: 'border-box', ...visibleStyle(!props.data.read) }}
+      sx={{ width: '90%', boxSizing: 'border-box',transition:"1s",borderLeft: '15px solid #00e500', ...visibleStyle(!props.data.read) }}
+      
     >
       <Typography variant="subtitle1">
         <Grid container>
+          <Grid
+            item
+            xs={2}
+            sx={{
+              color: '#00e500',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <TaskAltIcon fontSize="large" />
+          </Grid>
           <Grid item xs>
-            <PreFixSpan>[판매 완료] </PreFixSpan>
+            <span style={{ color: '#00e500', fontSize: '20px', fontWeight:"bold"}}>판매 완료 </span>{' '}
+            <br />
             <Tooltip title="누르면 제품 페이지로 이동">
               <StyledBlueSpan
                 onClick={() => {
@@ -111,11 +120,18 @@ const AlertItemComplete: React.FC<{
                 [{props.data.product_name}]
               </StyledBlueSpan>
             </Tooltip>
-            <span>을 </span>
-            <StyledRedSpan>[{props.data.final_price}원]</StyledRedSpan>
-            <span>에 판매하셨습니다.</span>
+            <br/>
+            <span style={{ color: 'gray' }}>최종 판매 가격 : </span>
+            <StyledRedSpan>{numberFormat(props.data.final_price)}</StyledRedSpan>
           </Grid>
-          <Grid item>
+          <Grid
+            item
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
             <Tooltip title="Delete">
               <IconButton
                 onClick={() => {

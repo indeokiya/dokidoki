@@ -116,7 +116,6 @@ const ProductPage = () => {
               }:${bid_time[5] > 9 ? bid_time[5] : '0' + bid_time[5]}`,
               bid_price: bid_price,
             };
-            console.log("소캣에서 넘어온 데이터로 만드는 newData : ",newData)
             setLeaderBoardData(pre =>[newData, ...pre].slice(0,5));
             let chartData = {
               name: newData.name,
@@ -124,7 +123,6 @@ const ProductPage = () => {
               bid_price: bid_price,
               bid_num: bid_num,
             }
-            console.log("새로 만든 chartData >>",chartData)
             updateMemberChart(chartData)
             
             
@@ -208,6 +206,9 @@ const ProductPage = () => {
         >
           <ScrollTop />
           <Grid container spacing={3} sx={{ marginBottom: '5%' }}>
+            <Grid item xs={12}>
+              <Grid container spacing={3}>
+                
             <Grid item xs={6}>
               {/* 제품 이미지 */}
               <ProductImages images={auction_image_urls} end_time={end_time} />
@@ -235,11 +236,13 @@ const ProductPage = () => {
                 />
             </Grid>
           </Grid>
+                </Grid>
+              </Grid>
           <Divider />
           <Grid container direction="column" justifyContent="center" alignItems="center">
             {/* 제품 카테고리 평균 가격 */}
 
-            <Grid item xs={12} sx={{ width: '100%', marginBottom: '10px' }}>
+            <Grid item xs={12} sx={{ width: '100%', marginBottom: '10px', marginTop:"10px" }}>
                   <MemberChart initial_datas={memberChart}/>
             </Grid>
 

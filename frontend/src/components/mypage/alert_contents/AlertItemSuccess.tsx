@@ -7,21 +7,21 @@ import Grid from '@mui/material/Grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Tooltip from '@mui/material/Tooltip';
 import { noticeAPI } from 'src/api/axios';
+import GavelOutlinedIcon from '@mui/icons-material/GavelOutlined';
+
 
 const StyledBlueSpan = styled.span`
-  font-weight: bold;
   color: #3a77ee;
   cursor: pointer;
 `;
 
 const StyledRedSpan = styled.span`
-  font-weight: bold;
-  color: #ff0000;
+  color: #ff3333;
 `;
-const PreFixSpan = styled.span`
-  //   font-weight: bold;
-  //   color: #7fff00;
-`;
+
+function numberFormat(price: number | null) {
+  return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+}
 
 type SuccessAlert = {
   type: string;
@@ -74,12 +74,17 @@ const AlertItemSuccess: React.FC<{
 
   function visibleStyle(x: boolean) {
     if (x) {
-      return { opacity: 1, mb: 4, padding: '20px', height: '70px' };
+      return {
+        opacity: 1,
+        mb: 4,
+        padding: '20px',
+        paddingLeft: '0px',
+        height:"130px"
+      };
     } else {
       return {
         opacity: 0,
         height: 0,
-        transition: '0.2s',
       };
     }
   }
@@ -95,12 +100,26 @@ const AlertItemSuccess: React.FC<{
   return (
     <Paper
       elevation={3}
-      sx={{ width: '90%', boxSizing: 'border-box', ...visibleStyle(!props.data.read) }}
+      sx={{ width: '90%', boxSizing: 'border-box',transition:"1s",borderLeft: '15px solid #3A77EE', ...visibleStyle(!props.data.read) }}
+      
     >
       <Typography variant="subtitle1">
         <Grid container>
+        <Grid
+            item
+            xs={2}
+            sx={{
+              color: '#3A77EE',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <GavelOutlinedIcon  fontSize="large" />
+          </Grid>
           <Grid item xs>
-            <PreFixSpan>[구매 성공] </PreFixSpan>
+          <span style={{ color: '#3A77EE', fontSize: '20px', fontWeight:"bold"}}>구매 성공 </span>{' '}
+            <br />
             <Tooltip title="누르면 제품 페이지로 이동">
               <StyledBlueSpan
                 onClick={() => {
@@ -110,11 +129,17 @@ const AlertItemSuccess: React.FC<{
                 [{props.data.product_name}]
               </StyledBlueSpan>
             </Tooltip>
-            <span>을 </span>
-            <StyledRedSpan>[{props.data.final_price} 원]</StyledRedSpan>
-            <span>에 구매하는 데에 성공하셨습니다.</span>
+            <br/>
+            <span style={{ color: 'gray' }}>최종 가격 : </span>
+            <StyledRedSpan>{numberFormat(props.data.final_price)}</StyledRedSpan>
+            
           </Grid>
-          <Grid item>
+          <Grid item
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}>
             <Tooltip title="Delete">
               <IconButton
                 onClick={() => {

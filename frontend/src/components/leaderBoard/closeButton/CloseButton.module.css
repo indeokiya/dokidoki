@@ -3,18 +3,23 @@
   .closeButton {
     position: relative;
     display: inline-block;
-    padding: 10px 20px;
+    padding: 20px 20px;
     color: #ee3a3a;
-    font-size: 16px;
+    font-size: 20px;
     text-decoration: none;
     text-transform: uppercase;
     overflow: hidden;
     transition: .5s;
     width:100%;
-    letter-spacing: 4px
+    letter-spacing: 4px;
+    font-weight: bold;
+    border:none;
+    border-radius: 10px;;
+    background-color:white;
   }
   
   .closeButton:hover {
+    cursor:pointer;
     background: white;
     color: #ee3a3a;
     border-radius: 5px;
