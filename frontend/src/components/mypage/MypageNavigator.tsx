@@ -36,7 +36,7 @@ const item = {
 
 const itemCategory = {
   boxShadow: '0 -1px 0 rgb(255,255,255,0.1) inset',
-  py: 1.5,
+  py: 0.82,
   px: 3,
 };
 
@@ -49,42 +49,71 @@ const MypageNavigator: React.FC<{
 
   const [menu, setMenu] = useRecoilState(myPageMenuState);
 
-
-
   const [categories, setCategories] = useState([
-    { id: '입찰 중', icon: <ShoppingCartOutlinedIcon />, active: menu.menu === "입찰 중", path: '' },
-    { id: '구매 내역', icon: <ShoppingCartIcon />, active: menu.menu === "구매 내역", path: 'action-history' },
-    { id: '판매 중', icon: <SellOutlinedIcon />, active: menu.menu === "판매 중", path: 'sale-item' },
-    { id: '판매 내역', icon: <SellIcon />, active: menu.menu === "판매 내역", path: 'sale-history' },
-    { id: '관심 내역', icon: <BookmarkBorderOutlinedIcon />, active: menu.menu === "관심 내역", path: 'bookmark-list' },
-    { id: '알림 내역', icon: <NotificationsIcon />, active: menu.menu === "알림 내역", path: 'alert-history' },
+    {
+      id: '입찰 중',
+      icon: <ShoppingCartOutlinedIcon />,
+      active: menu.menu === '입찰 중',
+      path: '',
+    },
+    {
+      id: '구매 내역',
+      icon: <ShoppingCartIcon />,
+      active: menu.menu === '구매 내역',
+      path: 'action-history',
+    },
+    {
+      id: '판매 중',
+      icon: <SellOutlinedIcon />,
+      active: menu.menu === '판매 중',
+      path: 'sale-item',
+    },
+    {
+      id: '판매 내역',
+      icon: <SellIcon />,
+      active: menu.menu === '판매 내역',
+      path: 'sale-history',
+    },
+    {
+      id: '관심 내역',
+      icon: <BookmarkBorderOutlinedIcon />,
+      active: menu.menu === '관심 내역',
+      path: 'bookmark-list',
+    },
+    {
+      id: '알림 내역',
+      icon: <NotificationsIcon />,
+      active: menu.menu === '알림 내역',
+      path: 'alert-history',
+    },
   ]);
 
-  //이거 true세팅하기 
+  //이거 true세팅하기
 
-  const [loginUser, setLoginUser]= useRecoilState(userInfoState);
+  const [loginUser, setLoginUser] = useRecoilState(userInfoState);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e)
+    console.log(e);
     const target = e.currentTarget;
     const files = (target.files as FileList)[0];
-    const formData = new FormData()
-    formData.append('file', files)
+    const formData = new FormData();
+    formData.append('file', files);
 
-    userAPI.put('/profiles', formData, {
-      headers : {
-        "Content-Type":"multipart/form-data",
-      }
-    })
-    .then(res => {
-      alert("성공")
-      setLoginUser({...loginUser, picture:res.data.data})
-      console.log("res >> ",res)
-    })
+    userAPI
+      .put('/profiles', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      })
+      .then((res) => {
+        alert('성공');
+        setLoginUser({ ...loginUser, picture: res.data.data });
+        console.log('res >> ', res);
+      });
   };
 
   const activeHandler = (_id: string) => {
-    setMenu((prevState) => ({...prevState, menu: _id}))
+    setMenu((prevState) => ({ ...prevState, menu: _id }));
     props.setSelectedMenu(_id);
     setCategories((pre) =>
       pre.map((child) => {
@@ -99,17 +128,16 @@ const MypageNavigator: React.FC<{
 
   const { ...other } = props;
 
-
   return (
     <Drawer variant="permanent" {...other}>
       <List disablePadding>
         <ListItem
-          sx={{ ...item, ...itemCategory, fontSize: 22, color: '#fff' }}
+          sx={{ ...item, ...itemCategory, fontSize: 22 }}
           onClick={() => {
             navigate('/');
           }}
         >
-          DOKIDOKI
+          <StyledLogo>DOKIDOKI</StyledLogo>
         </ListItem>
         <StyledDiv>
           <Badge
@@ -122,7 +150,12 @@ const MypageNavigator: React.FC<{
                     <EditOutlinedIcon />
                   </label>
                 </Tooltip>
-                <ImageInput type="file" accept="image/*" id="profileImgChange" onChange={handleUpload}></ImageInput>
+                <ImageInput
+                  type="file"
+                  accept="image/*"
+                  id="profileImgChange"
+                  onChange={handleUpload}
+                ></ImageInput>
               </StyledEditIcon>
             }
           >
@@ -174,25 +207,34 @@ const MypageNavigator: React.FC<{
 
 export default MypageNavigator;
 
-
 const StyledDiv = styled.div`
-    text-align: center;
-  `;
+  text-align: center;
+`;
 
-  const StyledEditIcon = styled.div`
-    color: white;
-    background-color: gray;
-    border: 1px solid white;
-    border-radius: 100px;
-    width: 40px;
-    height: 40px;
-    line-height: 55px;
-    transition: 0.5s;
-    &:hover {
-      background-color: silver;
-    }
-  `;
+const StyledEditIcon = styled.div`
+  color: white;
+  background-color: gray;
+  border: 1px solid white;
+  border-radius: 100px;
+  width: 40px;
+  height: 40px;
+  line-height: 55px;
+  transition: 0.5s;
+  &:hover {
+    background-color: silver;
+  }
+`;
 
-  const ImageInput = styled.input`
-    visibility: hidden;
-  `;
+const ImageInput = styled.input`
+  visibility: hidden;
+`;
+
+const StyledLogo = styled.span`
+  cursor: pointer;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 40px;
+  background-image: linear-gradient(135deg, #e570e7 0%, #79f1fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+`;
