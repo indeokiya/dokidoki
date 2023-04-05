@@ -98,6 +98,13 @@ services:
       dokidoki_net:
         ipv4_address: 172.20.128.7
 
+    # kafaka 독립 서버
+    stream-server:
+      container_name: stream-server
+      build:
+        context: ./backend/streaming
+        dockerfile: dockerfile
+      restart: always
   
 networks:
   dokidoki_net:
