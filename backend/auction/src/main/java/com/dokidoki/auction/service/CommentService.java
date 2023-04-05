@@ -38,29 +38,55 @@ public class CommentService {
         //      2) 부모 댓글 객체로 접근한 뒤, 부모 댓글 sub_comments에 대댓글 추가
 
         // DTO 생성
-        List<CommentResp> commentRespons = new ArrayList<>();
+        List<CommentResp> commentRespList = new ArrayList<>();
 
         // 부모 댓글의 인덱스를 관리할 변수
         Map<Long, Integer> indexOf = new HashMap<>();
 
         // 모든 comment 처리
         for (CommentEntity commentEntity : commentEntities) {
+            // 댓글 Resp DTO 생성
+            MemberEntity writer = commentEntity.getMemberEntity();
+            CommentResp commentResp;
+            if (writer == null) {
+                commentResp = CommentResp.builder()
+                        .id(commentEntity.getId())
+                        .member_id(-1L)
+                        .member_profile(null)
+                        .member_name("")
+                        .content("삭제된 댓글입니다.")
+                        .written_time(commentEntity.getWrittenTime())
+                        .modified_time(commentEntity.getModifiedTime())
+                        .build();
+            } else {
+                commentResp = CommentResp.builder()
+                        .id(commentEntity.getId())
+                        .member_id(writer.getId())
+                        .member_profile(writer.getPicture())
+                        .member_name(encryptedUserName(writer.getName()))
+                        .content(commentEntity.getContent())
+                        .written_time(commentEntity.getWrittenTime())
+                        .modified_time(commentEntity.getModifiedTime())
+                        .sub_comments(new ArrayList<>())
+                        .build();
+            }
+
             // 댓글일 경우, commentResponses 에 삽입 후 indexOf 에 위치 저장
             if (commentEntity.getParentId() == null) {
-                indexOf.put(commentEntity.getId(), commentRespons.size());
-                commentRespons.add(new CommentResp(commentEntity));
+                indexOf.put(commentEntity.getId(), commentRespList.size());
+                commentRespList.add(commentResp);
             }
             // 대댓글일 경우, 부모 댓글에 본인 추가
             else {
                 int parentIndex = indexOf.get(commentEntity.getParentId());
-                commentRespons
+                commentRespList
                         .get(parentIndex)
                         .getSub_comments()
-                        .add(new CommentResp(commentEntity));
+                        .add(commentResp);
             }
         }
 
-        return commentRespons;
+        return commentRespList;
     }
 
     @Transactional
@@ -198,5 +224,23 @@ public class CommentService {
         }
 
         return true;
+    }
+
+    // 유저 이름 암호화
+    private String encryptedUserName(String name){
+        // 이름이 세글자 이상일 때 암호화한다.
+        if(name ==null || name.length() <3) return name;
+
+        int nameLen = name.length();
+        // 가운데 2/3 지점을 *로 암호화한다.
+        // 가운데 지점이 제일 길게
+        int  middleLength = nameLen/3 + nameLen%3;
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(name.substring(0,nameLen/3));
+        for(int i = 0; i<middleLength; i++) sb.append('*');
+        sb.append(name.substring(nameLen/3 + middleLength));
+
+        return sb.toString();
     }
 }
