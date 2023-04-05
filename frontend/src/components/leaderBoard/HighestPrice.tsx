@@ -7,6 +7,8 @@ function numberFormat(price: number | null) {
   return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
 }
 
+
+
 const HighestPrice: React.FC<{ max: number; increase: number; animation: boolean }> = (props) => {
   const { max, increase, animation } = props;
   //   const [animation, setAnimation] = useState(false);

@@ -87,7 +87,7 @@ const StyledTopImg = styled.img`
 `;
 const StyledDiv = styled.div`
   position: absolute;
-  width: 100%;
+  width: 40%;
   box-sizing: border-box;
   margin-left: 1%;
 `;

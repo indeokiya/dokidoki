@@ -1,5 +1,4 @@
 import styles from './CloseButton.module.css';
-import styled from 'styled-components';
 import Button from '@mui/material/Button';
 const CloseButton:React.FC<{close:()=>void}> = (props) => {
     const {close} = props

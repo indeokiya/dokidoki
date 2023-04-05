@@ -97,7 +97,7 @@ const ProductInfo = ({
       .then((res) => {
         // 성공 로직
         // console.log('입찰 성공 res >> ', res);
-        enqueueSnackbar(`${numberFormat(highestPrice + priceSize)}에 입찰에 성공했습니다.`, {variant: 'info', anchorOrigin:{
+        enqueueSnackbar(`${numberFormat(highestPrice + priceSize)}원에 입찰에 성공했습니다.`, {variant: 'info', anchorOrigin:{
           horizontal:"center",
             vertical:"top"
         }});
