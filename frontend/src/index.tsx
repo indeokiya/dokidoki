@@ -20,6 +20,7 @@ import { RecoilRoot } from 'recoil';
 import GlobalFont from './styles/GlobalFont';
 import { SnackbarProvider } from 'notistack';
 
+
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
