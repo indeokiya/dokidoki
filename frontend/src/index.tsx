@@ -56,39 +56,40 @@ const router = createBrowserRouter([
         path: 'auction/update/:id',
         element: <AuctionUpdatePage />
       },
+      {
+        path: 'mypage',
+        element: <ProfilePage />,
+        children: [
+          {
+            path: '', //기본 페이지라 path가 없음 
+            element: <IngContentItemList />,
+          },
+          {
+            path: 'action-history',
+            element: <EndContentItemList />,
+          },
+          {
+            path: 'sale-item',
+            element: <IngContentItemList />,
+          },
+          {
+            path: 'sale-history',
+            element: <EndContentItemList />,
+          },
+          {
+            path: 'bookmark-list',
+            element: <IngContentItemList />,
+          },
+          {
+            path: 'alert-history',
+            element: <AlertItemList />,
+          },
+        ],
+      },
     ],
   },
 
-  {
-    path: '/mypage',
-    element: <ProfilePage />,
-    children: [
-      {
-        path: '', //기본 페이지라 path가 없음 
-        element: <IngContentItemList />,
-      },
-      {
-        path: 'action-history',
-        element: <EndContentItemList />,
-      },
-      {
-        path: 'sale-item',
-        element: <IngContentItemList />,
-      },
-      {
-        path: 'sale-history',
-        element: <EndContentItemList />,
-      },
-      {
-        path: 'bookmark-list',
-        element: <IngContentItemList />,
-      },
-      {
-        path: 'alert-history',
-        element: <AlertItemList />,
-      },
-    ],
-  },
+
   {
     path: '/test',
     element: <TestContainer />,
@@ -102,7 +103,9 @@ root.render(
     <SnackbarProvider maxSnack={5}>
     <GlobalFont />
     <QueryClientProvider client={queryClient}>
+    <SnackbarProvider maxSnack={10}>
       <RouterProvider router={router} ></RouterProvider>,
+     </SnackbarProvider>
     </QueryClientProvider>
     </SnackbarProvider>
   </RecoilRoot>,

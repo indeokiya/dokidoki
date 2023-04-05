@@ -3,7 +3,7 @@ import { AppBar, Avatar, Grid, IconButton, Tab, Tabs, Toolbar } from '@mui/mater
 import Typography from '@mui/material/Typography';
 import { useRecoilState } from 'recoil';
 import { myAlertMenuState } from 'src/store/userInfoState';
-import { useState, useEffect } from 'react';
+import Box from '@mui/material/Box';
 
 const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
 
@@ -15,10 +15,10 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
 
   return (
     <React.Fragment>
-      <AppBar color="primary" position="sticky" elevation={0}>
+      <Box sx={{backgroundColor:"#3A77EE", color:"white", paddingBottom:"1rem"}}>
         <Toolbar>
           <Grid container spacing={1} alignItems="center">
-            <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item></Grid>
+            
              
             <Grid item >
             <Typography variant='h5' color={"inherit"} sx={{marginTop:"30px", marginLeft:"20px"}}> {props.selectedMenu}</Typography>
@@ -43,7 +43,7 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
             </Grid>
           </Grid>
         </Toolbar>
-      </AppBar>
+      </Box>
 
       <AppBar component="div" position="sticky" elevation={0} sx={{ zIndex: 0 }}>
        
