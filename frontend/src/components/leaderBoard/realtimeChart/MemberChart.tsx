@@ -37,9 +37,12 @@ const [data, setData] = useState({
     datasets: []
 });
 
-const lineBorderColor = ['rgba(255, 0, 0, 0.5)', 'rgba(240, 193, 60, 0.5)', 'rgba(87, 217, 54, 0.5)'];
-// const borderColor = ['#E64D40', '#F0C13C', '#57D936'];
-const lineBackgroundColor = ['rgba(255, 0, 0, 0.1)', 'rgba(240, 193, 60, 0.1)', 'rgba(87, 217, 54, 0.1)'];
+// const lineBorderColor = ['rgba(255, 0, 0, 0.5)', 'rgba(240, 193, 60, 0.5)', 'rgba(87, 217, 54, 0.5)'];
+// const lineBackgroundColor = ['rgba(255, 0, 0, 0.1)', 'rgba(240, 193, 60, 0.1)', 'rgba(87, 217, 54, 0.1)'];
+
+
+const lineBorderColor = ['rgba(255, 99, 132, 0.7)', 'rgba(255, 205, 86, 0.7)', 'rgba(75, 192, 192, 0.7)'];
+const lineBackgroundColor = ['rgba(255, 99, 132, 0.3)', 'rgba(255, 205, 86, 0.3)', 'rgba(75, 192, 192, 0.3)'];
 
 const updateData = () => {
     const newDatasets = [];
