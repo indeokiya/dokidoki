@@ -48,8 +48,14 @@ const updateData = () => {
     const newDatasets = [];
     for (let i = 0; i < display_datas.length; i++) {
         let init_data = display_datas[i];
+        let modified_name:string = init_data.name
+        if (modified_name && modified_name.length >= 4) {
+            modified_name = modified_name.substring(0, 3);
+        }
+
+
         let dataset = {
-            label: init_data.name,
+            label: modified_name,
             data: init_data.bid_infos,
             stepped: 'after',
             pointRadius: 3
@@ -129,7 +135,7 @@ const options = {
                 boxHeight: 10,
                 font: {
                     size: fontSize + 4,
-                    weight: 'bold'
+                    // weight: 'bold'
                 }
             },
         }
