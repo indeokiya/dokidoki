@@ -7,6 +7,7 @@ spring:
     auto-offset-reset: latest
     num-stream-threads: 1
     commit-interval-ms: 5000
+    dest-topic-name: stream-result
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.apache.kafka.common.serialization.StringSerializer

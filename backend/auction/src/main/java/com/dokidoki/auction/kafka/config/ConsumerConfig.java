@@ -73,4 +73,25 @@ public class ConsumerConfig {
         factory.getContainerProperties().setPollTimeout(3000);
         return factory;
     }
+
+    public ConsumerFactory<String, String> streamConsumerFactory(String groupId) {
+        Map<String, Object> props = new HashMap<>();
+        props.put(org.apache.kafka.clients.consumer.ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
+        props.put(org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG, groupId);
+        props.put(ErrorHandlingDeserializer.KEY_DESERIALIZER_CLASS, StringDeserializer.class);
+        props.put(ErrorHandlingDeserializer.VALUE_DESERIALIZER_CLASS, StringDeserializer.class);
+        return new DefaultKafkaConsumerFactory<>(props,
+                new StringDeserializer(), // key
+                new StringDeserializer()); // value
+    }
+
+    @Bean
+    public ConcurrentKafkaListenerContainerFactory<String, String> streamKafkaListenerContainerFactory() {
+        ConcurrentKafkaListenerContainerFactory factory = new ConcurrentKafkaListenerContainerFactory();
+        factory.setConsumerFactory(streamConsumerFactory("stream-group"));
+        factory.setConcurrency(3);
+        factory.getContainerProperties().setPollTimeout(3000);
+        return factory;
+    }
+
 }
