@@ -233,7 +233,6 @@ const ProductPage = () => {
                 seller_name={seller_name}
                 leaderBoardData={leaderBoardData}
                 />
-                
             </Grid>
           </Grid>
                 </Grid>

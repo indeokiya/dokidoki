@@ -130,7 +130,7 @@ const MypageNavigator: React.FC<{
 
   return (
     <Drawer variant="permanent" {...other}>
-      <List disablePadding>
+      <List disablePadding style={{overflow: "hidden"}}>
         <ListItem
           sx={{ ...item, ...itemCategory, fontSize: 22 }}
           onClick={() => {

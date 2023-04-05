@@ -1,0 +1,16 @@
+spring:
+  application:
+    id: click-bid-counter
+  kafka:
+    bootstrap-server: 3.35.49.175:9092
+    #metrics-recording-level: INFO
+    auto-offset-reset: latest
+    num-stream-threads: 1
+    commit-interval-ms: 5000
+    dest-topic-name: stream-result
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      wait-timeout: 60*1000 # 60 seconds
+    streams:
+      application-id: streaming

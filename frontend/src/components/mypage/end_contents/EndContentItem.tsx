@@ -61,7 +61,7 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
               (+ {translatePrice()})
             </Typography>
             <Typography variant="h4" sx={{ textAlign: 'end' }}>
-              {numberFormat(auctionData.final_price)}
+              {auctionData.final_price ? numberFormat(auctionData.final_price) : "미판매 종료"}
             </Typography>
           </Grid>
         </Grid>

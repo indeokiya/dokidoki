@@ -3,8 +3,14 @@ import {Chart as ChartJS, CategoryScale, LinearScale, TimeScale, PointElement, L
 import 'chartjs-adapter-moment';
 import { Line } from 'react-chartjs-2';
 import { useState, useEffect } from 'react';
+import './ChartFont.css'
+
+
 
 ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, BarElement, LineElement, Title, Tooltip, Legend);
+ChartJS.defaults.font.family = 'Noto Sans'
+// ChartJS.defaults.borderColor = '#D3D3D3'
+// ChartJS.defaults.borderColor = '#808080'
 
 type Props = {
     initial_datas: Array<any>,
@@ -31,8 +37,12 @@ const [data, setData] = useState({
     datasets: []
 });
 
-const borderColor = ['#E64D40', '#F0C13C', '#57D936'];
-const backgroundColor = ['#FFAFA1', '#EBD386', '#AEFF9E'];
+// const lineBorderColor = ['rgba(255, 0, 0, 0.5)', 'rgba(240, 193, 60, 0.5)', 'rgba(87, 217, 54, 0.5)'];
+// const lineBackgroundColor = ['rgba(255, 0, 0, 0.1)', 'rgba(240, 193, 60, 0.1)', 'rgba(87, 217, 54, 0.1)'];
+
+
+const lineBorderColor = ['rgba(255, 99, 132, 0.7)', 'rgba(255, 205, 86, 0.7)', 'rgba(75, 192, 192, 0.7)'];
+const lineBackgroundColor = ['rgba(255, 99, 132, 0.3)', 'rgba(255, 205, 86, 0.3)', 'rgba(75, 192, 192, 0.3)'];
 
 const updateData = () => {
     const newDatasets = [];
@@ -42,11 +52,11 @@ const updateData = () => {
             label: init_data.name,
             data: init_data.bid_infos,
             stepped: 'after',
-            pointRadius: 2
+            pointRadius: 3
         }
         if (i < 3) {
-            dataset.borderColor = borderColor[i]
-            dataset.backgroundColor = backgroundColor[i]
+            dataset.borderColor = lineBorderColor[i]
+            dataset.backgroundColor = lineBackgroundColor[i]
         }
         newDatasets.push(dataset)
     
@@ -58,27 +68,55 @@ useEffect(() => {
     updateData()
 }, [initial_datas])
 
+const fontSize = 15;
+const borderWidth = 4;
+const borderColor = '#D3D3D3'
+// const borderColor = '#808080'
 
 const options = {
     scales: {
         y: {
             grid: {
+                lineWidth: 2,
+                color: borderColor
                 // display: false
             },
             ticks: {
-                // callback: function(value, index, ticks) {
-                    
-                //     return `${value} P`
-                // }
-            }
+                font: {
+                    size: fontSize
+                },
+                callback: function(value, index, ticks) {                    
+                    return  value?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+                }
+            },
+            border: {
+                width: borderWidth,
+                color: borderColor
+            },
         },
         x: {
             type: 'time',
             time: {
                 format: timeFormat,
+                displayFormats: {
+                    // millisecond: 'HH:mm:ss',
+                    // second: 'HH:mm:ss',
+                    // minute: 'HH:mm:ss',
+                    // hour: 'MM/DD HH'
+                },
+                // unit: 'second'
             },
             grid: {
-                display: false
+                display: false,
+            },
+            ticks: {
+                font: {
+                    size: fontSize
+                }
+            },
+            border: {
+                width: borderWidth,
+                color: borderColor
             }
         },
     },
@@ -88,7 +126,11 @@ const options = {
             align: 'start',
             labels: {
                 boxWidth: 10,
-                boxHeight: 8,
+                boxHeight: 10,
+                font: {
+                    size: fontSize + 4,
+                    weight: 'bold'
+                }
             },
         }
     }

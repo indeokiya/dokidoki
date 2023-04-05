@@ -1,6 +1,7 @@
 package com.dokidoki.bid.kafka.service;
 
 import com.dokidoki.bid.api.service.BiddingService;
+import com.dokidoki.bid.api.service.RealtimeInterestService;
 import com.dokidoki.bid.kafka.dto.KafkaAuctionRegisterDTO;
 import com.dokidoki.bid.kafka.dto.KafkaAuctionUpdateDTO;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class KafkaBidConsumer {
 
     private final BiddingService biddingService;
+    private final RealtimeInterestService realtimeInterestService;
 
     @KafkaListener(topics = "${spring.kafka.auctionRegisterConfig.topic}", containerFactory = "auctionRegisterKafkaListenerContainerFactory")
     public void auctionRegisterListener(
@@ -46,5 +48,12 @@ public class KafkaBidConsumer {
         });
 
         biddingService.updatePriceSize(dto);
+    }
+
+    @KafkaListener(topics = "${spring.kafka.streamConfig.topic}", containerFactory = "streamKafkaListenerContainerFactory")
+    public void streamListener(@Payload String message) {
+        log.info("Received stream message: [{}]", message);
+        realtimeInterestService.save(message);
+        // implement here
     }
 }
