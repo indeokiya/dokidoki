@@ -55,6 +55,7 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const selectProduct = (event: any) => {
     const { product_id, product_name } = products[event.target.id]
     dataRef.current.product_id = product_id  // 제품 ID 설정
+    setIsCategoryError(false)  // 카테고리가 바뀌면 카테고리 error 테두리 해제
     setProductName(product_name)  // 제품명 state 갱신
     setProducts([])  // 검색결과 초기화
     setShowResult(false)  // 검색결과 숨기기
@@ -70,7 +71,7 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
     }    
     // 카테고리 입력 시 debounce 사용하여 제품 검색 API 호출
     else if (name === "category") {
-      setIsCategoryError(false)  // 카테고리가 바뀌면 카테고리 error 테두리 해제
+      dataRef.current.product_id = -1  // 제품 ID 초기화
       setProductName(value)  // 사용자가 입력한 제품명을 state에 반영
       setProducts([])  // 기존 검색 정보 초기화
       setShowResult(false)  // 검색결과 숨기기
