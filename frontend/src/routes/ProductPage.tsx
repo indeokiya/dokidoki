@@ -22,7 +22,6 @@ import { useNavigate } from 'react-router-dom';
 import { SocketBidData } from 'src/datatype/datatype';
 import ProductPageSceleton from 'src/components/sceleton/ProductPageSceleton';
 import errorImg from "../assets/image/error_page.png"
-import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
 import { State } from 'react-daum-postcode';
 
 const ProductPage = () => {
@@ -215,7 +214,7 @@ const ProductPage = () => {
             </Grid>
             <Grid item xs={6}>
               {/* 제품 정보 */}
-              <SnackbarProvider maxSnack={5}>
+              
               <ProductInfo
                 setHighestPrice={setHighestPrice}
                 auction_title={auction_title}
@@ -234,7 +233,6 @@ const ProductPage = () => {
                 seller_name={seller_name}
                 leaderBoardData={leaderBoardData}
                 />
-                </SnackbarProvider>
             </Grid>
           </Grid>
           <Divider />
