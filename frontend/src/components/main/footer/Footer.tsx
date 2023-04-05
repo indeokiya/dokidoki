@@ -5,7 +5,7 @@ import Stack from '@mui/material/Stack';
 import Avatar from '@mui/material/Avatar';
 import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
-const TestContainer = () => {
+const Footer = () => {
   const member = [
     {
       name: '전인덕',
@@ -38,7 +38,7 @@ const TestContainer = () => {
       <Grid
         container
         width={'100%'}
-        sx={{ border: '1px solid black', backgroundColor: '#3A77EE', padding: '1rem' }}
+        sx={{ backgroundColor: '#3A77EE', padding: '1rem' }}
         gap={2}
       >
         <Grid item xs={12} textAlign="center">
@@ -127,7 +127,7 @@ const TestContainer = () => {
   );
 };
 
-export default TestContainer;
+export default Footer;
 
 const StyledLink = styled.a`
   color: white;

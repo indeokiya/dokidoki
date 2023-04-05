@@ -18,6 +18,7 @@ import AlertItemList from './components/mypage/alert_contents/AlertItemList';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { RecoilRoot } from 'recoil';
 import GlobalFont from './styles/GlobalFont';
+import { SnackbarProvider} from 'notistack';
 
 const queryClient = new QueryClient();
 
@@ -100,7 +101,9 @@ root.render(
   <RecoilRoot>
     <GlobalFont />
     <QueryClientProvider client={queryClient}>
+    <SnackbarProvider maxSnack={10}>
       <RouterProvider router={router} ></RouterProvider>,
+     </SnackbarProvider>
     </QueryClientProvider>
   </RecoilRoot>,
 

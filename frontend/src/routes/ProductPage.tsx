@@ -215,7 +215,7 @@ const ProductPage = () => {
             </Grid>
             <Grid item xs={6}>
               {/* 제품 정보 */}
-              <SnackbarProvider maxSnack={5}>
+              
               <ProductInfo
                 setHighestPrice={setHighestPrice}
                 auction_title={auction_title}
@@ -234,7 +234,7 @@ const ProductPage = () => {
                 seller_name={seller_name}
                 leaderBoardData={leaderBoardData}
                 />
-                </SnackbarProvider>
+                
             </Grid>
           </Grid>
           <Divider />
