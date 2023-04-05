@@ -76,10 +76,10 @@ const AfterLoginMenu = () => {
 
   //컴포넌트 내부에 사용
   const { enqueueSnackbar } = useSnackbar(); //for alert stack
-  // enqueueSnackbar('현재 최고가격이 갱신되어 입찰에 실패했습니다.', {variant: "info", anchorOrigin:{
-  //   horizontal:"center",
-  //   vertical:"top"
-  // }})
+
+  function numberFormat(price: number | null) {
+    return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+  }
 
    //소캣 연결 함수
    const connect = () => {
@@ -100,14 +100,14 @@ const AfterLoginMenu = () => {
 
             // 구매자가 돈 지불 성공 알림
             if(data.tradeSuccess){
-              enqueueSnackbar(`${data.productName} 판매 성공, 획득 포인트 : +${data.earnedPoint}`, {variant: "success", anchorOrigin:{
+              enqueueSnackbar(`${data.productName} 판매 성공, 획득 포인트 : +${numberFormat(data.earnedPoint)}`, {variant: "success", anchorOrigin:{
                 horizontal:"center",
                 vertical:"top"
               }})
             }else{  // 구매자가 수수료 지급 혹은 정지
               // 수수료 획득 알림
               if(data.earnedPoint){
-                enqueueSnackbar(`${data.productName} ${data.message} 획득 포인트 : +${data.earnedPoint}`, {variant: "info", anchorOrigin:{
+                enqueueSnackbar(`${data.productName} ${data.message} 획득 포인트 : +${numberFormat(data.earnedPoint)}`, {variant: "info", anchorOrigin:{
                   horizontal:"center",
                   vertical:"top"
                 }})
@@ -120,7 +120,7 @@ const AfterLoginMenu = () => {
             }
           }else if(data.type === "BUYER"){    // 구매자
             console.log("구매 성공")
-            enqueueSnackbar(`${data.productName} 구매 성공, 포인트 감소 : ${data.earnedPoint}`, {variant: "success", anchorOrigin:{
+            enqueueSnackbar(`${data.productName} 구매 성공, 포인트 감소 : ${numberFormat(data.earnedPoint)}`, {variant: "success", anchorOrigin:{
               horizontal:"center",
               vertical:"top"
             }})
@@ -130,7 +130,7 @@ const AfterLoginMenu = () => {
             Logout();
           }else if(data.type === "PENALTY"){  // 구매자 수수료 감소 알림
             console.log("패널티")
-            enqueueSnackbar(`${data.productName} ${data.message} 감소 포인트 : ${data.earnedPoint}`, {variant: "error", anchorOrigin:{
+            enqueueSnackbar(`${data.productName} ${data.message} 감소 포인트 : ${numberFormat(data.earnedPoint)}`, {variant: "error", anchorOrigin:{
               horizontal:"center",
               vertical:"top"
             }})
