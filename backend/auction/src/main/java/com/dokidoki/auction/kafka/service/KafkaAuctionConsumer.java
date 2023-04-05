@@ -38,7 +38,6 @@ public class KafkaAuctionConsumer {
     public void bidListener(
             @Payload KafkaBidDTO bid,
             @Headers MessageHeaders headers) {
-        //System.out.println("Received bid message : " + bid);
         log.info("Received bid message: [{}]", bid);
         headers.keySet().forEach(key -> {
             log.info("header | key: [{}] value: [{}]", key, headers.get(key));
@@ -46,4 +45,12 @@ public class KafkaAuctionConsumer {
         // 최고가 갱신
         auctionService.updateHighestPrice(bid.getAuctionId(), bid.getHighestPrice());
     }
+
+    @KafkaListener(topics = "${spring.kafka.streamConfig.topicName}", containerFactory = "streamKafkaListenerContainerFactory")
+    public void streamListener(@Payload String message) {
+        log.info("Received stream message: [{}]", message);
+
+        // implement here
+    }
+
 }

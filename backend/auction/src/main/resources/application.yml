@@ -50,6 +50,8 @@ spring:
       topic: auction.end
     bidConfig:
       topic: bid
+    streamConfig:
+      topic: stream-result
 
 #logging:
 #  level:

@@ -9,17 +9,24 @@ import org.apache.kafka.streams.StreamsBuilder;
 import org.apache.kafka.streams.kstream.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class LogCounter {
 
     @Autowired
     @Qualifier("KafkaStreamsConfigProps")
     private StreamsBuilder builder;
+
+    @Value("${spring.kafka.dest-topic-name}")
+    private String destTopicName;
 
     // final Serde<JsonNode> jsonSerde = Serdes.serdeFrom(new JsonSerializer(), new JsonDeserializer());
 
@@ -28,7 +35,7 @@ public class LogCounter {
         KStream<String, String> clicks = builder.stream("aggregate.click.log")
                 .map(((key, value) -> {
                     try {
-                        System.out.println("click | key >> " + key + ", value >> " + value + ", getId >> " + getAuctionIdByJson(String.valueOf(value)));
+//                        System.out.println("click | key >> " + key + ", value >> " + value + ", getId >> " + getAuctionIdByJson(String.valueOf(value)));
                         return KeyValue.pair(getAuctionId(String.valueOf(key)), "click");
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
@@ -60,22 +67,20 @@ public class LogCounter {
 
         KStream<String, String> clickResultStream = clickTable.toStream()
                 .map(((windowedkey, value) -> {
-//                    System.out.println("resultClickStream | windowedkey >> " + windowedkey + ", val >> " + value);
                     String resultKey = windowedkey.key();
-                    long resultValue = value;
-                    return KeyValue.pair(resultKey, "click" + " " + windowedkey + " " + resultValue);
+                    return KeyValue.pair(resultKey, "click" + " " + windowedkey.key() + " " + value);
                 }));
 
         KStream<String, String> bidResultStream = bidTable.toStream()
                 .map(((windowedkey, value) -> {
-                    System.out.println("resultbidStream | windowedkey >> " + windowedkey + ", val >> " + value);
                     String resultKey = windowedkey.key();
-                    long resultValue = value;
-                    return KeyValue.pair(resultKey, "bid" + " " + windowedkey + " " + resultValue);
+//                    log.info("bidresult [{}] [{}]", windowedkey, windowedkey.key());
+                    System.out.println("bidResult " + windowedkey + " " + windowedkey.key());
+                    return KeyValue.pair(resultKey, "bid" + " " + windowedkey.key() + " " + value);
                 }));
 
-        clickResultStream.to("test-result", Produced.with(Serdes.String(), Serdes.String()));
-        bidResultStream.to("test-result", Produced.with(Serdes.String(), Serdes.String()));
+        clickResultStream.to(destTopicName, Produced.with(Serdes.String(), Serdes.String()));
+        bidResultStream.to(destTopicName, Produced.with(Serdes.String(), Serdes.String()));
     }
 
     private static String getAuctionIdByJson(String value) throws JsonProcessingException {
