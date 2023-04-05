@@ -16,76 +16,74 @@ const ProductImages = ({ images, end_time }: Props) => {
   const [index, setIndex] = useState(0);
 
   return (
-    <div>
+    <Grid
+      container
+      spacing={1}
+      sx={{
+        margin: '0px',
+        height: '100%',
+        // border: '1px solid grey',
+        borderRadius: '10px',
+        padding: '10px',
+        boxSizing: 'border-box',
+        // boxShadow: '1px 1px `10px grey',
+      }}
+    >
       <Grid
-        container
-        spacing={1}
-        sx={{
-          height: '738px',
-          border: '1px solid #dddddd',
-          borderRadius: '10px',
-          padding: '10px',
-          boxSizing: 'border-box',
-          boxShadow: '1px 1px 5px #dddddd',
-        }}
+        item
+        xs={12}
+        sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+        height={'550px'}
       >
-        <Grid
-          item
-          xs={12}
-          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}
-          height={'550px'}
-        >
-          <ImgBox>
-            {images.length === 0 ? (
-              <StyledBigImg src={blank_img} />
-            ) : (
-              <StyledBigImg src={images[index]} />
-            )}
-          </ImgBox>
-        </Grid>
-        <Grid item xs={12}>
-          <Grid container justifyContent="center" alignItems="center">
-            {images.map((data, i) => {
-              return (
-                <Grid
-                  key={i}
-                  item
-                  xs={1}
-                  onClick={() => {
-                    setIndex(i);
-                  }}
-                >
-                  <IconButton>
-                    {i === index ? (
-                      <RadioButtonCheckedIcon color="primary" fontSize="small" />
-                    ) : (
-                      <RadioButtonUncheckedIcon fontSize="small" />
-                    )}
-                  </IconButton>
-                </Grid>
-              );
-            })}
-          </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <StyledTimer>
-            <Timer end_time={end_time} />
-          </StyledTimer>
+        <ImgBox>
+          {images.length === 0 ? (
+            <StyledBigImg src={blank_img} />
+          ) : (
+            <StyledBigImg src={images[index]} />
+          )}
+        </ImgBox>
+      </Grid>
+      <Grid item xs={12}>
+        <Grid container justifyContent="center" alignItems="center">
+          {images.map((data, i) => {
+            return (
+              <Grid
+                key={i}
+                item
+                xs={1}
+                onClick={() => {
+                  setIndex(i);
+                }}
+              >
+                <IconButton>
+                  {i === index ? (
+                    <RadioButtonCheckedIcon color="primary" fontSize="small" />
+                  ) : (
+                    <RadioButtonUncheckedIcon fontSize="small" />
+                  )}
+                </IconButton>
+              </Grid>
+            );
+          })}
         </Grid>
       </Grid>
-    </div>
+      <Grid item xs={12}>
+        <StyledTimer>
+          <Timer end_time={end_time} />
+        </StyledTimer>
+      </Grid>
+    </Grid>
   );
 };
 
 export default ProductImages;
 const ImgBox = styled.div`
-position:relative;
+  position: relative;
   width: 100%;
   height: 100%;
   padding: 5% 0;
   box-sizing: border-box;
   text-align: center;
-
 `;
 
 const StyledTimer = styled.div`
@@ -100,7 +98,7 @@ const StyledTimer = styled.div`
 `;
 
 const StyledBigImg = styled.img`
-width:100%;
-height:100%;
-object-fit:cover;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 `;

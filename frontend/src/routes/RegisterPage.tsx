@@ -131,7 +131,9 @@ const RegisterPage = () => {
 
   const cancel = () => {
     // 뒤로가기 로직
-    navigate('/auction');
+    if(window.confirm("정말 취소하시겠습니까?")){
+      navigate('/auction');
+    }
   };
 
   return (

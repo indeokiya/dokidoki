@@ -1,6 +1,5 @@
 /* CSS 코드 */
-.textContainer {
-    font-size: 24px;
+.largeText {
     font-family: sans-serif;
     white-space: nowrap;
     overflow: hidden;
@@ -15,7 +14,21 @@
       width: 100%;
     }
   }
-  
-  .none{
 
+  .smallText{
+    font-family: sans-serif;
+    white-space: nowrap;
+    overflow: hidden;
+    animation: appear 0.3s ease
   }
+
+ @keyframes appear {
+  from {
+    transform: translateY(-35px);
+  }
+  to{
+    transform: translateY(0px);
+  }
+}
+ 
+.none{}

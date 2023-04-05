@@ -49,21 +49,29 @@ const ProductLeaderBoard: React.FC<{
               {leaderBoardData &&
                 leaderBoardData.map((data: any, i: number) => {
                   let isBig = i === 0;
+                  const styleFunc =() =>{
+                    if(isBig){
+                      return animation? styles.largeText : styles.none
+                    }else{
+                      return animation? styles.smallText : styles.none
+                    }
+                  }
                   return (
-                    <Grid item xs={12} key={i} sx={{ marginBottom: '0.6rem' }}>
-                      <Box className={animation ? styles.textContainer : styles.none}>
-                        <Typography variant="caption" sx={{ fontSize: isBig ?  '1.2rem' : "1rem" }}>
+                    <Grid item xs={12} key={i} sx={{ marginBottom: '0.5rem' }}>
+                      {/* <Box className={animation ? styles.textContainer : styles.none} > */}
+                      <Box className={styleFunc()}>
+                        <Typography variant="caption" sx={{ fontSize:"1.2rem" }}>
                           [
                           {data.bid_time.length > 10
                             ? data.bid_time.substring(11, 19)
                             : data.bid_time}
                           ]{' '}
                         </Typography>
-                        <Typography variant="caption" color="primary" sx={{ fontSize: isBig ?  '1.2rem' : "1rem" }}>
-                          {data.name}
+                        <Typography variant="caption" color="primary" sx={{ fontSize:"1.2rem" }}>
+                          {data.name.substr(0, data.name.length >3 ? 3 : data.name.length)}
                         </Typography>
                         <Typography variant="caption">님이 </Typography>
-                        <Typography variant="caption" color="error" sx={{ fontSize:isBig ?  '1.2rem' : "1rem" }}>
+                        <Typography variant="caption" color="error" sx={{ fontSize:"1.2rem" }}>
                           {numberFormat(data.bid_price)}
                         </Typography>
                         <Typography variant="caption">에 입찰하셨습니다.</Typography>
