@@ -22,8 +22,6 @@ import { useNavigate } from 'react-router-dom';
 import { SocketBidData } from 'src/datatype/datatype';
 import ProductPageSceleton from 'src/components/sceleton/ProductPageSceleton';
 import errorImg from "../assets/image/error_page.png"
-import { SnackbarProvider, VariantType, useSnackbar } from 'notistack';
-import { State } from 'react-daum-postcode';
 
 const ProductPage = () => {
   const [reset, SetReset] = useState(true);
