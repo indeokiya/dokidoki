@@ -29,7 +29,8 @@ const StyledRankLabel = styled.div<{
 }>`
   display: inline-block;
   color: #ECF4FF;
-  font-size: 2rem;
+  font-size: 20px;
+ 
   font-weight: bold;
   ${({ bias }) => bias === "left"
     ? "border-right: 3px solid #ECF4FF;"

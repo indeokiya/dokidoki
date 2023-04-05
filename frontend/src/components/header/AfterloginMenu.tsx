@@ -210,7 +210,7 @@ const AfterLoginMenu = () => {
           <MenuItem
             onClick={() => {
               handleClose();
-              navigate('/mypage');
+              navigate('/mypage/auction-item');
             }}
           >
             Mypage

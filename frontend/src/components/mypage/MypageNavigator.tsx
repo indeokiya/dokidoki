@@ -49,18 +49,20 @@ const MypageNavigator: React.FC<{
 
   const [menu, setMenu] = useRecoilState(myPageMenuState);
 
+ 
+
   const [categories, setCategories] = useState([
     {
       id: '입찰 중',
       icon: <ShoppingCartOutlinedIcon />,
       active: menu.menu === '입찰 중',
-      path: '',
+      path: 'auction-item',
     },
     {
       id: '구매 내역',
       icon: <ShoppingCartIcon />,
       active: menu.menu === '구매 내역',
-      path: 'action-history',
+      path: 'auction-history',
     },
     {
       id: '판매 중',

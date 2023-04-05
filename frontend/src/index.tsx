@@ -62,11 +62,11 @@ const router = createBrowserRouter([
         element: <ProfilePage />,
         children: [
           {
-            path: '', //기본 페이지라 path가 없음 
+            path: 'auction-item', //기본 페이지라 path가 없음 
             element: <IngContentItemList />,
           },
           {
-            path: 'action-history',
+            path: 'auction-history',
             element: <EndContentItemList />,
           },
           {

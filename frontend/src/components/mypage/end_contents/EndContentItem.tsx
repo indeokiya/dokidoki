@@ -32,7 +32,7 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
     <React.Fragment>
       <Paper elevation={3} sx={{ minWidth: '660px' }}>
         <Grid container mx={1}>
-          <Grid item xs={2} maxHeight={'150px'} alignItems={'center'}>
+          <Grid item xs={2} maxHeight={'100%'} alignItems={'center'} p={1} mr={1}>
             <StyledImg src={!auctionData.auction_image_url?imgSrc : auctionData.auction_image_url}></StyledImg>
           </Grid>
           <Grid item xs={4} py={3}>

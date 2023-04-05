@@ -7,32 +7,7 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import { useRecentPopularInfo } from 'src/hooks/recentPopularInfo';
 const TestContainer = () => {
-  const member = [
-    {
-      name: '전인덕',
-      link: 'https://github.com/indeokiya',
-    },
-    {
-      name: '임혜진',
-      link: 'https://github.com/hjlim7831',
-    },
-    {
-      name: '윤재휘',
-      link: 'https://github.com/HwiHwi523',
-    },
-    {
-      name: '신민혜',
-      link: '',
-    },
-    {
-      name: '오종석',
-      link: 'https://github.com/jongseok-oh',
-    },
-    {
-      name: '김범식',
-      link: 'https://github.com/kimbeomsick',
-    },
-  ];
+  
 
 
 

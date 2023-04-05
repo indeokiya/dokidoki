@@ -18,7 +18,6 @@ import BidButton from './bidButton/BidButton';
 import ProductLeaderBoard from './ProductLeaderBoard';
 import { SocketBidData } from 'src/datatype/datatype';
 import { useSnackbar } from 'notistack';
-import Button from '@mui/material/Button';
 import CloseButton from './closeButton/CloseButton';
 
 function numberFormat(price: number | null) {
@@ -65,16 +64,12 @@ const ProductInfo = ({
 }: Props) => {
   const navigate = useNavigate();
 
-
   const { enqueueSnackbar } = useSnackbar(); //for alert stack
   const dataLeft = ['작성자', '시작가격', '경매단위', '제품명'];
   const userInfo = useRecoilValue(userInfoState);
   const [bookmark, setBookmark] = useState(is_my_interest);
 
-
   const bid = () => {
-
-   
     if (!userInfo.is_logged_in) {
       alert('먼저 로그인해주세요.');
       navigate('/login');
@@ -82,7 +77,7 @@ const ProductInfo = ({
 
     console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
     if (seller_id === userInfo.user_id) {
-      enqueueSnackbar(`내 경매는 입찰할 수 없습니다.`, {variant: 'info'});
+      enqueueSnackbar(`내 경매는 입찰할 수 없습니다.`, { variant: 'info' });
       alert('내 경매는 입찰할 수 없습니다.');
       return;
     }
@@ -97,10 +92,13 @@ const ProductInfo = ({
       .then((res) => {
         // 성공 로직
         // console.log('입찰 성공 res >> ', res);
-        enqueueSnackbar(`${numberFormat(highestPrice + priceSize)}원에 입찰에 성공했습니다.`, {variant: 'info', anchorOrigin:{
-          horizontal:"center",
-            vertical:"top"
-        }});
+        enqueueSnackbar(`${numberFormat(highestPrice + priceSize)}에 입찰에 성공했습니다.`, {
+          variant: 'info',
+          anchorOrigin: {
+            horizontal: 'center',
+            vertical: 'top',
+          },
+        });
         setHighestPrice(highestPrice + priceSize);
       })
       .catch((err) => {
@@ -108,25 +106,37 @@ const ProductInfo = ({
         console.log(err);
         const error_message = err.response.data.message;
         if (error_message === 'Different Highest Price') {
-          enqueueSnackbar('현재 최고가격이 갱신되어 입찰에 실패했습니다.', {variant: 'error', anchorOrigin:{
-            horizontal:"center",
-            vertical:"top"
-          }})
+          enqueueSnackbar('현재 최고가격이 갱신되어 입찰에 실패했습니다.', {
+            variant: 'error',
+            anchorOrigin: {
+              horizontal: 'center',
+              vertical: 'top',
+            },
+          });
         } else if (error_message === 'Different Price Size') {
-          enqueueSnackbar('경매 단위가 수정되었습니다. 다시 시도하세요.', {variant: 'error', anchorOrigin:{
-            horizontal:"center",
-            vertical:"top"
-          }})
+          enqueueSnackbar('경매 단위가 수정되었습니다. 다시 시도하세요.', {
+            variant: 'error',
+            anchorOrigin: {
+              horizontal: 'center',
+              vertical: 'top',
+            },
+          });
         } else if (error_message === 'Already Ended') {
-          enqueueSnackbar('이미 종료된 경매입니다.', {variant: 'error', anchorOrigin:{
-            horizontal:"center",
-            vertical:"top"
-          }})
+          enqueueSnackbar('이미 종료된 경매입니다.', {
+            variant: 'error',
+            anchorOrigin: {
+              horizontal: 'center',
+              vertical: 'top',
+            },
+          });
         } else {
-          enqueueSnackbar('알 수 없는 이유로 입찰에 실패했습니다.', {variant: 'error', anchorOrigin:{
-            horizontal:"center",
-            vertical:"top"
-          }})
+          enqueueSnackbar('알 수 없는 이유로 입찰에 실패했습니다.', {
+            variant: 'error',
+            anchorOrigin: {
+              horizontal: 'center',
+              vertical: 'top',
+            },
+          });
         }
       });
   };
@@ -138,14 +148,17 @@ const ProductInfo = ({
     }
     console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
     if (seller_id !== userInfo.user_id) {
-      enqueueSnackbar('종료할 수 없습니다. 내 경매가 아닙니다.', {variant: 'error', anchorOrigin:{
-        horizontal:"center",
-        vertical:"top"
-      }})
+      enqueueSnackbar('종료할 수 없습니다. 내 경매가 아닙니다.', {
+        variant: 'error',
+        anchorOrigin: {
+          horizontal: 'center',
+          vertical: 'top',
+        },
+      });
       return;
     }
 
-    if (!window.confirm("정말로 경매를 종료하시겠습니까?")) {
+    if (!window.confirm('정말로 경매를 종료하시겠습니까?')) {
       return;
     }
     const axios = bidAPI;
@@ -155,13 +168,13 @@ const ProductInfo = ({
         // 성공 로직
         console.log('경매 종료 성공 res >> ', res);
         alert(`경매를 종료했습니다.`);
-        navigate("/auction")
+        navigate('/auction');
       })
       .catch((err) => {
         // 실패 로직
         console.log(err);
         const error_message = err?.response?.data?.message;
-        alert(error_message)
+        alert(error_message);
       });
   };
 
@@ -205,8 +218,11 @@ const ProductInfo = ({
     <StyledBox>
       <StyeldDiv>
         <Tooltip title="수정">
-          <IconButton onClick={updateAuction}  sx={{ display: userInfo.user_id === seller_id ? '' : 'none' }} >
-            <EditOutlinedIcon/>
+          <IconButton
+            onClick={updateAuction}
+            sx={{ display: userInfo.user_id === seller_id ? '' : 'none' }}
+          >
+            <EditOutlinedIcon />
           </IconButton>
         </Tooltip>
         <Tooltip title="찜하기">
@@ -269,15 +285,10 @@ const ProductInfo = ({
           offerPrice={offer_price}
           leaderBoardData={leaderBoardData}
         ></ProductLeaderBoard>
-
       </Grid>
       <Stack spacing={2} direction="row" mt={3}>
-        {(seller_id === userInfo.user_id) &&(
-          <CloseButton close={close}/>
-        )}
-        {(seller_id !== userInfo.user_id) && (
-        <BidButton bid={bid} />
-        )}
+        {seller_id === userInfo.user_id && <CloseButton close={close} />}
+        {seller_id !== userInfo.user_id && <BidButton bid={bid} />}
       </Stack>
     </StyledBox>
   );

@@ -59,6 +59,7 @@ const Footer = () => {
                 <Tooltip
                   key={i}
                   title={data.name + '의 깃허브로 이동' + (linkActive ? '' : ' 못함.. ')}
+                  sx={{cursor:"pointer"}}
                 >
                   <StyledLink
                     href={linkActive ? data.link : ''}
@@ -131,4 +132,5 @@ export default Footer;
 
 const StyledLink = styled.a`
   color: white;
+  cursor:pointer;
 `;

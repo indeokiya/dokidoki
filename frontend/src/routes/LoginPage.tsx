@@ -5,8 +5,20 @@ import styled, { keyframes } from 'styled-components';
 import Typography from '@mui/material/Typography';
 import { userAPI } from '../api/axios';
 import Box from '@mui/material/Box';
+import { useRecoilValue } from 'recoil';
+import { userInfoState } from 'src/store/userInfoState';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+
+  const LoginUser = useRecoilValue(userInfoState);
+  const navigator = useNavigate();
+
+  useEffect(()=>{
+    if(LoginUser.is_logged_in) navigator("/")
+  })
+
   const kakaoLoginHandler = () => {
     userAPI.get('/oauth2/login/kakao').then(({ data }) => {
       window.location.replace(data.url);
@@ -33,7 +45,7 @@ const LoginPage = () => {
           width: '600px',
           margin: '0 auto',
           borderRadius: '10px',
-          boxShadow: '1px 1px 15px #dddddd',
+          boxShadow: '1px 1px 15px #a1abe2',
           overflow: 'hidden',
         }}
       >

@@ -70,10 +70,11 @@ const StyledUpIcon = styled.div`
   position: fixed;
   right: 10%;
   top: 80%;
-  background:linear-gradient(135deg, #e570e7 0%, #79f1fc 100%);
+  border:2px solid #a3aae1;
+  background:white;
+  color: #a3aae1;
   border-radius: 100px;
   font-size: 50px;
-  color: white;
   font-weight: bold;
   width: 60px;
   height: 60px;
@@ -95,10 +96,11 @@ const StyledIcon = styled.div`
   position: fixed;
   right: 10%;
   top: 90%;
-  background:linear-gradient(135deg, #e570e7 0%, #79f1fc 100%);
+  border:2px solid #a3aae1;
+  background:white;
+  color: #a3aae1;
   border-radius: 100px;
   font-size: 50px;
-  color: white;
   font-weight: bold;
   width: 60px;
   height: 60px;
