@@ -43,7 +43,7 @@ spring:
       - id: bid-server
         uri: http://bid-server
         predicates:
-          - Path=/api/bids/**
+          - Path=/api/bids/**, /api/bids/analyze/realtime-interest
         filters:
           - RewritePath=/api/bids/(?<segment>.*), /$\{segment}
           - JwtAuthenticationFilter
