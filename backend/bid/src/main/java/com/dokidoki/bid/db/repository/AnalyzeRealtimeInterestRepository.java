@@ -10,7 +10,9 @@ import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -38,15 +40,18 @@ public class AnalyzeRealtimeInterestRepository {
         bucket.set(cnt, ttl, timeUnit);
     }
 
-    public List<RealtimeInterestInfo> findAllByType(InterestType type) {
+    public List<Long[]> findAllByType(InterestType type) {
         Iterable<String> keysByPattern = redisson.getKeys().getKeysByPattern(getPattern(type));
-        List<RealtimeInterestInfo> resList = new ArrayList<>();
+        List<Long[]> resList = new ArrayList<>();
         for (String key: keysByPattern) {
             log.info("조회할 key: {}", key);
             String[] splitKey = key.split(":");
             Long auctionId = Long.parseLong(splitKey[1]);
             Long cnt = (Long) redisson.getBucket(key).get();
-            resList.add(RealtimeInterestInfo.from(auctionId, cnt));
+            Long[] resArr = new Long[2];
+            resArr[0] = auctionId;
+            resArr[1] = cnt;
+            resList.add(resArr);
         }
         return resList;
     }
