@@ -2,38 +2,34 @@ import Grid from '@mui/material/Grid';
 import styled from 'styled-components';
 import Typography from '@mui/material/Typography';
 import { SocketBidData } from 'src/datatype/datatype';
-import { useEffect,useState } from 'react';
+import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import styles from './ProductLeaderBoard.module.css'
+import styles from './ProductLeaderBoard.module.css';
 import HighestPrice from './HighestPrice';
 
 const ProductLeaderBoard: React.FC<{
   highestPrice: number;
   offerPrice: number;
   leaderBoardData: SocketBidData[];
-  priceSize:number;
- 
-
+  priceSize: number;
 }> = (props) => {
   const [animation, setAnimation] = useState(false);
-  const { highestPrice, offerPrice, leaderBoardData,priceSize } = props;
+  const { highestPrice, offerPrice, leaderBoardData, priceSize } = props;
   function numberFormat(price: number | null) {
     return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
   }
 
-  useEffect(()=>{
-
-    setAnimation(true)
-    setTimeout(()=>{
-      setAnimation(false)
-    },500)
-  },[leaderBoardData])
+  useEffect(() => {
+    setAnimation(true);
+    setTimeout(() => {
+      setAnimation(false);
+    }, 500);
+  }, [leaderBoardData]);
 
   return (
     <BackgroundDiv>
       <Grid container>
-
-          {/* 증가한 금액 */}
+        {/* 증가한 금액 */}
         <Grid item xs={12}>
           <Typography variant="subtitle1" sx={{ color: '#BBCAFF' }}>
             (+ {numberFormat(highestPrice - offerPrice)})
@@ -45,53 +41,33 @@ const ProductLeaderBoard: React.FC<{
           <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }}>
             {/* <span>{numberFormat(highestPrice)}</span> */}
             <HighestPrice increase={priceSize} max={highestPrice} animation={true} />
-
           </Typography>
         </Grid>
         <Grid item xs={12}>
           <InnerDiv>
-            <Grid container>
+            <Grid container sx={{overflow:"hidden"}}>
               {leaderBoardData &&
                 leaderBoardData.map((data: any, i: number) => {
+                  let isBig = i === 0;
                   return (
-                    <Grid item xs={12} key={i} sx={{ marginBottom: '0.5rem' }}>
-                      {i === 0 ? (
-                        <Box className={animation ?(styles.textContainer):(styles.none)}>
-                          <Typography variant="caption" sx={{ fontSize: '1.2rem' }}>
-                            [
-                            {data.bid_time.length > 10
-                              ? data.bid_time.substring(11, 19)
-                              : data.bid_time}
-                            ]{' '}
-                          </Typography>
-                          <Typography variant="caption" color="primary" sx={{ fontSize: '1.2rem' }}>
-                            {data.name}
-                          </Typography>
-                          <Typography variant="caption">님이 </Typography>
-                          <Typography variant="caption" color="error" sx={{ fontSize: '1.2rem' }}>
-                            {numberFormat(data.bid_price)}
-                          </Typography>
-                          <Typography variant="caption">원에 입찰하셨습니다.</Typography>
-                        </Box>
-                      ) : (
-                        <>
-                          <Typography variant="caption" sx={{ fontSize: '1rem' }}>
-                            [
-                            {data.bid_time.length > 10
-                              ? data.bid_time.substring(11, 19)
-                              : data.bid_time}
-                            ]{' '}
-                          </Typography>
-                          <Typography variant="caption" color="primary" sx={{ fontSize: '1rem' }}>
-                            {data.name}
-                          </Typography>
-                          <Typography variant="caption">님이 </Typography>
-                          <Typography variant="caption" color="error" sx={{ fontSize: '1rem' }}>
-                            {numberFormat(data.bid_price)}
-                          </Typography>
-                          <Typography variant="caption">원에 입찰하셨습니다.</Typography>
-                        </>
-                      )}
+                    <Grid item xs={12} key={i} sx={{ marginBottom: '0.6rem' }}>
+                      <Box className={animation ? styles.textContainer : styles.none}>
+                        <Typography variant="caption" sx={{ fontSize: isBig ?  '1.2rem' : "1rem" }}>
+                          [
+                          {data.bid_time.length > 10
+                            ? data.bid_time.substring(11, 19)
+                            : data.bid_time}
+                          ]{' '}
+                        </Typography>
+                        <Typography variant="caption" color="primary" sx={{ fontSize: isBig ?  '1.2rem' : "1rem" }}>
+                          {data.name}
+                        </Typography>
+                        <Typography variant="caption">님이 </Typography>
+                        <Typography variant="caption" color="error" sx={{ fontSize:isBig ?  '1.2rem' : "1rem" }}>
+                          {numberFormat(data.bid_price)}
+                        </Typography>
+                        <Typography variant="caption">에 입찰하셨습니다.</Typography>
+                      </Box>
                     </Grid>
                   );
                 })}
