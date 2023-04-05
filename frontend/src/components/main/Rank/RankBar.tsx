@@ -19,8 +19,8 @@ const RankBar = ({
   const MAX_VALUE = rankData[0].value
   return (
     <div style={{width: widthSize}}>
-      {rankData.map(rank =>
-        <EmptyBar bias={bias}>
+      {rankData.map((rank, index) =>
+        <EmptyBar key={index} bias={bias}>
           <HorizontalBar
             percent={rank.value / MAX_VALUE * 100}
             bias={bias}
