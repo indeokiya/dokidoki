@@ -7,6 +7,7 @@ import com.dokidoki.auction.domain.repository.*;
 import com.dokidoki.auction.dto.request.AuctionRegisterReq;
 import com.dokidoki.auction.dto.request.AuctionUpdateReq;
 import com.dokidoki.auction.dto.response.*;
+import com.dokidoki.auction.enumtype.TradeType;
 import com.dokidoki.auction.kafka.dto.KafkaAuctionRegisterDTO;
 import com.dokidoki.auction.kafka.dto.KafkaAuctionUpdateDTO;
 import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
@@ -240,6 +241,9 @@ public class AuctionService {
                 ? memberRepository.findById(buyerId).orElse(null)
                 : null;
 
+        boolean tradeSuccess = true;
+
+
         // 구매자가 존재한다면
         if(buyer != null){
             // 경매 종료시 최고가
@@ -247,13 +251,20 @@ public class AuctionService {
 
             Long commision = finalPrice * COMMISION_PERCENT / 100; // 수수료
 
+            // 물건 이름
+            String productName = auctionIngEntity.getProductEntity().getName();
+
+            // 판매자
+            MemberEntity seller = auctionIngEntity.getSeller();
 
             // 돈을 지불할 능력이 없으면
             if(buyer.getPoint() < finalPrice){
+                tradeSuccess = false;
                 // 징벌
 
                 // 수수료도 낼 돈이 없으면
                 if (buyer.getPoint() < commision){
+                    log.info("한달 정지");
                     MemberEntity updatedBuyer = MemberEntity.builder()
                             .point(buyer.getPoint())
                             .id(buyer.getId())
@@ -265,7 +276,33 @@ public class AuctionService {
                             .EndTimeOfSuspension(LocalDateTime.now().plusMonths(1)) // 한달 정지
                             .build();
                     memberRepository.save(updatedBuyer);
+
+                    // 소켓 요청
+                    List<UpdatePointSocketRes> updatePointSocketResList = new ArrayList<>();
+
+                    updatePointSocketResList.add(
+                            UpdatePointSocketRes.builder()
+                                    .user_id(updatedBuyer.getId())
+                                    .type(TradeType.PRISONER)
+                                    .message("수수료를 지불할 수 없어 한달간 이용이 정지됩니다." +
+                                            "\n 정지 해제 날짜 : " + updatedBuyer.getEndTimeOfSuspension())
+                                    .tradeSuccess(false)
+                                    .build()
+                    );
+
+                    updatePointSocketResList.add(
+                            UpdatePointSocketRes.builder()
+                                    .type(TradeType.SELLER)
+                                    .productName(productName)
+                                    .tradeSuccess(false)
+                                    .message("최고가 입찰자가 정지 처리 당했습니다.")
+                                    .user_id(seller.getId())
+                                    .build()
+                    );
+
+                    sendPointUpdateRequest(updatePointSocketResList);
                 }else{ // 수수료 지불
+                    log.info("돈 없는 놈");
                     MemberEntity updatedBuyer = MemberEntity.builder()
                             .point(buyer.getPoint() - commision)  // 돈 감소
                             .id(buyer.getId())
@@ -277,16 +314,21 @@ public class AuctionService {
                             .EndTimeOfSuspension(buyer.getEndTimeOfSuspension())
                             .build();
 
-                    TreasuryEntity treasury = TreasuryEntity.builder()
-                            .member(auctionIngEntity.getSeller())
-                            .money(commision)
+                    MemberEntity updatedSeller  = MemberEntity.builder()
+                            .point((seller.getPoint() + commision))  // 수수료 획득
+                            .id(seller.getId())
+                            .picture(seller.getPicture())
+                            .name(seller.getName())
+                            .sub(seller.getSub())
+                            .providerType(seller.getProviderType())
+                            .email(seller.getEmail())
                             .build();
 
-                    // 국고에 돈 저장
-                    treasuryRepository.save(treasury);
+                    List<MemberEntity> memberEntityList = new ArrayList<>();
+                    memberEntityList.add(updatedBuyer);
+                    memberEntityList.add(updatedSeller);
 
-                    // 수수료 지불하고 남은 돈 저장
-                    memberRepository.save(updatedBuyer);
+                    memberRepository.saveAll(memberEntityList);
 
                     // 소켓 요청
                     List<UpdatePointSocketRes> updatePointSocketResList = new ArrayList<>();
@@ -294,13 +336,31 @@ public class AuctionService {
                             UpdatePointSocketRes.builder()
                                     .point(updatedBuyer.getPoint())
                                     .user_id(updatedBuyer.getId())
+                                    .tradeSuccess(false)
+                                    .type(TradeType.PENALTY)
+                                    .earnedPoint(-commision)
+                                    .productName(productName)
+                                    .message("물건을 구매할 포인트가 부족해 수수료가 차감됩니다.")
                                     .build()
                     );
+
+                    updatePointSocketResList.add(
+                            UpdatePointSocketRes.builder()
+                                    .point(updatedSeller.getPoint())
+                                    .user_id(updatedSeller.getId())
+                                    .tradeSuccess(false)
+                                    .type(TradeType.SELLER)
+                                    .earnedPoint(commision)
+                                    .productName(productName)
+                                    .message("최고가 입찰자가 물건을 구매할 포인트가 부족해 수수료를 획득합니다.")
+                                    .build()
+                    );
+
                     sendPointUpdateRequest(updatePointSocketResList);
                 }
-                return;
             }else{
-                MemberEntity seller =  auctionIngEntity.getSeller();
+
+                log.info("합리적인 거래 우하하");
 
                 Long sellerGetMoney = finalPrice - commision; // 수수료 제외 지급 금액
 
@@ -341,12 +401,26 @@ public class AuctionService {
                 // 소켓 요청
                 List<UpdatePointSocketRes> updatePointSocketResList = new ArrayList<>();
                 updatePointSocketResList.add(
-                        UpdatePointSocketRes.builder().point(updatedBuyer.getPoint())
-                                .user_id(updatedBuyer.getId()).build()
+                        UpdatePointSocketRes.builder()
+                                .point(updatedBuyer.getPoint())
+                                .user_id(updatedBuyer.getId())
+                                .earnedPoint(-finalPrice)
+                                .type(TradeType.BUYER)
+                                .tradeSuccess(true)
+                                .productName(productName)
+                                .message("현명한 소비였습니다! :)")
+                                .build()
                 );
                 updatePointSocketResList.add(
-                        UpdatePointSocketRes.builder().point(updatedSeller.getPoint())
-                                .user_id(updatedSeller.getId()).build()
+                        UpdatePointSocketRes.builder()
+                                .point(updatedSeller.getPoint())
+                                .user_id(updatedSeller.getId())
+                                .productName(productName)
+                                .type(TradeType.SELLER)
+                                .earnedPoint(sellerGetMoney)
+                                .tradeSuccess(true)
+                                .message("합리적인 판매였습니다! :)")
+                                .build()
                 );
                 sendPointUpdateRequest(updatePointSocketResList);
             }
@@ -361,7 +435,7 @@ public class AuctionService {
         AuctionEndEntity auctionEndEntity = AuctionEndEntity.createAuctionEnd(
                 auctionIngEntity.getId(),
                 auctionIngEntity.getSeller(),
-                buyer,
+                tradeSuccess?buyer:null,    // 거래가 성공하면 구매자를 넣기
                 auctionIngEntity.getProductEntity(),
                 auctionIngEntity.getStartTime(),
                 endTime,
@@ -378,7 +452,8 @@ public class AuctionService {
         log.info("auctionEndEvent >> delete auction-ing entity");
 
         // 판매 빈도 증가
-        productRepository.updateSaleCount(auctionEndEntity.getProduct().getId());
+        if(buyer != null && tradeSuccess)
+            productRepository.updateSaleCount(auctionEndEntity.getProduct().getId());
         log.info("auctionEndEvent >> increase product's sale count");
     }
 

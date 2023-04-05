@@ -44,9 +44,9 @@ public class AuctionIngEntity {
 
     @CreatedDate
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalDateTime startTime;    // 경매 시작 시간
 
-    @Column(name = "end_at")
+    @Column(name = "end_at")            // 판매자가 정의한
     private LocalDateTime endAt;        // 경매 종료 시점
 
     @Column(name = "meeting_place")

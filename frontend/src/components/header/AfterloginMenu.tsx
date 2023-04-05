@@ -81,7 +81,10 @@ const AfterLoginMenu = () => {
 
         clientRef.current?.subscribe(`/topic/points/${userInfo.user_id}/realtime`, (message: Message) => {
           console.log(`Received message: ${message.body}`);
-          setUserInfoState({ ...userInfo, point: JSON.parse(message.body).updated_point});
+          
+          const data = JSON.parse(message.body);
+          console.log("data : ", data);
+          setUserInfoState({ ...userInfo, point: data.point})
         });
       },
     });

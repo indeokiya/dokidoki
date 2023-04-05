@@ -4,14 +4,32 @@ import AddressInput from "./AddressInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import MapIcon from "@mui/icons-material/Map";
 import { NumericFormat } from "react-number-format";
+import { useRecoilState } from "recoil";
+import { isEndAtErrorState, isOfferPriceErrorState, isPriceSizeErrorState } from "src/store/RegisterAuctionStates";
 
 const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const [addressInputVisible, setAddressInputVisible] = useState(false);
+  
+  const [isOfferPriceError, setIsOfferPriceError] = useRecoilState(isOfferPriceErrorState)
+  const [isPriceSizeError, setIsPriceSizeError] = useRecoilState(isPriceSizeErrorState)
+  const [isEndAtError, setIsEndAtError] = useRecoilState(isEndAtErrorState)
 
   const onChange = (e: any) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
     dataRef.current[name] = parseInt(value.replace(/(,|\s|[A-Za-z])/g, ""));
-    // console.log("name >>", name, ":", dataRef.current[name]);
+    
+    // 값이 바뀌면 error flag 해제
+    switch (name) {
+      case "offer_price":
+        setIsOfferPriceError(false)
+        break
+      case "price_size":
+        setIsPriceSizeError(false)
+        break
+      case "end_at":
+        setIsEndAtError(false)
+        break
+    }
   };
 
   return (
@@ -32,7 +50,7 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
               style={{
                 width: '97%',
                 height: 50,
-                border: '1px solid shilver',
+                border: `1px solid ${isOfferPriceError ? "red" : "silver"}`,  // error flag에 따라 다르게 색상 설정
                 fontSize: 20,
                 paddingLeft: '10px',
               }}
@@ -54,7 +72,7 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
               style={{
                 width: '97%',
                 height: 50,
-                border: '1px solid shilver',
+                border: `1px solid ${isPriceSizeError ? "red" : "silver"}`,  // error flag에 따라 다르게 색상 설정
                 fontSize: 20,
                 paddingLeft: '10px',
               }}
@@ -82,7 +100,9 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
               onChange={(e) => {
                 const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
                 dataRef.current[name] = value;
+                setIsEndAtError(false)  // error flag 해제
               }}
+              error={isEndAtError}
             />
           </Grid> }
 

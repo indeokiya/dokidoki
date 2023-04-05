@@ -5,6 +5,8 @@ import styled from "styled-components";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useRef, useState, useCallback } from "react";
 import { auctionAPI } from "src/api/axios";
+import { isCategoryErrorState, isFilesErrorState, isTitleErrorState } from "src/store/RegisterAuctionStates";
+import { useRecoilState } from "recoil";
 
 // 제품 Response DTO
 type Product = {
@@ -16,6 +18,11 @@ type Product = {
 const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const [imageCnt,setImageCnt] = useState(0)
   const editorRef: any = useRef(null);
+  
+  // Error 체크용 전역 State
+  const [isTitleError, setIsTitleError] = useRecoilState(isTitleErrorState)
+  const [isCategoryError, setIsCategoryError] = useRecoilState(isCategoryErrorState)
+  const [isFilesError, setIsFilesError] = useRecoilState(isFilesErrorState)
 
   /*
   제품 검색 관련 변수, 함수
@@ -56,10 +63,14 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const onChange = (e: any) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
     dataRef.current[name] = value;
-    // console.log("name >> ", name, dataRef.current[name])
     
+    // 제목이 바뀌면 제목 error 테두리 해제
+    if (name === "title") {
+      setIsTitleError(false)
+    }    
     // 카테고리 입력 시 debounce 사용하여 제품 검색 API 호출
-    if (name === "category") {
+    else if (name === "category") {
+      setIsCategoryError(false)  // 카테고리가 바뀌면 카테고리 error 테두리 해제
       setProductName(value)  // 사용자가 입력한 제품명을 state에 반영
       setProducts([])  // 기존 검색 정보 초기화
       setShowResult(false)  // 검색결과 숨기기
@@ -84,7 +95,7 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
           { !update && 
           <Grid item xs={10} mb={1}>
             <label htmlFor="imageInput">
-              <ImageInputLabel>
+              <ImageInputLabel style={{border: `${isFilesError ? "1px solid red" : ""}`}}>
                 <AddAPhotoIcon />
                 {imageCnt}/5
               </ImageInputLabel>
@@ -97,9 +108,10 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
               multiple
               onChange={(e: any) => {
                 const files: any[] = e.target.files;
-                setImageCnt(files.length)
+                setIsFilesError(false)
+                setImageCnt(files.length)  // error flag 해제
                 if (files.length > 5) {
-                  alert("사진을 5개 이상 등록할 수 없습니다.");
+                  alert("사진은 5개를 초과할 수 없습니다.");
                   e.target.value = null;
                   return;
                 }
@@ -122,6 +134,7 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
               fullWidth
               name="title"
               onChange={onChange}
+              error={isTitleError}
             />
           </Grid>
 
@@ -138,6 +151,7 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
               name="category"
               onChange={onChange}
               value={productName}
+              error={isCategoryError}
             />
             {showResult
               ? <Paper>
@@ -172,7 +186,6 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
               usageStatistics={false}
               onChange={(e) => {
                 dataRef.current["description"] = editorRef.current.getInstance().getHTML();
-                // console.log(dataRef.current["category"])
               }}
             />
           </Grid>
