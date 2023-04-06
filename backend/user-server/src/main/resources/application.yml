@@ -10,17 +10,16 @@ server:
     basedir: ./
 
 spring:
-  # database local
   datasource:
-    url: jdbc:mysql://j8a202.p.ssafy.io:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
-    username: dokidoki
-    password: dokidoki202
+    url: # db 주소
+    username: # db 유저
+    password: # db 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
       ddl-auto: validate
-    show-sql: true
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
@@ -32,10 +31,10 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: dokidoki
+      bucket: # 버킷 명
     credentials:
-      access-key: AKIAUEVS3DJH3EYUME6G
-      secret-key: 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
+      access-key: # S3 ACCESS KEY
+      secret-key: # S3 SECRET KEY
     region:
       static: ap-northeast-2
       auto: false
@@ -44,28 +43,25 @@ cloud:
 
 oauth2:
   google:
-    client_id: 409728357789-pfbb5h8u9m4tib34v3qne7n7atat1tbc.apps.googleusercontent.com
-    client_secret: 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
+    client_id: # GOOGLE OAUTH CLIENT ID
+    client_secret: # GOOGLE OAUTH SECRET KEY
     token_uri: https://oauth2.googleapis.com/token
     profile_uri: https://www.googleapis.com/oauth2/v3/userinfo
     redirect_uri: https://j8a202.p.ssafy.io/api/users/oauth2/google/redirect
-    #redirect_uri: http://localhost:8083/oauth2/google/redirect
   kakao:
-    # REST API 키
-    client_id: 355cfcf503170ecfb98fae9e4aa9a4df
-    client_secret: DrtbGue1SrkzOWMJPLVx9g2by9YlNIWk
+    client_id: # KAKAO OAUTH CLIENT ID
+    client_secret: # KAKAO OAUTH SECRET KEY
     redirect_uri: https://j8a202.p.ssafy.io/api/users/oauth2/kakao/redirect
-    #redirect_uri: http://localhost:8083/oauth2/kakao/redirect
     token_uri: https://kauth.kakao.com/oauth/token
 
+
 jwt:
-  issuer: dokidoki.com
-  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
+  issuer: # JWT 발급 도메인
+  secret: # JWT SECRET KEY
   # unit is ms. 15 * 24 * 60 * 60 * 1000 = 15days 1296000000
   # 3 * 60 * 60 * 1000 = 3 hours 10800000
-  access_expiration: 10800000
-  refresh_expiration: 1296000000
+  access_expiration: # access token 만료기간
+  refresh_expiration: # refresh token 만료기간
 
 front:
   redirect_uri: https://j8a202.p.ssafy.io/redirect
-  #redirect_uri: http://localhost:3000/redirect

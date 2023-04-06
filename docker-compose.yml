@@ -59,9 +59,10 @@ services:
       context: ./backend/auction
       dockerfile: dockerfile
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
-      SPRING_DATASOURCE_USERNAME: dokidoki
-      SPRING_DATASOURCE_PASSWORD: dokidoki202
+      SPRING_DATASOURCE_URL: ${DATABASE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET_KEY}
     volumes:
       - /var/log/springboot/auction/system:/var/log/springboot/auction
       - /var/log/springboot/auction/access:/logs
@@ -78,9 +79,21 @@ services:
       - /var/log/springboot/user/system:/var/log/springboot/user
       - /var/log/springboot/user/access:/logs
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://172.17.0.1:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
-      SPRING_DATASOURCE_USERNAME: dokidoki
-      SPRING_DATASOURCE_PASSWORD: dokidoki202
+      SPRING_DATASOURCE_URL: ${DATABASE_URL}
+      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
+      CLOUD_AWS_S3_BUCKET: ${S3_BUCKET}
+      CLOUD_AWS_CREDENTIALS_ACCESS-KEY: ${S3_ACCESS_KEY}
+      CLOUD_AWS_CREDENTIALS_SECRET-KEY: ${S3_SECRET_KEY}
+      OAUTH2_GOOGLE_CLIENT_ID: ${GOOGLE_OAUTH_CLIENT_ID}
+      OAUTH2_GOOGLE_CLIENT_SECRET: ${GOOGLE_OAUTH_CLIENT_SECRET}
+      OAUTH2_KAKAO_CLIENT_ID: ${KAKAO_OAUTH_CLIENT_ID}
+      OAUTH2_KAKAO_CLIENT_SECRET: ${KAKAO_OAUTH_CLIENT_SECRET}
+      JWT_ISSUER: ${JWT_ISSUER}
+      JWT_SECRET: ${JWT_SECRET_KEY}
+      JWT_ACCESS-EXPIRATION: ${JWT_ACCESS_EXPIRATION}
+      JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
+
     restart: always
     networks:
       - dokidoki_net

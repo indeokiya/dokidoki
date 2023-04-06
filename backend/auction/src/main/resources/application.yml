@@ -11,10 +11,9 @@ server:
 
 spring:
   datasource:
-    url: jdbc:mysql://j8a202.p.ssafy.io:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
-#    url: jdbc:mysql://localhost:3306/dokidb?serverTimezone=UTC&characterEncoding=UTF-8
-    username: dokidoki
-    password: dokidoki202
+    url: # db 주소
+    username: # db 유저
+    password: # db 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     pathmatch:
@@ -34,7 +33,7 @@ spring:
       max-file-size: 10MB
   kafka:
     bootstrap-servers:
-      - 3.35.49.175:9092
+      - # 카프카 주소
     consumer:
       group-id: test.group
       # Kafka 서버에 초기 offset이 없거나, 서버에 현재 offset이 더 이상 존재하지 않을 경우 수행할 작업을 설정
@@ -58,10 +57,10 @@ spring:
 cloud:
   aws:
     s3:
-      bucket: dokidoki
+      bucket: # 버킷 명
     credentials:
-      access-key: AKIAUEVS3DJH3EYUME6G
-      secret-key: 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
+      access-key: # S3 ACCESS KEY
+      secret-key: # S3 SECRET KEY
     region:
       static: ap-northeast-2
       auto: false
@@ -69,10 +68,10 @@ cloud:
       auto: false
 
 jwt:
-  issuer: dokidoki.com
-  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
-  access_expiration: 3600000
-  refresh_expiration: 1296000000
+  issuer: # JWT 발급 도메인
+  secret: # JWT SECRET KEY
+  access_expiration: # access token 만료기간
+  refresh_expiration: # refresh token 만료기간
 
 logging:
   file:

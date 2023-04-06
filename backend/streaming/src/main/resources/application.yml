@@ -2,7 +2,7 @@ spring:
   application:
     id: click-bid-counter
   kafka:
-    bootstrap-server: 3.35.49.175:9092
+    bootstrap-server: # 카프카 주소
     #metrics-recording-level: INFO
     auto-offset-reset: latest
     num-stream-threads: 1
