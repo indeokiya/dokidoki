@@ -35,9 +35,9 @@ const KafkaLogInfo = () => {
     <>
       <Grid container sx={{ width: '100%', padding: '10%' }} gap={5} ref={ref}>
         <Grid item xs={12} sx={{ textAlign: 'center' }}>
-          <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold' }}>
+          {/* <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold' }}>
             kafka Info
-          </Typography>
+          </Typography> */}
         </Grid>
         <Grid item xs={12} alignSelf="flex-start">
           <LeftAnimationDiv start={inView}>

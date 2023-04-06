@@ -24,7 +24,7 @@ const MostSaleProductsRank = () => {
     >
       {/* 순위 제목 */}
       <Grid container px={3}>
-      <Title title="Most populer Product"></Title>
+      <Title title="Most popular Product"></Title>
         <Grid item xs={12} sm={5} sx={{ position: 'relative' }}>
           <StyledImg src={Smartphone} start={inView} />
         </Grid>
