@@ -58,7 +58,7 @@ const EndContentItem: React.FC<{ auctionData: Post }> = (props) => {
           <Grid item xs />
           <Grid item xs={5} pt={6} pr={5} alignContent={'end'}>
             <Typography variant="subtitle2" sx={{ textAlign: 'end', color: '#ff0000' }}>
-              (+ {translatePrice()})
+              (+ {numberFormat(translatePrice())})
             </Typography>
             <Typography variant="h4" sx={{ textAlign: 'end' }}>
               {auctionData.final_price ? numberFormat(auctionData.final_price) : "미판매 종료"}
