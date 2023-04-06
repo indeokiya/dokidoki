@@ -1,8 +1,8 @@
 package com.dokidoki.bid.common.utils;
 
-import com.dokidoki.bid.api.response.DetailAuctionIngData;
 import com.dokidoki.bid.api.response.DetailAuctionIngResp;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -15,6 +15,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 @Component
 @RequiredArgsConstructor
 public class HttpUtil {
+
+    @Value("${api.server.uri.auction}")
+    private String AUCTION_SERVER_URI;
 
     @Bean
     private RestTemplate restTemplate() {
@@ -29,7 +32,7 @@ public class HttpUtil {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
-        String url = new StringBuilder().append("https://j8a202.p.ssafy.io/api/auctions/in-progress/").append(auctionId).toString();
+        String url = new StringBuilder().append(AUCTION_SERVER_URI).append("/in-progress/").append(auctionId).toString();
 
         UriComponents uriComponents = UriComponentsBuilder
                 .fromHttpUrl(url)

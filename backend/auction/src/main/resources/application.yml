@@ -79,3 +79,9 @@ logging:
 #    name: auction.log
   level:
     root: INFO
+
+api:
+  server:
+    uri:
+      notice: # notice server uri
+      bid: # bid server uri
