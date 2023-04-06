@@ -5,7 +5,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import MapIcon from "@mui/icons-material/Map";
 import { NumericFormat } from "react-number-format";
 import { useRecoilState } from "recoil";
-import { isEndAtErrorState, isOfferPriceErrorState, isPriceSizeErrorState } from "src/store/RegisterAuctionStates";
+import { isEndAtErrorState, isMeetingPlaceErrorState, isOfferPriceErrorState, isPriceSizeErrorState } from "src/store/RegisterAuctionStates";
 
 const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const [addressInputVisible, setAddressInputVisible] = useState(false);
@@ -13,6 +13,7 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const [isOfferPriceError, setIsOfferPriceError] = useRecoilState(isOfferPriceErrorState)
   const [isPriceSizeError, setIsPriceSizeError] = useRecoilState(isPriceSizeErrorState)
   const [isEndAtError, setIsEndAtError] = useRecoilState(isEndAtErrorState)
+  const [isMeetingPlaceError, setIsMeetingPlaceError] = useRecoilState(isMeetingPlaceErrorState)
 
   const onChange = (e: any) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
@@ -28,6 +29,9 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
         break
       case "end_at":
         setIsEndAtError(false)
+        break
+      case "meeting_place":
+        setIsMeetingPlaceError(false)
         break
     }
   };
@@ -113,6 +117,7 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
             {addressInputVisible ? (
               <AddressInput
                 setVisible={setAddressInputVisible}
+                setIsErrorState={setIsMeetingPlaceError}
                 dataRef={dataRef}
               />
             ) : (
@@ -131,6 +136,7 @@ const ActionInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
                     </InputAdornment>
                   ),
                 }}
+                error={isMeetingPlaceError}
               />
             )}
           </Grid>

@@ -9,7 +9,7 @@ import ActionInfoInput from '../components/resigter/AuctionInfoInput';
 import { auctionAPI } from '../api/axios';
 import { useNavigate } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { isCategoryErrorState, isEndAtErrorState, isFilesErrorState, isOfferPriceErrorState, isPriceSizeErrorState, isTitleErrorState } from 'src/store/RegisterAuctionStates';
+import { isCategoryErrorState, isEndAtErrorState, isFilesErrorState, isMeetingPlaceErrorState, isOfferPriceErrorState, isPriceSizeErrorState, isTitleErrorState } from 'src/store/RegisterAuctionStates';
 
 //경매 등록 타입
 export type AuctionRegisterType = {
@@ -45,6 +45,7 @@ const RegisterPage = () => {
   const setIsPriceSizeError = useSetRecoilState(isPriceSizeErrorState)
   const setIsEndAtError = useSetRecoilState(isEndAtErrorState)
   const setIsFilesError = useSetRecoilState(isFilesErrorState)
+  const setIsMeetingPlaceError = useSetRecoilState(isMeetingPlaceErrorState)
   useEffect(() => {
     setIsTitleError(false)
     setIsCategoryError(false)
@@ -52,6 +53,7 @@ const RegisterPage = () => {
     setIsPriceSizeError(false)
     setIsEndAtError(false)
     setIsFilesError(false)
+    setIsMeetingPlaceError(false)
   }, [])
 
   let userName = 'defaultName';
@@ -83,6 +85,10 @@ const RegisterPage = () => {
     } else if (dataRef.current.end_at.length === 0) {
       setIsEndAtError(true)
       alert("종료 시간을 입력해주세요.")
+      return
+    } else if (dataRef.current.meeting_place.length === 0) {
+      setIsMeetingPlaceError(true)
+      alert("거래 장소를 입력해주세요.")
       return
     }
     for (let idx = 0; idx < dataRef.current.files.length; idx++) {
