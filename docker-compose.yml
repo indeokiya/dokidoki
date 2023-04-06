@@ -53,6 +53,7 @@ services:
       JWT_SECRET: ${JWT_SECRET_KEY}
       JWT_ACCESS_EXPIRATION: ${JWT_ACCESS_EXPIRATION}
       JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
+      API_SERVER_URI_AUCTION: http://auction-server
     volumes:
       - /var/log/springboot/bid/system:/var/log/springboot/bid
       - /var/log/springboot/bid/access:/logs
@@ -76,7 +77,10 @@ services:
       SPRING_KAFKA_BOOTSTRAP_SERVERS_0: ${KAFKA_SERVER_URI}
       CLOUD_AWS_S3_BUCKET: ${S3_BUCKET}
       CLOUD_AWS_CREDENTIALS_ACCESS-KEY: ${S3_ACCESS_KEY}
-      CLOUD_AWS_CREDENTIALS_SECRET-KEY: ${S3_SECRET_KEY}            
+      CLOUD_AWS_CREDENTIALS_SECRET-KEY: ${S3_SECRET_KEY}
+      API_SERVER_URI_NOTICE: http://user-server
+      API_SERVER-URI_BID: http://bid-server
+                  
     volumes:
       - /var/log/springboot/auction/system:/var/log/springboot/auction
       - /var/log/springboot/auction/access:/logs

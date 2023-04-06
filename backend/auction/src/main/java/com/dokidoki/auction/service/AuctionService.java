@@ -13,6 +13,7 @@ import com.dokidoki.auction.kafka.dto.KafkaAuctionUpdateDTO;
 import com.dokidoki.auction.kafka.service.KafkaAuctionProducer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.stereotype.Service;
@@ -48,7 +49,8 @@ public class AuctionService {
 
     private final int COMMISION_PERCENT = 5;
 
-    private final String SOCKER_SERVER_URI = "https://j8a202.p.ssafy.io/api/notices/points/realtime";
+    @Value("${api.server.uri.notice}")
+    private String NOTICE_SERVER_URI;
 
     // 카테고리 기준 제품 목록 조회
     @Transactional(readOnly = true)
@@ -477,7 +479,7 @@ public class AuctionService {
 
     // Point update 소켓 요청
     private void sendPointUpdateRequest(List<UpdatePointSocketRes> updatePointSocketResList){
-        URI uri = UriComponentsBuilder.fromUriString(SOCKER_SERVER_URI).build().toUri();
+        URI uri = UriComponentsBuilder.fromUriString(NOTICE_SERVER_URI + "/points/realtime").build().toUri();
 
         HttpEntity<List<UpdatePointSocketRes>> httpEntity = new HttpEntity<>(updatePointSocketResList);
 
