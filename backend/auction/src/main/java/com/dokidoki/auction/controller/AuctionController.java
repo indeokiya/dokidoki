@@ -66,9 +66,11 @@ public class AuctionController {
         if (req.getEnd_at() == null)
             return ResponseEntity.status(400).body(BaseResponseBody.of("종료 시간을 입력해주세요."));
         // 파일 타입 검증
-        for (MultipartFile multipartFile : req.getFiles())
-            if (multipartFile.getContentType() == null || !multipartFile.getContentType().startsWith("image/"))
-                return ResponseEntity.status(400).body(BaseResponseBody.of("이미지 파일만 등록해주세요."));
+        if (req.getFiles() != null) {  // 파일이 주어졌을 때만 검증
+            for (MultipartFile multipartFile : req.getFiles())
+                if (multipartFile.getContentType() == null || !multipartFile.getContentType().startsWith("image/"))
+                    return ResponseEntity.status(400).body(BaseResponseBody.of("이미지 파일만 등록해주세요."));
+        }
 
         Long sellerId = jwtUtil.getUserId(request);
         auctionService.createAuction(req, sellerId);
