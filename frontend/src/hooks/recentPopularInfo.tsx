@@ -4,11 +4,17 @@ import { bidAPI } from "../api/axios"
 const fetchRecentPopularInfo = () => {
   const axios = bidAPI;
   return axios.get(`analyze/realtime-interest`)
-   .then(res => {
-    console.log("res >> ", res);
-    return res.data;
-   })
-   .catch(err => console.error(err));
+    .then(res => {
+      console.log("res >> ", res);
+      return res.data;
+    })
+    .catch(err => {
+      console.log("err >> ", err);
+      return {
+        bid: [],
+        click: []
+      };
+    });
 
 }
 
