@@ -31,7 +31,7 @@ const SuperRichRank = () => {
           <RankLabel bias={bias} widthSize="20%" rankData={data} />
           <RankBar bias={bias} widthSize="80%" rankData={data} animation={inView} />
         </Grid>
-        <Grid item xs={12} sm={5} sx={{ position: 'relative' }}>
+        <Grid item xs={12} sm={5} sx={{ position: 'relative', }}>
           <StyledImg src={Smartphone} start={inView} />
         </Grid>
       </Grid>
@@ -53,12 +53,14 @@ const animation = keyframes`
 
 const StyledImg = styled.img<{ start: boolean }>`
   position: absolute;
+  opacity:0;
   top: -40px;
   left: 0%;
   width: 600px;
   height: 600px;
   animation : ${({start}) => start ? animation : ""};
-  animation-duration : 1s
+  animation-duration : 1s;
+  animation-fill-mode: forwards;
 
 
 `;

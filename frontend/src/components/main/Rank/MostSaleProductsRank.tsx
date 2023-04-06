@@ -52,7 +52,7 @@ const animation = keyframes`
 `
 
 const StyledImg = styled.img<{ start: boolean }>`
-
+  opacity:0;
 z-index:10;
   position: absolute;
   top: -40px;
@@ -60,7 +60,8 @@ z-index:10;
   width: 750px;
   height: 600px;
   animation : ${({start}) => start ? animation : ""};
-  animation-duration : 1s
+  animation-duration : 1s;
+  animation-fill-mode: forwards;;
 
 
 `;

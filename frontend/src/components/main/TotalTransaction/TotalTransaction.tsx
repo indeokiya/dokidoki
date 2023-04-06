@@ -5,44 +5,45 @@ import { useState, useEffect } from 'react';
 import HighestPrice from 'src/components/leaderBoard/HighestPrice';
 import { useInView } from 'react-intersection-observer';
 import Box from '@mui/material/Box';
+import iconSrc from '../../../assets/icon/dollar.png';
 
 const TotalTransaction = () => {
-  const [ref, inView] = useInView({threshold:0.5,triggerOnce: true,});
-
+  const [ref, inView] = useInView({ threshold: 0.5, triggerOnce: true });
 
   const [totalPrice, setTotalPrice] = useState(0);
 
-  
-
-  if(inView){
+  if (inView) {
     auctionAPI.get('/total-prices').then(({ data }) => {
       setTotalPrice((pre) => data.data);
     });
   }
 
-
- 
-
   return (
     <>
-  <Box ref={ref}>
-      <StyledDiv  start={inView ? "start":"end"} >
-        <AttachMoneyIcon fontSize="large" sx={{ marginBottom: '15px' }} />
-        <StyledSmallP>총 거래된 금액</StyledSmallP>
-        <StyledLargeP >
-          <HighestPrice animation={false} increase={totalPrice} max={totalPrice} />
-        </StyledLargeP>
-      </StyledDiv>
-  </Box>
+      <Box ref={ref}>
+        <StyledDiv start={inView ? 'start' : 'end'}>
+          <StyleIcon src={iconSrc} />
+          <StyledSmallP>총 거래된 금액</StyledSmallP>
+          <StyledLargeP>
+            <HighestPrice animation={false} increase={totalPrice} max={totalPrice} />
+          </StyledLargeP>
+        </StyledDiv>
+      </Box>
     </>
   );
 };
 
 export default TotalTransaction;
 
+const StyleIcon = styled.img`
+  width: 50px;
+  height: 50px;
+  margin-bottom: 20px;
+`;
+
 type StyledDivProps = {
   start?: string;
-}
+};
 
 const animation = keyframes`
 0%{
@@ -55,24 +56,20 @@ const animation = keyframes`
 }
 `;
 
-
-
 const StyledDiv = styled.div<StyledDivProps>`
-opacity:0;
-transition:1s;
-position: relative;
-width: 100%;
-padding: 15%;
-box-sizing: border-box;
-text-align: center;
-animation-duration: 1s;
-animation-name: ${props => props.start ==="start" ? animation:""};
-animation-iteration-count: 1;
-animation-timing-function: ease;
-animation-fill-mode: forwards;
+  opacity: 0;
+  transition: 1s;
+  position: relative;
+  width: 100%;
+  padding: 15%;
+  box-sizing: border-box;
+  text-align: center;
+  animation-duration: 1s;
+  animation-name: ${(props) => (props.start === 'start' ? animation : '')};
+  animation-iteration-count: 1;
+  animation-timing-function: ease;
+  animation-fill-mode: forwards;
 `;
-
- 
 
 const StyledSmallP = styled.p`
   margin-bottom: 10px;
