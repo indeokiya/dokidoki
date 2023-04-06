@@ -23,9 +23,15 @@ const MemberChart = ({
 // initial_datas의 bid_infos 마지막 가격을 기준으로 sort.
 let display_datas = []
 
+console.log(initial_datas)
 if (initial_datas) {
-    display_datas = [...initial_datas]
+    for(const init_data of initial_datas) {
+        if (init_data.name) {
+            display_datas.push(init_data)
+        }
+    }
     display_datas.sort((a, b) => b.bid_infos[0].y - a.bid_infos[0].y)
+    console.log(display_datas)
 }
 
 console.log("initial_datas >> ", initial_datas)
