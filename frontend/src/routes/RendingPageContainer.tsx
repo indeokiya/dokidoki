@@ -6,11 +6,13 @@ import Footer from 'src/components/main/footer/Footer';
 import Box from '@mui/material/Box';
 import SuperRichRank from 'src/components/main/Rank/SuperRichRank';
 import MostSaleProductsRank from 'src/components/main/Rank/MostSaleProductsRank';
+import KafkaLogInfo from 'src/components/main/kafkalog/KafkaLogInfo';
 
 const RendingPageContainer = () => {
   return (
     <Box sx={{overflow:"hidden"}}>
       <StartAction></StartAction>
+      <KafkaLogInfo></KafkaLogInfo>
       <SuperRichRank></SuperRichRank>
       <TotalTransaction></TotalTransaction>
       <MostSaleProductsRank></MostSaleProductsRank>

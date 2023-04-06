@@ -84,3 +84,13 @@ export type RankData = {
   label: string,
   value: number
 }
+
+//kafka로 집계되는 데이터 타입
+export type KafkaLog = {
+  auction_id:number,
+  auction_title:number,
+  category_name:string,
+  cnt:number,
+  highest_price:number;
+  product_name:string
+}
