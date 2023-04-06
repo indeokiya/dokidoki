@@ -5,10 +5,10 @@ import MypageHeader from '../components/mypage/MypageHeader';
 import MypageNavigator from '../components/mypage/MypageNavigator';
 import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router';
-import { useRecoilState, useSetRecoilState } from 'recoil';
-import { myPageMenuState } from 'src/store/userInfoState';
+import { useRecoilState, useRecoilValue } from 'recoil';
+import { myPageMenuState, userInfoState } from 'src/store/userInfoState';
 import { useLocation } from 'react-router';
-
+import { useNavigate } from 'react-router';
 let theme = createTheme({
   palette: {
     primary: {
@@ -158,10 +158,15 @@ export default function Paperbase() {
   const [menu, setMenu] = useRecoilState(myPageMenuState);
   const [selectedMenu, setSelectedMenu] = useState(menu.menu);
   const param = useLocation();
+  const loginUser = useRecoilValue(userInfoState)
+  const navigate = useNavigate();
 
-  //전역 변수로 메뉴 넣어줌
+  //전역 변수로 메뉴 넣어줌use
   useEffect(() => {
-    // setMenu({ menu: selectedMenu });
+    // setMenu({ menu: selectedMenu })
+    if(!loginUser.is_logged_in){
+      navigate("/login");
+    }
     console.log(" 지금 페이지의 url paht >>> ",param.pathname)
     if (param.pathname.split('/')[2] === "auction-item") {
       setMenu({ menu: '입찰 중' });

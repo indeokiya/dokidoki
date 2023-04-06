@@ -52,9 +52,11 @@ const EmptyBar = styled.div<{
   maxheight: 45px;
   padding: 12px;
   display: flex;
+  opacity:0.5%;
   justify-content: ${({ bias }) => bias};
   animation : ${({start}) => start ? animation : ""};
   animation-duration : 2s;
+  animation-fill-mode: forwards;
   over-flow:hidden;
   `;
 
