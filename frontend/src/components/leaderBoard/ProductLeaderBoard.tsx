@@ -40,7 +40,7 @@ const ProductLeaderBoard: React.FC<{
         <Grid item xs={12}>
           <Typography variant="h4" sx={{ color: 'white', fontWeight: 'bold' }}>
             {/* <span>{numberFormat(highestPrice)}</span> */}
-            <HighestPrice increase={priceSize} max={highestPrice} animation={true} />
+            <HighestPrice increase={Math.min(priceSize, highestPrice)} max={highestPrice} animation={true} />
           </Typography>
         </Grid>
         <Grid item xs={12}>
