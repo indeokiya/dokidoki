@@ -18,7 +18,7 @@ const MostSaleProductsRank = () => {
       ref={ref}
       sx={{
         position: 'relative',
-        padding: '5% 0%',
+        padding: '5% 10%',
         backgroundColor: '#3A77EE',
       }}
     >
@@ -44,7 +44,7 @@ export default MostSaleProductsRank;
 const animation = keyframes`
   from{
     opacity:0;
-    transform:translateY(15px);
+    transform:translateY(35px);
   }to{
     opacity:1;
     transform:translateY(0px);
