@@ -15,7 +15,7 @@ spring:
       matching-strategy: ant_path_matcher
   kafka:
     bootstrap-servers:
-      - 3.35.49.175:9092
+      - # 카프카 서버 주소
     consumer:
       # consumer bootstrap servers가 따로 존재하면 설정
       # bootstrap-servers: localhost:9092
@@ -40,12 +40,12 @@ spring:
       topic: bid
 #    producer:
       # producer bootstrap servers가 따로 존재하면 설정
-      # bootstrap-servers: 3.34.97.97:9092
+      # bootstrap-servers: 카프카 서버 주소
 jwt:
-  issuer: dokidoki.com
-  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
-  access_expiration: 3600000
-  refresh_expiration: 1296000000
+  issuer: # JWT 발급 도메인
+  secret: # JWT SECRET KEY
+  access_expiration: # access token 만료기간
+  refresh_expiration: # refresh token 만료기간
 
 logging:
   file:

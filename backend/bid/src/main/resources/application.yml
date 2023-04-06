@@ -9,14 +9,13 @@ server:
       pattern: '%{yyyy-MM-dd HH:mm:ss}t %s %r'
     basedir: ./
 
-
 spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
   kafka:
     bootstrap-servers:
-      - 3.35.49.175:9092
+      - # 카프카 주소
     consumer:
       # consumer bootstrap servers가 따로 존재하면 설정
       # bootstrap-servers: localhost:9092
@@ -43,10 +42,10 @@ spring:
       topic: stream-result
 
 jwt:
-  issuer: dokidoki.com
-  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
-  access_expiration: 3600000
-  refresh_expiration: 1296000000
+  issuer: # 토큰 발급 주소
+  secret: # 시크릿 키
+  access_expiration: # access token 만료 기간
+  refresh_expiration: # refresh toekn 만료 기간
 
 logging:
   file:

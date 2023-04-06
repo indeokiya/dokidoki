@@ -2,7 +2,7 @@ server:
   port: 80
 
 jwt:
-  secret: CEV5lPhLfU3RdjTqoHBfEHNrIWAGDRTZfFSLAO5X
+  secret: # JWT SECRET
 
 spring:
   cloud:
@@ -64,14 +64,6 @@ spring:
         filters:
           - RewritePath=/api/auctions/(?<segment>.*), /$\{segment}
           - JwtAuthenticationFilter
-
-      # # notice routing
-      # - id: notice-server
-      #   uri: http://notice-server
-      #   predicates:
-      #     - Path=/api/notices/**
-      #   filters:
-      #     - RewritePath=/api/notices/(?<segment>.*), /$\{segment}
 
       # socket routing
       - id: notice-server
