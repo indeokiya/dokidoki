@@ -8,10 +8,15 @@ import ProductInfoInput from '../components/resigter/ProductInfoInput';
 import AuctionInfoInput from '../components/resigter/AuctionInfoInput';
 import { auctionAPI } from '../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useSetRecoilState } from 'recoil';
+import { isPriceSizeErrorState, isTitleErrorState } from 'src/store/RegisterAuctionStates';
 
 const AuctionUpdatePage = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
+
+  const setIsTitleError = useSetRecoilState(isTitleErrorState)
+  const setIsPriceSizeError = useSetRecoilState(isPriceSizeErrorState)
 
   const dataRef = useRef({
     title: state.title,
@@ -21,6 +26,16 @@ const AuctionUpdatePage = () => {
   });
 
   const update = () => {
+    if (dataRef.current.title === "") {
+      setIsTitleError(true)
+      alert("제목을 입력해주세요.")
+      return
+    } else if (Number.isNaN(dataRef.current.price_size)
+      || dataRef.current.price_size <= 0) {
+      setIsPriceSizeError(true)
+      alert("경매 단위를 1 이상 입력해주세요.")
+      return
+    }
 
     const axios = auctionAPI;
     axios
