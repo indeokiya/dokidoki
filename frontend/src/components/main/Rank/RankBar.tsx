@@ -35,7 +35,7 @@ const RankBar = ({
 export default RankBar;
 const animation = keyframes`
   from{
-    opacity:0.5;
+    opacity:0;
     width:50%;
   }to{
     opacity:1;
@@ -52,7 +52,7 @@ const EmptyBar = styled.div<{
   maxheight: 45px;
   padding: 12px;
   display: flex;
-  opacity:0.5%;
+  opacity:0;
   justify-content: ${({ bias }) => bias};
   animation : ${({start}) => start ? animation : ""};
   animation-duration : 2s;
