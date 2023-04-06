@@ -3,6 +3,7 @@ import DaumPostcode from 'react-daum-postcode';
 
 const AddressInput: React.FC<{
   setVisible: (data: boolean) => void;
+  setIsErrorState: (data: boolean) => void;
   dataRef: any;
 }> = (props) => {
   const handleComplete = (data: any) => {
@@ -23,6 +24,7 @@ const AddressInput: React.FC<{
     props.dataRef.current.meeting_place = fullAddress;
     // console.log("fullAddress >> ", props.dataRef.current.meetingPlace);
     props.setVisible(false);
+    props.setIsErrorState(false)
   };
 
   return (

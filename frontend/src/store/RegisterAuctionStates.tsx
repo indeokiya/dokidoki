@@ -30,3 +30,8 @@ export const isFilesErrorState = atom({
   key: "isFilesErrorState",
   default: false
 })
+
+export const isMeetingPlaceErrorState = atom({
+  key: "isMeetingPlaceErrorState",
+  default: false
+})
