@@ -55,12 +55,12 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
   //부모컴포넌트에서 받아온 게시글 정보
   const { auctionData } = props;
 
-  const auction_end: boolean = auctionData.final_price !== undefined;
-  const is_sold_out: boolean = auctionData?.is_sold_out !== undefined ? auctionData.is_sold_out : false
+  const auction_end: boolean = auctionData.is_sold_out !== undefined;
+  const is_sold_out: boolean = auction_end ? auctionData.is_sold_out : false
 
   // 가격
   const price = numberFormat(
-    auctionData.final_price !== undefined
+    auction_end
       ? auctionData.final_price
       : auctionData.cur_price,
   )
@@ -179,7 +179,7 @@ const Content: React.FC<{ auctionData: Post }> = (props) => {
         <StyledFlex>
           <StyledSpan style={{ fontWeight: 'bold' }}>{auction_end ? "낙찰가 : " : "현재 가격 : "}</StyledSpan>
           <StyledSpan style={{ fontWeight: 'bold', fontSize: '1rem' }}>
-            {!auction_end || price !== "undefined 원" ? price : "미판매 종료"}
+            {auction_end && !is_sold_out ? "미판매 종료" : price}
           </StyledSpan>
         </StyledFlex>
       </CardContent>
