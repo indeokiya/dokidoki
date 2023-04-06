@@ -1,6 +1,6 @@
 import { RankData } from 'src/datatype/datatype';
 import styled, {keyframes} from 'styled-components';
-import HighestPrice from 'src/components/leaderBoard/HighestPrice';
+import MyPoint from 'src/components/header/MyPoint';
 
 const RankBar = ({
   widthSize,
@@ -16,11 +16,7 @@ const RankBar = ({
   if (rankData === undefined || rankData.length === 0) return null;
 
   // 정수 포맷팅
-  const showValue = (point: number) =>
-    point
-      .toString()
-      .split(/(?=(?:\d{3})+(?:\.|$))/g)
-      .join(',');
+
 
   const MAX_VALUE = rankData[0].value;
   return (
@@ -28,8 +24,7 @@ const RankBar = ({
       {rankData.map((rank, index) => (
         <EmptyBar key={index} bias={bias} start={animation}>
           <HorizontalBar percent={(rank.value / MAX_VALUE) * 100} bias={bias}>
-          <HighestPrice animation={false} max={rank.value} increase={rank.value}></HighestPrice>
-            {/* {showValue(rank.value)} */}
+            <MyPoint animation={false} max={rank.value} increase={rank.value}/>
           </HorizontalBar>
         </EmptyBar>
       ))}
@@ -59,7 +54,7 @@ const EmptyBar = styled.div<{
   display: flex;
   justify-content: ${({ bias }) => bias};
   animation : ${({start}) => start ? animation : ""};
-  animation-duration : 4s;
+  animation-duration : 2s;
   over-flow:hidden;
   `;
 

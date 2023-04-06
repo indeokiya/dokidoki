@@ -3,13 +3,13 @@ import TotalTransaction from '../components/main/TotalTransaction/TotalTransacti
 import FunctionInfoCards from '../components/main/functionInfoCards/FunctionInfoCards';
 import Treasury from 'src/components/main/Treasury/Treasury';
 import Footer from 'src/components/main/footer/Footer';
-
+import Box from '@mui/material/Box';
 import SuperRichRank from 'src/components/main/Rank/SuperRichRank';
 import MostSaleProductsRank from 'src/components/main/Rank/MostSaleProductsRank';
 
 const RendingPageContainer = () => {
   return (
-    <>
+    <Box sx={{overflow:"hidden"}}>
       <StartAction></StartAction>
       <SuperRichRank></SuperRichRank>
       <TotalTransaction></TotalTransaction>
@@ -17,7 +17,7 @@ const RendingPageContainer = () => {
       <Treasury></Treasury>
       <FunctionInfoCards></FunctionInfoCards>
       <Footer></Footer>
-    </>
+    </Box>
   );
 };
 

@@ -163,7 +163,7 @@ const AfterLoginMenu = () => {
           <b>{userInfo.name}</b>님
           <span style={{ margin: "0 8px", color: "gray" }}>|</span>
           {/* 포인트 <StyledPoint>{showPoint(userInfo.point)}</StyledPoint> */}
-          포인트 <MyPoint animation={false} increase={userInfo.point} max={userInfo.point}></MyPoint>
+          포인트 <MyPoint animation={false} increase={userInfo.point} max={userInfo.point}/> P
         </p>
       </Grid>
       <Grid item>

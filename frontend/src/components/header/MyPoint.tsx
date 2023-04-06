@@ -1,11 +1,8 @@
 import { useEffect, useState } from 'react';
-import styles from './HighestPrice.module.css';
-import Box from '@mui/material/Box';
-import { Troubleshoot } from '@mui/icons-material';
 import styled from 'styled-components';
 
 function numberFormat(price: number | null) {
-  return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',') + ' 원';
+  return price?.toString().replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ',');
 }
 
 const MyPoint: React.FC<{ max: number; increase: number; animation: boolean }> = (props) => {

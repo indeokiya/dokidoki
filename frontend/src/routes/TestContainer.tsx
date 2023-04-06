@@ -7,7 +7,12 @@ import Divider from '@mui/material/Divider';
 import Tooltip from '@mui/material/Tooltip';
 import { useRecentPopularInfo } from 'src/hooks/recentPopularInfo';
 const TestContainer = () => {
+
   
+  
+const commentStyle = [{
+  padding:"10%",
+},]
 
 
 
@@ -23,10 +28,20 @@ const TestContainer = () => {
   console.log("bidArr >> ", bidArr);
 
   return (
+    <>
 
-    <></>
-  )
+<Grid container>
+  <Grid item sx={...commentStyle}>
 
+
+  </Grid>
+  <Grid item>
+
+  </Grid>
+</Grid>
+    
+    </>
+  );
 };
 
 export default TestContainer;
@@ -34,3 +49,4 @@ export default TestContainer;
 const StyledLink = styled.a`
   color: white;
 `;
+
