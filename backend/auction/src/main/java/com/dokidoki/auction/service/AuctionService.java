@@ -479,6 +479,7 @@ public class AuctionService {
 
     // Point update 소켓 요청
     private void sendPointUpdateRequest(List<UpdatePointSocketRes> updatePointSocketResList){
+        log.info("socket path : " + NOTICE_SERVER_URI + "/points/realtime");
         URI uri = UriComponentsBuilder.fromUriString(NOTICE_SERVER_URI + "/points/realtime").build().toUri();
 
         HttpEntity<List<UpdatePointSocketRes>> httpEntity = new HttpEntity<>(updatePointSocketResList);
