@@ -49,6 +49,9 @@ const KafkaLogInfo = () => {
                 <Typography variant="subtitle1" color="primary">
                   지금 제일 핫한 경매
                 </Typography>
+                {bidArr.length === 0
+                  ? <Typography variant='h5' textAlign="center">지금은 경매가 없어요😢</Typography>
+                  : null}
                 {bidArr.map((data: KafkaLog, i) => {
                   return (
                     <AnimationDiv style={{ marginTop: '10px' }}>
@@ -90,6 +93,9 @@ const KafkaLogInfo = () => {
                 <Typography variant="subtitle1" color="primary" textAlign={'end'}>
                   인기 글
                 </Typography>
+                {clickArr.length === 0
+                  ? <Typography variant='h5' textAlign="center">지금은 경매가 없어요😢</Typography>
+                  : null}
                 {clickArr.map((data: KafkaLog, i) => {
                   return (
                     <AnimationDiv style={{ textAlign: 'end', marginTop: '10px' }}>
