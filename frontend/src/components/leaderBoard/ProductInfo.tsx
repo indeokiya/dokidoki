@@ -129,6 +129,7 @@ const ProductInfo = ({
               vertical: 'top',
             },
           });
+          navigate('/');
         } else {
           enqueueSnackbar('알 수 없는 이유로 입찰에 실패했습니다.', {
             variant: 'error',

@@ -22,6 +22,7 @@ import { useNavigate } from 'react-router-dom';
 import { SocketBidData } from 'src/datatype/datatype';
 import ProductPageSceleton from 'src/components/sceleton/ProductPageSceleton';
 import errorImg from "../assets/image/error_page.png"
+import { useSnackbar } from 'notistack';
 
 const ProductPage = () => {
   const [reset, SetReset] = useState(true);
@@ -89,6 +90,9 @@ const ProductPage = () => {
     console.log("수정된 memberChart >>", memberChart)
   }, [memberChart])
 
+  // 스낵바
+  const { enqueueSnackbar } = useSnackbar();
+
   //소캣 연결 함수
   const connect = () => {
     // 연결할 때
@@ -101,7 +105,7 @@ const ProductPage = () => {
         console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
-          // console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
+          console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
           let sData = JSON.parse(message.body);
 
           //소켓으로 경매정보가 넘어왔을 때
@@ -128,6 +132,13 @@ const ProductPage = () => {
           } else {
             //경매단위 갱신
             setPriceSize(sData.price_size);
+            enqueueSnackbar(`경매 단위가 ${sData.price_size}원으로 갱신되었습니다. `, {
+              variant: 'error',
+              anchorOrigin: {
+                horizontal: 'center',
+                vertical: 'top',
+              },
+            });
           }
         });
       },
