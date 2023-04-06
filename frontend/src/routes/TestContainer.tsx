@@ -51,21 +51,8 @@ const TestContainer = () => {
                         <NumberSpan>{i + 1}. </NumberSpan>
                         <Chip size="small" label={data.category_name} variant="outlined" />
 
-                        <span style={{ margin: '0px 10px', color: 'grey' }}>
-                          {data.product_name}
-                        </span>
-                        <Typography variant="caption">최고가 :</Typography>
-                        <Typography variant="caption" color="error">
-                          {numberFormat(data.highest_price)}
-                        </Typography>
-                      </Box>
-                    </Tooltip>
-                  </AnimationDiv>
-                );
-              })}
-            </StyledBidRank>
-          </StyledDiv>
-        </Grid>
+{/* <Grid container>
+  <Grid item sx={...commentStyle}>
 
         <Grid item xs={12} alignItems="end" justifyContent={'end'} alignContent="end">
           <StyledDiv style={{ padding: '10%', boxSizing: 'border-box', float: 'right', width:"1100px" }}>
@@ -87,21 +74,12 @@ const TestContainer = () => {
                         <Typography variant="caption" color="error">
                           {numberFormat(data.highest_price)}
 
-                        </Typography>
-                        <span style={{ margin: '0px 10px', color: 'grey' }}>
-                          {data.product_name}
-                        </span>
-                        <Chip size="small" label={data.category_name} variant="outlined" />
-                        <NumberSpan> .{i + 1}</NumberSpan>
-                      </Box>
-                    </Tooltip>
-                  </AnimationDiv>
-                );
-              })}
-            </StyledClickRank>
-          </StyledDiv>
-        </Grid>
-      </Grid>
+  </Grid>
+  <Grid item>
+
+  </Grid>
+</Grid> */}
+    
     </>
   );
 };

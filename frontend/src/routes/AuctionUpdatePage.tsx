@@ -9,7 +9,7 @@ import AuctionInfoInput from '../components/resigter/AuctionInfoInput';
 import { auctionAPI } from '../api/axios';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSetRecoilState } from 'recoil';
-import { isPriceSizeErrorState, isTitleErrorState } from 'src/store/RegisterAuctionStates';
+import { isMeetingPlaceErrorState, isPriceSizeErrorState, isTitleErrorState } from 'src/store/RegisterAuctionStates';
 
 const AuctionUpdatePage = () => {
   const navigate = useNavigate();
@@ -17,6 +17,7 @@ const AuctionUpdatePage = () => {
 
   const setIsTitleError = useSetRecoilState(isTitleErrorState)
   const setIsPriceSizeError = useSetRecoilState(isPriceSizeErrorState)
+  const setIsMeetingPlaceError = useSetRecoilState(isMeetingPlaceErrorState)
 
   const dataRef = useRef({
     title: state.title,
@@ -34,6 +35,10 @@ const AuctionUpdatePage = () => {
       || dataRef.current.price_size <= 0) {
       setIsPriceSizeError(true)
       alert("경매 단위를 1 이상 입력해주세요.")
+      return
+    } else if (dataRef.current.meeting_place.length === 0) {
+      setIsMeetingPlaceError(true)
+      alert("거래 장소를 입력해주세요.")
       return
     }
 
