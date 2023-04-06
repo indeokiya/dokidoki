@@ -34,7 +34,7 @@ public class OauthController {
 
     private final JwtProvider jwtProvider;
 
-    private final Long DEFAULT_POINT = (long)0x7fffffff;
+    private final Long DEFAULT_POINT = (long)5000000;
 
     @Value("${front.redirect_uri}")
     private String FRONT_REDIRECT_URI;
