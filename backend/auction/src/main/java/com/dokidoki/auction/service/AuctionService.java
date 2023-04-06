@@ -435,13 +435,15 @@ public class AuctionService {
         AuctionEndEntity auctionEndEntity = AuctionEndEntity.createAuctionEnd(
                 auctionIngEntity.getId(),
                 auctionIngEntity.getSeller(),
-                tradeSuccess?buyer:null,    // 거래가 성공하면 구매자를 넣기
+                tradeSuccess ? buyer : null,    // 거래가 성공하면 구매자를 넣기
                 auctionIngEntity.getProductEntity(),
                 auctionIngEntity.getStartTime(),
                 endTime,
                 auctionIngEntity.getTitle(),
                 auctionIngEntity.getOfferPrice(),
-                auctionIngEntity.getHighestPrice(),
+                auctionIngEntity.getHighestPrice() != null
+                        ? auctionIngEntity.getHighestPrice()
+                        : auctionIngEntity.getOfferPrice(),  // 최고 입찰가가 없다면 입찰 자체가 없던 것이었으므로 시작가 넣어줌
                 auctionIngEntity.getDescription()
         );
         auctionEndRepository.save(auctionEndEntity);
