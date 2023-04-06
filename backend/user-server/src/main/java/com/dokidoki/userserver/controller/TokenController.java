@@ -35,14 +35,17 @@ public class TokenController {
                 ()-> new CustomException(HttpStatus.NOT_FOUND, "존재하지 않는 유저입니다.")
         );
 
+         LocalDateTime endTimeOfSuspension = userEntity.getEndTimeOfSuspension();
         // 정지 당한 사용자면 토큰 발급 X
-        if(userEntity.getEndTimeOfSuspension().compareTo(LocalDateTime.now()) < 0){
+        if(endTimeOfSuspension != null && endTimeOfSuspension.compareTo(LocalDateTime.now()) < 0){
             throw new CustomException(HttpStatus.FORBIDDEN, "이용 정지 유저, 토큰 발급 불가");
         }
 
+        log.info("토큰을 만들어보자!");
         String accessToken = jwtProvider.getAccessToken(userEntity.getId());
         String refreshToken = jwtProvider.getRefreshToken(userEntity);
 
+        log.info("토큰을 다 만들었다!");
         JWTRes res = JWTRes.builder()
                 .access_token(accessToken)
                 .refresh_token(refreshToken).build();

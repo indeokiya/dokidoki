@@ -11,7 +11,7 @@ server:
 
 spring:
   datasource:
-    url: # db 주소
+    url:  # db 주소
     username: # db 유저
     password: # db 비밀번호
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -58,8 +58,6 @@ oauth2:
 jwt:
   issuer: # JWT 발급 도메인
   secret: # JWT SECRET KEY
-  # unit is ms. 15 * 24 * 60 * 60 * 1000 = 15days 1296000000
-  # 3 * 60 * 60 * 1000 = 3 hours 10800000
   access_expiration: # access token 만료기간
   refresh_expiration: # refresh token 만료기간
 
