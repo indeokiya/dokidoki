@@ -9,7 +9,7 @@ import './ChartFont.css'
 
 ChartJS.register(CategoryScale, LinearScale, TimeScale, PointElement, BarElement, LineElement, Title, Tooltip, Legend);
 ChartJS.defaults.font.family = 'Noto Sans'
-// ChartJS.defaults.borderColor = '#D3D3D3'
+// ChartJS.defaults.borderColor = 'rgba(0, 0, 0, 0.1)'
 // ChartJS.defaults.borderColor = '#808080'
 
 type Props = {
@@ -63,6 +63,9 @@ const updateData = () => {
         if (i < 3) {
             dataset.borderColor = lineBorderColor[i]
             dataset.backgroundColor = lineBackgroundColor[i]
+        } else {
+            dataset.borderColor = ChartJS.defaults.borderColor
+            dataset.backgroundColor = ChartJS.defaults.borderColor
         }
         newDatasets.push(dataset)
     
