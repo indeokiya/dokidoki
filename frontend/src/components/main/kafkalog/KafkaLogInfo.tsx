@@ -51,7 +51,7 @@ const KafkaLogInfo = () => {
                 </Typography>
                 {bidArr.map((data: KafkaLog, i) => {
                   return (
-                    <AnimationDiv style={{ marginTop: '10px' }}>
+                    <AnimationDiv key={i} style={{ marginTop: '10px' }}>
                       <Tooltip title={data.product_name} arrow placement="top-end">
                         <Box
                           key={i}
@@ -92,7 +92,7 @@ const KafkaLogInfo = () => {
                 </Typography>
                 {clickArr.map((data: KafkaLog, i) => {
                   return (
-                    <AnimationDiv style={{ textAlign: 'end', marginTop: '10px' }}>
+                    <AnimationDiv key={i} style={{ textAlign: 'end', marginTop: '10px' }}>
                       <Tooltip title={data.product_name} arrow placement="top-start">
                         <Box
                           key={i}
