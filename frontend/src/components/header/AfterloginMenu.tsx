@@ -203,7 +203,7 @@ const AfterLoginMenu = () => {
             <span style={{marginRight: "8px"}}>Alert</span>
             <StyledDropdownBadge
               key={badgeKey}
-              badgeContent={alertCnt}
+              badgeContent={alertCnt > 0 ? 1 : 0}
               anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             />
           </MenuItem>
