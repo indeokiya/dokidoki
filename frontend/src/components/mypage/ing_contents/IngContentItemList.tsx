@@ -21,7 +21,7 @@ const bidding = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('입찰중인 데이터 >> ', data.data);
+      // console.log('입찰중인 데이터 >> ', data.data);
       return data.data;
     });
 };
@@ -36,7 +36,7 @@ const selling = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('판매중인 데이터 >> ', data.data);
+      // console.log('판매중인 데이터 >> ', data.data);
       return data.data;
     });
 };
@@ -51,7 +51,7 @@ const wishlist = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('찜목록 >> ', data.data);
+      // console.log('찜목록 >> ', data.data);
       return data.data;
     });
 };
@@ -67,7 +67,7 @@ const IngContentItemList = () => {
       ['mypage', menu.menu],
       ({ pageParam = 0 }) => {
         //조건에 따른 api 분기
-        console.log('선택된 메뉴 >> ', menu.menu);
+        // console.log('선택된 메뉴 >> ', menu.menu);
         if (menu.menu === '입찰 중') {
           return bidding(pageParam, size);
         }

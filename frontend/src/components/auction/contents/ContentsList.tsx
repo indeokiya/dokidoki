@@ -22,7 +22,7 @@ const getInProgress = (category_id: number, keyword: string, page: number, size:
       },
     })
     .then(({ data }) => {
-      console.log('경매중인 물건 >> ', data.data);
+      // console.log('경매중인 물건 >> ', data.data);
       return data.data;
     });
 };
@@ -37,7 +37,7 @@ const getEndList = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('경매가 끝난 물건 >> ', data.data);
+      // console.log('경매가 끝난 물건 >> ', data.data);
       return data.data;
     });
 };
@@ -52,7 +52,7 @@ const getDeadline = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('마감이 임박한 경매 데이터 >> ', data.data);
+      // console.log('마감이 임박한 경매 데이터 >> ', data.data);
       return data.data;
     });
 };
@@ -69,9 +69,9 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
     useInfiniteQuery(
       ['infinity', category, keyword, size],
       ({ pageParam = 0 }) => {
-        console.log('useInfinity 함수 동작하는 중~');
-        console.log('category >> ', category);
-        console.log('keyword >> ', keyword );
+        // console.log('useInfinity 함수 동작하는 중~');
+        // console.log('category >> ', category);
+        // console.log('keyword >> ', keyword );
 
         //조건에 따른 api 분기
         if (category < 9) {
@@ -99,7 +99,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
   useEffect(() => {
     if (inView && !isFetchingNextPage) {
       fetchNextPage();
-      console.log("hasNextPage >> ",hasNextPage)
+      // console.log("hasNextPage >> ",hasNextPage)
     }
   }, [inView]);
 
@@ -107,7 +107,7 @@ const ContentsList: React.FC<{ category: number; keyword: string; size: number }
 
   // data is not undefined
   if ( !isLoading){
-    console.log(data)
+    // console.log(data)
   }
 
 

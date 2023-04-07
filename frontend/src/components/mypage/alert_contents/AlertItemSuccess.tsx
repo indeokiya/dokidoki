@@ -93,7 +93,7 @@ const AlertItemSuccess: React.FC<{
     noticeAPI.put(
       `/${key}/read`
     ).then((res)=> {
-      console.log(res)
+      // console.log(res)
     })
   }
 
@@ -143,7 +143,7 @@ const AlertItemSuccess: React.FC<{
             <Tooltip title="Delete">
               <IconButton
                 onClick={() => {
-                  console.log("클릭", props.id)
+                  // console.log("클릭", props.id)
                   ComponentHidden(props.id); //사라지는 애니메이션 back이랑 연동하는거 아님
                   props.setAlertCnt((data: any) => data - 1); //카운트 줄어듬
                 }}

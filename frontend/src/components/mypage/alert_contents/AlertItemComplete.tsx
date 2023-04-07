@@ -84,7 +84,7 @@ const AlertItemComplete: React.FC<{
 
   function Read(key: string) {
     noticeAPI.put(`/${key}/read`).then((res) => {
-      console.log(res);
+      // console.log(res);
     });
   }
 

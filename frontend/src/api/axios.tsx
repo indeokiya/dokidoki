@@ -43,12 +43,12 @@ noticeAPI.defaults.timeout = 3000;
 
 // 공통 request 인터셉터
 function addRequestIntercepter(axiosApi : any){
-  console.log("request interceptor")
+  // console.log("request interceptor")
   axiosApi.interceptors.request.use(
     (config:any) => {
         // 로컬 스토리지에서 Access Token 가져오기, 없다면 Undefined
         let accessToken = localStorage.getItem("access_token");
-        console.log("accessToken >> ", accessToken)
+        // console.log("accessToken >> ", accessToken)
         
         // Authorization 헤더에 토큰 추가 및 credential 설정
         if (accessToken) config.headers["authorization"] = "Bearer " + accessToken;
@@ -84,10 +84,10 @@ function addResponseIntercepter(axiosApi : any){
     // 응답 오류가 있는 작업 수행
     
     const res = error.response;
-    console.log(res);
+    // console.log(res);
     if (res && res.data){
       const message = res.data.message;
-      console.log("axios response intercepter : " + message);
+      // console.log("axios response intercepter : " + message);
       
       // api gateway에서 인가가 막힌 경우 처리
       if(message === "만료된 토큰입니다."){
@@ -120,9 +120,6 @@ function addResponseIntercepter(axiosApi : any){
 
 
 
-            //
-
-
           
           window.location.href = window.location.origin;
           // refresh token이 유효한 경우 토큰 재발급
@@ -136,7 +133,7 @@ function addResponseIntercepter(axiosApi : any){
       }else if(message === "유효하지 않은 토큰입니다."
       || message === "지원하지 않는 토큰입니다."
       || message === "토큰의 클레임이 비어있습니다"){
-        console.log("이상한 토큰 일 때!");
+        // console.log("이상한 토큰 일 때!");
         Logout();
         // access token이 변조 된 경우
         return Promise.resolve("이상한 토큰 쓰지 마세요 ㅡㅡ.");

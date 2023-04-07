@@ -7,6 +7,7 @@ import Grid from '@mui/material/Grid';
 import backgroundSrc from '../../../assets/image/startAuction_background.png';
 import SamsungLogo from '../../../assets/logo/logo.png'
 
+
 const StartAuction = () => {
   const navigate = useNavigate();
 

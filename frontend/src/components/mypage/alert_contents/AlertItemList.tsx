@@ -37,14 +37,14 @@ const AlertItemList = () => {
     noticeAPI
       .get('/')
       .then(({ data }) => {
-        console.log('알림 내역 >> ', data);
+        // console.log('알림 내역 >> ', data);
         setAlertCnt(countAlert(data, tabValue.menu));
         setAlertMap(data);
       })
       .catch((err) => {
-        console.log(err);
+        // console.log(err);
       });
-    console.log(tabValue);
+    // console.log(tabValue);
   }, []);
 
   useEffect(() => {
@@ -131,7 +131,7 @@ const AlertItemList = () => {
   };
 
   const renderTypedAlerts = (alertType: string): JSX.Element[] => {
-    console.log(alertType);
+    // console.log(alertType);
     return Object.keys(alertMap)
       .reverse()
       .map((key: string) => {

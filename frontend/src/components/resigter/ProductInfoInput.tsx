@@ -18,7 +18,7 @@ type Product = {
 const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const [imageCnt,setImageCnt] = useState(0)
   const editorRef: any = useRef(null);
-  console.log(dataRef)
+  // console.log(dataRef)
   // Error 체크용 전역 State
   const [isTitleError, setIsTitleError] = useRecoilState(isTitleErrorState)
   const [isCategoryError, setIsCategoryError] = useRecoilState(isCategoryErrorState)
@@ -64,7 +64,7 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
   const onChange = (e: any) => {
     const { value, name } = e.target; // 우선 e.target 에서 name 과 value 를 추출
     dataRef.current[name] = value;
-    console.log(value, name)
+    // console.log(value, name)
     
     // 제목이 바뀌면 제목 error 테두리 해제
     if (name === "title") {
@@ -117,9 +117,9 @@ const ProductInfoInput = ( {dataRef, update} : any ) : React.ReactElement => {
                   e.target.value = null;
                   return;
                 }
-                console.log("files >> ", files);
+                // console.log("files >> ", files);
                 dataRef.current.files = files;
-                console.log("dataRef.current.files >> ", dataRef.current.files);
+                // console.log("dataRef.current.files >> ", dataRef.current.files);
               }}
             />
           </Grid> }

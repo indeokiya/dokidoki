@@ -3,6 +3,7 @@ package com.dokidoki.auction.common;
 import com.dokidoki.auction.dto.response.BiddingResp;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ import java.util.List;
 public class HttpUtil {
     private final RestTemplate restTemplate;
 
+    @Value("${api.server.uri.bid}")
+    private String BID_SERVER_URI;
+
     public BiddingResp getAuctionIdList(String accessToken) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(accessToken);
@@ -26,7 +30,7 @@ public class HttpUtil {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         UriComponents uriComponents = UriComponentsBuilder
-                .fromHttpUrl("https://j8a202.p.ssafy.io/api/bids/my-infos/bids")
+                .fromHttpUrl(BID_SERVER_URI+"/my-infos/bids")
                 .build(true);
 
         try {

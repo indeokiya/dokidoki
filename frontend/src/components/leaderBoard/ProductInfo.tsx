@@ -75,7 +75,7 @@ const ProductInfo = ({
       navigate('/login');
     }
 
-    console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
+    // console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
     if (seller_id === userInfo.user_id) {
       enqueueSnackbar(`내 경매는 입찰할 수 없습니다.`, { variant: 'info' });
       alert('내 경매는 입찰할 수 없습니다.');
@@ -103,7 +103,7 @@ const ProductInfo = ({
       })
       .catch((err) => {
         // 실패 로직
-        console.log(err);
+        // console.log(err);
         const error_message = err.response.data.message;
         if (error_message === 'Different Highest Price') {
           enqueueSnackbar('현재 최고가격이 갱신되어 입찰에 실패했습니다.', {
@@ -147,7 +147,7 @@ const ProductInfo = ({
       alert('먼저 로그인해주세요.');
       navigate('/login');
     }
-    console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
+    // console.warn('seller >>', seller_id, ', user id >> ', userInfo.user_id);
     if (seller_id !== userInfo.user_id) {
       enqueueSnackbar('종료할 수 없습니다. 내 경매가 아닙니다.', {
         variant: 'error',
@@ -167,13 +167,13 @@ const ProductInfo = ({
       .delete(`auctions/${auction_id}/close`)
       .then((res) => {
         // 성공 로직
-        console.log('경매 종료 성공 res >> ', res);
+        // console.log('경매 종료 성공 res >> ', res);
         alert(`경매를 종료했습니다.`);
         navigate('/auction');
       })
       .catch((err) => {
         // 실패 로직
-        console.log(err);
+        // console.log(err);
         const error_message = err?.response?.data?.message;
         alert(error_message);
       });
@@ -189,7 +189,7 @@ const ProductInfo = ({
           setBookmark(!bookmark);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     } else {
       auctionAPI
@@ -198,7 +198,7 @@ const ProductInfo = ({
           setBookmark(!bookmark);
         })
         .catch((err) => {
-          console.log(err);
+          // console.log(err);
         });
     }
   };

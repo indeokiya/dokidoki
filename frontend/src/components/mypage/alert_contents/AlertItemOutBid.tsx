@@ -90,7 +90,7 @@ const AlertItemOutBid: React.FC<{
     noticeAPI.put(
       `/${key}/read`
     ).then((res)=> {
-      console.log(res)
+      // console.log(res)
     })
   }
 

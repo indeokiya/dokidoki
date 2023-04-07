@@ -52,12 +52,12 @@ const AuctionUpdatePage = () => {
       }, )
       .then((res) => {
         alert('경매 정보 수정에 성공했습니다.');
-        console.log(res);
+        // console.log(res);
         navigate(`/auction/product/${state.auction_id}`);
       })
       .catch((err) => {
         alert('경매 정보 수정에 실패했습니다.');
-        console.error(err);
+        // console.error(err);
       });
   };
 
