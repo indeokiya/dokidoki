@@ -5,10 +5,10 @@ const fetchRecentPopularInfo = () => {
   const axios = bidAPI;
   return axios.get(`analyze/realtime-interest`)
    .then(res => {
-    console.log("res >> ", res);
+    // console.log("res >> ", res);
     return res.data;
    })
-   .catch(err => console.error(err));
+  //  .catch(err => console.error(err));
 
 }
 
@@ -30,11 +30,11 @@ export const useRecentPopularInfo = () => {
 const select = (data: any) => {
   if (data.bid.length === 0) {
     data.bid = dummyData;
-    console.log("dummyData added to bid!")
+    // console.log("dummyData added to bid!")
   }
   if (data.click.length === 0) {
     data.click = dummyData;
-    console.log("dummyData added to click!")
+    // console.log("dummyData added to click!")
   }
   return data;
 }

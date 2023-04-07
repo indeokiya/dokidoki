@@ -29,7 +29,7 @@ const TokenRedirectPage = () => {
         }
 
         if(access_token) localStorage.setItem('access_token', access_token);
-        else console.log('엑세스 토큰 안들어감');
+        // else console.log('엑세스 토큰 안들어감');
         
         if(refresh_token) {
             localStorage.setItem('refresh_token', refresh_token);
@@ -38,7 +38,7 @@ const TokenRedirectPage = () => {
             user_info = {...user_info, is_logged_in: true};
             setUserInfoState(user_info);
         }
-        else console.log('리프레시 토큰 안들어감');
+        // else console.log('리프레시 토큰 안들어감');
 
         navigate('/',{replace:true})
     }, []);

@@ -21,7 +21,7 @@ const AuctionPageContent = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    console.log('auctionPageContent : category : ', category, ' keyword : ', keyword);
+    // console.log('auctionPageContent : category : ', category, ' keyword : ', keyword);
   }, []);
 
   return (

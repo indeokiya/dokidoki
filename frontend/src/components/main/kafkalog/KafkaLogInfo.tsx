@@ -28,8 +28,8 @@ const KafkaLogInfo = () => {
   const clickArr: KafkaLog[] = data.click;
   const bidArr: KafkaLog[] = data.bid;
 
-  console.log('clickArr >> ', clickArr); //가장 많이 방문된 게시글
-  console.log('bidArr >> ', bidArr); //입찰이 가장 많일어난 계시글
+  // console.log('clickArr >> ', clickArr); //가장 많이 방문된 게시글
+  // console.log('bidArr >> ', bidArr); //입찰이 가장 많일어난 계시글
 
   return (
     <>

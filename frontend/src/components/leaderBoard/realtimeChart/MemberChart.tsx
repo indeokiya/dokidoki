@@ -28,8 +28,8 @@ if (initial_datas) {
     display_datas.sort((a, b) => b.bid_infos[0].y - a.bid_infos[0].y)
 }
 
-console.log("initial_datas >> ", initial_datas)
-console.log("display_datas >>", display_datas)
+// console.log("initial_datas >> ", initial_datas)
+// console.log("display_datas >>", display_datas)
 
 const timeFormat = 'YYYY-MM-DDTHH:mm:ss'
 

@@ -96,7 +96,7 @@ const AlertItemFail: React.FC<{
     noticeAPI.put(
       `/${key}/read`
     ).then((res)=> {
-      console.log(res)
+      // console.log(res)
     })
   }
 

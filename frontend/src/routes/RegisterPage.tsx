@@ -93,7 +93,7 @@ const RegisterPage = () => {
     }
     for (let idx = 0; idx < dataRef.current.files.length; idx++) {
       const file: File = dataRef.current.files[idx]
-      console.log(file)
+      // console.log(file)
       if (!file.type.startsWith("image/")) {
         setIsFilesError(true)
         alert("이미지 파일만 업로드 가능합니다.")
@@ -125,13 +125,13 @@ const RegisterPage = () => {
       })
       .then((res) => {
         alert('성공');
-        console.log(res);
+        // console.log(res);
         // 성공하면 alert 알림 후 location.href , location.replace 또는 navigator로 이동
         navigate('/auction');
       })
       .catch((err) => {
         alert('최대 10MB 까지 보낼 수 있습니다.');
-        console.error(err);
+        // console.error(err);
       });
   };
 

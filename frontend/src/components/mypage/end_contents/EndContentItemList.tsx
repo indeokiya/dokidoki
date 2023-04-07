@@ -22,7 +22,7 @@ const purchaseHitory = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('구매한 데이터 >> ', data.data);
+      // console.log('구매한 데이터 >> ', data.data);
       return data.data;
     });
 };
@@ -37,7 +37,7 @@ const salesHistory = (page: number, size: number) => {
       },
     })
     .then(({ data }) => {
-      console.log('판매한 데이터 >> ', data.data);
+      // console.log('판매한 데이터 >> ', data.data);
       return data.data;
     });
 };
@@ -55,7 +55,7 @@ const EndContentItemList = () => {
       ['mypage', menu.menu],
       ({ pageParam = 0 }) => {
         //조건에 따른 api 분기
-        console.log('선택된 메뉴 >> ', menu.menu);
+        // console.log('선택된 메뉴 >> ', menu.menu);
         if (menu.menu === '구매 내역') {
           return purchaseHitory(pageParam, size);
         }
@@ -95,8 +95,8 @@ const EndContentItemList = () => {
         <EndSceleton/>
     );
   }
-  console.log('data >>', data);
-  console.log('posts >> ', posts);
+  // console.log('data >>', data);
+  // console.log('posts >> ', posts);
 
 
   return (
