@@ -2,6 +2,9 @@ import axios from 'axios';
 
 import { Logout, RedirectLogin} from 'src/hooks/logout';
 
+import { useSetRecoilState } from 'recoil';
+import { userInfoState } from 'src/store/userInfoState';
+
 const auctionAPI = axios.create({
   baseURL: process.env.REACT_APP_AUCTION_SERVER_BASE_URL,
   headers: {
@@ -93,11 +96,29 @@ function addResponseIntercepter(axiosApi : any){
         return getRefreshToken().then(({data})=>{
           alert("토큰 재발급 성공!");
 
-          const access_token = data.access_token;
-          const refresh_token = data.refresh_token;
-          
-          localStorage.setItem("access_token", access_token);
-          localStorage.setItem("refresh_token", refresh_token);
+          function parseJwt (token : string) {
+            var base64Url = token.split('.')[1];
+            var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            var jsonPayload = decodeURIComponent(window.atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        
+            return jsonPayload;
+        }
+        const setUserInfoState = useSetRecoilState(userInfoState);
+        const access_token = data.access_token;
+        const refresh_token = data.refresh_token;
+        
+        localStorage.setItem("access_token", access_token);
+        localStorage.setItem("refresh_token", refresh_token);
+
+        
+        let user_info = JSON.parse(parseJwt(refresh_token));
+        user_info = {...user_info, is_logged_in: true};
+        setUserInfoState(user_info);
+
+
+
           
           window.location.href = window.location.origin;
           // refresh token이 유효한 경우 토큰 재발급
