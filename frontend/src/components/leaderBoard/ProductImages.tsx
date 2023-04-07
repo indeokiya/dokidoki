@@ -22,7 +22,7 @@ const ProductImages = ({ images, end_time }: Props) => {
       sx={{
         margin: '0px',
         height: '100%',
-        // border: '1px solid grey',
+        border: '1px solid #dddddd',
         borderRadius: '10px',
         padding: '10px',
         boxSizing: 'border-box',
