@@ -14,8 +14,7 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
   kafka:
-    bootstrap-servers:
-      - # 카프카 주소
+    bootstrap-servers: # 카프카 주소
     consumer:
       # consumer bootstrap servers가 따로 존재하면 설정
       # bootstrap-servers: localhost:9092
@@ -53,3 +52,8 @@ logging:
 #    name: bid.log
   level:
     root: INFO
+
+api:
+  server:
+    uri:
+      auction: # auction server uri

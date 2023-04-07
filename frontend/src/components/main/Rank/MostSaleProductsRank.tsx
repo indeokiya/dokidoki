@@ -18,13 +18,13 @@ const MostSaleProductsRank = () => {
       ref={ref}
       sx={{
         position: 'relative',
-        padding: '5% 0%',
+        padding: '5% 10%',
         backgroundColor: '#3A77EE',
       }}
     >
       {/* 순위 제목 */}
       <Grid container px={3}>
-      <Title title="Most populer Product"></Title>
+      <Title title="Most popular Product"></Title>
         <Grid item xs={12} sm={5} sx={{ position: 'relative' }}>
           <StyledImg src={Smartphone} start={inView} />
         </Grid>
@@ -44,7 +44,7 @@ export default MostSaleProductsRank;
 const animation = keyframes`
   from{
     opacity:0;
-    transform:translateY(15px);
+    transform:translateY(35px);
   }to{
     opacity:1;
     transform:translateY(0px);

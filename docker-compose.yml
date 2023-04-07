@@ -34,9 +34,6 @@ services:
       context: ./backend/api-gateway
       dockerfile: dockerfile
     environment:
-      SPRING_DATASOURCE_URL: ${DATABASE_URL}
-      SPRING_DATASOURCE_USERNAME: ${DATABASE_USERNAME}
-      SPRING_DATASOURCE_PASSWORD: ${DATABASE_PASSWORD}
       JWT_SECRET: ${JWT_SECRET_KEY}
     restart: always
     stdin_open: true
@@ -51,11 +48,12 @@ services:
       context: ./backend/bid
       dockerfile: dockerfile
     environment:
-      SPRING_KAFKA_BOOTSTRAP-SERVERS: ${KAFKA_SERVER_URI}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS_0: ${KAFKA_SERVER_URI}
       JWT_ISSUER: ${JWT_ISSUER}
       JWT_SECRET: ${JWT_SECRET_KEY}
       JWT_ACCESS_EXPIRATION: ${JWT_ACCESS_EXPIRATION}
       JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
+      API_SERVER_URI_AUCTION: http://auction-server
     volumes:
       - /var/log/springboot/bid/system:/var/log/springboot/bid
       - /var/log/springboot/bid/access:/logs
@@ -76,10 +74,13 @@ services:
       JWT_SECRET: ${JWT_SECRET_KEY}
       JWT_ACCESS_EXPIRATION: ${JWT_ACCESS_EXPIRATION}
       JWT_REFRESH_EXPIRATION: ${JWT_REFRESH_EXPIRATION}
-      SPRING_KAFKA_BOOTSTRAP-SERVERS: ${KAFKA_SERVER_URI}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS_0: ${KAFKA_SERVER_URI}
       CLOUD_AWS_S3_BUCKET: ${S3_BUCKET}
       CLOUD_AWS_CREDENTIALS_ACCESS-KEY: ${S3_ACCESS_KEY}
-      CLOUD_AWS_CREDENTIALS_SECRET-KEY: ${S3_SECRET_KEY}            
+      CLOUD_AWS_CREDENTIALS_SECRET-KEY: ${S3_SECRET_KEY}
+      API_SERVER_URI_NOTICE: http://notice-server
+      API_SERVER-URI_BID: http://bid-server
+                  
     volumes:
       - /var/log/springboot/auction/system:/var/log/springboot/auction
       - /var/log/springboot/auction/access:/logs
@@ -120,7 +121,7 @@ services:
       context: ./backend/notice
       dockerfile: dockerfile
     environment:
-      SPRING_KAFKA_BOOTSTRAP-SERVERS: ${KAFKA_SERVER_URI}
+      SPRING_KAFKA_BOOTSTRAP_SERVERS_0: ${KAFKA_SERVER_URI}
       JWT_ISSUER: ${JWT_ISSUER}
       JWT_SECRET: ${JWT_SECRET_KEY}
       JWT_ACCESS_EXPIRATION: ${JWT_ACCESS_EXPIRATION}
@@ -140,7 +141,7 @@ services:
       context: ./backend/streaming
       dockerfile: dockerfile
     environment:
-      SPRING_KAFKA_BOOTSTRAP-SERVERS: ${KAFKA_SERVER_URI}    
+      SPRING_KAFKA_BOOTSTRAP_SERVER: ${KAFKA_SERVER_URI}
     restart: always
   
 networks:

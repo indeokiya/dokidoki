@@ -17,7 +17,7 @@ function numberFormat(price: number | null) {
 }
 
 const KafkaLogInfo = () => {
-  const [ref, inView] = useInView({ threshold: 0.5, triggerOnce: true });
+  const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: true });
   const navigate = useNavigate();
 
   const { isLoading, isError, data } = useRecentPopularInfo();
@@ -35,9 +35,9 @@ const KafkaLogInfo = () => {
     <>
       <Grid container sx={{ width: '100%', padding: '10%' }} gap={5} ref={ref}>
         <Grid item xs={12} sx={{ textAlign: 'center' }}>
-          <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold' }}>
+          {/* <Typography variant="h4" color="primary" sx={{ fontWeight: 'bold' }}>
             kafka Info
-          </Typography>
+          </Typography> */}
         </Grid>
         <Grid item xs={12} alignSelf="flex-start">
           <LeftAnimationDiv start={inView}>
@@ -49,6 +49,9 @@ const KafkaLogInfo = () => {
                 <Typography variant="subtitle1" color="primary">
                   지금 제일 핫한 경매
                 </Typography>
+                {bidArr.length === 0
+                  ? <Typography variant='h5' textAlign="center">지금은 경매가 없어요😢</Typography>
+                  : null}
                 {bidArr.map((data: KafkaLog, i) => {
                   return (
                     <AnimationDiv key={i} style={{ marginTop: '10px' }}>
@@ -90,6 +93,9 @@ const KafkaLogInfo = () => {
                 <Typography variant="subtitle1" color="primary" textAlign={'end'}>
                   인기 글
                 </Typography>
+                {clickArr.length === 0
+                  ? <Typography variant='h5' textAlign="center">지금은 경매가 없어요😢</Typography>
+                  : null}
                 {clickArr.map((data: KafkaLog, i) => {
                   return (
                     <AnimationDiv key={i} style={{ textAlign: 'end', marginTop: '10px' }}>
