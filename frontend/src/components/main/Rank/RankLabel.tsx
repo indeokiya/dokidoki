@@ -15,8 +15,8 @@ const RankLabel = ({
     <StyledRankLabel style={{ width: widthSize }} bias={bias}>
       {rankData !== undefined
         ? rankData.map((rank, index) => (
-            <Tooltip title={rank.label}  arrow placement={bias === "right" ? "top-end":"top-start"}>
-              <StyledLabel key={index} bias={bias} title={rank.label}>
+            <Tooltip key={index} title={rank.label}  arrow placement={bias === "right" ? "top-end":"top-start"}>
+              <StyledLabel key={index} bias={bias}>
                 {rank.label}
               </StyledLabel>
             </Tooltip>

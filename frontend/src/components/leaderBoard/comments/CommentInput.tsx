@@ -31,7 +31,7 @@ const CommentInput: React.FC<{parentId: string | null, refetch: Function}> = (pr
       setContent("")  // 댓글 초기화
   
     }).catch(err => {
-      console.error("ERROR >>", err)
+      // console.error("ERROR >>", err)
       alert("댓글이 등록되지 않았습니다.")
     });
   }

@@ -43,7 +43,7 @@ const ProductPage = () => {
 
     // array로 넘어오는 날짜 데이터를 ISOString으로 변환
     let dateTime = new Date(bid_time[0], bid_time[1]-1, bid_time[2], bid_time[3], bid_time[4], bid_time[5], bid_time[6]/1e+6).toISOString()
-    console.log(name, bid_time, bid_price, bid_num)
+    // console.log(name, bid_time, bid_price, bid_num)
 
     setMemberChart(prevMemberChart => {
       // bid_num이 새로운 사용자라면? (이건 정상 작동하는거 같은데)
@@ -87,7 +87,7 @@ const ProductPage = () => {
   }, []);
 
   useEffect(() => {
-    console.log("수정된 memberChart >>", memberChart)
+    // console.log("수정된 memberChart >>", memberChart)
   }, [memberChart])
 
   // 스낵바
@@ -102,10 +102,10 @@ const ProductPage = () => {
         authorization: 'Bearer ' + localStorage.getItem('access_token'),
       },
       onConnect: () => {
-        console.log('socket connected');
+        // console.log('socket connected');
 
         clientRef.current?.subscribe(`/topic/auctions/${id}/realtime`, (message: Message) => {
-          console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
+          // console.log(`Received message: ${message.body}`); //여기서 전부 뽑아씀 => 업데이트할 자료
           let sData = JSON.parse(message.body);
 
           //소켓으로 경매정보가 넘어왔을 때
@@ -149,7 +149,7 @@ const ProductPage = () => {
   const disconnect = () => {
     // 연결이 끊겼을 때
     clientRef.current?.deactivate();
-    console.log('socket disconnected');
+    // console.log('socket disconnected');
   };
 
   // props로 내려줄 초기 데이터 가져오기 . useQuery 사용
@@ -157,7 +157,7 @@ const ProductPage = () => {
   const { isLoading, isError, error, data } = useAuctionDetail({ id });
   if (isLoading) return <ProductPageSceleton/>;
   if (isError) {
-    console.error('error occured >> ', error.message);
+    // console.error('error occured >> ', error.message);
     return <StyledImg src={errorImg}></StyledImg>;
   }
   // 이미 종료된 경매라면 경매 상세정보가 넘어오지 않으므로,
@@ -178,7 +178,7 @@ const ProductPage = () => {
 
 
   // 이 아래부터는 data가 존재함이 보장됨
-  console.log('fetched auction data >> ', data);
+  // console.log('fetched auction data >> ', data);
   
   const {
     auction_image_urls,

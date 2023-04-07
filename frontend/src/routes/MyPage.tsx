@@ -167,7 +167,7 @@ export default function Paperbase() {
     if(!loginUser.is_logged_in){
       navigate("/login");
     }
-    console.log(" 지금 페이지의 url paht >>> ",param.pathname)
+    // console.log(" 지금 페이지의 url paht >>> ",param.pathname)
     if (param.pathname.split('/')[2] === "auction-item") {
       setMenu({ menu: '입찰 중' });
     }

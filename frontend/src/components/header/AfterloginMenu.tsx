@@ -51,11 +51,11 @@ const AfterLoginMenu = () => {
   useEffect(()=> {
     noticeAPI.get("/")
     .then(({ data }) => {
-      console.log('알림 내역 >> ', data)
+      // console.log('알림 내역 >> ', data)
       setAlertMap(data)
     })
     .catch((err) => {
-      console.log(err)
+      // console.log(err)
     })
     
 
@@ -64,7 +64,7 @@ const AfterLoginMenu = () => {
   useEffect(() => {
     setAlertCnt(countAlert(alertMap))
     setBadgeKey((prev) => prev + 1)
-    console.log(alertCnt)
+    // console.log(alertCnt)
   }, [alertMap, alertCnt])
 
   let clientRef = useRef<Client>();
@@ -87,13 +87,13 @@ const AfterLoginMenu = () => {
     clientRef.current = new Client({
       brokerURL: `wss://j8a202.p.ssafy.io/api/notices/ws`,
       onConnect: () => {
-        console.log('header socket connected');
+        // console.log('header socket connected');
 
         clientRef.current?.subscribe(`/topic/points/${userInfo.user_id}/realtime`, (message: Message) => {
-          console.log(`Received message: ${message.body}`);
+          // console.log(`Received message: ${message.body}`);
           
           const data = JSON.parse(message.body);
-          console.log("data : ", data);
+          // console.log("data : ", data);
           if(data.point) setUserInfoState({ ...userInfo, point: data.point})
           
           if(data.type === "SELLER"){         // 판매자
@@ -119,17 +119,17 @@ const AfterLoginMenu = () => {
               }
             }
           }else if(data.type === "BUYER"){    // 구매자
-            console.log("구매 성공")
+            // console.log("구매 성공")
             enqueueSnackbar(`${data.productName} 구매 성공, 포인트 감소 : ${numberFormat(data.earnedPoint)}`, {variant: "success", anchorOrigin:{
               horizontal:"center",
               vertical:"top"
             }})
           }else if(data.type === "PRISONER"){ // 이용 정지
-            console.log("계정 정지")
+            // console.log("계정 정지")
             alert(data.message);
             Logout();
           }else if(data.type === "PENALTY"){  // 구매자 수수료 감소 알림
-            console.log("패널티")
+            // console.log("패널티")
             enqueueSnackbar(`${data.productName} ${data.message} 감소 포인트 : ${numberFormat(data.earnedPoint)}`, {variant: "error", anchorOrigin:{
               horizontal:"center",
               vertical:"top"
@@ -144,7 +144,7 @@ const AfterLoginMenu = () => {
   const disconnect = () => {
     // 연결이 끊겼을 때
     clientRef.current?.deactivate();
-    console.log('header socket disconnected');
+    // console.log('header socket disconnected');
   };
 
 

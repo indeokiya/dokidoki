@@ -14,7 +14,7 @@ export const useTotalExpensesQuery = () => useQuery({
       .get(`/my-infos/total-expenses`)
       .then(({ data }) => {
         const totalExpenses: number = data.data
-        console.log("넘어와라 좀!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", totalExpenses)
+        // console.log("넘어와라 좀!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", totalExpenses)
         return totalExpenses
       })
   },
@@ -28,7 +28,7 @@ export const useTotalProfitsQuery = () => useQuery({
       .get(`/my-infos/total-profits`)
       .then(({ data }) => {
         const totalProfits: number = data.data
-        console.log("넘어와라 좀!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", totalProfits)
+        // console.log("넘어와라 좀!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", totalProfits)
         return totalProfits
       })
   },

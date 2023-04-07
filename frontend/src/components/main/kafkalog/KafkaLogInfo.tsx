@@ -28,8 +28,8 @@ const KafkaLogInfo = () => {
   const clickArr: KafkaLog[] = data.click;
   const bidArr: KafkaLog[] = data.bid;
 
-  console.log('clickArr >> ', clickArr); //가장 많이 방문된 게시글
-  console.log('bidArr >> ', bidArr); //입찰이 가장 많일어난 계시글
+  // console.log('clickArr >> ', clickArr); //가장 많이 방문된 게시글
+  // console.log('bidArr >> ', bidArr); //입찰이 가장 많일어난 계시글
 
   return (
     <>
@@ -54,7 +54,7 @@ const KafkaLogInfo = () => {
                   : null}
                 {bidArr.map((data: KafkaLog, i) => {
                   return (
-                    <AnimationDiv style={{ marginTop: '10px' }}>
+                    <AnimationDiv key={i} style={{ marginTop: '10px' }}>
                       <Tooltip title={data.product_name} arrow placement="top-end">
                         <Box
                           key={i}
@@ -98,7 +98,7 @@ const KafkaLogInfo = () => {
                   : null}
                 {clickArr.map((data: KafkaLog, i) => {
                   return (
-                    <AnimationDiv style={{ textAlign: 'end', marginTop: '10px' }}>
+                    <AnimationDiv key={i} style={{ textAlign: 'end', marginTop: '10px' }}>
                       <Tooltip title={data.product_name} arrow placement="top-start">
                         <Box
                           key={i}

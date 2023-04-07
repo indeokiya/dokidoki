@@ -34,8 +34,8 @@ if (initial_datas) {
     console.log(display_datas)
 }
 
-console.log("initial_datas >> ", initial_datas)
-console.log("display_datas >>", display_datas)
+// console.log("initial_datas >> ", initial_datas)
+// console.log("display_datas >>", display_datas)
 
 const timeFormat = 'YYYY-MM-DDTHH:mm:ss'
 

@@ -95,7 +95,7 @@ const MypageNavigator: React.FC<{
   const [loginUser, setLoginUser] = useRecoilState(userInfoState);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log(e);
+    // console.log(e);
     const target = e.currentTarget;
     const files = (target.files as FileList)[0];
     const formData = new FormData();
@@ -110,7 +110,7 @@ const MypageNavigator: React.FC<{
       .then((res) => {
         alert('성공');
         setLoginUser({ ...loginUser, picture: res.data.data });
-        console.log('res >> ', res);
+        // console.log('res >> ', res);
       });
   };
 

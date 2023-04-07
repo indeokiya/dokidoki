@@ -7,7 +7,7 @@ const AddressInput: React.FC<{
   dataRef: any;
 }> = (props) => {
   const handleComplete = (data: any) => {
-    console.log("addressData >>> ",data)
+    // console.log("addressData >>> ",data)
     let fullAddress = data.address;
     let extraAddress = '';
 
