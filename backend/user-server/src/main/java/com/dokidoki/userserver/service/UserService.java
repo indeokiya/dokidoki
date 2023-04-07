@@ -86,6 +86,7 @@ public class UserService {
                 .providerType(userEntity.getProviderType())
                 .sub(userEntity.getSub())
                 .picture(profileImageUrl)
+                .point(userEntity.getPoint())
                 .build();
 
         // 업데이트
