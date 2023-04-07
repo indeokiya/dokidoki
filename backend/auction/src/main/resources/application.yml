@@ -27,6 +27,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        jdbc:
+          time_zone: Asia/Seoul
   servlet:
     multipart:
       max-request-size: 10MB
