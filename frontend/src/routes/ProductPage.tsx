@@ -215,7 +215,7 @@ const ProductPage = () => {
           }}
         >
           <ScrollTop />
-          <Grid container spacing={3} sx={{ marginBottom: '5%' ,border:"1px solid #dddddd"}}>
+          <Grid container spacing={3} sx={{ marginBottom: '5%' }}>
             <Grid item xs={12}>
               <Grid container spacing={3}>
                 
