@@ -1,0 +1,65 @@
+server:
+  port: 80
+  tomcat:
+    accesslog:
+      enabled: true
+      suffix: .log
+      prefix: access_log
+      file-date-format: .yyyy-MM-dd
+      pattern: '%{yyyy-MM-dd HH:mm:ss}t %s %r'
+    basedir: ./
+
+spring:
+  datasource:
+    url:  # db 주소
+    username: # db 유저
+    password: # db 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  logging:
+    level:
+      org.hibernate.type: trace
+
+cloud:
+  aws:
+    s3:
+      bucket: # 버킷 명
+    credentials:
+      access-key: # S3 ACCESS KEY
+      secret-key: # S3 SECRET KEY
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
+oauth2:
+  google:
+    client_id: # GOOGLE OAUTH CLIENT ID
+    client_secret: # GOOGLE OAUTH SECRET KEY
+    token_uri: https://oauth2.googleapis.com/token
+    profile_uri: https://www.googleapis.com/oauth2/v3/userinfo
+    redirect_uri: https://j8a202.p.ssafy.io/api/users/oauth2/google/redirect
+  kakao:
+    client_id: # KAKAO OAUTH CLIENT ID
+    client_secret: # KAKAO OAUTH SECRET KEY
+    redirect_uri: https://j8a202.p.ssafy.io/api/users/oauth2/kakao/redirect
+    token_uri: https://kauth.kakao.com/oauth/token
+
+
+jwt:
+  issuer: # JWT 발급 도메인
+  secret: # JWT SECRET KEY
+  access_expiration: # access token 만료기간
+  refresh_expiration: # refresh token 만료기간
+
+front:
+  redirect_uri: https://j8a202.p.ssafy.io/redirect

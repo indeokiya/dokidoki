@@ -1,0 +1,19 @@
+spring:
+  # database local
+  datasource:
+    url: jdbc:mysql://j8a202.p.ssafy.io:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+#    url: jdbc:mysql://localhost:3306/test_dokidb?serverTimezone=UTC&characterEncoding=UTF-8
+    username: dokidoki
+    password: dokidoki202
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  logging:
+    level:
+      org.hibernate.type: trace

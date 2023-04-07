@@ -1,0 +1,87 @@
+server:
+  port: 80
+  tomcat:
+    accesslog:
+      enabled: true
+      suffix: .log
+      prefix: access_log
+      file-date-format: .yyyy-MM-dd
+      pattern: '%{yyyy-MM-dd HH:mm:ss}t %s %r'
+    basedir: ./
+
+spring:
+  datasource:
+    url: # db 주소
+    username: # db 유저
+    password: # db 비밀번호
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  jpa:
+    database: mysql
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+#    show-sql: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  servlet:
+    multipart:
+      max-request-size: 10MB
+      max-file-size: 10MB
+  kafka:
+    bootstrap-servers: # 카프카 주소
+      - 3.35.49.175:9092
+    consumer:
+      group-id: test.group
+      # Kafka 서버에 초기 offset이 없거나, 서버에 현재 offset이 더 이상 존재하지 않을 경우 수행할 작업을 설정
+      # latest: 가장 최근에 생산된 메시지로 offeset reset
+      # earliest: 가장 오래된 메시지로 offeset reset
+      # none: offset 정보가 없으면 Exception 발생
+      auto-offset-reset: latest
+    auctionRegisterConfig:
+      topic: auction.register
+    auctionUpdateConfig:
+      topic: auction.update
+    auctionEndConfig:
+      topic: auction.end
+    bidConfig:
+      topic: bid
+
+#logging:
+#  level:
+#    root: debug
+
+cloud:
+  aws:
+    s3:
+      bucket: # 버킷 명
+    credentials:
+      access-key: # S3 ACCESS KEY
+      secret-key: # S3 SECRET KEY
+    region:
+      static: ap-northeast-2
+      auto: false
+    stack:
+      auto: false
+
+jwt:
+  issuer: # JWT 발급 도메인
+  secret: # JWT SECRET KEY
+  access_expiration: # access token 만료기간
+  refresh_expiration: # refresh token 만료기간
+
+logging:
+  file:
+    path: /var/log/springboot/auction
+#    name: auction.log
+  level:
+    root: INFO
+
+api:
+  server:
+    uri:
+      notice: # notice server uri
+      bid: # bid server uri

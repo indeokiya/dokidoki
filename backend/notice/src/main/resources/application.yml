@@ -1,0 +1,54 @@
+server:
+  port: 80
+  tomcat:
+    accesslog:
+      enabled: true
+      suffix: .log
+      prefix: access_log
+      file-date-format: .yyyy-MM-dd
+      pattern: '%{yyyy-MM-dd HH:mm:ss}t %s %r'
+    basedir: ./
+
+spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  kafka:
+    bootstrap-servers: # 카프카 서버 주소
+    consumer:
+      # consumer bootstrap servers가 따로 존재하면 설정
+      # bootstrap-servers: localhost:9092
+      # 식별 가능한 Consumer Group Id
+      group-id: test.group
+      # Kafka 서버에 초기 offset이 없거나, 서버에 현재 offset이 더 이상 존재하지 않을 경우 수행할 작업을 설정
+      # latest: 가장 최근에 생산된 메시지로 offeset reset
+      # earliest: 가장 오래된 메시지로 offeset reset
+      # none: offset 정보가 없으면 Exception 발생
+      auto-offset-reset: latest
+      # 데이터를 받아올 때, key/value를 역직렬화
+      # JSON 데이터를 받아올 것이라면 JsonDeserializer
+#      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+#      value-deserializer: org.apache.kafka.common.serialization.JsonDeserializer
+    auctionRegisterConfig:
+      topic: auction.register
+    auctionUpdateConfig:
+      topic: auction.update
+    auctionEndConfig:
+      topic: auction.end
+    bidConfig:
+      topic: bid
+#    producer:
+      # producer bootstrap servers가 따로 존재하면 설정
+      # bootstrap-servers: 카프카 서버 주소
+jwt:
+  issuer: # JWT 발급 도메인
+  secret: # JWT SECRET KEY
+  access_expiration: # access token 만료기간
+  refresh_expiration: # refresh token 만료기간
+
+logging:
+  file:
+    path: /var/log/springboot/notice
+#    name: notice.log
+  level:
+    root: INFO
