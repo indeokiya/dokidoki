@@ -1,10 +1,11 @@
 import styled, { keyframes } from 'styled-components';
 import { Box } from '@mui/system';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import topImg from '../../../assets/image/main_product.png';
 import bottomImg from '../../../assets/image/main_product_bottom.png';
 import Grid from '@mui/material/Grid';
-import backgroundSrc from '../../../assets/image/startAuction_background.png'
+import backgroundSrc from '../../../assets/image/startAuction_background.png';
+import SamsungLogo from '../../../assets/logo/삼성로고.png'
 
 const StartAuction = () => {
   const navigate = useNavigate();
@@ -14,15 +15,15 @@ const StartAuction = () => {
       container
       sx={{
         height: '100vh',
-        backgroundImage:`url(${backgroundSrc})`,
-        backgroundSize:'cover'
+        backgroundImage: `url(${backgroundSrc})`,
+        backgroundSize: 'cover',
       }}
     >
-      <Grid item  xs={12} sm={4} sx={{padding:"10%", }}>
+      <Grid item xs={12} sm={4} sx={{ padding: '10%' }}>
         <Box>
           <StyledDiv>
-            <StyledSmallP>samsung for</StyledSmallP>
-            <StyledLargeP>samsung</StyledLargeP>
+            <StyledSmallP>auction for</StyledSmallP>
+            <StyledImg src={SamsungLogo}></StyledImg>
             <Describe>삼성의 모든 것을 갖춘 옥션에서 일상을 즐겁게 만들어보세요.</Describe>
             <Describe>당신의 삶을 업그레이드하세요.</Describe>
             <Box sx={{ marginTop: '10px', marginLeft: '5px' }}>
@@ -53,6 +54,12 @@ const StartAuction = () => {
 };
 
 export default StartAuction;
+
+const StyledImg = styled.img`
+margin:5px 0;
+  width:300px;
+  height:auto;
+`
 
 const bottomAnimation = keyframes`
   0%{
@@ -112,40 +119,33 @@ const StyledDiv = styled.div`
 `;
 
 const StyledSmallP = styled.p`
-  color: #3A77EE;
+  color: #3a77ee;
+  font-size: 1.2rem;
   margin-bottom: 0px;
   padding: 0;
   padding-left: 5px;
 `;
 
-const StyledLargeP = styled.p`
-  margin: 0;
-  padding: 0;
-  color: #3A77EE;
-  font-wieght: bold;
-  font-size: 50px;
-  text-transform: uppercase;
-  padding-bottom: 5px;
-`;
 
 const Describe = styled.p`
   margin: 0;
   padding: 0;
   padding-left: 5px;
-  color: #3A77EE;
+  color: #3a77ee;
   white-space: pre-wrap;
 `;
 
 const StyledButton = styled.button`
-margin-top:10px;
+  font-weight: bold;
+  margin-top: 10px;
   font-size: 15px;
-  background-color: #3A77EE;
+  background-color: #3a77ee;
   padding: 15px;
   border-radius: 5px;
-  border: 1px solid #3A77EE;
+  border: 1px solid #3a77ee;
   color: white;
   transition: 0.2s;
   &:hover {
-    box-shadow: 1px 1px 15px #3A77EE;
+    box-shadow: 1px 1px 15px #3a77ee;
   }
 `;
