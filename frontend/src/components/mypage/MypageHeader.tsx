@@ -27,7 +27,7 @@ const MypageHeader: React.FC<{ selectedMenu: string }> = (props) => {
         })
     }
   }, [props.selectedMenu])
-  
+
   // 정수 포맷팅
   const showPoint = (point: number) => point.toString().split( /(?=(?:\d{3})+(?:\.|$))/g ).join( "," )
 
