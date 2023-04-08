@@ -8,7 +8,7 @@ singleServerConfig:
 #  password: null
   subscriptionsPerConnection: 5
   clientName: null
-  address: "redis://database_redis"
+  address: "redis://database_redis:6379"
   # address: "redis://j8a202.p.ssafy.io:6379"
 #  address: "redis://127.0.0.1:6379"
   subscriptionConnectionMinimumIdleSize: 1
