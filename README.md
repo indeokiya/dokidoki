@@ -1,24 +1,20 @@
 # README
 
-Created: 2023년 4월 5일 오후 1:57
+Created: April 5, 2023 1:57 PM
 
 # I. 서비스 소개
 
 ## 1. Overview
 
-[한 줄 소개 (사실 두 줄)]
-
 경매를 통해 중고 전자제품을 쟁취하세요! 합리적인 가격으로 구매할 수 있고, 어떤 걱정도 없이 간편하게 판매할 수 있습니다. 
 
 ## 2. 기획 배경
-
-[한 줄 소개 (사실 세 줄)]
 
 기존 중고 거래 플랫폼은 과도하게 가격 흥정을 하는 구매자, 물건을 먼저 이용해 보겠다는 구매자 등 여러 종류의 진상 구매자를 상대하는 불편함을 가지고 있습니다. 게다가 거래할 제품이 전자제품이라면 더욱더 많은 애로사항을 가집니다.
 
 저희는 경매 방식을 중고 전자제품 거래에 접목시켜 중고 거래와 전자제품 거래 모두의 불편함을 해소하고자 본 서비스를 기획하게 되었습니다.
 
-[구구절절 소개]
+---
 
 중고 전자제품을 사고 파는 것은 수많은 불편함을 안고 있습니다.
 
@@ -37,62 +33,79 @@ Created: 2023년 4월 5일 오후 1:57
 ### 메인페이지
 
 - 소개 부분
+    
+    ![ezgif.com-optimize.gif](README/ezgif.com-optimize.gif)
+    
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled.png)
+![Untitled](README/Untitled.png)
 
-- 가장 많은 포인트를 보유한 상위 5인
+- 최근 30초간 가장 입찰 요청, 조회가 많은 경매 순위
+    
+    ![실시간랭킹.gif](README/%25EC%258B%25A4%25EC%258B%259C%25EA%25B0%2584%25EB%259E%25AD%25ED%2582%25B9.gif)
+    
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%201.png)
-
-- 역대 가장 많이 거래된 제품
-
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%202.png)
-
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%203.png)
+- 역대 거래 정보 통계 분석 (가장 많이 거래된 제품, 포인트 랭킹, 총 거래 금액 등)
+    
+    ![통계페이지.gif](README/%25ED%2586%25B5%25EA%25B3%2584%25ED%258E%2598%25EC%259D%25B4%25EC%25A7%2580.gif)
+    
 
 ### 마이페이지
 
 - 입찰중 및 판매중 UI
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%204.png)
+![Untitled](README/Untitled%201.png)
 
 - 구매내역 및 판매내역 UI
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%205.png)
+![Untitled](README/Untitled%202.png)
 
 - 알림내역
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%206.png)
+![Untitled](README/Untitled%203.png)
 
 ### 경매 목록 페이지
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%207.png)
+![Untitled](README/Untitled%204.png)
 
 ### 경매 진행 페이지
 
 - 제품 설명
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%208.png)
+![Untitled](README/Untitled%205.png)
+
+- 입찰 성공, 실패 알림
+
+![스크린샷 2023-04-10 오후 4.21.27.png](README/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2023-04-10_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_4.21.27.png)
+
+- 낙찰 알림
+
+![스크린샷 2023-04-10 오후 4.26.04.png](README/%25E1%2584%2589%25E1%2585%25B3%25E1%2584%258F%25E1%2585%25B3%25E1%2584%2585%25E1%2585%25B5%25E1%2586%25AB%25E1%2584%2589%25E1%2585%25A3%25E1%2586%25BA_2023-04-10_%25E1%2584%258B%25E1%2585%25A9%25E1%2584%2592%25E1%2585%25AE_4.26.04.png)
 
 - 사용자별 입찰 기록 그래프
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%209.png)
+![Untitled](README/Untitled%206.png)
 
-- 제품 설명
+- 제품 설명 - 마크다운 및 지도 지원
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2010.png)
+![Untitled](README/Untitled%207.png)
 
-# II. 서비스 구조 & ERD
-
----
-
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2011.png)
-
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2012.png)
-
-# III. 기술 스택
+# II. 서비스 아키텍처
 
 ---
+
+## 서비스 구조
+
+![Untitled](README/Untitled%208.png)
+
+![Untitled](README/Untitled%209.png)
+
+![Untitled](README/Untitled%2010.png)
+
+## ERD
+
+![Untitled](README/Untitled%2011.png)
+
+## 기술 스택
 
 **📍 Frontend**
 
@@ -101,7 +114,8 @@ Created: 2023년 4월 5일 오후 1:57
 - TypeScript 4.9.5
 - Stomp.js 7.0.0
 - Axios 1.3.4
-- Stomp.js 7.0.0
+- mui 5.11.12
+- react-query 3.39.3
 
 **📍 DataBase**
 
@@ -122,38 +136,46 @@ Created: 2023년 4월 5일 오후 1:57
 - Lombok
 - jjwt 0.11.2
 
+**📍 Notification Server**
+
+- Spring Kafka 3.1.2
+- Spring Boot WebSocket
+- Jackson
+- RocksDB 7.10.2
+
 **📍 Auction Server**
 
 - Spring Boot 2.7.9
 - Spring Data JPA
 - Swagger 3.0.0
 
+**📍 Streaming Server**
+
+- Kafka Streams 3.1.2
+- Spring Kafka 3.1.2
+- Jackson
+- RocksDB 7.10.2
+
 **📍 Bid Server** 
 
-- Spring Kafka
+- Spring Kafka 3.1.2
 - Spring Boot WebSocket
 - Jackson
 - Redisson 3.17.7
-
-**📍 Notification Server**
-
-- Spring Kafka
-- Spring Boot WebSocket
-- Jackson
-- RocksDB 7.10.2
-
-**📍 Streaming Server**
-
-- Kafka Streams
-- Spring Kafka
-- Jackson
-- RocksDB 7.10.2
 
 **📍 Gateway Server**
 
 - Spring Cloud Gateway
 
-# IV. 서비스 컨텐츠 소개
+**📍 Data**
+
+- Kafka 3.4.0
+- Filebeat 7.17
+- Elasticsearch 7.17
+- Logstash 7.17
+- Kibana 7.17
+
+# III. 서비스 컨텐츠 소개
 
 ---
 
@@ -165,7 +187,7 @@ Created: 2023년 4월 5일 오후 1:57
 
 실제 서비스에서는 민감 개인정보를 공개하는 것은 절대 하지 말아야 할 행위지만, 가상의 포인트를 사용한다는 점에서 흥미를 이끌어 보고자 추가했습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%201.png)
+![Untitled](README/Untitled%2012.png)
 
 ### 2. 현재까지 가장 많이 거래된 제품
 
@@ -175,7 +197,15 @@ Created: 2023년 4월 5일 오후 1:57
 
 - 역대 가장 많이 거래된 제품
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2013.png)
+![Untitled](README/Untitled%2013.png)
+
+### 3. 현재 가장 입찰이 많은 경매와 조회수가 많은 경매
+
+최근 30초 이내에 가장 입찰이 많은 경매와 가장 조회수가 많은 경매 순위를 보여줍니다.
+
+경매를 클릭하면 해당 게시글로 이동합니다.
+
+![Untitled](README/Untitled%2014.png)
 
 ---
 
@@ -187,17 +217,19 @@ Created: 2023년 4월 5일 오후 1:57
 
 사용자는 현재 진행중인 경매들 및 해당 경매들의 남은 시간, 시작가, 입찰 단위, 현재가 등 다양한 정보를 확인할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2014.png)
+![Untitled](README/Untitled%2015.png)
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2015.png)
+![Untitled](README/Untitled%2016.png)
 
 ### 2. 카테고리 조회
 
 좌측의 카테고리 메뉴를 클릭하여 특정 카테고리의 제품만 조회할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2016.png)
+![Untitled](README/Untitled%2017.png)
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2017.png)
+![Untitled](README/Untitled%2018.png)
+
+![Untitled](README/Untitled%2019.png)
 
 ### 3. 종료된 경매 목록 조회
 
@@ -205,7 +237,9 @@ Created: 2023년 4월 5일 오후 1:57
 
 이 기능을 이용해 사용자는 어느 제품이 얼마에 팔렸는지 참고할 수 있습니다.
 
-(정상적인 경매 올리고 사진사진)
+![Untitled](README/Untitled%2020.png)
+
+![Untitled](README/Untitled%2021.png)
 
 ### 4. 진행중인 경매 검색
 
@@ -213,7 +247,9 @@ Created: 2023년 4월 5일 오후 1:57
 
 키워드가 포함된 경매 제목, 제품명, 카테고리의 경매가 등장합니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2018.png)
+좌측의 카테고리 메뉴를 눌러 필터를 적용할 수 있습니다.
+
+![Untitled](README/Untitled%2022.png)
 
 ---
 
@@ -225,9 +261,9 @@ Created: 2023년 4월 5일 오후 1:57
 
 경매 제목 우측 상단에 있는 북마크 표시를 눌러 해당 경매를 관심 경매 목록에 추가할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2019.png)
+![Untitled](README/Untitled%2023.png)
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2020.png)
+![Untitled](README/Untitled%2024.png)
 
 ### 2. 입찰
 
@@ -235,7 +271,7 @@ Created: 2023년 4월 5일 오후 1:57
 
 입찰이 성공적으로 이루어지면 리더보드에 사용자의 이름, 입찰 시각, 입찰가가 올라옵니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2021.png)
+![Untitled](README/Untitled%2025.png)
 
 ### 3.  사용자별 입찰 추이
 
@@ -243,7 +279,7 @@ Created: 2023년 4월 5일 오후 1:57
 
 각 사용자마다 그래프가 제공되므로 입찰한 사용자의 인원에 따라 그려지는 그래프가 2개 이상일 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2022.png)
+![Untitled](README/Untitled%2026.png)
 
 ### 4. 댓글
 
@@ -253,7 +289,7 @@ Created: 2023년 4월 5일 오후 1:57
 
 사용자는 이 기능을 통해 물건의 상세한 정보를 판매자에게 요청할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2023.png)
+![Untitled](README/Untitled%2027.png)
 
 ---
 
@@ -263,13 +299,13 @@ Created: 2023년 4월 5일 오후 1:57
 
 현재 진행중인 경매중 입찰한 이력이 있는 경매를 조회할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2024.png)
+![Untitled](README/Untitled%2028.png)
 
 ### 2. 구매한 내역 조회
 
 사용자가 구매했던 제품의 내역을 확인할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2025.png)
+![Untitled](README/Untitled%2029.png)
 
 ### 3. 판매중인 경매 조회
 
@@ -277,19 +313,19 @@ Created: 2023년 4월 5일 오후 1:57
 
 각 게시물을 누르면 해당 페이지로 이동합니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2026.png)
+![Untitled](README/Untitled%2030.png)
 
 ### 4. 판매한 내역 조회
 
 사용자가 판매했던 제품의 내역을 확인할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2027.png)
+![Untitled](README/Untitled%2031.png)
 
 ### 5. 관심 경매 조회
 
 관심 등록을 한 경매 목록을 확인하고 입장할 수 있습니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2028.png)
+![Untitled](README/Untitled%2032.png)
 
 ### 6. 알림 내역 조회
 
@@ -299,7 +335,7 @@ Created: 2023년 4월 5일 오후 1:57
 
 각 알림의 제품명을 누르면 해당 게시물로 이동합니다.
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2029.png)
+![Untitled](README/Untitled%2033.png)
 
 # V. 협업 툴
 
@@ -350,49 +386,32 @@ Created: 2023년 4월 5일 오후 1:57
 - Jira 컨벤션
     - 기본 단위를 Epic으로 잡고 Task 및 Story로 나누어 작성하였습니다.
     - MSA 구조에 따라 여러 서버로 나누었기 때문에 Epic은 주로 서버를 기준으로 나누었습니다.
+    - 경우에 따라 Task를 sub-task로 나누어 작업했습니다.
 
 - 협업사항 및 결과
     - 월요일 아침마다 회의를 통해 금주에 해야 할 작업을 논의해 분배하였고, 금요일 오후마다 완료된 작업사항을 공유하며 차주의 작업 분배를 개선했습니다.
     - Story Point는 세분화된 관리를 위해 가급적 2, 3을 할당하고자 하였으나 큰 단일 작업의 경우 초과 할당을 하기도 했습니다.
     - 번다운 차트를 통해 개발이 유난히 더뎠던 부분이 있다면 그 이유와 개선사항을 분석하기도 했습니다.
 
-- 번다운 차트 용두사미 되어 가는데 빼야 되나;
-    
-    ![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2030.png)
-    
-    ![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2031.png)
-    
-    ![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2032.png)
-    
-    ![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2033.png)
-    
-    ![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2034.png)
-    
-    ![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2035.png)
-    
-    ![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2036.png)
-    
+![Untitled](README/Untitled%2034.png)
+
+![Untitled](README/Untitled%2035.png)
 
 ### 3. Notion
 
 - 금주 공지사항 또는 이슈 공유
 - 코드, Git, Jira 등 작업 툴 컨벤션 공유
 - 팀원 간 유용한 팁 공유
-- API 명세 및 툴 버전 명세
+- [API 명세](https://www.notion.so/API-e241e7e849224affb0317ba70e21b03f)
+- 툴 버전 명세
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2037.png)
+![Untitled](README/Untitled%2036.png)
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2038.png)
+![Untitled](README/Untitled%2037.png)
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2039.png)
+![Untitled](README/Untitled%2038.png)
 
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2040.png)
-
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2041.png)
-
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2042.png)
-
-![Untitled](README%20a31fbca4f359417bb992010b2cb35ffd/Untitled%2043.png)
+![Untitled](README/Untitled%2039.png)
 
 # VI. 팀원
 
@@ -400,9 +419,9 @@ Created: 2023년 4월 5일 오후 1:57
 
 | 이름 | 역할 |
 | --- | --- |
-| 전인덕 (PM) | Kafka |
+| 전인덕 (PM) | Data, Frontend |
 | 김범식 | Frontend, UX/UI, UCC |
 | 신민혜 | Backend |
-| 오종석 | CI/CD, OAuth |
-| 윤재휘 | Backend |
+| 오종석 | CI/CD, OAuth, Backend, Frontend |
+| 윤재휘 | Backend, Frontend |
 | 임혜진 | Backend, 기능 소개 영상 |
