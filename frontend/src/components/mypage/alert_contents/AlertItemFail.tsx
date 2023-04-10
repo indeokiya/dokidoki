@@ -146,7 +146,10 @@ const AlertItemFail: React.FC<{
           }}>
             <Tooltip title="Delete">
               <IconButton
-               
+                onClick={() => {
+                  ComponentHidden(props.id); //사라지는 애니메이션 back이랑 연동하는거 아님
+                  props.setAlertCnt((data: any) => data - 1); //카운트 줄어듬
+                }}
               >
                 <DeleteIcon />
               </IconButton>
